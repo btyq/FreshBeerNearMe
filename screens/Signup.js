@@ -157,7 +157,7 @@ const Signup = ({ navigation }) => {
               fontSize: 16,
               fontWeight: 400,
               marginVertical: 8
-            }}>Confirm Password</Text>
+            }}>Confirm Password Password</Text>
 
             <View style={{
               width: "100%",
