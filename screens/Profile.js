@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
 
+// Define your custom colors
 const COLORS = {
   primary: '#6D4C41', // Dark Brown color (resembles dark craft beer)
   secondary: '#DAA520', // Golden color (resembles light craft beer)
@@ -14,20 +15,32 @@ const COLORS = {
 };
 
 const Button = (props) => {
-  const filledBgColor = props.color || COLORS.primary;
+  const filledBgColor = props.color || COLORS.secondary;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
-  const textColor = COLORS.black;
+  const textColor = props.filled ? COLORS.white : COLORS.white;
 
   return (
     <TouchableOpacity
-      style={{ ...styles.button, ...{ backgroundColor: bgColor }, ...props.style }}
+      style={{
+        ...styles.button,
+        ...{ backgroundColor: bgColor },
+        ...props.style,
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2, // Lowered shadow opacity
+        shadowRadius: 1, // Lowered shadow radius
+        elevation: 2,
+      }}
       onPress={props.onPress}
     >
-      <Text style={{ fontSize: 15, color: textColor }}>{props.title}</Text>
+      <Text style={{ fontSize: 15, color: textColor, fontWeight: 'bold' }}>{props.title}</Text>
     </TouchableOpacity>
   );
 };
+
+
+
 
 const Profile = ({ navigation }) => {
   const [username, setUsername] = useState('');
@@ -40,7 +53,7 @@ const Profile = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.foam, COLORS.secondary]}>
+    <LinearGradient style={{ flex: 1 }} colors={[COLORS.secondary, COLORS.primary]}>
       <View
         style={{
           flexDirection: 'row',
@@ -48,48 +61,56 @@ const Profile = ({ navigation }) => {
           alignItems: 'center',
           padding: 10,
           paddingTop: 30,
-          backgroundColor: COLORS.primary,
+          backgroundColor: COLORS.foam,
           height: 70,
+          shadowColor: COLORS.black,
+          shadowOffset: { width: 0, height: 2 },
+          shadowOpacity: 0.3,
+          shadowRadius: 3,
+          elevation: 5,
         }}
       >
-        <Text style={{ fontSize: 20, color: COLORS.foam }}>FreshBeer</Text>
-        <Ionicons name="notifications-outline" size={24} color={COLORS.foam} />
+        <Text style={{ fontSize: 22, color: COLORS.primary, fontWeight: 'bold' }}>FreshBeer</Text>
+        <Ionicons name="notifications-outline" size={24} color={COLORS.primary} />
       </View>
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.black }}>My Profile</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.foam }}>My Profile</Text>
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Username</Text>
+            <Text style={{ ...styles.label, color: COLORS.white }}>Username</Text>
             <TextInput
-              style={styles.input}
+              style={{ ...styles.input, borderColor: COLORS.secondary, color: COLORS.white }}
               value={username}
               onChangeText={setUsername}
               placeholder="Enter your username"
+              placeholderTextColor={COLORS.white}
             />
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Email</Text>
+            <Text style={{ ...styles.label, color: COLORS.secondary }}>Email</Text>
             <TextInput
-              style={styles.input}
+              style={{ ...styles.input, borderColor: COLORS.secondary, color: COLORS.white }}
               value={email}
               onChangeText={setEmail}
               placeholder="Enter your email"
+              placeholderTextColor={COLORS.white}
               keyboardType="email-address"
             />
           </View>
 
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Password</Text>
+            <Text style={{ ...styles.label, color: COLORS.secondary }}>Password</Text>
             <TextInput
-              style={styles.input}
+              style={{ ...styles.input, borderColor: COLORS.secondary, color: COLORS.white }}
               value={password}
               onChangeText={setPassword}
               placeholder="Enter your password"
+              placeholderTextColor={COLORS.white}
               secureTextEntry
             />
           </View>
@@ -101,7 +122,7 @@ const Profile = ({ navigation }) => {
               onValueChange={setReceiveNotification}
               color={COLORS.primary}
             />
-            <Text style={styles.checkboxLabel}>
+            <Text style={{ ...styles.checkboxLabel, color: COLORS.white }}>
               Receive notification for new releases, events & personalized recommendations
             </Text>
           </View>
@@ -109,7 +130,7 @@ const Profile = ({ navigation }) => {
           <Button
             title="Save Changes"
             onPress={saveChanges}
-            style={styles.saveButton}
+            style={{ ...styles.saveButton, backgroundColor: COLORS.secondary }}
           />
         </ScrollView>
       </SafeAreaView>
@@ -124,15 +145,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.primary,
   },
   input: {
     height: 40,
-    borderColor: COLORS.primary,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    color: COLORS.black,
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -144,16 +162,17 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 14,
-    color: COLORS.primary,
   },
-  saveButton: {
+  button: {
     marginTop: 20,
-    backgroundColor: COLORS.primary,
     paddingVertical: 10,
     alignItems: 'center',
     borderRadius: 20,
-    width: '50%', 
-    alignSelf: 'center', 
+    width: '50%',
+    alignSelf: 'center',
+  },
+  saveButton: {
+    backgroundColor: COLORS.primary,
   },
 });
 
