@@ -83,7 +83,7 @@ const Profile = ({ navigation }) => {
           <View style={styles.inputContainer}>
             <Text style={{ ...styles.label, color: COLORS.white }}>Username</Text>
             <TextInput
-              style={{ ...styles.input, borderColor: COLORS.secondary, color: COLORS.white }}
+              style={{ ...styles.input, borderColor: COLORS.foam, color: COLORS.white }}
               value={username}
               onChangeText={setUsername}
               placeholder="Enter your username"
@@ -94,7 +94,7 @@ const Profile = ({ navigation }) => {
           <View style={styles.inputContainer}>
             <Text style={{ ...styles.label, color: COLORS.secondary }}>Email</Text>
             <TextInput
-              style={{ ...styles.input, borderColor: COLORS.secondary, color: COLORS.white }}
+              style={{ ...styles.input, borderColor: COLORS.foam, color: COLORS.white }}
               value={email}
               onChangeText={setEmail}
               placeholder="Enter your email"
@@ -106,7 +106,7 @@ const Profile = ({ navigation }) => {
           <View style={styles.inputContainer}>
             <Text style={{ ...styles.label, color: COLORS.secondary }}>Password</Text>
             <TextInput
-              style={{ ...styles.input, borderColor: COLORS.secondary, color: COLORS.white }}
+              style={{ ...styles.input, borderColor: COLORS.foam, color: COLORS.white }}
               value={password}
               onChangeText={setPassword}
               placeholder="Enter your password"
