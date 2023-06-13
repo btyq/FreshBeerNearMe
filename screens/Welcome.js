@@ -131,8 +131,7 @@ const Welcome = ({ navigation }) => {
               marginBottom: 4,
             }}>
           </Button>
-
-
+          
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>
             <View style={{
               flex: 1,
