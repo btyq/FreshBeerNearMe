@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -106,12 +106,20 @@ const Dashboard = ({ navigation }) => {
           <View style={styles.cardContainer}>
             <Text style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.foam }}>Upcoming Events</Text>
             <View style={styles.card}>
-              <Text style={{ fontSize: 16, color: COLORS.black }}>Event details...</Text>
+              <ImageBackground                 
+                source={require('../assets/event1.png')} 
+                style={styles.cardImage}>
+              </ImageBackground>
+              <Text style={{ fontSize: 16, color: COLORS.black }}></Text>
             </View>
 
             <Text style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.foam }}>Recommended Specialty for You</Text>
             <View style={styles.card}>
-              <Text style={{ fontSize: 16, color: COLORS.black }}>Specialty details...</Text>
+              <ImageBackground                 
+                source={require('../assets/specialtybeer.png')} 
+                style={styles.cardImage}>
+              </ImageBackground>
+              <Text style={{ fontSize: 16, color: COLORS.black }}></Text>
             </View>
           </View>
         </ScrollView>
@@ -166,7 +174,11 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     width: '100%',
-    height: '70%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: 10,
+    overflow: 'hidden',
+    marginTop: 20,
   },
 });
 
