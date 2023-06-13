@@ -49,6 +49,7 @@ const Dashboard = ({ navigation }) => {
             <View style={styles.grid}>
               <Button
                 title="My Profile"
+                onPress={() => navigation.navigate("Profile")}
                 color="#ffff99"
                 filled
                 style={styles.gridItem}
