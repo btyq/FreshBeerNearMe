@@ -43,7 +43,7 @@ const StarRating = () => (
   </View>
 );
 
-const Dashboard = ({ navigation }) => {
+const BeersVenue = ({ navigation }) => {
   const handleVenue1Click = () => {
     // Handle click for "Venue 1" here
   };
@@ -230,4 +230,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Dashboard;
+export default BeersVenue;
