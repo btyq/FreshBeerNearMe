@@ -269,6 +269,21 @@ const Welcome = ({ navigation }) => {
                 }}>Register</Text>
             </Pressable>
           </View>
+          
+          <View style={{
+            flexDirection: "row",
+            justifyContent: "center"
+          }}>
+            <Pressable
+              onPress={() => navigation.navigate("AdminLogin")}>
+                <Text style={{
+                  fontSize: 16,
+                  textDecorationLine: 'underline',
+                  color: COLORS.black,
+                  marginLeft: 6
+                }}>I am an admin</Text>
+            </Pressable>
+          </View>
         </View>
         </View>
       </SafeAreaView>
