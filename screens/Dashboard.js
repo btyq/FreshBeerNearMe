@@ -36,6 +36,14 @@ const Button = (props) => {
 };
 
 const Dashboard = ({ navigation }) => {
+  const handleUpcomingEventsClick = () => {
+    // Handle click for "Upcoming Events" here
+  };
+
+  const handleRecommendedSpecialtyClick = () => {
+    // Handle click for "Recommended Specialty for You" here
+  };
+
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.secondary, COLORS.primary]}>
       <View
@@ -105,23 +113,29 @@ const Dashboard = ({ navigation }) => {
           </View>
 
           <View style={styles.cardContainer}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.foam }}>Upcoming Events</Text>
-            <View style={styles.card}>
-              <ImageBackground                 
-                source={require('../assets/event1.png')} 
-                style={styles.cardImage}>
-              </ImageBackground>
-              <Text style={{ fontSize: 16, color: COLORS.black }}></Text>
-            </View>
+            <TouchableOpacity onPress={handleUpcomingEventsClick} style={styles.clickableSection}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.foam }}>Upcoming Events</Text>
+              <View style={styles.card}>
+                <ImageBackground                 
+                  source={require('../assets/event1.png')} 
+                  style={styles.cardImage}
+                >
+                </ImageBackground>
+                <Text style={{ fontSize: 16, color: COLORS.black }}></Text>
+              </View>
+            </TouchableOpacity>
 
-            <Text style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.foam }}>Recommended Specialty for You</Text>
-            <View style={styles.card}>
-              <ImageBackground                 
-                source={require('../assets/specialtybeer.png')} 
-                style={styles.cardImage}>
-              </ImageBackground>
-              <Text style={{ fontSize: 16, color: COLORS.black }}></Text>
-            </View>
+            <TouchableOpacity onPress={handleRecommendedSpecialtyClick} style={styles.clickableSection}>
+              <Text style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.foam }}>Recommended Specialty for You</Text>
+              <View style={styles.card}>
+                <ImageBackground                 
+                  source={require('../assets/specialtybeer.png')} 
+                  style={styles.cardImage}
+                >
+                </ImageBackground>
+                <Text style={{ fontSize: 16, color: COLORS.black }}></Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -174,12 +188,15 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   cardImage: {
-    width: '100%',
-    height: '100%',
+    width: '110%',
+    height: '122%',
     resizeMode: 'cover',
     borderRadius: 10,
     overflow: 'hidden',
-    marginTop: 20,
+    marginTop: 30,
+  },
+  clickableSection: {
+    marginBottom: 20,
   },
 });
 
