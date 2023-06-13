@@ -36,7 +36,7 @@ const Signup = ({ navigation }) => {
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>  
       <ScrollView>
-        <SafeAreaView style={{flex: 1, backgroundColor:COLORS.white}}>
+        <SafeAreaView style={{flex: 1}}>
           <View style={{flex: 1, marginHorizontal: 22}}>
             <View style={{marginVertical: 22}}>
               <Text style={{
@@ -218,6 +218,7 @@ const Signup = ({ navigation }) => {
 
             <Button
               title="Sign Up"
+              color="black"
               onPress = {checkPassword}
               filled
               style={{
