@@ -72,7 +72,7 @@ const Signup = ({ navigation }) => {
                 <TextInput
                   placeholder='Enter your username'
                   placeholderTextColor={COLORS.black}
-                  keyboardType="text"
+                  keyboardType="default"
                   style={{
                     width: "100%"
                   }}>
