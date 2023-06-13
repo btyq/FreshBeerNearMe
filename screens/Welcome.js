@@ -125,11 +125,6 @@ const Welcome = ({ navigation }) => {
 
           <Button
             title="Login"
-<<<<<<< HEAD
-            color="black"
-=======
-            onPress={() => navigation.navigate("Dashboard")}
->>>>>>> d66f512816d5cce805b11b76e819ee5f7a168d70
             filled
             style={{
               marginTop: 10,
