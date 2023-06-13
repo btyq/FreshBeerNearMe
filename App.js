@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 //import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Login, Signup, Welcome} from "./screens";
+import { Dashboard, Signup, Welcome} from "./screens";
 
 const Stack = createNativeStackNavigator();
 
@@ -13,9 +13,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Welcome">
-        <Stack.Screen name="Login" component={Login} options={{headerShown:false}} />
         <Stack.Screen name="Welcome" component={Welcome} options={{headerShown:false}} />
         <Stack.Screen name="Signup" component={Signup} options={{headerShown:false}}/>
+        <Stack.Screen name="Dashboard" component={Dashboard} options={{headerShown:false}} />
       </Stack.Navigator>
     </NavigationContainer>
   );
