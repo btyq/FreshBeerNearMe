@@ -72,6 +72,7 @@ const Dashboard = ({ navigation }) => {
               />
               <Button
                 title="Beers & Venues"
+                onPress={() => navigation.navigate('BeersVenue')}
                 color={COLORS.secondary}
                 filled
                 style={styles.gridItem}

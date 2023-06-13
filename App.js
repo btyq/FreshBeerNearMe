@@ -3,7 +3,7 @@ import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 //import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Dashboard, Signup, Welcome, Profile} from "./screens";
+import { Dashboard, Signup, Welcome, Profile, BeersVenue} from "./screens";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,6 +17,7 @@ export default function App() {
         <Stack.Screen name="Signup" component={Signup} options={{headerShown:false}}/>
         <Stack.Screen name="Dashboard" component={Dashboard} options={{headerShown:false}}/>
         <Stack.Screen name="Profile" component={Profile} options={{headerShown:false}}/>
+        <Stack.Screen name="BeersVenue" component={BeersVenue} options={{headerShown:false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
