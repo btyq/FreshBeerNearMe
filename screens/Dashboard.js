@@ -10,7 +10,7 @@ import Button from "../components/Button";
 const Dashboard = ({ navigation }) => {
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={['#ffffff', '#ffffff']}>
+    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10,paddingTop: 30, backgroundColor: 'yellow', height: 70 }}>
         <Text style={{ fontSize: 20 }}>FreshBeer</Text>
         <Ionicons name="notifications-outline" size={24} color="black" />
@@ -21,12 +21,36 @@ const Dashboard = ({ navigation }) => {
           <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Welcome</Text>
             <View style={styles.grid}>
-              <Button style={styles.gridItem}>Button 1</Button>
-              <Button style={styles.gridItem}>Button 2</Button>
-              <Button style={styles.gridItem}>Button 3</Button>
-              <Button style={styles.gridItem}>Button 4</Button>
-              <Button style={styles.gridItem}>Button 5</Button>
-              <Button style={styles.gridItem}>Button 6</Button>
+              <Button 
+                title="My Profile"
+                color="yellow"
+                filled
+                style={styles.gridItem}></Button>
+              <Button 
+                title="Beers & Venues"
+                color="yellow"
+                filled
+                style={styles.gridItem}></Button>
+              <Button 
+                title="Social & Community"
+                color="yellow"
+                filled
+                style={styles.gridItem}></Button>
+              <Button 
+                title="Feedback & Requests"
+                color="yellow"
+                filled
+                style={styles.gridItem}></Button>
+              <Button 
+                title="My Journal & Achievements"
+                color="yellow"
+                filled
+                style={styles.gridItem}></Button>
+              <Button 
+                title="My Wishlist"
+                color="yellow"
+                filled
+                style={styles.gridItem}></Button>
             </View>
           </View>
 
