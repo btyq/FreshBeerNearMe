@@ -11,7 +11,7 @@ const Welcome = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.secondary, COLORS.primary]}>
+    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
       <SafeAreaView>
         <View style={{flex: 1}}>
           <Image 
@@ -125,6 +125,7 @@ const Welcome = ({ navigation }) => {
 
           <Button
             title="Login"
+            color="black"
             filled
             style={{
               marginTop: 10,
