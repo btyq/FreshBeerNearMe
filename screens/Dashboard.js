@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
   gridItem: {
     width: '45%',
     height: 50,
-    margin: 10
+    marginVertical: 10,
+    marginHorizontal: '2.5%',
   },
   cardContainer: {
     padding: 20,
