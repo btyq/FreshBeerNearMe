@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
@@ -90,11 +90,19 @@ const Dashboard = ({ navigation }) => {
           <View style={styles.cardContainer}>
             <Text>Upcoming Events</Text>
             <View style={styles.card}>
+              <ImageBackground
+                source={require('../assets/event1.png')} 
+                style={styles.cardImage}>
+              </ImageBackground>
               <Text>Event details...</Text>
             </View>
 
             <Text>Recommended Specialty for You</Text>
             <View style={styles.card}>
+              <ImageBackground
+                source={require('../assets/specialtybeer.png')} 
+                style={styles.cardImage}>
+              </ImageBackground>
               <Text>Specialty details...</Text>
             </View>
           </View>
@@ -140,8 +148,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   cardImage: {
+    flex : 1,
     width: '100%',
-    height: '70%',
+    height: '100%',
+    resizeMode: 'cover',
+    borderRadius: 10,
+    overflow: 'hidden'
   },
 });
 
