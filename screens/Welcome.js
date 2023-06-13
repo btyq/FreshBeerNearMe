@@ -1,12 +1,30 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, Pressable, TextInput } from "react-native";
+import { View, Text, TouchableOpacity, Image, Pressable, TextInput, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
-import Button from "../components/Button";
 
+//CODES TO STYLE BUTTON
+const Button = (props) => {
+  const filledBgColor = props.color || COLORS.yellow;
+  const outlinedColor = COLORS.white;
+  const bgColor = props.filled ? filledBgColor : outlinedColor;
+  const textColor = props.filled ? COLORS.white : COLORS.primary;
+  
+return (
+  <TouchableOpacity 
+  style={{...styles.button,
+          ...{backgroundColor: bgColor},
+          ...props.style}}
+  onPress={props.onPress}>
+      <Text style={{fontSize: 15, ... { color: textColor }}}>{props.title}</Text>
+  </TouchableOpacity>
+)
+}
+
+//CODES FOR THE MAIN PAGE
 const Welcome = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
@@ -258,4 +276,15 @@ const Welcome = ({ navigation }) => {
   )
 }
 
+const styles = StyleSheet.create({
+  button:{
+      paddingBottom: 16,
+      paddingVertical:10,
+      borderColor: COLORS.primary,
+      borderWidth: 2,
+      borderRadius: 12,
+      alignItems: 'center',
+      justifyContent: 'center'
+  }
+})
 export default Welcome
