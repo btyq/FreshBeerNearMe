@@ -2,12 +2,19 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import COLORS from '../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
 
+const COLORS = {
+  primary: '#6D4C41', // Dark Brown color (resembles dark craft beer)
+  secondary: '#DAA520', // Golden color (resembles light craft beer)
+  foam: '#F0E68C', // Frothy beer foam color
+  white: '#FFFFFF',
+  black: '#000000',
+};
+
 const Button = (props) => {
-  const filledBgColor = props.color || COLORS.yellow;
+  const filledBgColor = props.color || COLORS.primary;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
   const textColor = COLORS.black;
@@ -33,7 +40,7 @@ const Profile = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
+    <LinearGradient style={{ flex: 1 }} colors={[COLORS.foam, COLORS.secondary]}>
       <View
         style={{
           flexDirection: 'row',
@@ -41,18 +48,18 @@ const Profile = ({ navigation }) => {
           alignItems: 'center',
           padding: 10,
           paddingTop: 30,
-          backgroundColor: '#ffff99',
+          backgroundColor: COLORS.primary,
           height: 70,
         }}
       >
-        <Text style={{ fontSize: 20 }}>FreshBeer</Text>
-        <Ionicons name="notifications-outline" size={24} color="black" />
+        <Text style={{ fontSize: 20, color: COLORS.foam }}>FreshBeer</Text>
+        <Ionicons name="notifications-outline" size={24} color={COLORS.foam} />
       </View>
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>My Profile</Text>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.black }}>My Profile</Text>
           </View>
 
           <View style={styles.inputContainer}>
@@ -92,6 +99,7 @@ const Profile = ({ navigation }) => {
               style={styles.checkbox}
               value={receiveNotification}
               onValueChange={setReceiveNotification}
+              color={COLORS.primary}
             />
             <Text style={styles.checkboxLabel}>
               Receive notification for new releases, events & personalized recommendations
@@ -116,13 +124,15 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: COLORS.primary,
   },
   input: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: COLORS.primary,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
+    color: COLORS.black,
   },
   checkboxContainer: {
     flexDirection: 'row',
@@ -134,15 +144,16 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 14,
+    color: COLORS.primary,
   },
   saveButton: {
     marginTop: 20,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.primary,
     paddingVertical: 10,
     alignItems: 'center',
     borderRadius: 20,
-    width: '50%', // Adjust the width as desired
-    alignSelf: 'center', // Center the button horizontally
+    width: '50%', 
+    alignSelf: 'center', 
   },
 });
 
