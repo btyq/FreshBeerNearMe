@@ -4,8 +4,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
 import { LinearGradient } from 'expo-linear-gradient';
+import axios from 'axios';
 
-// Define your custom colors
+//Define your custom colors
 const COLORS = {
   primary: '#6D4C41', // Dark Brown color (resembles dark craft beer)
   secondary: '#DAA520', // Golden color (resembles light craft beer)
@@ -31,32 +32,47 @@ const Button = (props) => {
 
 // Signup component
 const Signup = ({ navigation }) => {
+  const ageRestriction = 18;
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
 
   const handleSignUp = () => {
-    const ageRestriction = 18; // Replace with the minimum age restriction value
-
     if (!username) {
-      // Username is missing
+      //Username is missing
       Alert.alert("Missing Username", "Please enter your username.");
     } else if (!mobileNumber) {
-      // Mobile number is missing
+      //Mobile number is missing
       Alert.alert("Missing Mobile Number", "Please enter your mobile number.");
     } else if (isChecked) {
       if (password1 !== password2) {
-        // Passwords do not match
+        //Passwords do not match
         Alert.alert("Password Mismatch", "Please make sure your passwords match.");
       } else {
-        // Passwords match, show success message
-        Alert.alert("Account Signup Success", "Your account has been successfully created!");
+        //Passwords match, send signup request
+        axios.post('http://192.168.1.237:3000/signup', {
+          username: username,
+          password: password1,
+          email: email,
+          mobileNumber: mobileNumber
+        })
+          .then((response) => {
+            //Handle success response
+            Alert.alert("Account Signup Success", "Your account has been successfully created!");
+            console.log("Frontend is working");
+          })
+          .catch((error) => {
+            //Handle error response
+            console.error(error);
+            Alert.alert("Signup Error", "An error occurred during signup.");
+          });
       }
     } else {
-      // Age restriction not met
+      //Age restriction not met
       Alert.alert("Age Restriction", `You must be over ${ageRestriction} years old to sign up.`);
     }
   };
@@ -103,13 +119,45 @@ const Signup = ({ navigation }) => {
                 <TextInput
                   placeholder='Enter your username'
                   placeholderTextColor={COLORS.black}
-                  keyboardType="text"
+                  keyboardType="default"
                   style={{
                     width: "100%",
                     color: COLORS.black,
                   }}
                   value={username}
                   onChangeText={setUsername}
+                />
+              </View>
+            </View>
+
+            <View style={{ marginBottom: 12 }}>
+              <Text style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                marginVertical: 8,
+                color: COLORS.black,
+              }}>Email</Text>
+
+              <View style={{
+                width: "100%",
+                height: 48,
+                borderColor: COLORS.black,
+                borderWidth: 1,
+                borderRadius: 8,
+                alignItems: "center",
+                justifyContent: "center",
+                paddingLeft: 22,
+              }}>
+                <TextInput
+                  placeholder='Enter your email address'
+                  placeholderTextColor={COLORS.black}
+                  keyboardType="text"
+                  style={{
+                    width: "100%",
+                    color: COLORS.black,
+                  }}
+                  value={email}
+                  onChangeText={setEmail}
                 />
               </View>
             </View>
