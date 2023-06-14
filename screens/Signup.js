@@ -170,6 +170,50 @@ const Signup = ({ navigation }) => {
           </View>
         </View>
 
+        <View style={{marginBottom: 12}}>
+          <Text style={{
+            fontSize: 16,
+            fontWeight: 'bold',
+            marginVertical: 8,
+            color: COLORS.black,
+          }}>Confirm Password</Text>
+
+          <View style={{
+            width: "100%",
+            height: 48,
+            borderColor: COLORS.black,
+            borderWidth: 1,
+            borderRadius: 8,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingLeft: 22,
+            flexDirection: 'row',
+          }}>
+            <TextInput
+              placeholder='Re-enter your password'
+              placeholderTextColor={COLORS.black}
+              secureTextEntry={!isPasswordShown}
+              style={{
+                flex: 1,
+                color: COLORS.black,
+              }}
+            />
+
+            <TouchableOpacity 
+              onPress={() => setIsPasswordShown(!isPasswordShown)}
+              style={{
+                position: "absolute",
+                right: 12,
+              }}>
+              <Ionicons
+                name={isPasswordShown ? "eye" : "eye-off"}
+                size={24}
+                color={COLORS.black}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
         <View style={{
           flexDirection: 'row',
           marginVertical: 6,
