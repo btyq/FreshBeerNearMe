@@ -42,9 +42,9 @@ const handleLogin = async () => {
 
     //Process the response
     if (response.data.success) {
-      // Login successful
+      //Login successful
       const { username, password } = response.data;
-      //Do something with the username and id
+      //Do something with the username and password
       console.log("Wow it works");
       navigation.navigate("Dashboard")
     } else {
