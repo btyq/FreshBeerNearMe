@@ -3,8 +3,8 @@ import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 //import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Dashboard, Signup, Welcome, Profile, BeersVenue } from "./screens";
-import { AdminLogin } from "./components";
+import { Dashboard, Signup, Welcome, Profile, BeersVenue } from "./frontend/screens";
+import { AdminLogin } from "./frontend/components";
 
 const Stack = createNativeStackNavigator();
 
