@@ -3,23 +3,15 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground }
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import CheckBox from 'expo-checkbox';
-
-// Define your custom colors
-const COLORS = {
-  primary: '#6D4C41', // Dark Brown color (resembles dark craft beer)
-  secondary: '#DAA520', // Golden color (resembles light craft beer)
-  foam: '#F0E68C', // Frothy beer foam color
-  white: '#FFFFFF',
-  black: '#000000',
-};
+import { Octicons } from '@expo/vector-icons'; 
+import COLORS from "../constants/colors";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
-  const textColor = props.filled ? COLORS.white : COLORS.primary;
+  const textColor = props.filled ? COLORS.black : COLORS.primary;
 
   return (
     <TouchableOpacity
@@ -30,7 +22,7 @@ const Button = (props) => {
       }}
       onPress={props.onPress}
     >
-      <Text style={{ fontSize: 16, fontWeight: 'bold', ...{ color: textColor } }}>{props.title}</Text>
+      <Text style={{ fontSize: 14, ...{ color: textColor } }}>{props.title}</Text>
     </TouchableOpacity>
   );
 };
@@ -45,7 +37,7 @@ const Dashboard = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.secondary, COLORS.primary]}>
+    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
       <View
         style={{
           flexDirection: 'row',
@@ -62,50 +54,53 @@ const Dashboard = ({ navigation }) => {
           elevation: 5,
         }}
       >
-        <Text style={{ fontSize: 22, color: COLORS.primary, fontWeight: 'bold' }}>FreshBeer</Text>
-        <Ionicons name="notifications-outline" size={24} color={COLORS.primary} />
+        <Text style={{ fontSize: 20, color: COLORS.black, fontWeight: 'bold' }}>FreshBeer</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Octicons name="bookmark" size={24} color={COLORS.black} style={{marginRight: 12}}/>
+          <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+        </View>
       </View>
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
-          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-            <Text style={{ fontSize: 26, fontWeight: 'bold', color: COLORS.foam }}>Welcome</Text>
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+            <Text style={{ fontSize: 26, fontWeight: 'bold', color: COLORS.black }}>Welcome!</Text>
             <View style={styles.grid}>
               <Button
                 title="My Profile"
                 onPress={() => navigation.navigate('Profile')}
-                color={COLORS.secondary}
+                color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
               <Button
                 title="Beers & Venues"
                 onPress={() => navigation.navigate('BeersVenue')}
-                color={COLORS.secondary}
+                color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
               <Button
                 title="Social & Community"
-                color={COLORS.secondary}
+                color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
               <Button
                 title="Feedback & Requests"
-                color={COLORS.secondary}
+                color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
               <Button
                 title="My Journal & Achievements"
-                color={COLORS.secondary}
+                color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
               <Button
                 title="My Wishlist"
-                color={COLORS.secondary}
+                color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
@@ -113,8 +108,8 @@ const Dashboard = ({ navigation }) => {
           </View>
 
           <View style={styles.cardContainer}>
+          <Text style={{ fontSize: 17, color: COLORS.black }}>Upcoming Events</Text>
             <TouchableOpacity onPress={handleUpcomingEventsClick} style={styles.clickableSection}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.foam }}>Upcoming Events</Text>
               <View style={styles.card}>
                 <ImageBackground                 
                   source={require('../assets/event1.png')} 
@@ -125,8 +120,8 @@ const Dashboard = ({ navigation }) => {
               </View>
             </TouchableOpacity>
 
+            <Text style={{ fontSize: 17, color: COLORS.black }}>Recommended Specially for You</Text>
             <TouchableOpacity onPress={handleRecommendedSpecialtyClick} style={styles.clickableSection}>
-              <Text style={{ fontSize: 20, fontWeight: 'bold', color: COLORS.foam }}>Recommended Specialty for You</Text>
               <View style={styles.card}>
                 <ImageBackground                 
                   source={require('../assets/specialtybeer.png')} 
@@ -148,24 +143,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    marginBottom: 20,
+    marginBottom: 10,
   },
   gridItem: {
     width: '45%',
-    height: 70, // increased height
-    marginVertical: 10,
+    height: 50, // increased height
+    marginVertical: 5,
     marginHorizontal: '2.5%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
   },
   button: {
-    paddingVertical: 15, // increased padding
+    paddingVertical: 3, // increased padding
     borderColor: COLORS.primary,
     borderWidth: 2,
-    borderRadius: 12,
+    borderRadius: 30,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -180,7 +170,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
