@@ -3,16 +3,15 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, Pressable, ScrollView 
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import { LinearGradient } from "expo-linear-gradient";
-import DropDownPicker from 'react-native-dropdown-picker';
 import CheckBox from "expo-checkbox";
-
+import { SelectList } from 'react-native-dropdown-select-list';
 
 //CODES TO STYLE BUTTON
 const Button = (props) => {
-    const filledBgColor = props.color || COLORS.yellow;
-    const outlinedColor = COLORS.white;
-    const bgColor = props.filled ? filledBgColor : outlinedColor;
-    const textColor = props.filled ? COLORS.white : COLORS.primary;
+  const filledBgColor = props.color || COLORS.yellow;
+  const outlinedColor = COLORS.white;
+  const bgColor = props.filled ? filledBgColor : outlinedColor;
+  const textColor = props.filled ? COLORS.white : COLORS.primary;
     
   return (
     <TouchableOpacity 
@@ -25,8 +24,25 @@ const Button = (props) => {
   )
   }
 
+
+
 const AdminLogin = ({ navigation }) => {
-  const [isChecked, setIsChecked] = useState(false);
+  const [isChecked1, setIsChecked1] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
+  const [isChecked3, setIsChecked3] = useState(false);
+  const [isChecked4, setIsChecked4] = useState(false);
+  const [isChecked5, setIsChecked5] = useState(false);
+  const [isChecked6, setIsChecked6] = useState(false);
+
+  // for dropdown select list
+  const [selected, setSelected] = React.useState("");
+  
+  const data = [
+    {key:'1',value:'test1'},
+    {key:'2',value:'test2'},
+    {key:'3',value:'test3'},
+    {key:'4',value:'test4'},
+  ];
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -72,30 +88,15 @@ const AdminLogin = ({ navigation }) => {
               </Pressable>
           </View>
 
-          <DropDownPicker
-            items={[
-              { label: 'Option 1', value: 'option1' },
-              { label: 'Option 2', value: 'option2' },
-              { label: 'Option 3', value: 'option3' },
-            ]}
-            defaultValue={'option1'}
-            containerStyle={{ height: 10, marginTop: 50 }}
-            style={{ 
-              backgroundColor: COLORS.white,
-              borderWidth: 1,
-              borderRadius: 8,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              paddingLeft: 22,
-              padding: 10,
-              height: 10 }}
-            dropDownStyle={{ backgroundColor: COLORS.white }}
-            itemStyle={{ justifyContent: 'flex-start' }}
-            labelStyle={{ fontSize: 16, color: 'black' }}
-            onChangeItem={(item) => console.log(item.value)}>
-          </DropDownPicker>
-
+        <View style={{paddingHorizontal: 20, paddingVertical: 50, flex: 1}}>
+          <SelectList 
+            data={data} 
+            setSelected={setSelected} 
+            boxStyles={{borderRadius:0}} //override default styles
+            defaultOption={{ key:'1', value:'test1' }}   //default selected option
+          />
+        </View>
+          
           <View style={{
             paddingHorizontal: 55,
             position: "absolute",
@@ -124,9 +125,9 @@ const AdminLogin = ({ navigation }) => {
           }}>
             <CheckBox
               style={{ marginRight: 8 }}
-              value={isChecked}
-              onValueChange={setIsChecked}
-              color={isChecked ? COLORS.primary : undefined}
+              value={isChecked1}
+              onValueChange={setIsChecked1}
+              color={isChecked1 ? COLORS.primary : undefined}
             />
             <Text>Bug Report 2</Text>
           </View>
@@ -143,9 +144,9 @@ const AdminLogin = ({ navigation }) => {
           }}>
             <CheckBox
               style={{ marginRight: 8 }}
-              value={isChecked}
-              onValueChange={setIsChecked}
-              color={isChecked ? COLORS.primary : undefined}
+              value={isChecked2}
+              onValueChange={setIsChecked2}
+              color={isChecked2 ? COLORS.primary : undefined}
             />
             <Text>Bug Report 5</Text>
           </View>
@@ -162,9 +163,9 @@ const AdminLogin = ({ navigation }) => {
           }}>
             <CheckBox
               style={{ marginRight: 8 }}
-              value={isChecked}
-              onValueChange={setIsChecked}
-              color={isChecked ? COLORS.primary : undefined}
+              value={isChecked3}
+              onValueChange={setIsChecked3}
+              color={isChecked3 ? COLORS.primary : undefined}
             />
             <Text>Bug Report 4</Text>
           </View>
@@ -217,9 +218,9 @@ const AdminLogin = ({ navigation }) => {
           }}>
             <CheckBox
               style={{ marginRight: 8 }}
-              value={isChecked}
-              onValueChange={setIsChecked}
-              color={isChecked ? COLORS.primary : undefined}
+              value={isChecked4}
+              onValueChange={setIsChecked4}
+              color={isChecked4 ? COLORS.primary : undefined}
             />
             <Text>Feedback 1</Text>
           </View>
@@ -236,9 +237,9 @@ const AdminLogin = ({ navigation }) => {
           }}>
             <CheckBox
               style={{ marginRight: 8 }}
-              value={isChecked}
-              onValueChange={setIsChecked}
-              color={isChecked ? COLORS.primary : undefined}
+              value={isChecked5}
+              onValueChange={setIsChecked5}
+              color={isChecked5 ? COLORS.primary : undefined}
             />
             <Text>Feedback 2</Text>
           </View>
@@ -255,9 +256,9 @@ const AdminLogin = ({ navigation }) => {
           }}>
             <CheckBox
               style={{ marginRight: 8 }}
-              value={isChecked}
-              onValueChange={setIsChecked}
-              color={isChecked ? COLORS.primary : undefined}
+              value={isChecked6}
+              onValueChange={setIsChecked6}
+              color={isChecked6 ? COLORS.primary : undefined}
             />
             <Text>Feedback 3</Text>
           </View>
@@ -282,38 +283,38 @@ const AdminLogin = ({ navigation }) => {
               </Pressable>
           </View>
           
-          <Button
-              title="Manage users"
-              onPress={() => console.log("Pressed")}
-              color="black"
-              filled
-              style={{
-                marginTop: 420,
-                marginBottom: 4,
-              }}>
-          </Button>
+            <Button
+                title="Manage users"
+                onPress={() => navigation.navigate('ManageUsers')}
+                color="black"
+                filled
+                style={{
+                  marginTop: 360,
+                  marginBottom: 4,
+                }}>
+            </Button>
 
-          <Button
-              title="Performance Report"
-              onPress={() => console.log("Pressed")}
-              color="black"
-              filled
-              style={{
-                marginTop: 15,
-                marginBottom: 4,
-              }}>
-          </Button>
+            <Button
+                title="Performance Report"
+                onPress={() => console.log("Pressed")}
+                color="black"
+                filled
+                style={{
+                  marginTop: 15,
+                  marginBottom: 4,
+                }}>
+            </Button>
 
-          <Button
-              title="Manage Promotion/Events"
-              onPress={() => console.log("Pressed")}
-              color="black"
-              filled
-              style={{
-                marginTop: 15,
-                marginBottom: 4,
-              }}>
-          </Button>
+            <Button
+                title="Manage Promotion/Events"
+                onPress={() => console.log("Pressed")}
+                color="black"
+                filled
+                style={{
+                  marginTop: 15,
+                  marginBottom: 4,
+                }}>
+            </Button>
           </View>
         </ScrollView>
       </LinearGradient>
