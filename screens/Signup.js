@@ -182,7 +182,7 @@ const Signup = ({ navigation }) => {
             color={isChecked ? COLORS.black : undefined}
           />
 
-          <Text style={{color: COLORS.black}}>I agree to the above terms and conditions</Text>
+          <Text style={{color: COLORS.black}}>I am above 18.</Text>
         </View> 
 
         <Button
