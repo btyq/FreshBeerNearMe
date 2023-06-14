@@ -28,8 +28,8 @@ return (
 const Welcome = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
   return (
-    <ScrollView contentContainerStyle={{ flex: 1 }}>
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
       <SafeAreaView>
         <View style={{flex: 1}}>
@@ -145,6 +145,17 @@ const Welcome = ({ navigation }) => {
           <Button
             title="Login"
             onPress={() => navigation.navigate("Dashboard")}
+            color="black"
+            filled
+            style={{
+              marginTop: 10,
+              marginBottom: 4,
+            }}>
+          </Button>
+
+          <Button
+            title="I am an admin"
+            onPress={() => navigation.navigate("AdminLogin")}
             color="black"
             filled
             style={{
@@ -289,7 +300,6 @@ const Welcome = ({ navigation }) => {
         </View>
       </SafeAreaView>
     </LinearGradient>
-    </ScrollView>
   )
 }
 
