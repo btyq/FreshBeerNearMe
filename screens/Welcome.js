@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Image, Pressable, TextInput, StyleSheet } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, Pressable, TextInput, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
@@ -29,6 +29,7 @@ const Welcome = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   return (
+    <ScrollView contentContainerStyle={{ flex: 1 }}>
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
       <SafeAreaView>
         <View style={{flex: 1}}>
@@ -288,6 +289,7 @@ const Welcome = ({ navigation }) => {
         </View>
       </SafeAreaView>
     </LinearGradient>
+    </ScrollView>
   )
 }
 
