@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
+import axios from 'axios';
 
 //CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -26,8 +27,37 @@ return (
 
 //CODES FOR THE MAIN PAGE
 const Welcome = ({ navigation }) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+
+  //Axios get function for login
+const handleLogin = async () => {
+  try {
+    const response = await axios.post('http://192.168.1.237:3000', {
+      username: username,
+      password: password
+    });
+
+    //Process the response
+    if (response.data.success) {
+      // Login successful
+      const { username, password } = response.data;
+      //Do something with the username and id
+      console.log("Wow it works");
+      navigation.navigate("Dashboard")
+    } else {
+      //Login failed
+      const { message } = response.data;
+      //Display an error message
+      console.log("Login failed:", message);
+    }
+  } catch (error) {
+    //Handle error
+    console.log("An error occurred:", error.message);
+  }
+};
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
@@ -72,6 +102,8 @@ const Welcome = ({ navigation }) => {
             }}>
 
               <TextInput
+                value={username}
+                onChangeText={setUsername}
                 placeholder='Username'
                 placeholderTextColor={COLORS.black}
                 keyboardType="default"
@@ -94,6 +126,8 @@ const Welcome = ({ navigation }) => {
               paddingLeft: 22
             }}>
               <TextInput
+                value={password}
+                onChangeText={setPassword}
                 placeholder='Password'
                 placeholderTextColor={COLORS.black}
                 secureTextEntry={!isPasswordShown}
@@ -144,7 +178,7 @@ const Welcome = ({ navigation }) => {
 
           <Button
             title="Login"
-            onPress={() => navigation.navigate("Dashboard")}
+            onPress={handleLogin}
             color="black"
             filled
             style={{

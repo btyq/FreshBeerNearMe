@@ -1,35 +1,53 @@
 const express = require('express');
 const app = express();
 const port = 3000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient } = require('mongodb');
 const uri = "mongodb+srv://Admin:admin123@fyp.qzlvrug.mongodb.net/?retryWrites=true&w=majority";
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
-});
+const client = new MongoClient(uri);
 
-async function run() {
+//Connect to MongoDB
+async function connectToMongoDB() {
   try {
-    // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
+    console.log("Connected to MongoDB successfully");
+  } catch (err) {
+    console.error("Error connecting to MongoDB:", err);
   }
 }
-run().catch(console.dir);
+
+//Call the MongoDB connection function
+connectToMongoDB();
+
+//Specify the database and collection to use
+const db = client.db('UserDB');
+const collection = db.collection('User');
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+
+//Route to verify username and password
+app.post('/', async (req, res) => {
+    const { username, password } = req.body;
+  
+    try {
+      // Find a document that matches the username and password
+      const result = await collection.findOne({ username, password });
+  
+      if (result) {
+        res.json({ success: true, username: result.username, id: result.password });
+      } else {
+        res.json({ success: false, message: 'Invalid username or password' });
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      res.status(500).json({ success: false, message: 'An error occurred during login' });
+    }
+  });
 
 app.get('/', (req, res) => {
-  res.send('Hello, World!');
+  res.send('fk how do i do this');
 });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
+
