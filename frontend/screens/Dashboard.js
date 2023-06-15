@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useFocusEffect } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons'; 
 import COLORS from "../constants/colors";
-import { useFocusEffect } from '@react-navigation/native';
+import { useCookies } from "../CookieContext";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -28,12 +28,18 @@ const Button = (props) => {
   );
 };
 
-const Dashboard = ({ navigation, route }) => {
-const { sessionToken, username } = route.params;
-console.log("Username:", username);
-console.log("Session Token:", sessionToken);
-  
-// ================================== Functions for different button ==================================
+const Dashboard = ({ navigation }) => {
+  const { cookies } = useCookies();
+
+  useEffect(() => {
+    const sessionToken = cookies.sessionToken;
+    const username = cookies.username;
+    // Use the sessionToken and username as needed
+    console.log("Session Token:", sessionToken);
+    console.log("Username:", username);
+  }, []);
+
+  // ================================== Functions for different button ==================================
   const handleUpcomingEventsClick = () => {
     // Handle click for "Upcoming Events" here
   };
@@ -41,7 +47,6 @@ console.log("Session Token:", sessionToken);
   const handleRecommendedSpecialtyClick = () => {
     // Handle click for "Recommended Specialty for You" here
   };
-
   
 //=====================================================================================================
   return (

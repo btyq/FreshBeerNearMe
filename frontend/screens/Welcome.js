@@ -47,10 +47,9 @@ const Welcome = ({ navigation }) => {
       if (response.data.success) {
         const { username, password } = response.data;
         const sessionToken = 'testtoken123';
-        setCookies('sessionToken', sessionToken, { path: '/' });
-        setCookies('username', username, { path: '/' });
+        setCookies({sessionToken, username});
         console.log("Wow it works");
-        navigation.navigate("Dashboard", { sessionToken: sessionToken, username: username });
+        navigation.navigate("Dashboard");
       } else {
         const { message } = response.data;
         console.log("Login failed:", message);
