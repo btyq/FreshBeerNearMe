@@ -20,7 +20,7 @@ async function connectToMongoDB() {
 connectToMongoDB();
 
 //Specify the database and collection to use
-const db = client.db('UserDB');
+const db = client.db('FreshBearNearMe');
 const collection = db.collection('User');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -38,7 +38,7 @@ app.post('/', async (req, res) => {
     if (result) {
       //Create a session token
       const sessionToken = 'testtoken123';
-      
+
       //Set the session token in a cookie
       res.cookie('sessionToken', sessionToken, { httpOnly: true });
 

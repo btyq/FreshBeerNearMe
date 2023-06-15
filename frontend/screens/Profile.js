@@ -30,9 +30,9 @@ const Profile = () => {
   const [email, setEmail] = useState('');
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [receiveNotification, setReceiveNotification] = useState(false);
-  const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(0);
   const navigation = useNavigation();
-  
+
   useEffect(() => {
     if (progress >= 0) {
         // navigate to the Feed Screen

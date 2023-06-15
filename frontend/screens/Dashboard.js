@@ -28,12 +28,12 @@ const Button = (props) => {
 };
 
 const Dashboard = ({ navigation, route }) => {
-  const { sessionToken, username } = route.params;
-  console.log("Username:", username);
-  console.log("Session Token:", sessionToken);
+  //const { sessionToken, username } = route.params;
+  //console.log("Username:", username);
+  //console.log("Session Token:", sessionToken);
   
 // ================================== Functions for different button ==================================
-const handleUpcomingEventsClick = () => {
+  const handleUpcomingEventsClick = () => {
     // Handle click for "Upcoming Events" here
   };
 
@@ -74,7 +74,7 @@ const handleUpcomingEventsClick = () => {
             <View style={styles.grid}>
               <Button
                 title="My Profile"
-                onPress={() => navigation.navigate('Profile', {sessionToken, username})}
+                onPress={() => navigation.navigate('Profile')}
                 color={COLORS.foam}
                 filled
                 style={styles.gridItem}
