@@ -54,7 +54,7 @@ const Signup = ({ navigation }) => {
         Alert.alert("Password Mismatch", "Please make sure your passwords match.");
       } else {
         //Passwords match, send signup request
-        axios.post('http://192.168.1.237:3000/signup', {
+        axios.post('http://192.168.1.116:3000/signup', {
           username: username,
           password: password1,
           email: email,
