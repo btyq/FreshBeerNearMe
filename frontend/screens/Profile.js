@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
 import COLORS from '../constants/colors';
-import { useNavigation } from '@react-navigation/native';
+//import { useNavigation } from '@react-navigation/native';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -30,7 +30,7 @@ const Profile = () => {
   const [email, setEmail] = useState('');
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [receiveNotification, setReceiveNotification] = useState(false);
-  const [progress, setProgress] = useState(0);
+  /*const [progress, setProgress] = useState(0);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const Profile = () => {
         // navigate to the Feed Screen
         navigation.navigate('BottomTabNavigation', { name: 'Feed' })
     }
-}, [progress, navigation])
+}, [progress, navigation])*/
   
 
   const saveChanges = () => {

@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons'; 
 import COLORS from "../constants/colors";
+import { useFocusEffect } from '@react-navigation/native';
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -41,6 +42,7 @@ const Dashboard = ({ navigation, route }) => {
     // Handle click for "Recommended Specialty for You" here
   };
 
+  
 //=====================================================================================================
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
@@ -74,7 +76,7 @@ const Dashboard = ({ navigation, route }) => {
             <View style={styles.grid}>
               <Button
                 title="My Profile"
-                onPress={() => navigation.navigate('Profile')}
+                onPress={() => navigation.navigate('BottomTabNavigation', { screen: 'Profile' })}
                 color={COLORS.foam}
                 filled
                 style={styles.gridItem}
