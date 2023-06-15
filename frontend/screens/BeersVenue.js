@@ -1,24 +1,25 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Octicons } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons'; // Imported to render star ratings
 import { LinearGradient } from 'expo-linear-gradient';
+import COLORS from '../constants/colors';
 
 // Define your custom colors
-const COLORS = {
+/*const COLORS = {
   primary: '#6D4C41',
   secondary: '#DAA520',
   foam: '#F0E68C',
   white: '#FFFFFF',
   black: '#000000',
-};
+};*/
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
-  const textColor = props.filled ? COLORS.white : COLORS.primary;
+  const textColor = props.filled ? COLORS.black : COLORS.primary;
 
   return (
     <TouchableOpacity
@@ -29,7 +30,7 @@ const Button = (props) => {
       }}
       onPress={props.onPress}
     >
-      <Text style={{ fontSize: 12, fontWeight: 'bold', ...{ color: textColor } }}>{props.title}</Text>
+      <Text style={{ fontSize: 12, ...{ color: textColor } }}>{props.title}</Text>
     </TouchableOpacity>
   );
 };
@@ -38,7 +39,7 @@ const Button = (props) => {
 const StarRating = () => (
   <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
     {[1, 2, 3, 4, 5].map((star) => (
-      <MaterialCommunityIcons key={star} name="star" size={20} color={COLORS.secondary} />
+      <MaterialCommunityIcons key={star} name="star" size={20} />
     ))}
   </View>
 );
@@ -53,7 +54,7 @@ const BeersVenue = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.secondary, COLORS.primary]}>
+    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
       <View
         style={{
           flexDirection: 'row',
@@ -70,10 +71,12 @@ const BeersVenue = ({ navigation }) => {
           elevation: 5,
         }}
       >
-        <Text style={{ fontSize: 22, color: COLORS.primary, fontWeight: 'bold' }}>FreshBeer</Text>
-        <Ionicons name="notifications-outline" size={24} color={COLORS.primary} />
+        <Text style={{ fontSize: 20, color: COLORS.black, fontWeight: 'bold' }}>FreshBeer</Text>
+        <View style={{ flexDirection: 'row' }}>
+          <Octicons name="bookmark" size={24} color={COLORS.black} style={{marginRight: 12}}/>
+          <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+        </View>
       </View>
-
       
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
@@ -82,7 +85,7 @@ const BeersVenue = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.secondary}
+                color={COLORS.orange}
                 filled
                 style={styles.longButton}
               />
@@ -93,7 +96,7 @@ const BeersVenue = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.secondary}
+                color={COLORS.orange}
                 filled
                 style={styles.shortButton}
               />
@@ -104,7 +107,7 @@ const BeersVenue = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.secondary}
+                color={COLORS.orange}
                 filled
                 style={styles.shortButton}
               />
@@ -151,34 +154,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    marginTop: 2,
-    paddingHorizontal: 20,
+    //marginTop: 2,
+    marginHorizontal: 20,
   },
   longButton: {
     width: '20%',
-    height: 70,
+    height: 55,
     marginVertical: 0,
-    marginHorizontal: '0%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
+    borderRadius: 50,
+    marginRight: 0,
   },
   shortButton: {
     width: '30%',
-    height: 50,
-    marginVertical: 10,
+    height: 40,
+    marginVertical: 5,
+    borderRadius: 30,
     marginHorizontal: '1%',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
   },
   button: {
-    paddingVertical: 15,
-    borderColor: COLORS.primary,
+    paddingVertical: 10,
+    borderColor: COLORS.black,
     borderWidth: 2,
     borderRadius: 12,
     alignItems: 'center',
@@ -225,8 +220,7 @@ const styles = StyleSheet.create({
   },
   venueTitle: {
     fontSize: 20, 
-    fontWeight: 'bold', 
-    color: COLORS.foam,
+    color: COLORS.black,
   },
 });
 

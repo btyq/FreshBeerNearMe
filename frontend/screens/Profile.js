@@ -2,15 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Octicons } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
-import { Octicons } from '@expo/vector-icons'; 
 import COLORS from '../constants/colors';
 import { useNavigation } from '@react-navigation/native';
 
 const Button = (props) => {
-  const filledBgColor = props.color || COLORS.black;
-  const outlinedColor = COLORS.black;
+  const filledBgColor = props.color || COLORS.primary;
+  const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
   const textColor = props.filled ? COLORS.black : COLORS.white;
 
@@ -33,28 +32,14 @@ const Profile = () => {
   const [receiveNotification, setReceiveNotification] = useState(false);
   const [progress, setProgress] = useState(0)
   const navigation = useNavigation();
-
-  useEffect(() => {
-      const intervalId = setInterval(() => {
-          setProgress((prevProgress) => {
-              if (prevProgress >= 1) {
-                  clearInterval(intervalId)
-                  return prevProgress
-              }
-
-              return prevProgress + 0.1
-          })
-      }, 1000)
-
-      return () => clearInterval(intervalId)
-  }, [])
   
   useEffect(() => {
-    if (progress >= 1) {
+    if (progress >= 0) {
         // navigate to the Feed Screen
-        navigation.navigate('BottomTabNavigation', { name: 'Profile' })
+        navigation.navigate('BottomTabNavigation', { name: 'Feed' })
     }
 }, [progress, navigation])
+  
 
   const saveChanges = () => {
     // Implement logic to save changes here
@@ -218,7 +203,7 @@ const Profile = () => {
           <Button
             title="Save Changes"
             onPress={saveChanges}
-            color={COLORS.yellow}
+            color={COLORS.orange}
             filled
             style={{
               marginTop: 10,
@@ -263,10 +248,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     paddingVertical: 10,
     alignItems: 'center',
+    borderColor: COLORS.black,
     borderRadius: 20,
     width: '50%',
     alignSelf: 'center',
-    borderColor: COLORS.black
   },
 });
 
