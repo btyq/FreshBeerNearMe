@@ -23,7 +23,9 @@ connectToMongoDB();
 const db = client.db('UserDB');
 const collection = db.collection('User');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 //Route to verify username and password
 app.post('/', async (req, res) => {
@@ -34,7 +36,16 @@ app.post('/', async (req, res) => {
     const result = await collection.findOne({ username, password });
 
     if (result) {
-      res.json({ success: true, username: result.username, id: result.password });
+      //Create a session token
+      const sessionToken = 'testtoken123';
+      
+      //Set the session token in a cookie
+      res.cookie('sessionToken', sessionToken, { httpOnly: true });
+
+      //Set the username in a separate cookie
+      res.cookie('username', result.username, { httpOnly: true });
+
+      res.json({ success: true, username: result.username, password: result.password });
     } else {
       res.json({ success: false, message: 'Invalid username or password' });
     }

@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons'; 
 import COLORS from "../constants/colors";
+import { useCookies } from 'react-cookie';
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -27,7 +28,15 @@ const Button = (props) => {
   );
 };
 
-const Dashboard = ({ navigation }) => {
+// ================================== Functions for different button ==================================
+
+
+//=====================================================================================================
+const Dashboard = ({ navigation, route }) => {
+  const { sessionToken, username } = route.params;
+  console.log("Username:", username);
+  console.log("Session Token:", sessionToken);
+
   const handleUpcomingEventsClick = () => {
     // Handle click for "Upcoming Events" here
   };

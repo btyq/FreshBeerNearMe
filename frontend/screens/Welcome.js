@@ -6,6 +6,7 @@ import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
 import axios from 'axios';
+import { useCookies } from 'react-cookie';
 
 //CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -31,11 +32,13 @@ const Welcome = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
+  const [cookies, setCookie] = useCookies(['sessionToken']);
 
-  //Axios get function for login
+//Axios get function for login
 const handleLogin = async () => {
+  //Storing user's session throughout the app
   try {
-    const response = await axios.post('http://192.168.1.133:3000', {
+    const response = await axios.post('http://192.168.1.116:3000', {
       username: username,
       password: password
     });
@@ -44,9 +47,13 @@ const handleLogin = async () => {
     if (response.data.success) {
       //Login successful
       const { username, password } = response.data;
-      //Do something with the username and password
+      //Store the session token in a cookie
+      const sessionToken = 'testtoken123';
+      setCookie('sessionToken', sessionToken, { path: '/'});
+      setCookie('username', username, { path: '/'});
       console.log("Wow it works");
-      navigation.navigate("Dashboard")
+      navigation.navigate("Dashboard", { sessionToken: sessionToken, username: username });
+      
     } else {
       //Login failed
       const { message } = response.data;
