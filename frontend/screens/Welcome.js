@@ -5,6 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
+import { SelectList } from 'react-native-dropdown-select-list';
 import axios from 'axios';
 import { useCookies } from 'react-cookie';
 
@@ -33,6 +34,8 @@ const Welcome = ({ navigation }) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
   const [cookies, setCookie] = useCookies(['sessionToken']);
+  const [selected, setSelected] = React.useState("");
+  const data = [{key:'1',value:'User'}, {key:'2',value:'Venue Owner'}, {key:'3',value:'Admin'}];
 
 //Axios get function for login
 const handleLogin = async () => {
@@ -158,18 +161,30 @@ const handleLogin = async () => {
           </View>
           <View style={{
             flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             marginVertical: 6
           }}>
-            <CheckBox 
-            style={{marginRight: 8}}
-            value={isChecked}
-            onValueChange={setIsChecked}
-            color={isChecked ? COLORS.primary : undefined}>
-            </CheckBox>
-
-            <Text>Remember Me</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <CheckBox 
+                style={{ marginRight: 8 }}
+                value={isChecked}
+                onValueChange={setIsChecked}
+                color={isChecked ? COLORS.primary : undefined}
+              />
+              <Text>Remember Me</Text>
+            </View>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Text style={{ marginRight: 8 }}>Login As</Text>
+              <SelectList
+                data={data}
+                value={selected}
+                setSelected={setSelected}
+                boxStyles={{ borderRadius: 0 }}
+                defaultOption={{ key: '1', value: 'User' }}
+              />
+            </View>
           </View> 
-
           <View style={{
             flexDirection: "row",
             marginVertical: 6
