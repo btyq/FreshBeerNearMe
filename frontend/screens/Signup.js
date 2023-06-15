@@ -43,17 +43,17 @@ const Signup = ({ navigation }) => {
 
   const handleSignUp = () => {
     if (!username) {
-      //Username is missing
+      // Username is missing
       Alert.alert("Missing Username", "Please enter your username.");
     } else if (!mobileNumber) {
-      //Mobile number is missing
+      // Mobile number is missing
       Alert.alert("Missing Mobile Number", "Please enter your mobile number.");
     } else if (isChecked) {
       if (password1 !== password2) {
-        //Passwords do not match
+        // Passwords do not match
         Alert.alert("Password Mismatch", "Please make sure your passwords match.");
       } else {
-        //Passwords match, send signup request
+        // Passwords match, send signup request
         axios.post('http://192.168.1.116:3000/signup', {
           username: username,
           password: password1,
@@ -61,18 +61,32 @@ const Signup = ({ navigation }) => {
           mobileNumber: mobileNumber
         })
           .then((response) => {
-            //Handle success response
-            Alert.alert("Account Signup Success", "Your account has been successfully created!");
-            console.log("Frontend is working");
+            if (response.data.success) {
+              // Handle success response
+              Alert.alert("Account Signup Success", "Your account has been successfully created!");
+              console.log("Account signup success");
+              navigation.navigate('Welcome');
+            } else {
+              // Display specific error message based on response
+              if (response.data.message === 'Username already exists') {
+                Alert.alert("Username is Taken", "Please choose a different username.");
+              } else if (response.data.message === 'Email already exists') {
+                Alert.alert("Email is Taken", "Please use a different email address.");
+              } else if (response.data.message === 'Mobile number already exists') {
+                Alert.alert("Mobile Number is Taken", "Please use a different mobile number.");
+              } else {
+                Alert.alert("Signup Error", "An error occurred during signup.");
+              }
+            }
           })
           .catch((error) => {
-            //Handle error response
+            // Handle error response
             console.error(error);
             Alert.alert("Signup Error", "An error occurred during signup.");
           });
       }
     } else {
-      //Age restriction not met
+      // Age restriction not met
       Alert.alert("Age Restriction", `You must be over ${ageRestriction} years old to sign up.`);
     }
   };

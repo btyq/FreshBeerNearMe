@@ -35,7 +35,25 @@ app.post('/signup', async (req, res) => {
   const { username, password, email, mobileNumber, receiveNotification } = req.body;
 
   try {
-    //Insert the user data into the MongoDB collection
+    // Check if the username already exists
+    const existingUsername = await collection.findOne({ username });
+    if (existingUsername) {
+      return res.json({ success: false, message: 'Username already exists' });
+    }
+
+    // Check if the email already exists
+    const existingEmail = await collection.findOne({ email });
+    if (existingEmail) {
+      return res.json({ success: false, message: 'Email already exists' });
+    }
+
+    // Check if the mobile number already exists
+    const existingMobileNumber = await collection.findOne({ mobileNumber });
+    if (existingMobileNumber) {
+      return res.json({ success: false, message: 'Mobile number already exists' });
+    }
+
+    // Insert the user data into the MongoDB collection
     const result = await collection.insertOne({
       username,
       password,

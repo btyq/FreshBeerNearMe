@@ -41,7 +41,7 @@ const Welcome = ({ navigation }) => {
 const handleLogin = async () => {
   //Storing user's session throughout the app
   try {
-    const response = await axios.post('http://192.168.1.133:3000', {
+    const response = await axios.post('http://192.168.1.116:3000', {
       username: username,
       password: password
     });
