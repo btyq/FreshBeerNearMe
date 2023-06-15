@@ -29,9 +29,9 @@ const Button = (props) => {
 };
 
 const Dashboard = ({ navigation, route }) => {
-  //const { sessionToken, username } = route.params;
-  //console.log("Username:", username);
-  //console.log("Session Token:", sessionToken);
+const { sessionToken, username } = route.params;
+console.log("Username:", username);
+console.log("Session Token:", sessionToken);
   
 // ================================== Functions for different button ==================================
   const handleUpcomingEventsClick = () => {

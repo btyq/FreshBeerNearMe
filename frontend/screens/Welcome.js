@@ -7,67 +7,58 @@ import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
 import { SelectList } from 'react-native-dropdown-select-list';
 import axios from 'axios';
-import { useCookies } from 'react-cookie';
+import { useCookies } from "../CookieContext";
 
-//CODES TO STYLE BUTTON
+
+// CODES TO STYLE BUTTON
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.yellow;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
   const textColor = props.filled ? COLORS.white : COLORS.primary;
-  
-return (
-  <TouchableOpacity 
-  style={{...styles.button,
-          ...{backgroundColor: bgColor},
-          ...props.style}}
-  onPress={props.onPress}>
-      <Text style={{fontSize: 15, ... { color: textColor }}}>{props.title}</Text>
-  </TouchableOpacity>
-)
-}
 
-//CODES FOR THE MAIN PAGE
+  return (
+    <TouchableOpacity
+      style={{ ...styles.button, ...{ backgroundColor: bgColor }, ...props.style }}
+      onPress={props.onPress}
+    >
+      <Text style={{ fontSize: 15, ...{ color: textColor } }}>{props.title}</Text>
+    </TouchableOpacity>
+  );
+};
+
+// CODES FOR THE MAIN PAGE
 const Welcome = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [isChecked, setIsChecked] = useState(false);
-  const [cookies, setCookie] = useCookies(['sessionToken']);
-  const [selected, setSelected] = React.useState("");
+  const { setCookies } = useCookies();
+  const [selected, setSelected] = useState("");
   const data = [{key:'1',value:'User'}, {key:'2',value:'Venue Owner'}, {key:'3',value:'Admin'}];
 
-//Axios get function for login
-const handleLogin = async () => {
-  //Storing user's session throughout the app
-  try {
-    const response = await axios.post('http://192.168.1.116:3000', {
-      username: username,
-      password: password
-    });
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://192.168.1.116:3000', {
+        username: username,
+        password: password
+      });
 
-    //Process the response
-    if (response.data.success) {
-      //Login successful
-      const { username, password } = response.data;
-      //Store the session token in a cookie
-      const sessionToken = 'testtoken123';
-      setCookie('sessionToken', sessionToken, { path: '/'});
-      setCookie('username', username, { path: '/'});
-      console.log("Wow it works");
-      navigation.navigate("Dashboard", { sessionToken: sessionToken, username: username });
-      
-    } else {
-      //Login failed
-      const { message } = response.data;
-      //Display an error message
-      console.log("Login failed:", message);
+      if (response.data.success) {
+        const { username, password } = response.data;
+        const sessionToken = 'testtoken123';
+        setCookies('sessionToken', sessionToken, { path: '/' });
+        setCookies('username', username, { path: '/' });
+        console.log("Wow it works");
+        navigation.navigate("Dashboard", { sessionToken: sessionToken, username: username });
+      } else {
+        const { message } = response.data;
+        console.log("Login failed:", message);
+      }
+    } catch (error) {
+      console.log("An error occurred:", error.message);
     }
-  } catch (error) {
-    //Handle error
-    console.log("An error occurred:", error.message);
-  }
-};
+  };
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
@@ -174,17 +165,18 @@ const handleLogin = async () => {
               />
               <Text>Remember Me</Text>
             </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Text style={{ marginRight: 8 }}>Login As</Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', position: 'relative', zIndex: 1 }}>
               <SelectList
                 data={data}
                 value={selected}
                 setSelected={setSelected}
-                boxStyles={{ borderRadius: 0 }}
+                boxStyles={{ borderRadius: 0, position: 'absolute', right: 8 }}
+                dropdownStyles={{ position: 'absolute', top: '100%', right: 0 }}
                 defaultOption={{ key: '1', value: 'User' }}
+                search={false}
               />
             </View>
-          </View> 
+          </View>
           <View style={{
             flexDirection: "row",
             marginVertical: 6
@@ -206,6 +198,7 @@ const handleLogin = async () => {
             style={{
               marginTop: 10,
               marginBottom: 4,
+              zIndex: -5,
             }}>
           </Button>
 
@@ -217,6 +210,7 @@ const handleLogin = async () => {
             style={{
               marginTop: 10,
               marginBottom: 4,
+              zIndex: -5,
             }}>
           </Button>
 
