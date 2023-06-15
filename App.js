@@ -2,13 +2,11 @@ import * as React from "react";
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-//import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Dashboard, Signup, Welcome, Profile, BeersVenue } from "./frontend/screens";
 import { AdminLogin, ManageUsers } from "./frontend/components";
+import BottomTabNavigation from './frontend/navigation/BottomTabNavigation'
 
 const Stack = createNativeStackNavigator();
-
-//const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
@@ -21,6 +19,13 @@ export default function App() {
         <Stack.Screen name="BeersVenue" component={BeersVenue} options={{headerShown:false}}/>
         <Stack.Screen name="AdminLogin" component={AdminLogin} options={{headerShown:false}}/>
         <Stack.Screen name="ManageUsers" component={ManageUsers} options={{headerShown:false}}/>
+        <Stack.Screen
+          name="BottomTabNavigation"
+          component={BottomTabNavigation}
+          options={{
+              headerShown: false,
+          }}
+      />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
 import { Octicons } from '@expo/vector-icons'; 
 import COLORS from '../constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.black;
@@ -25,14 +26,35 @@ const Button = (props) => {
   );
 };
 
-
-
-
-const Profile = ({ navigation }) => {
+const Profile = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [receiveNotification, setReceiveNotification] = useState(false);
+  const [progress, setProgress] = useState(0)
+  const navigation = useNavigation();
+
+  useEffect(() => {
+      const intervalId = setInterval(() => {
+          setProgress((prevProgress) => {
+              if (prevProgress >= 1) {
+                  clearInterval(intervalId)
+                  return prevProgress
+              }
+
+              return prevProgress + 0.1
+          })
+      }, 1000)
+
+      return () => clearInterval(intervalId)
+  }, [])
+  
+  useEffect(() => {
+    if (progress >= 1) {
+        // navigate to the Feed Screen
+        navigation.navigate('BottomTabNavigation', { name: 'Profile' })
+    }
+}, [progress, navigation])
 
   const saveChanges = () => {
     // Implement logic to save changes here
@@ -125,7 +147,7 @@ const Profile = ({ navigation }) => {
               }}>
 
                 <TextInput
-                  value={username}
+                  value={email}
                   onChangeText={setEmail}
                   placeholder='Email'
                   placeholderTextColor={COLORS.black}

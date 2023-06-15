@@ -35,7 +35,7 @@ const Welcome = ({ navigation }) => {
   //Axios get function for login
 const handleLogin = async () => {
   try {
-    const response = await axios.post('http://192.168.1.237:3000', {
+    const response = await axios.post('http://192.168.1.133:3000', {
       username: username,
       password: password
     });
