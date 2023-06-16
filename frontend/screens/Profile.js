@@ -5,6 +5,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
 import COLORS from '../constants/colors';
+import { useCookies} from "../CookieContext";
+import  axios  from "axios";  
 //import { useNavigation } from '@react-navigation/native';
 
 const Button = (props) => {
@@ -25,24 +27,64 @@ const Button = (props) => {
   );
 };
 
-const Profile = () => {
+const Profile = ( {navigation} ) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
+  const [mobileNumber, setMobileNumber] = useState('');
+  const [password, setPassword] = useState('');
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [receiveNotification, setReceiveNotification] = useState(false);
-  /*const [progress, setProgress] = useState(0);
-  const navigation = useNavigation();
+  const { cookies } = useCookies();
 
   useEffect(() => {
-    if (progress >= 0) {
-        // navigate to the Feed Screen
-        navigation.navigate('BottomTabNavigation', { name: 'Feed' })
-    }
-}, [progress, navigation])*/
-  
+    const sessionToken = cookies.sessionToken;
+    const username = cookies.username;
+    console.log(sessionToken);
+    console.log(username);
 
-  const saveChanges = () => {
-    // Implement logic to save changes here
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.post('http://192.168.1.116:3000/getUserData', { username });
+
+        const userData = response.data;
+        const { email, mobileNumber, password, receiveNotification } = userData;
+
+        setUsername(username);
+        setEmail(email);
+        setMobileNumber(mobileNumber);
+        setPassword(password);
+        setReceiveNotification(receiveNotification)
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+  
+  //Function for save changes button
+  const saveChanges = async () => {
+    try {
+      const newData = {
+        // Update the desired fields here
+        // For example, if you want to update the email and mobileNumber:
+        email: 'newemail@example.com',
+        mobileNumber: '1234567890',
+        // Add other fields if needed
+      };
+  
+      // Make a POST request to the /updateProfile endpoint with the new data
+      const response = await axios.post('http://192.168.1.116:3000/editProfile', newData);
+  
+      // Handle the response
+      if (response.data.success) {
+        console.log('Profile updated successfully');
+      } else {
+        console.log('Failed to update profile:', response.data.message);
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error.message);
+    }
   };
 
   return (
@@ -143,6 +185,39 @@ const Profile = () => {
                 </TextInput>
               </View>
             </View>
+            
+            <View style={{marginBottom: 8}}>
+              <Text style={{
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  color: COLORS.black,
+                  marginTop: 10
+                }}>Mobile Number</Text>
+
+              <View style={{
+                width: "100%",
+                height: 45,
+                borderColor: COLORS.black,
+                borderWidth: 1,
+                borderRadius: 8,
+                alignItems: "center",
+                justifyContent: "center",
+                paddingLeft: 22,
+                marginTop: 10,
+              }}>
+
+                <TextInput
+                  value={mobileNumber}
+                  onChangeText={setMobileNumber}
+                  placeholder='Mobile Number'
+                  placeholderTextColor={COLORS.black}
+                  keyboardType="default"
+                  style={{
+                    width: "100%"
+                  }}>
+                </TextInput>
+              </View>
+            </View>         
 
             <View style={{ marginBottom: 12 }}>
               <Text style={{
@@ -165,6 +240,8 @@ const Profile = () => {
               }}>
                 <TextInput
                   placeholder='Password'
+                  value={password}
+                  onChangeText={setPassword}
                   placeholderTextColor={COLORS.black}
                   secureTextEntry={!isPasswordShown}
                   style={{

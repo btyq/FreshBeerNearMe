@@ -23,14 +23,24 @@ connectToMongoDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.get('/', (req, res) => {
+  res.send('Server is up');
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+//=======================================All Route Functions=============================================
+
 //Route to verify username and password
 app.post('/', async (req, res) => {
   const { username, password } = req.body;
-  const user = new User(client, "", username, password, "", "", false);
-  await user.login(res, username, password);
+  req.user = new User(client, "", username, password, "", "", false);
+  await req.user.login(res, username, password);
 });
 
-//Route to signup user
+//Route to verify username and password
 app.post('/signup', async (req, res) => {
   const { username, password, email, mobileNumber, receiveNotification } = req.body;
 
@@ -53,8 +63,13 @@ app.post('/signup', async (req, res) => {
       return res.json({ success: false, message: 'Mobile number already exists' });
     }
 
-    // Insert the user data into the MongoDB collection
+    // Retrieve the last user document and get the next userID
+    const lastUser = await collection.find().sort({ userID: -1 }).limit(1).toArray();
+    const nextUserID = lastUser.length > 0 ? lastUser[0].userID + 1 : 1;
+
+    // Insert the user data into the MongoDB collection with the next userID
     const result = await collection.insertOne({
+      userID: nextUserID,
       username,
       password,
       email,
@@ -69,10 +84,54 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-app.get('/', (req, res) => {
-  res.send('Server is up');
+//Route to retrieve user data at userProfile
+app.post('/getUserData', async (req, res) => {
+  const { username } = req.body;
+
+  try {
+    // Find the user document that matches the provided username
+    const user = await collection.findOne({ username });
+    if (user) {
+      // Extract the necessary data from the user document
+      const { email, mobileNumber, password, receiveNotification } = user;
+
+      // Send the user data as the response
+      res.json({ success: true, email, mobileNumber, password, receiveNotification });
+    } else {
+      res.json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error retrieving user data:', error);
+    res.status(500).json({ success: false, message: 'An error occurred while retrieving user data' });
+  }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+//Route to edit user's profile
+app.post('/editProfile', async (req, res) => {
+  try {
+    // Retrieve the User object from the request object
+    const user = req.user;
+    console.log(req.body.email);
+    console.log(req.body.mobileNumber);
+    console.log(req.body.password);
+
+    if (user) {
+      // Call the editProfile function on the User object to update the profile
+      const newData = {
+        username: user.username,
+        email: req.body.email,
+        mobileNumber: req.body.mobileNumber,
+        password: req.password
+      };
+
+      await user.editProfile(res, newData);
+    } else {
+      res.json({ success: false, message: 'User not found' });
+    }
+  } catch (error) {
+    console.error('Error updating profile:', error);
+    res.status(500).json({ success: false, message: 'An error occurred while updating the profile' });
+  }
 });
+
+//===================================================================================================================
