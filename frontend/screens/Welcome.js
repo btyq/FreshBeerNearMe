@@ -259,7 +259,7 @@ const Welcome = ({ navigation }) => {
                 flexDirection: 'row',
                 height: 52,
                 borderWidth: 1,
-                borderColor: COLORS.grey,
+                borderColor: COLORS.black,
                 marginRight: 4,
                 borderRadius: 10,
                 paddingHorizontal: 15, // Add horizontal padding to create space
@@ -285,7 +285,7 @@ const Welcome = ({ navigation }) => {
                   flexDirection: 'row',
                   height: 52,
                   borderWidth: 1,
-                  borderColor: COLORS.grey,
+                  borderColor: COLORS.black,
                   marginRight: 4,
                   borderRadius: 10,
                   paddingHorizontal: 10, // Add horizontal padding to create space
@@ -311,7 +311,7 @@ const Welcome = ({ navigation }) => {
                 flexDirection: 'row',
                 height: 52,
                 borderWidth: 1,
-                borderColor: COLORS.grey,
+                borderColor: COLORS.black,
                 marginRight: 4,
                 borderRadius: 10,
                 paddingHorizontal: 10, // Add horizontal padding to create space

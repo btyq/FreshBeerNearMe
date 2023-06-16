@@ -5,18 +5,19 @@ import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
+import COLORS from "../constants/colors";
 
 //Define your custom colors
-const COLORS = {
+/*const COLORS = {
   primary: '#6D4C41', // Dark Brown color (resembles dark craft beer)
   secondary: '#DAA520', // Golden color (resembles light craft beer)
   white: '#FFFFFF',
   black: '#000000',
-};
+};*/
 
 // Button component
 const Button = (props) => {
-  const filledBgColor = props.color || COLORS.primary;
+  const filledBgColor = props.color || COLORS.black;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
   const textColor = props.filled ? COLORS.white : COLORS.primary;
@@ -93,7 +94,7 @@ const Signup = ({ navigation }) => {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <LinearGradient style={{ flex: 1 }} colors={[COLORS.secondary, COLORS.primary]}>
+      <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
         <ScrollView style={{ flex: 1, marginHorizontal: 0 }} contentContainerStyle={{ padding: 0 }}>
           <View style={{ flex: 1, marginHorizontal: 22 }}>
             <View style={{ marginVertical: 22 }}>
@@ -323,7 +324,7 @@ const Signup = ({ navigation }) => {
                 color={isChecked ? COLORS.black : undefined}
               />
 
-              <Text style={{ color: COLORS.black }}>I am above 18.</Text>
+              <Text style={{ color: COLORS.black }}>I am above 18</Text>
             </View>
 
             <Button
@@ -375,18 +376,18 @@ const Signup = ({ navigation }) => {
                   borderWidth: 1,
                   borderColor: COLORS.black,
                   marginRight: 4,
-                  borderRadius: 10
+                  borderRadius: 10,
                 }}>
                 <Image
                   source={require("../assets/facebook.png")}
                   style={{
-                    height: 36,
-                    width: 36,
-                    marginRight: 8
+                    height: 26,
+                    width: 26,
+                    marginRight: 4
                   }}
                   resizeMode='contain'
                 />
-                <Text style={{ color: COLORS.black }}>Facebook</Text>
+                <Text>Facebook</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -405,13 +406,13 @@ const Signup = ({ navigation }) => {
                 <Image
                   source={require("../assets/google.png")}
                   style={{
-                    height: 36,
-                    width: 36,
+                    height: 26,
+                    width: 26,
                     marginRight: 8
                   }}
                   resizeMode='contain'
                 />
-                <Text style={{ color: COLORS.black }}>Google</Text>
+                <Text>Google</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
@@ -436,7 +437,7 @@ const Signup = ({ navigation }) => {
                   }}
                   resizeMode='contain'
                 />
-                <Text style={{ color: COLORS.black }}>Email</Text>
+                <Text>Email</Text>
               </TouchableOpacity>
             </View>
 
@@ -445,13 +446,13 @@ const Signup = ({ navigation }) => {
               justifyContent: "center",
               marginVertical: 22
             }}>
-              <Text style={{ fontSize: 16, color: COLORS.primary }}>Already have an account?</Text>
+              <Text style={{ fontSize: 16, color: COLORS.black }}>Already have an account?</Text>
               <Pressable
                 onPress={() => navigation.navigate("Login")}>
                 <Text style={{
                   fontSize: 16,
                   textDecorationLine: 'underline',
-                  color: COLORS.primary,
+                  color: COLORS.black,
                   marginLeft: 6
                 }}>Login</Text>
               </Pressable>
@@ -465,10 +466,13 @@ const Signup = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   button: {
-    height: 48,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center",
+    paddingBottom: 16,
+    paddingVertical:10,
+    borderColor: COLORS.primary,
+    borderWidth: 2,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 })
 
