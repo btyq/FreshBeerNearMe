@@ -169,35 +169,35 @@ const Dashboard = ({ navigation }) => {
               </Tab>
               <TabView value={index} onChange={setIndex} animationType="spring">
                 <TabView.Item style={{ width: '100%', padding: 20 }}>
-                  <Card>
+                  <Card containerStyle={styles.cardContainer}>
                     <ImageBackground
                       source={require('../assets/event1.png')}
                       style={styles.cardImage}
-                    >
-                    </ImageBackground>
+                    />
                   </Card>
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%', padding: 20 }}>
-                  <Card>
+                  <Card containerStyle={styles.cardContainer}>
                     <ImageBackground
                       source={require('../assets/event2.png')}
                       style={styles.cardImage}
-                    >
-                    </ImageBackground>
+                    />
                   </Card>
                 </TabView.Item>
                 <TabView.Item style={{ width: '100%', padding: 20 }}>
-                  <Card>
+                  <Card containerStyle={styles.cardContainer}>
                     <ImageBackground
                       source={require('../assets/event3.png')}
                       style={styles.cardImage}
-                    >
-                    </ImageBackground>
+                    />
                   </Card>
                 </TabView.Item>
               </TabView>
             </ThemeProvider>
           </Card>
+        </ScrollView>
+      </SafeAreaView>
+
 
           <Card containerStyle={{ marginTop: 15, color: COLORS.yellow }}>
           <Text style={{ fontSize: 17, color: COLORS.black, marginHorizontal: 22, marginBottom: 5 }}>Recommended Specially for you</Text>
@@ -269,9 +269,7 @@ const Dashboard = ({ navigation }) => {
                 </TabView>
                 </View>
               </ThemeProvider>
-              </Card>
-        </ScrollView>
-      </SafeAreaView>
+          </Card>
     </LinearGradient>
   );
 };
@@ -298,7 +296,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardContainer: {
-    padding: 20,
+    width: '100%',
+    borderRadius: 10,
+    marginBottom: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.5,
+    shadowRadius: 2,
+    elevation: 5,
   },
   card: {
     width: '100%',
@@ -317,11 +322,11 @@ const styles = StyleSheet.create({
   },
   cardImage: {
     width: '100%',
-    height: 150,
+    height: 200,
     resizeMode: 'cover',
     borderRadius: 10,
     overflow: 'hidden',
-  }, 
+  },
   tabContent: {
     width: '100%',
     height: 50, // Adjust the height as per your requirement
