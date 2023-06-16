@@ -201,7 +201,7 @@ const Welcome = ({ navigation }) => {
             </Pressable>
           </View>
 
-          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'center', zIndex: -5 }}>
             <Button
               title="Login"
               onPress={handleLogin}
@@ -241,7 +241,8 @@ const Welcome = ({ navigation }) => {
               flex: 1,
               height: 1,
               backgroundColor: COLORS.black,
-              marginHorizontal: 10
+              marginHorizontal: 10,
+              zIndex: -5
             }}>
             </View>
           </View>

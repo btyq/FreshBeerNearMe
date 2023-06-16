@@ -2,11 +2,10 @@ import React, { useEffect } from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { SafeAreaView, useFocusEffect } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
-import { Octicons } from '@expo/vector-icons'; 
+import { Ionicons, MaterialIcons, Octicons, Entypo } from '@expo/vector-icons';
 import COLORS from "../constants/colors";
 import { useCookies } from "../CookieContext";
-import { Tab, TabView, ThemeProvider } from '@rneui/themed';
+import { Tab, TabView, ThemeProvider, Card } from '@rneui/themed';
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -32,9 +31,7 @@ const Button = (props) => {
 const Dashboard = ({ navigation }) => {
   const { cookies } = useCookies();
   const [index, setIndex] = React.useState(0);
-  const handleTabChange = (tabIndex) => {
-    setIndex(tabIndex);
-  };
+  const [index1, setIndex1] = React.useState(0);
 
   useEffect(() => {
     const sessionToken = cookies.sessionToken;
@@ -84,6 +81,7 @@ const Dashboard = ({ navigation }) => {
           <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
             <Text style={{ fontSize: 26, fontWeight: 'bold', color: COLORS.black }}>Welcome!</Text>
             <View style={styles.grid}>
+              <Card>
               <Button
                 title="My Profile"
                 onPress={() => navigation.navigate('BottomTabNavigation', { screen: 'Profile' })}
@@ -126,82 +124,156 @@ const Dashboard = ({ navigation }) => {
                 filled
                 style={styles.gridItem}
               />
+              </Card>
             </View>
           </View>
-
-          <View style={styles.cardContainer}>
-          <Text style={{ fontSize: 17, color: COLORS.black }}>Upcoming Events</Text>
-            <TouchableOpacity onPress={handleUpcomingEventsClick} >
-            <ThemeProvider
-              theme={{
-                Tab: {
-                  primary: {
-                    backgroundColor: COLORS.foam, // Change the background color here
-                  },
-                },
-              }}
-            >
-              <Tab
-                value={index}
-                onChange={handleTabChange}
-                indicatorStyle={{
-                  backgroundColor: 'white',
-                  height: 3,
-                }}
-                variant="primary"
-              >
-
-                <Tab.Item
-                  title="Recent"
-                  titleStyle={{ fontSize: 12 }}
-                  icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
-                />
-                <Tab.Item
-                  title="favorite"
-                  titleStyle={{ fontSize: 12 }}
-                  icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
-                />
-                <Tab.Item
-                  title="cart"
-                  titleStyle={{ fontSize: 12 }}
-                  icon={{ name: 'cart', type: 'ionicon', color: 'white' }}
-                />
-              </Tab>
-              
-              <TabView value={index} onChange={setIndex} animationType="spring">
-                <TabView.Item style={styles.card}>
-                  <ImageBackground                 
-                    source={require('../assets/event1.png')} 
-                    style={styles.cardImage}
-                  >
-                  </ImageBackground>
-                  <Text style={{ fontSize: 16, color: COLORS.black }}>Event 1</Text>
-                </TabView.Item>
-                <TabView.Item style={styles.card}>
-                  <ImageBackground                 
-                    source={require('../assets/event1.png')} 
-                    style={styles.cardImage}
-                  >
-                  </ImageBackground>
-                  <Text style={{ fontSize: 16, color: COLORS.black }}>Event 2</Text>
-                </TabView.Item>
-                <TabView.Item style={styles.card}>
-                  <ImageBackground                 
-                    source={require('../assets/event1.png')} 
-                    style={styles.cardImage}
-                  >
-                  </ImageBackground>
-                  <Text style={{ fontSize: 16, color: COLORS.black }}>Event 3</Text>
-                </TabView.Item>
-              </TabView>
-
-
-            </ThemeProvider>
-            </TouchableOpacity>
-
-          </View>
         </ScrollView>
-      </SafeAreaView>
+      </SafeAreaView>  
+
+      <Card containerStyle={{ marginTop: 15 }}>
+        <Card.Title>Upcoming Events</Card.Title>
+        <Card.Divider />
+        <ThemeProvider
+          theme={{
+            Tab: {
+              primary: {
+                backgroundColor: COLORS.foam, // Change the background color here
+              },
+            },
+          }}
+        >
+          <Tab
+            value={index}
+            onChange={(e) => setIndex(e)}
+            style={{ marginHorizontal: 20, height: 50 }}
+            indicatorStyle={{
+              backgroundColor: 'white',
+              height: 3,
+            }}
+            variant="primary"
+          >
+            <Tab.Item
+              title="Event 1"
+              titleStyle={{ fontSize: 12 }}
+              icon={<MaterialIcons name="event-available" size={24} color="white" />}
+              style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+            />
+            <Tab.Item
+              title="Event 2"
+              titleStyle={{ fontSize: 12 }}
+              icon={<MaterialIcons name="event-available" size={24} color="white" />}
+              style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+            />
+            <Tab.Item
+              title="Event 3"
+              titleStyle={{ fontSize: 12 }}
+              icon={<MaterialIcons name="event-available" size={24} color="white" />}
+              style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+            />
+          </Tab>
+          <TabView value={index} onChange={setIndex} animationType="spring">
+            <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <Card>
+                <ImageBackground
+                  source={require('../assets/event1.png')}
+                  style={styles.cardImage}
+                >
+                </ImageBackground>
+              </Card>
+            </TabView.Item>
+            <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <Card>
+                <ImageBackground
+                  source={require('../assets/event2.png')}
+                  style={styles.cardImage}
+                >
+                </ImageBackground>
+              </Card>
+            </TabView.Item>
+            <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <Card>
+                <ImageBackground
+                  source={require('../assets/event3.png')}
+                  style={styles.cardImage}
+                >
+                </ImageBackground>
+              </Card>
+            </TabView.Item>
+          </TabView>
+        </ThemeProvider>
+      </Card>
+
+      <Card containerStyle={{ marginTop: 15, color: COLORS.yellow }}>
+      <Text style={{ fontSize: 17, color: COLORS.black, marginHorizontal: 22, marginBottom: 5 }}>Recommended Specially for you</Text>
+        <ThemeProvider
+          theme={{
+            Tab: {
+              primary: {
+                backgroundColor: COLORS.foam, // Change the background color here
+              },
+            },
+          }}
+        >
+            <Tab
+              value={index1}
+              onChange={(e) => setIndex1(e)}
+              style={{ marginHorizontal: 20, height: 50 }}  
+              indicatorStyle={{
+                backgroundColor: 'white',
+                height: 3,
+              }}
+              variant="primary"
+            >
+              <Tab.Item
+                title="Venue 1"
+                titleStyle={{ fontSize: 12 }}
+                icon={<Entypo name="drink" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+              <Tab.Item
+                title="Venue 2"
+                titleStyle={{ fontSize: 12 }}
+                icon={<Entypo name="drink" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+              <Tab.Item
+                title="Venue 3"
+                titleStyle={{ fontSize: 12 }}
+                icon={<Entypo name="drink" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+            </Tab>
+            <View style={styles.cardContainer}>
+            <TabView value={index1} onChange={setIndex1} animationType="spring">
+              <TabView.Item style={{ backgroundColor: 'transparent', width: '100%', padding: 20 }}>
+                <View style={styles.card}>
+                  <ImageBackground
+                    source={require('../assets/event1.png')}
+                    style={styles.cardImage}
+                    >
+                  </ImageBackground>
+                </View>
+              </TabView.Item>
+              <TabView.Item style={{ backgroundColor: 'transparent', width: '100%', padding: 20, }}>
+                <View style={styles.card}>
+                  <ImageBackground
+                    source={require('../assets/event2.png')}
+                    style={styles.cardImage}
+                      >
+                  </ImageBackground>
+                </View>
+              </TabView.Item>
+              <TabView.Item style={{ backgroundColor: 'transparent', width: '100%', padding: 20 }}>
+                  <ImageBackground
+                    source={require('../assets/event3.png')}
+                    style={styles.cardImage}
+                      >
+                  </ImageBackground>
+              </TabView.Item>
+            </TabView>
+            </View>
+          </ThemeProvider>
+          </Card>
     </LinearGradient>
   );
 };
@@ -243,16 +315,35 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 5,
-    marginBottom: 5,
+    //marginBottom: 5,
   },
   cardImage: {
     width: '100%',
-    height: '100%',
+    height: 150,
     resizeMode: 'cover',
     borderRadius: 10,
     overflow: 'hidden',
   }, 
-
+  tabContent: {
+    width: '100%',
+    height: 50, // Adjust the height as per your requirement
+  },
+  tabView: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  tabViewItem: {
+    //backgroundColor: 'transparent',
+    width: '100%',
+    height: '100%',
+  },
 });
 
 export default Dashboard;
