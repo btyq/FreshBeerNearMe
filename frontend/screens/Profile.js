@@ -6,7 +6,7 @@ import { Ionicons, Octicons } from '@expo/vector-icons';
 import CheckBox from 'expo-checkbox';
 import COLORS from '../constants/colors';
 import { useCookies} from "../CookieContext";
-import  axios  from "axios";  
+import axios from "axios"; 
 //import { useNavigation } from '@react-navigation/native';
 
 const Button = (props) => {
@@ -66,19 +66,26 @@ const Profile = ( {navigation} ) => {
   const saveChanges = async () => {
     try {
       const newData = {
-        // Update the desired fields here
-        // For example, if you want to update the email and mobileNumber:
-        email: 'newemail@example.com',
-        mobileNumber: '1234567890',
-        // Add other fields if needed
+        username: username,
+        password: password,
+        email: email,
+        mobileNumber: mobileNumber
       };
-  
       // Make a POST request to the /updateProfile endpoint with the new data
       const response = await axios.post('http://10.0.2.2:3000/editProfile', newData);
   
       // Handle the response
       if (response.data.success) {
         console.log('Profile updated successfully');
+        
+        // Update the cookies.username value
+        if (response.data.success) {
+          const updatedUsername = response.data.username;
+          // Update the value in the cookies
+          const updatedCookies = { ...cookies, username: updatedUsername };
+          // Update the context with the new cookies
+          setCookies(updatedCookies);
+        }
       } else {
         console.log('Failed to update profile:', response.data.message);
       }

@@ -44,23 +44,31 @@ class User {
     }
   }
 
-  async editProfile(res, newData) {
+  async editProfile(res, oldData, newData) {
     try {
       const db = this.client.db('FreshBearNearMe');
       const collection = db.collection('User');
   
-      // Update the user's profile in the database
-      const result = await collection.updateOne(
-        { userID: this.userID },
-        { $set: newData }
-      );
+      // Check if the old data exists in the database
+      const existingUser = await collection.findOne(oldData);
   
-      if (result.modifiedCount > 0) {
-        // Profile update successful
-        res.json({ success: true, message: 'Profile updated successfully' });
+      if (existingUser) {
+        // Update the user's profile in the database
+        const result = await collection.updateOne(
+          oldData,
+          { $set: newData }
+        );
+  
+        if (result.modifiedCount > 0) {
+          // Profile update successful
+          res.json({ success: true, message: 'Profile updated successfully' });
+        } else {
+          // No changes made
+          res.json({ success: false, message: 'No changes made to the profile' });
+        }
       } else {
-        // No matching user found or no changes made
-        res.json({ success: false, message: 'Profile update failed' });
+        // User not found in the database
+        res.json({ success: false, message: 'User not found' });
       }
     } catch (error) {
       console.error('Error during profile update:', error);
