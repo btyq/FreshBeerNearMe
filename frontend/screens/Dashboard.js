@@ -52,225 +52,220 @@ const Dashboard = ({ navigation }) => {
   
 //=====================================================================================================
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 10,
-          paddingTop: 30,
-          backgroundColor: COLORS.foam,
-          height: 70,
-          shadowColor: COLORS.black,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.3,
-          shadowRadius: 3,
-          elevation: 5,
-        }}
-      >
-        <Text style={{ fontSize: 20, color: COLORS.black, fontWeight: 'bold' }}>FreshBeer</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Octicons name="bookmark" size={24} color={COLORS.black} style={{marginRight: 12}}/>
-          <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
-        </View>
-      </View>
-
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
-          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
-            <Text style={{ fontSize: 26, fontWeight: 'bold', color: COLORS.black }}>Welcome!</Text>
-            <View style={styles.grid}>
-              <Button
-                title="My Profile"
-                onPress={() => navigation.navigate('BottomTabNavigation', { screen: 'Profile' })}
-                color={COLORS.foam}
-                filled
-                style={styles.gridItem}
-              />
-              <Button
-                title="Beers & Venues"
-                onPress={() => navigation.navigate('BeersVenue')}
-                color={COLORS.foam}
-                filled
-                style={styles.gridItem}
-              />
-              <Button
-                title="Social & Community"
-                onPress={() => navigation.navigate('Social')}
-                color={COLORS.foam}
-                filled
-                style={styles.gridItem}
-              />
-              <Button
-                title="Feedback & Requests"
-                onPress={() => navigation.navigate('Feedback')}
-                color={COLORS.foam}
-                filled
-                style={styles.gridItem}
-              />
-              <Button
-                title="My Journal & Achievements"
-                onPress={() => navigation.navigate('Journal')}
-                color={COLORS.foam}
-                filled
-                style={styles.gridItem}
-              />
-              <Button
-                title="My Wishlist"
-                onPress={() => navigation.navigate('Wishlist')}
-                color={COLORS.foam}
-                filled
-                style={styles.gridItem}
-              />
-            </View>
+    <ScrollView>
+      <LinearGradient style={{ flexGrow:1 }} colors={[COLORS.white, COLORS.yellow]}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: 10,
+            paddingTop: 30,
+            backgroundColor: COLORS.foam,
+            height: 70,
+            shadowColor: COLORS.black,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.3,
+            shadowRadius: 3,
+            elevation: 5,
+          }}
+        >
+          <Text style={{ fontSize: 20, color: COLORS.black, fontWeight: 'bold' }}>FreshBeer</Text>
+          <View style={{ flexDirection: 'row' }}>
+            <Octicons name="bookmark" size={24} color={COLORS.black} style={{marginRight: 12}}/>
+            <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
           </View>
+        </View>
+        
+        <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
+          <Text style={{ fontSize: 26, fontWeight: 'bold', color: COLORS.black }}>Welcome!</Text>
+          <View style={styles.grid}>
+            <Button
+              title="My Profile"
+              onPress={() => navigation.navigate('BottomTabNavigation', { screen: 'Profile' })}
+              color={COLORS.foam}
+              filled
+              style={styles.gridItem}
+            />
+            <Button
+              title="Beers & Venues"
+              onPress={() => navigation.navigate('BeersVenue')}
+              color={COLORS.foam}
+              filled
+              style={styles.gridItem}
+            />
+            <Button
+              title="Social & Community"
+              onPress={() => navigation.navigate('Social')}
+              color={COLORS.foam}
+              filled
+              style={styles.gridItem}
+            />
+            <Button
+              title="Feedback & Requests"
+              onPress={() => navigation.navigate('Feedback')}
+              color={COLORS.foam}
+              filled
+              style={styles.gridItem}
+            />
+            <Button
+              title="My Journal & Achievements"
+              onPress={() => navigation.navigate('Journal')}
+              color={COLORS.foam}
+              filled
+              style={styles.gridItem}
+            />
+            <Button
+              title="My Wishlist"
+              onPress={() => navigation.navigate('Wishlist')}
+              color={COLORS.foam}
+              filled
+              style={styles.gridItem}
+            />
+          </View>
+        </View>
 
-          <Card containerStyle={{ marginTop: 5 }}>
-            <Card.Title>Upcoming Events</Card.Title>
-            <Card.Divider />
-            <ThemeProvider
-              theme={{
-                Tab: {
-                  primary: {
-                    backgroundColor: COLORS.foam, // Change the background color here
-                  },
+        <Card containerStyle={{ marginTop: 5 , height: 500, backgroundColor: 'transparent', borderColor: 'transparent'}}>
+          <Card.Title>Upcoming Events</Card.Title>
+          <Card.Divider />
+          <ThemeProvider
+            theme={{
+              Tab: {
+                primary: {
+                  backgroundColor: COLORS.foam, // Change the background color here
                 },
+              },
+            }}
+          >
+            <Tab
+              value={index}
+              onChange={(e) => setIndex(e)}
+              style={{ marginHorizontal: 20, height: 50 }}
+              indicatorStyle={{
+                backgroundColor: 'white',
+                height: 3,
               }}
+              variant="primary"
             >
-              <Tab
-                value={index}
-                onChange={(e) => setIndex(e)}
-                style={{ marginHorizontal: 20, height: 50 }}
-                indicatorStyle={{
-                  backgroundColor: 'white',
-                  height: 3,
-                }}
-                variant="primary"
-              >
-                <Tab.Item
-                  title="Event 1"
-                  titleStyle={{ fontSize: 12 }}
-                  icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                  style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-                />
-                <Tab.Item
-                  title="Event 2"
-                  titleStyle={{ fontSize: 12 }}
-                  icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                  style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-                />
-                <Tab.Item
-                  title="Event 3"
-                  titleStyle={{ fontSize: 12 }}
-                  icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                  style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-                />
-              </Tab>
-              <TabView value={index} onChange={setIndex} animationType="spring">
-                <TabView.Item style={{ width: '100%', padding: 20 }}>
-                  <Card containerStyle={styles.cardContainer}>
-                    <ImageBackground
-                      source={require('../assets/event1.png')}
-                      style={styles.cardImage}
-                    />
-                  </Card>
-                </TabView.Item>
-                <TabView.Item style={{ width: '100%', padding: 20 }}>
-                  <Card containerStyle={styles.cardContainer}>
-                    <ImageBackground
-                      source={require('../assets/event2.png')}
-                      style={styles.cardImage}
-                    />
-                  </Card>
-                </TabView.Item>
-                <TabView.Item style={{ width: '100%', padding: 20 }}>
-                  <Card containerStyle={styles.cardContainer}>
-                    <ImageBackground
-                      source={require('../assets/event3.png')}
-                      style={styles.cardImage}
-                    />
-                  </Card>
-                </TabView.Item>
-              </TabView>
-            </ThemeProvider>
-          </Card>
-        </ScrollView>
-      </SafeAreaView>
-
-
-          <Card containerStyle={{ marginTop: 15, color: COLORS.yellow }}>
-          <Text style={{ fontSize: 17, color: COLORS.black, marginHorizontal: 22, marginBottom: 5 }}>Recommended Specially for you</Text>
-            <ThemeProvider
-              theme={{
-                Tab: {
-                  primary: {
-                    backgroundColor: COLORS.foam, // Change the background color here
-                  },
+              <Tab.Item
+                title="Event 1"
+                titleStyle={{ fontSize: 12 }}
+                icon={<MaterialIcons name="event-available" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+              <Tab.Item
+                title="Event 2"
+                titleStyle={{ fontSize: 12 }}
+                icon={<MaterialIcons name="event-available" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+              <Tab.Item
+                title="Event 3"
+                titleStyle={{ fontSize: 12 }}
+                icon={<MaterialIcons name="event-available" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+            </Tab>
+            <TabView value={index} onChange={setIndex} animationType="spring">
+              <TabView.Item style={{ width: '100%', padding: 20 }}>
+                <Card containerStyle={styles.cardContainer}>
+                  <ImageBackground
+                    source={require('../assets/event1.png')}
+                    style={styles.cardImage}
+                  />
+                </Card>
+              </TabView.Item>
+              <TabView.Item style={{ width: '100%', padding: 20 }}>
+                <Card containerStyle={styles.cardContainer}>
+                  <ImageBackground
+                    source={require('../assets/event2.png')}
+                    style={styles.cardImage}
+                  />
+                </Card>
+              </TabView.Item>
+              <TabView.Item style={{ width: '100%', padding: 20 }}>
+                <Card containerStyle={styles.cardContainer}>
+                  <ImageBackground
+                    source={require('../assets/event3.png')}
+                    style={styles.cardImage}
+                  />
+                </Card>
+              </TabView.Item>
+            </TabView>
+          </ThemeProvider>
+        </Card>
+        
+        <Card containerStyle={{ marginTop: 5 , height: 200, backgroundColor: 'transparent', borderColor: 'transparent'}}>
+          <Card.Title>Upcoming Events</Card.Title>
+          <Card.Divider />
+          <ThemeProvider
+            theme={{
+              Tab: {
+                primary: {
+                  backgroundColor: COLORS.foam, // Change the background color here
                 },
+              },
+            }}
+          >
+            <Tab
+              value={index1}
+              onChange={(e) => setIndex1(e)}
+              style={{ marginHorizontal: 20, height: 50 }}
+              indicatorStyle={{
+                backgroundColor: 'white',
+                height: 3,
               }}
+              variant="primary"
             >
-                <Tab
-                  value={index1}
-                  onChange={(e) => setIndex1(e)}
-                  style={{ marginHorizontal: 20, height: 50 }}  
-                  indicatorStyle={{
-                    backgroundColor: 'white',
-                    height: 3,
-                  }}
-                  variant="primary"
-                >
-                  <Tab.Item
-                    title="Venue 1"
-                    titleStyle={{ fontSize: 12 }}
-                    icon={<Entypo name="drink" size={24} color="white" />}
-                    style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              <Tab.Item
+                title="Venue 1"
+                titleStyle={{ fontSize: 12 }}
+                icon={<MaterialIcons name="event-available" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+              <Tab.Item
+                title="Venue 2"
+                titleStyle={{ fontSize: 12 }}
+                icon={<MaterialIcons name="event-available" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+              <Tab.Item
+                title="Venue 3"
+                titleStyle={{ fontSize: 12 }}
+                icon={<MaterialIcons name="event-available" size={24} color="white" />}
+                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+              />
+            </Tab>
+            <TabView value={index1} onChange={setIndex1} animationType="spring">
+              <TabView.Item style={{ width: '100%', padding: 20 }}>
+                <Card containerStyle={styles.cardContainer}>
+                  <ImageBackground
+                    source={require('../assets/event1.png')}
+                    style={styles.cardImage}
                   />
-                  <Tab.Item
-                    title="Venue 2"
-                    titleStyle={{ fontSize: 12 }}
-                    icon={<Entypo name="drink" size={24} color="white" />}
-                    style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+                </Card>
+              </TabView.Item>
+              <TabView.Item style={{ width: '100%', padding: 20 }}>
+                <Card containerStyle={styles.cardContainer}>
+                  <ImageBackground
+                    source={require('../assets/event2.png')}
+                    style={styles.cardImage}
                   />
-                  <Tab.Item
-                    title="Venue 3"
-                    titleStyle={{ fontSize: 12 }}
-                    icon={<Entypo name="drink" size={24} color="white" />}
-                    style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
+                </Card>
+              </TabView.Item>
+              <TabView.Item style={{ width: '100%', padding: 20 }}>
+                <Card containerStyle={styles.cardContainer}>
+                  <ImageBackground
+                    source={require('../assets/event3.png')}
+                    style={styles.cardImage}
                   />
-                </Tab>
-                <View style={styles.cardContainer}>
-                <TabView value={index1} onChange={setIndex1} animationType="spring">
-                  <TabView.Item style={{ backgroundColor: 'transparent', width: '100%', padding: 20 }}>
-                    <View style={styles.card}>
-                      <ImageBackground
-                        source={require('../assets/event1.png')}
-                        style={styles.cardImage}
-                        >
-                      </ImageBackground>
-                    </View>
-                  </TabView.Item>
-                  <TabView.Item style={{ backgroundColor: 'transparent', width: '100%', padding: 20, }}>
-                    <View style={styles.card}>
-                      <ImageBackground
-                        source={require('../assets/event2.png')}
-                        style={styles.cardImage}
-                          >
-                      </ImageBackground>
-                    </View>
-                  </TabView.Item>
-                  <TabView.Item style={{ backgroundColor: 'transparent', width: '100%', padding: 20 }}>
-                      <ImageBackground
-                        source={require('../assets/event3.png')}
-                        style={styles.cardImage}
-                          >
-                      </ImageBackground>
-                  </TabView.Item>
-                </TabView>
-                </View>
-              </ThemeProvider>
-          </Card>
-    </LinearGradient>
+                </Card>
+              </TabView.Item>
+            </TabView>
+          </ThemeProvider>
+        </Card>
+      </LinearGradient>
+    </ScrollView>  
   );
 };
 
@@ -297,13 +292,12 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '100%',
+    height: 225,
     borderRadius: 10,
     marginBottom: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
+    borderWidth: 0, // Make the border transparent
+    shadowColor: 'transparent', // Make the shadow color transparent
+    elevation: 0, // Remove the elevation (shadow effect)
   },
   card: {
     width: '100%',
