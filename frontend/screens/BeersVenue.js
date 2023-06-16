@@ -40,7 +40,7 @@ const StarRating = () => {
           <Ionicons
             name="star"
             size={20}
-            color={star <= rating ? COLORS.red : COLORS.white}
+            color={star <= rating ? COLORS.foam : COLORS.gray}
           />
         </TouchableOpacity>
       ))}
