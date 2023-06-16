@@ -53,7 +53,7 @@ const Dashboard = ({ navigation }) => {
 //=====================================================================================================
   return (
     <ScrollView>
-      <LinearGradient style={{ flexGrow:1 }} colors={[COLORS.white, COLORS.yellow]}>
+      <LinearGradient style={{ height:900 }} colors={[COLORS.white, COLORS.yellow]}>
         <View
           style={{
             flexDirection: 'row',
@@ -125,7 +125,7 @@ const Dashboard = ({ navigation }) => {
           </View>
         </View>
 
-        <Card containerStyle={{ marginTop: 5 , height: 500, backgroundColor: 'transparent', borderColor: 'transparent'}}>
+        <Card containerStyle={{ marginTop: 5 , height: 280, backgroundColor: 'transparent', borderColor: 'transparent'}}>
           <Card.Title>Upcoming Events</Card.Title>
           <Card.Divider />
           <ThemeProvider
@@ -136,38 +136,9 @@ const Dashboard = ({ navigation }) => {
                 },
               },
             }}
-          >
-            <Tab
-              value={index}
-              onChange={(e) => setIndex(e)}
-              style={{ marginHorizontal: 20, height: 50 }}
-              indicatorStyle={{
-                backgroundColor: 'white',
-                height: 3,
-              }}
-              variant="primary"
-            >
-              <Tab.Item
-                title="Event 1"
-                titleStyle={{ fontSize: 12 }}
-                icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-              />
-              <Tab.Item
-                title="Event 2"
-                titleStyle={{ fontSize: 12 }}
-                icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-              />
-              <Tab.Item
-                title="Event 3"
-                titleStyle={{ fontSize: 12 }}
-                icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-              />
-            </Tab>
+          >            
             <TabView value={index} onChange={setIndex} animationType="spring">
-              <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <TabView.Item style={{ width: '100%', marginTop: -30 }}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
                     source={require('../assets/event1.png')}
@@ -175,7 +146,7 @@ const Dashboard = ({ navigation }) => {
                   />
                 </Card>
               </TabView.Item>
-              <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <TabView.Item style={{ width: '100%', marginTop: -30 }}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
                     source={require('../assets/event2.png')}
@@ -183,7 +154,7 @@ const Dashboard = ({ navigation }) => {
                   />
                 </Card>
               </TabView.Item>
-              <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <TabView.Item style={{ width: '100%', marginTop: -30 }}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
                     source={require('../assets/event3.png')}
@@ -195,7 +166,7 @@ const Dashboard = ({ navigation }) => {
           </ThemeProvider>
         </Card>
         
-        <Card containerStyle={{ marginTop: 5 , height: 200, backgroundColor: 'transparent', borderColor: 'transparent'}}>
+        <Card containerStyle={{ marginTop: 5 , height: 280, backgroundColor: 'transparent', borderColor: 'transparent'}}>
           <Card.Title>Upcoming Events</Card.Title>
           <Card.Divider />
           <ThemeProvider
@@ -207,37 +178,8 @@ const Dashboard = ({ navigation }) => {
               },
             }}
           >
-            <Tab
-              value={index1}
-              onChange={(e) => setIndex1(e)}
-              style={{ marginHorizontal: 20, height: 50 }}
-              indicatorStyle={{
-                backgroundColor: 'white',
-                height: 3,
-              }}
-              variant="primary"
-            >
-              <Tab.Item
-                title="Venue 1"
-                titleStyle={{ fontSize: 12 }}
-                icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-              />
-              <Tab.Item
-                title="Venue 2"
-                titleStyle={{ fontSize: 12 }}
-                icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-              />
-              <Tab.Item
-                title="Venue 3"
-                titleStyle={{ fontSize: 12 }}
-                icon={<MaterialIcons name="event-available" size={24} color="white" />}
-                style={{ paddingHorizontal: 5, marginHorizontal: -5 }}
-              />
-            </Tab>
             <TabView value={index1} onChange={setIndex1} animationType="spring">
-              <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <TabView.Item style={{ width: '100%', marginTop: -30}}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
                     source={require('../assets/event1.png')}
@@ -245,7 +187,7 @@ const Dashboard = ({ navigation }) => {
                   />
                 </Card>
               </TabView.Item>
-              <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <TabView.Item style={{ width: '100%', marginTop: -30}}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
                     source={require('../assets/event2.png')}
@@ -253,7 +195,7 @@ const Dashboard = ({ navigation }) => {
                   />
                 </Card>
               </TabView.Item>
-              <TabView.Item style={{ width: '100%', padding: 20 }}>
+              <TabView.Item style={{ width: '100%', marginTop: -30}}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
                     source={require('../assets/event3.png')}
@@ -291,8 +233,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   cardContainer: {
-    width: '100%',
-    height: 225,
+    height: 50,
     borderRadius: 10,
     marginBottom: 5,
     borderWidth: 0, // Make the border transparent

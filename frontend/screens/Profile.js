@@ -84,7 +84,7 @@ const Profile = ( {navigation} ) => {
           // Update the value in the cookies
           const updatedCookies = { ...cookies, username: updatedUsername };
           // Update the context with the new cookies
-          setCookies(updatedCookies);
+          //setCookies(updatedCookies);
         }
       } else {
         console.log('Failed to update profile:', response.data.message);
