@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
@@ -27,20 +27,20 @@ const Button = (props) => {
 };
 
 const StarRating = () => {
-  const [rating, setRating] = React.useState(0);
+  const [rating, setRating] = React.useState(4);
 
   const handleRating = (value) => {
     setRating(value);
   };
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.yellow, marginTop: -7  }}>
       {[1, 2, 3, 4, 5].map((star) => (
         <TouchableOpacity key={star} onPress={() => handleRating(star)}>
           <Ionicons
             name="star"
             size={20}
-            color={star <= rating ? COLORS.foam : COLORS.gray}
+            color={star <= rating ? COLORS.foam : COLORS.grey}
           />
         </TouchableOpacity>
       ))}
@@ -122,7 +122,9 @@ const BeersVenue = ({ navigation }) => {
             <TouchableOpacity onPress={handleVenue1Click} style={styles.clickableSection}>
               <View style={styles.venueContainer}>
                 <Text style={styles.venueTitle}>Venue 1</Text>
-                <StarRating />
+                <View style={styles.starRatingContainer}>
+                  <StarRating />
+                </View>
               </View>
               <View style={styles.card}>
                 <ImageBackground
@@ -135,7 +137,9 @@ const BeersVenue = ({ navigation }) => {
             <TouchableOpacity onPress={handleVenue2Click} style={styles.clickableSection}>
               <View style={styles.venueContainer}>
                 <Text style={styles.venueTitle}>Venue 2</Text>
-                <StarRating />
+                <View style={styles.starRatingContainer}>
+                  <StarRating />
+                </View>
               </View>
               <View style={styles.card}>
                 <ImageBackground
@@ -218,10 +222,24 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 10,
+    backgroundColor: COLORS.yellow,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    height: 50, // adjust the height as per your requirement
+    width: '105%', // adjust the width as per your requirement
+    marginLeft: -10, // add left margin to move the container to the left
   },
   venueTitle: {
     fontSize: 20,
     color: COLORS.black,
+  },
+  starRatingContainer: {
+    backgroundColor: COLORS.yellow,
+    borderRadius: 10,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
   },
 });
 
