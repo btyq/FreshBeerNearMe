@@ -33,11 +33,26 @@ app.listen(port, () => {
 
 //=======================================All Route Functions=============================================
 
+// Custom middleware to store 'user' object in a global variable
+let globalUser = null;
+app.use((req, res, next) => {
+  if (req.url === '/') {
+    globalUser = new User(client, "", "", "", "", "", false);
+  } 
+  next();
+});
+
 //Route to verify username and password
 app.post('/', async (req, res) => {
   const { username, password } = req.body;
-  req.user = new User(client, "", username, password, "", "", false);
-  await req.user.login(res, username, password);
+
+  if (!globalUser) {
+    globalUser = new User(client, "", username, password, "", "", false);
+  } else {
+    globalUser.username = username;
+    globalUser.password = password;
+  }
+  await globalUser.login(res, username, password);
 });
 
 //Route to verify username and password
@@ -109,22 +124,23 @@ app.post('/getUserData', async (req, res) => {
 //Route to edit user's profile
 app.post('/editProfile', async (req, res) => {
   try {
-    // Retrieve the User object from the request object
-    const user = req.user;
-    console.log(req.body.email);
-    console.log(req.body.mobileNumber);
-    console.log(req.body.password);
-
-    if (user) {
-      // Call the editProfile function on the User object to update the profile
-      const newData = {
-        username: user.username,
-        email: req.body.email,
-        mobileNumber: req.body.mobileNumber,
-        password: req.password
+    if (globalUser) {
+      // Store the existing user data in 'oldData'
+      const oldData = {
+        username: globalUser.username,
+        password: globalUser.password,
+        email: globalUser.email,
+        mobileNumber: globalUser.mobileNumber,               
+        //receiveNotification wait
       };
-
-      await user.editProfile(res, newData);
+      const newData = {
+        username: req.body.username,
+        password: req.body.password,
+        email: req.body.email,
+        mobileNumber: req.body.mobileNumber
+      };
+      
+      await globalUser.editProfile(res, oldData, newData);
     } else {
       res.json({ success: false, message: 'User not found' });
     }
