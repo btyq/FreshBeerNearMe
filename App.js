@@ -3,7 +3,7 @@ import { CookieProvider } from "./frontend/CookieContext";
 import { View, Text } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Dashboard, Signup, Welcome, Profile, BeersVenue } from "./frontend/screens";
+import { Dashboard, Signup, Welcome, Profile, BeersVenue, Social, Feedback, Journal, Wishlist } from "./frontend/screens";
 import { AdminLogin, ManageUsers } from "./frontend/components";
 import BottomTabNavigation from './frontend/navigation/BottomTabNavigation'
 
@@ -21,6 +21,10 @@ export default function App() {
           <Stack.Screen name="BeersVenue" component={BeersVenue} options={{headerShown:false}}/>
           <Stack.Screen name="AdminLogin" component={AdminLogin} options={{headerShown:false}}/>
           <Stack.Screen name="ManageUsers" component={ManageUsers} options={{headerShown:false}}/>
+          <Stack.Screen name="Social" component={Social} options={{headerShown:false}}/>
+          <Stack.Screen name="Feedback" component={Feedback} options={{headerShown:false}}/>
+          <Stack.Screen name="Journal" component={Journal} options={{headerShown:false}}/>
+          <Stack.Screen name="Wishlist" component={Wishlist} options={{headerShown:false}}/>
           <Stack.Screen
             name="BottomTabNavigation"
             component={BottomTabNavigation}

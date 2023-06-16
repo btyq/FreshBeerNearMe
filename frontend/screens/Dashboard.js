@@ -6,6 +6,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Octicons } from '@expo/vector-icons'; 
 import COLORS from "../constants/colors";
 import { useCookies } from "../CookieContext";
+import { Tab, TabView, ThemeProvider } from '@rneui/themed';
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -30,6 +31,10 @@ const Button = (props) => {
 
 const Dashboard = ({ navigation }) => {
   const { cookies } = useCookies();
+  const [index, setIndex] = React.useState(0);
+  const handleTabChange = (tabIndex) => {
+    setIndex(tabIndex);
+  };
 
   useEffect(() => {
     const sessionToken = cookies.sessionToken;
@@ -95,24 +100,28 @@ const Dashboard = ({ navigation }) => {
               />
               <Button
                 title="Social & Community"
+                onPress={() => navigation.navigate('Social')}
                 color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
               <Button
                 title="Feedback & Requests"
+                onPress={() => navigation.navigate('Feedback')}
                 color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
               <Button
                 title="My Journal & Achievements"
+                onPress={() => navigation.navigate('Journal')}
                 color={COLORS.foam}
                 filled
                 style={styles.gridItem}
               />
               <Button
                 title="My Wishlist"
+                onPress={() => navigation.navigate('Wishlist')}
                 color={COLORS.foam}
                 filled
                 style={styles.gridItem}
@@ -122,28 +131,74 @@ const Dashboard = ({ navigation }) => {
 
           <View style={styles.cardContainer}>
           <Text style={{ fontSize: 17, color: COLORS.black }}>Upcoming Events</Text>
-            <TouchableOpacity onPress={handleUpcomingEventsClick} style={styles.clickableSection}>
-              <View style={styles.card}>
-                <ImageBackground                 
-                  source={require('../assets/event1.png')} 
-                  style={styles.cardImage}
-                >
-                </ImageBackground>
-                <Text style={{ fontSize: 16, color: COLORS.black }}></Text>
-              </View>
+            <TouchableOpacity onPress={handleUpcomingEventsClick} >
+            <ThemeProvider
+              theme={{
+                Tab: {
+                  primary: {
+                    backgroundColor: COLORS.foam, // Change the background color here
+                  },
+                },
+              }}
+            >
+              <Tab
+                value={index}
+                onChange={handleTabChange}
+                indicatorStyle={{
+                  backgroundColor: 'white',
+                  height: 3,
+                }}
+                variant="primary"
+              >
+
+                <Tab.Item
+                  title="Recent"
+                  titleStyle={{ fontSize: 12 }}
+                  icon={{ name: 'timer', type: 'ionicon', color: 'white' }}
+                />
+                <Tab.Item
+                  title="favorite"
+                  titleStyle={{ fontSize: 12 }}
+                  icon={{ name: 'heart', type: 'ionicon', color: 'white' }}
+                />
+                <Tab.Item
+                  title="cart"
+                  titleStyle={{ fontSize: 12 }}
+                  icon={{ name: 'cart', type: 'ionicon', color: 'white' }}
+                />
+              </Tab>
+              
+              <TabView value={index} onChange={setIndex} animationType="spring">
+                <TabView.Item style={styles.card}>
+                  <ImageBackground                 
+                    source={require('../assets/event1.png')} 
+                    style={styles.cardImage}
+                  >
+                  </ImageBackground>
+                  <Text style={{ fontSize: 16, color: COLORS.black }}>Event 1</Text>
+                </TabView.Item>
+                <TabView.Item style={styles.card}>
+                  <ImageBackground                 
+                    source={require('../assets/event1.png')} 
+                    style={styles.cardImage}
+                  >
+                  </ImageBackground>
+                  <Text style={{ fontSize: 16, color: COLORS.black }}>Event 2</Text>
+                </TabView.Item>
+                <TabView.Item style={styles.card}>
+                  <ImageBackground                 
+                    source={require('../assets/event1.png')} 
+                    style={styles.cardImage}
+                  >
+                  </ImageBackground>
+                  <Text style={{ fontSize: 16, color: COLORS.black }}>Event 3</Text>
+                </TabView.Item>
+              </TabView>
+
+
+            </ThemeProvider>
             </TouchableOpacity>
 
-            <Text style={{ fontSize: 17, color: COLORS.black }}>Recommended Specially for You</Text>
-            <TouchableOpacity onPress={handleRecommendedSpecialtyClick} style={styles.clickableSection}>
-              <View style={styles.card}>
-                <ImageBackground                 
-                  source={require('../assets/specialtybeer.png')} 
-                  style={styles.cardImage}
-                >
-                </ImageBackground>
-                <Text style={{ fontSize: 16, color: COLORS.black }}></Text>
-              </View>
-            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -179,28 +234,25 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 150,
     borderRadius: 10,
-    backgroundColor: COLORS.white,
+    //backgroundColor: COLORS.white,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    marginBottom: 5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
     elevation: 5,
+    marginBottom: 5,
   },
   cardImage: {
-    width: '110%',
-    height: '122%',
+    width: '100%',
+    height: '100%',
     resizeMode: 'cover',
     borderRadius: 10,
     overflow: 'hidden',
-    marginTop: 30,
-  },
-  clickableSection: {
-    marginBottom: 20,
-  },
+  }, 
+
 });
 
 export default Dashboard;
