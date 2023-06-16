@@ -74,7 +74,7 @@ const Profile = ( {navigation} ) => {
       };
   
       // Make a POST request to the /updateProfile endpoint with the new data
-      const response = await axios.post('http://192.168.1.116:3000/editProfile', newData);
+      const response = await axios.post('http://10.0.2.2:3000/editProfile', newData);
   
       // Handle the response
       if (response.data.success) {
