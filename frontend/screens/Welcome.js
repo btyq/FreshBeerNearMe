@@ -39,7 +39,7 @@ const Welcome = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const response = await axios.post('http://192.168.1.116:3000', {
+      const response = await axios.post('http://192.168.1.133:3000', {
         username: username,
         password: password
       });
@@ -169,8 +169,20 @@ const Welcome = ({ navigation }) => {
                 data={data}
                 value={selected}
                 setSelected={setSelected}
-                boxStyles={{ borderRadius: 0, position: 'absolute', right: 8 }}
-                dropdownStyles={{ position: 'absolute', top: '100%', right: 0 }}
+                boxStyles={{
+                  borderRadius: 20,
+                  position: 'absolute',
+                  right: 8,
+                  backgroundColor: "#ffe6b3", // Add background color here
+                  opacity: 1, // Set opacity to 1
+                }}
+                dropdownStyles={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  backgroundColor: "#ffe6b3", // Add background color here
+                  opacity: 1, // Set opacity to 1
+                }}
                 defaultOption={{ key: '1', value: 'User' }}
                 search={false}
               />
@@ -189,35 +201,38 @@ const Welcome = ({ navigation }) => {
             </Pressable>
           </View>
 
-          <Button
-            title="Login"
-            onPress={handleLogin}
-            color="black"
-            filled
-            style={{
-              marginTop: 10,
-              marginBottom: 4,
-              zIndex: -5,
-            }}>
-          </Button>
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Button
+              title="Login"
+              onPress={handleLogin}
+              color="black"
+              filled
+              style={{
+                marginTop: 10,
+                paddingHorizontal: 15,
+                marginBottom: 4,
+                marginRight: 4, // Add marginRight to create spacing between buttons
+                zIndex: -5,
+              }}>
+            </Button>
 
-          <Button
-            title="I am an admin"
-            onPress={() => navigation.navigate("AdminLogin")}
-            color="black"
-            filled
-            style={{
-              marginTop: 10,
-              marginBottom: 4,
-              zIndex: -5,
-            }}>
-          </Button>
-
+            <Button
+              title="I am an admin"
+              onPress={() => navigation.navigate("AdminLogin")}
+              color="black"
+              filled
+              style={{
+                marginTop: 10,
+                marginBottom: 4,
+                zIndex: -5,
+              }}>
+            </Button>
+          </View>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>
             <View style={{
               flex: 1,
               height: 1,
-              backgroundColor: COLORS.grey,
+              backgroundColor: COLORS.black,
               marginHorizontal: 10
             }}>
             </View>
@@ -225,7 +240,7 @@ const Welcome = ({ navigation }) => {
             <View style={{
               flex: 1,
               height: 1,
-              backgroundColor: COLORS.grey,
+              backgroundColor: COLORS.black,
               marginHorizontal: 10
             }}>
             </View>
@@ -328,21 +343,6 @@ const Welcome = ({ navigation }) => {
                   color: COLORS.black,
                   marginLeft: 6
                 }}>Register</Text>
-            </Pressable>
-          </View>
-          
-          <View style={{
-            flexDirection: "row",
-            justifyContent: "center"
-          }}>
-            <Pressable
-              onPress={() => navigation.navigate("AdminLogin")}>
-                <Text style={{
-                  fontSize: 16,
-                  textDecorationLine: 'underline',
-                  color: COLORS.black,
-                  marginLeft: 6
-                }}>I am an admin</Text>
             </Pressable>
           </View>
         </View>
