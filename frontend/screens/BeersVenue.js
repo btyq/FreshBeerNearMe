@@ -2,18 +2,9 @@ import React from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // Imported to render star ratings
+import { AirbnbRating } from 'react-native-ratings'; // Imported AirbnbRating component
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
-
-// Define your custom colors
-/*const COLORS = {
-  primary: '#6D4C41',
-  secondary: '#DAA520',
-  foam: '#F0E68C',
-  white: '#FFFFFF',
-  black: '#000000',
-};*/
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -35,14 +26,27 @@ const Button = (props) => {
   );
 };
 
-// To render star ratings
-const StarRating = () => (
-  <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
-    {[1, 2, 3, 4, 5].map((star) => (
-      <MaterialCommunityIcons key={star} name="star" size={20} />
-    ))}
-  </View>
-);
+const StarRating = () => {
+  const [rating, setRating] = React.useState(0);
+
+  const handleRating = (value) => {
+    setRating(value);
+  };
+
+  return (
+    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+      {[1, 2, 3, 4, 5].map((star) => (
+        <TouchableOpacity key={star} onPress={() => handleRating(star)}>
+          <Ionicons
+            name="star"
+            size={20}
+            color={star <= rating ? COLORS.red : COLORS.white}
+          />
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
 
 const BeersVenue = ({ navigation }) => {
   const handleVenue1Click = () => {
@@ -73,11 +77,11 @@ const BeersVenue = ({ navigation }) => {
       >
         <Text style={{ fontSize: 20, color: COLORS.black, fontWeight: 'bold' }}>FreshBeer</Text>
         <View style={{ flexDirection: 'row' }}>
-          <Octicons name="bookmark" size={24} color={COLORS.black} style={{marginRight: 12}}/>
+          <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 12 }} />
           <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
         </View>
       </View>
-      
+
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
           <View style={styles.grid}>
@@ -121,11 +125,10 @@ const BeersVenue = ({ navigation }) => {
                 <StarRating />
               </View>
               <View style={styles.card}>
-                <ImageBackground                 
-                  source={require('../assets/event1.png')} 
+                <ImageBackground
+                  source={require('../assets/event1.png')}
                   style={styles.cardImage}
-                >
-                </ImageBackground>
+                />
               </View>
             </TouchableOpacity>
 
@@ -135,11 +138,10 @@ const BeersVenue = ({ navigation }) => {
                 <StarRating />
               </View>
               <View style={styles.card}>
-                <ImageBackground                 
-                  source={require('../assets/specialtybeer.png')} 
+                <ImageBackground
+                  source={require('../assets/specialtybeer.png')}
                   style={styles.cardImage}
-                >
-                </ImageBackground>
+                />
               </View>
             </TouchableOpacity>
           </View>
@@ -154,7 +156,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    //marginTop: 2,
     marginHorizontal: 20,
   },
   longButton: {
@@ -219,7 +220,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   venueTitle: {
-    fontSize: 20, 
+    fontSize: 20,
     color: COLORS.black,
   },
 });
