@@ -1,30 +1,50 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image, Pressable, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Pressable, ScrollView, TextInput } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import { LinearGradient } from "expo-linear-gradient";
-import CheckBox from "expo-checkbox";
 import { SelectList } from 'react-native-dropdown-select-list';
 import { Feather } from '@expo/vector-icons'; 
 import { useNavigation } from '@react-navigation/native';
+import { SearchBar, ListItem } from '@rneui/themed';
+import { DataTable } from 'react-native-paper';
 
-//CODES TO STYLE BUTTON
 const Button = (props) => {
-  const filledBgColor = props.color || COLORS.yellow;
-  const outlinedColor = COLORS.white;
+  const filledBgColor = props.color || COLORS.primary;
+  const outlinedColor = COLORS.black;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
-  const textColor = props.filled ? COLORS.white : COLORS.primary;
-    
+  const textColor = props.filled ? COLORS.white : COLORS.white;
+
   return (
-    <TouchableOpacity 
-    style={{...styles.button,
-            ...{backgroundColor: bgColor},
-            ...props.style}}
-    onPress={props.onPress}>
-        <Text style={{fontSize: 15, ... { color: textColor }}}>{props.title}</Text>
+    <TouchableOpacity
+      style={{
+        ...styles.button,
+        ...{ backgroundColor: bgColor },
+        ...props.style}}
+      onPress={props.onPress}>
+      <Text style={{ fontSize: 15, color: textColor }}>{props.title}</Text>
     </TouchableOpacity>
-  )
-}
+  );
+};
+
+const CustomButtonGroup = ({ buttons, selectedIndex, onPress }) => {
+  return (
+    <View style={styles.buttonGroupContainer}>
+      {buttons.map((button, index) => (
+        <TouchableOpacity
+          key={index}
+          style={[
+            styles.button,
+            selectedIndex === index && styles.selectedButton,
+          ]}
+          onPress={() => onPress(index)}
+        >
+          <Text style={styles.buttonText}>{button}</Text>
+        </TouchableOpacity>
+      ))}
+    </View>
+  );
+};
 
 const ManageUsers = ({ navigation }) => {
 
@@ -32,10 +52,10 @@ const ManageUsers = ({ navigation }) => {
   const [selected, setSelected] = React.useState("");
   
   const data = [
-    {key:'1',value:'test1'},
-    {key:'2',value:'test2'},
-    {key:'3',value:'test3'},
-    {key:'4',value:'test4'},
+    {key:'1',value:'Manage Users'},
+    {key:'2',value:'Feedback'},
+    {key:'3',value:'View All'},
+    {key:'4',value:'Bugs and Reports'},
   ];
 
   const BackButton = () => {
@@ -51,286 +71,141 @@ const ManageUsers = ({ navigation }) => {
     );
   };
   
+  // Calculate the dropdown container height based on the number of options
+  const dropdownContainerHeight = data.length * 50;
+
+  const [search, setSearch] = useState("");
+
+  const updateSearch = (search) => {
+    setSearch(search);
+  };
+
+  const data1 = [
+    { name: "John", status: "Active"},
+    { name: "Bob", status: "Inactive"},
+    { name: "Mei", status: "Active"},
+  ];
+
+  const [selectedButtonIndex, setSelectedButtonIndex] = useState(0);
+
+  const handleButtonPress = (index) => {
+    setSelectedButtonIndex(index);
+  };
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
-        <ScrollView style={{ flex: 1, marginHorizontal: 0 }} contentContainerStyle={{ padding: 0 }}>
-          <View style={{ flex: 1, marginHorizontal: 12 }}>
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={{ marginHorizontal: 12, marginTop: 12 }}>
             <BackButton />
           </View>
 
-          <View style={{flex: 1, marginHorizontal: 12, marginVertical: 22}}>
-            <View style={{
-              position: "absolute",
-              width: "50%"
-            }}>
-              <Text style={{
-                fontSize: 25,
-                fontWeight: 700,
-                color: COLORS.black
-              }}>Welcome</Text>
-            </View>
+          <View style={{ flex: 1, marginHorizontal: 12 }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Text style={{ fontSize: 25, fontWeight: '700', color: COLORS.black, marginTop: 22 }}>
+                Welcome
+              </Text>
 
-            <View style={{
-              flexDirection: "row",
-              position: "absolute",
-              width: "100%",
-              marginHorizontal: 250,
-              marginVertical: 6
-            }}>
-              <Pressable
-                onPress={() => navigation.navigate("Welcome")}>
-                <Text style={{
-                  color: COLORS.black,
-                  marginLeft: 4
-                }}>Logout</Text>
+              <Pressable onPress={() => navigation.navigate('Welcome')}>
+                <Text style={{ color: COLORS.black, marginLeft: 4 }}>Logout</Text>
               </Pressable>
             </View>
 
-            <View style={{paddingHorizontal: 20, paddingVertical: 50, flex: 1, zIndex: 1}}>
-              <SelectList 
-                data={data} 
-                setSelected={setSelected} 
+            <View style={{ paddingHorizontal: 20, paddingVertical: 20, flex: 1 }}>
+              <SelectList
+                data={data}
+                setSelected={setSelected}
                 boxStyles={{
-                  borderRadius:20, 
-                  width: 280, 
-                  opacity: 1
+                  borderRadius: 20,
+                  width: 280,
+                  opacity: 1,
                 }}
                 dropdownStyles={{
-                  position: 'absolute', 
-                  top: "100%", 
-                  width: 280, 
-                  opacity: 1
+                  width: 280,
+                  position: 'absolute',
+                  top: '100%',
+                  borderRadius: 20,
+                  height: dropdownContainerHeight,
+                  opacity: 1,
                 }}
-                defaultOption={{ key:'1', value:'test1' }}   
+                defaultOption={{ key: '1', value: 'Search' }}
                 search={false}
               />
-            </View>
-          
-            <View style={{
-              paddingHorizontal: 55,
-              position: "absolute",
-              top: 120,
-              width: "100%"
-            }}>
-              <Text style={{
-                flexDirection: "row",
-                justifyContent: "center",
-                fontSize: 16,
-                fontWeight: 500,
-                color: COLORS.black,
-                textDecorationLine: 'underline',
-                zIndex: -5
-              }}>Bugs//Problems Reported (5)</Text>
-            </View>
 
-            <View style={{ 
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginVertical: 6,
-              paddingHorizontal: 45,
-              position: "absolute",
-              justifyContent: "center",
-              top: 150,
-              width: "100%"
-            }}>
-              <CheckBox
-                style={{ marginRight: 8 }}
-                value={isChecked1}
-                onValueChange={setIsChecked1}
-                color={isChecked1 ? COLORS.primary : undefined}
+              {/* Search bar */}
+              <View style={styles.container}>
+                <SearchBar
+                  placeholder="Search by"
+                  onChangeText={updateSearch}
+                  value={search}
+                  containerStyle={styles.searchBarContainer}
+                  inputContainerStyle={styles.searchBarInputContainer}
+                  inputStyle={styles.searchBarInput}
+                />
+                <SearchBar
+                  placeholder="Search by ID"
+                  onChangeText={updateSearch}
+                  value={search}
+                  containerStyle={styles.searchBarContainer}
+                  inputContainerStyle={styles.searchBarInputContainer}
+                  inputStyle={styles.searchBarInput}
+                />
+              </View>
+
+              <Button
+                title="Create User"
+                color={COLORS.black}
+                filled
+                style={{
+                  marginTop: 10,
+                  marginBottom: 4,
+                  paddingHorizontal: 12,
+                }}
               />
-              <Text>Bug Report 2</Text>
+
+              {/* Table */}
+              <ScrollView horizontal>
+                <DataTable>
+                  <DataTable.Header>
+                    <DataTable.Title style={{ justifyContent: 'center', width: 150 }}>
+                      Username
+                    </DataTable.Title>
+                    <DataTable.Title style={{ justifyContent: 'center', width: 150 }}>
+                      Status
+                    </DataTable.Title>
+                  </DataTable.Header>
+
+                  {data1.map((item, index) => (
+                    <DataTable.Row key={index}>
+                      <DataTable.Cell style={{ justifyContent: 'center', width: 150 }}>
+                        {item.name}
+                      </DataTable.Cell>
+                      <DataTable.Cell style={{ justifyContent: 'center', width: 150 }}>
+                        {item.status}
+                      </DataTable.Cell>
+                    </DataTable.Row>
+                  ))}
+                </DataTable>
+
+              </ScrollView>
+
+              <View>
+                <CustomButtonGroup
+                  buttons={['View Details', 'Suspend', 'Deactivate', 'View Chat History']}
+                  selectedIndex={selectedButtonIndex}
+                  onPress={handleButtonPress}
+                  buttonStyle={styles.button}
+                  selectedButtonStyle={styles.selectedButton}
+                  buttonTextStyle={styles.buttonText}
+                />
+              </View>
             </View>
-
-            <View style={{ 
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginVertical: 6,
-              paddingHorizontal: 45,
-              position: "absolute",
-              justifyContent: "center",
-              top: 180,
-              width: "100%"
-            }}>
-              <CheckBox
-                style={{ marginRight: 8 }}
-                value={isChecked2}
-                onValueChange={setIsChecked2}
-                color={isChecked2 ? COLORS.primary : undefined}
-              />
-              <Text>Bug Report 5</Text>
-            </View>
-
-            <View style={{ 
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginVertical: 6,
-              paddingHorizontal: 45,
-              position: "absolute",
-              justifyContent: "center",
-              top: 210,
-              width: "100%"
-            }}>
-              <CheckBox
-                style={{ marginRight: 8 }}
-                value={isChecked3}
-                onValueChange={setIsChecked3}
-                color={isChecked3 ? COLORS.primary : undefined}
-              />
-              <Text>Bug Report 4</Text>
-            </View>
-
-            <View style={{
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginVertical: 6,
-              paddingHorizontal: 45,
-              position: "absolute",
-              justifyContent: "center",
-              top: 250,
-              width: "100%"
-            }}>
-              <Pressable
-                onPress={() => console.log("Pressed")}>
-                <Text style={{
-                  fontSize: 16,
-                  color: COLORS.black,
-                  marginLeft: 6
-                }}>View all</Text>
-              </Pressable>
-            </View>
-
-            <View style={{
-              paddingHorizontal: 85,
-              position: "absolute",
-              justifyContent: "center",
-              top: 290,
-              width: "100%"
-            }}>
-              <Text style={{
-                flexDirection: "row",
-                fontSize: 16,
-                fontWeight: 500,
-                color: COLORS.black,
-                textDecorationLine: 'underline',
-              }}>Feedback received (2)</Text>
-            </View>
-
-            <View style={{ 
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginVertical: 6,
-              paddingHorizontal: 45,
-              position: "absolute",
-              justifyContent: "center",
-              top: 320,
-              width: "100%"
-            }}>
-              <CheckBox
-                style={{ marginRight: 8 }}
-                value={isChecked4}
-                onValueChange={setIsChecked4}
-                color={isChecked4 ? COLORS.primary : undefined}
-              />
-              <Text>Feedback 1</Text>
-            </View>
-
-            <View style={{ 
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginVertical: 6,
-              paddingHorizontal: 45,
-              position: "absolute",
-              justifyContent: "center",
-              top: 350,
-              width: "100%"
-            }}>
-              <CheckBox
-                style={{ marginRight: 8 }}
-                value={isChecked5}
-                onValueChange={setIsChecked5}
-                color={isChecked5 ? COLORS.primary : undefined}
-              />
-              <Text>Feedback 2</Text>
-            </View>
-
-            <View style={{ 
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginVertical: 6,
-              paddingHorizontal: 45,
-              position: "absolute",
-              justifyContent: "center",
-              top: 380,
-              width: "100%"
-            }}>
-              <CheckBox
-                style={{ marginRight: 8 }}
-                value={isChecked6}
-                onValueChange={setIsChecked6}
-                color={isChecked6 ? COLORS.primary : undefined}
-              />
-              <Text>Feedback 3</Text>
-            </View>
-
-            <View style={{
-              flexDirection: 'row', 
-              alignItems: 'center', 
-              marginVertical: 6,
-              paddingHorizontal: 45,
-              position: "absolute",
-              justifyContent: "center",
-              top: 420,
-              width: "100%"
-            }}>
-              <Pressable
-                onPress={() => console.log("Pressed")}>
-                <Text style={{
-                  fontSize: 16,
-                  color: COLORS.black,
-                  marginLeft: 6
-                }}>View all feedback</Text>
-              </Pressable>
-            </View>
-
-            <Button
-              title="Manage users"
-              onPress={() => navigation.navigate('ManageUsers')}
-              color="black"
-              filled
-              style={{
-                marginTop: 360,
-                marginBottom: 4,
-              }}>
-            </Button>
-
-            <Button
-              title="Performance Report"
-              onPress={() => console.log("Pressed")}
-              color="black"
-              filled
-              style={{
-                marginTop: 15,
-                marginBottom: 4,
-              }}>
-            </Button>
-
-            <Button
-              title="Manage Promotion/Events"
-              onPress={() => console.log("Pressed")}
-              color="black"
-              filled
-              style={{
-                marginTop: 15,
-                marginBottom: 4,
-              }}>
-            </Button>
           </View>
         </ScrollView>
       </LinearGradient>
     </SafeAreaView>
+
   );
 };
 
@@ -343,6 +218,58 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  container: {
+    flexDirection: 'row',
+    marginLeft: 5,
+    marginTop: 12,
+    alignItems: 'center',
+    marginHorizontal: 12,
+  },
+  searchBarContainer: {
+    backgroundColor: "transparent",
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
+    flex: 1,
+  },
+  searchBarInputContainer: {
+    backgroundColor: "transparent",
+    borderRadius: 10,
+    height: 40,
+  },
+  searchBarInput: {
+    fontSize: 12,
+  },
+  tableContainer: {
+    marginBottom: 20,
+    paddingHorizontal: 12,
+    maxHeight: 200
+  },
+  button: {
+    marginTop: 20,
+    paddingVertical: 10,
+    alignItems: 'center',
+    borderColor: COLORS.black,
+    borderRadius: 20,
+    width: '50%',
+    alignSelf: 'center',
+  },
+  buttonGroupContainer: {
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'gray',
+    backgroundColor: 'transparent',
+    justifyContent: 'space-evenly',
+    flexWrap: 'wrap'
+  },
+  selectedButton: {
+    backgroundColor: COLORS.foam,
+  },
+  buttonText: {
+    color: 'black',
   },
 });
 
