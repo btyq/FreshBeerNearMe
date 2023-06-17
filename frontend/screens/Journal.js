@@ -11,11 +11,11 @@ const Button = ({ title, selected, onSelect }) => {
     <TouchableOpacity
       style={[
         styles.button,
-        { backgroundColor: selected ? COLORS.primary : COLORS.white },
+        { backgroundColor: selected ? COLORS.foam : COLORS.white },
       ]}
       onPress={() => onSelect(title)}
     >
-      <Text style={{ color: selected ? COLORS.white : COLORS.black }}>
+      <Text style={{ color: selected ? COLORS.black : COLORS.black }}>
         {title}
       </Text>
     </TouchableOpacity>
