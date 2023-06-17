@@ -167,7 +167,7 @@ const Dashboard = ({ navigation }) => {
         </Card>
         
         <Card containerStyle={{ marginTop: 5 , height: 280, backgroundColor: 'transparent', borderColor: 'transparent'}}>
-          <Card.Title>Upcoming Events</Card.Title>
+          <Card.Title>Recommended Specially For You</Card.Title>
           <Card.Divider />
           <ThemeProvider
             theme={{
@@ -182,7 +182,7 @@ const Dashboard = ({ navigation }) => {
               <TabView.Item style={{ width: '100%', marginTop: -30}}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
-                    source={require('../assets/event1.png')}
+                    source={require('../assets/beer1.png')}
                     style={styles.cardImage}
                   />
                 </Card>
@@ -190,7 +190,7 @@ const Dashboard = ({ navigation }) => {
               <TabView.Item style={{ width: '100%', marginTop: -30}}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
-                    source={require('../assets/event2.png')}
+                    source={require('../assets/beer2.png')}
                     style={styles.cardImage}
                   />
                 </Card>
@@ -198,7 +198,7 @@ const Dashboard = ({ navigation }) => {
               <TabView.Item style={{ width: '100%', marginTop: -30}}>
                 <Card containerStyle={styles.cardContainer}>
                   <ImageBackground
-                    source={require('../assets/event3.png')}
+                    source={require('../assets/beer3.png')}
                     style={styles.cardImage}
                   />
                 </Card>
