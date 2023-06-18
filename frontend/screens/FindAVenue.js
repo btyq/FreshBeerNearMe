@@ -5,7 +5,6 @@ import { Ionicons, Octicons } from '@expo/vector-icons';
 import { AirbnbRating } from 'react-native-ratings';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
-import { FindAVenue } from '.';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -49,7 +48,7 @@ const StarRating = () => {
   );
 };
 
-const FindAVenueScreen = ({ navigation }) => {
+const FindAVenue = ({ navigation }) => {
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
   };
@@ -186,157 +185,105 @@ const FindAVenueScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-    grid: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      flexWrap: 'wrap',
-      marginHorizontal: 20,
-    },
-    longButton: {
-      width: '20%',
-      height: 55,
-      marginVertical: 0,
-      borderRadius: 50,
-      marginRight: 0,
-    },
-    shortButton: {
-      width: '30%',
-      height: 40,
-      marginVertical: 5,
-      borderRadius: 30,
-      marginHorizontal: '1%',
-      marginTop: 10, // Adjust the top spacing here
-    },
-    button: {
-      paddingVertical: 10,
-      borderColor: COLORS.black,
-      borderWidth: 2,
-      borderRadius: 12,
-      alignItems: 'center',
-      justifyContent: 'center',
-    },
-    cardContainer: {
-      padding: 20,
-    },
-    card: {
-      width: '100%',
-      height: 150,
-      borderRadius: 10,
-      backgroundColor: COLORS.white,
-      justifyContent: 'center',
-      alignItems: 'center',
-      padding: 10,
-      marginBottom: 10,
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.5,
-      shadowRadius: 2,
-      elevation: 5,
-    },
-    cardImage: {
-      width: '110%',
-      height: 150,
-      resizeMode: 'cover',
-      borderRadius: 10,
-      overflow: 'hidden',
-      shadowColor: '#000',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.5,
-      shadowRadius: 2,
-      elevation: 5,
-    },
-    clickableSection: {
-      marginBottom: 20,
-    },
-    VenueContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginBottom: 10,
-      backgroundColor: COLORS.white,
-      padding: 10,
-      borderWidth: 1,
-      borderColor: COLORS.black,
-      borderRadius: 10,
-      height: 70,
-      width: '100%',
-      marginLeft: 0,
-      height: 55,
-    },
-    venueName: {
-      fontSize: 16,
-      fontWeight: 'bold',
-      color: COLORS.black,
-    },
-    starRatingContainer: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginTop: 4,
-    },
-    searchContainer: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      marginHorizontal: 20,
-      marginTop: 20, // Adjust the top spacing here
-    },
-    searchInput: {
-      flex: 1,
-      height: 40,
-      borderWidth: 1,
-      borderColor: COLORS.black,
-      borderRadius: 10,
-      paddingHorizontal: 10,
-      marginRight: 10,
-    },
-    searchButton: {
-      width: '40%',
-      height: 40,
-      borderRadius: 10,
-    },
-    container: {
-      width: '95%',
-      alignSelf: 'center',
-      marginTop: 10, // Adjust the margin value to make it lower
-      borderWidth: 1, // Add a border width
-      borderColor: COLORS.black, // Specify the border color
-      borderRadius: 10, // Add border radius for rounded corners
-      padding: 10, // Add padding to create space between the border and the content
-      height: 340, // Adjust the height as per your requirement
-    },
-    header: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-      padding: 10,
-      paddingTop: 30, // reduce paddingTop to bring the header closer to the top
-      backgroundColor: COLORS.foam,
-      height: 70,
-      shadowColor: COLORS.black,
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.3,
-      shadowRadius: 3,
-      elevation: 5,
-    },
-    headerText: {
-      fontSize: 20,
-      color: COLORS.black,
-      fontWeight: 'bold',
-    },
-    containerItem: {
-      flexDirection: 'row',
-      alignItems: 'center',
-      marginBottom: 10,
-    },
-    leftContainer: {
-      flex: 1,
-    },
-    rightContainer: {
-      flex: 0.3,
-      justifyContent: 'flex-end',
-      flexDirection: 'row-reverse',
-      alignItems: 'center',
-    },
-  });
+  grid: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    marginHorizontal: 20,
+  },
+  longButton: {
+    width: '20%',
+    height: 55,
+    marginVertical: 0,
+    borderRadius: 50,
+    marginRight: 0,
+  },
+  shortButton: {
+    width: '30%',
+    height: 40,
+    marginVertical: 5,
+    borderRadius: 30,
+    marginHorizontal: '1%',
+    marginTop: 10,
+  },
+  button: {
+    paddingVertical: 10,
+    borderColor: COLORS.black,
+    borderWidth: 2,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  VenueContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+    backgroundColor: COLORS.white,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    height: 70,
+    width: '100%',
+    marginLeft: 0,
+    height: 55,
+  },
+  venueName: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.black,
+  },
+  starRatingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginTop: 20,
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginRight: 10,
+  },
+  searchButton: {
+    width: '40%',
+    height: 40,
+    borderRadius: 10,
+  },
+  container: {
+    width: '95%',
+    alignSelf: 'center',
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    padding: 10,
+    height: 340,
+  },
+  containerItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  leftContainer: {
+    flex: 1,
+  },
+  rightContainer: {
+    flex: 0.3,
+    justifyContent: 'flex-end',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+  },
+});
 
-export default FindAVenueScreen;
+export default FindAVenue;
