@@ -7,15 +7,25 @@ import Social from "./Social";
 import Feedback from "./Feedback";
 import Journal from "./Journal";
 import Wishlist from "./Wishlist";
+import FindABeer from "./FindABeer";
+import FindAVenue from "./FindAVenue";
+import NearbyVenues from "./NearbyVenues";
+import TopRated from "./TopRated";
+import Breweries from "./Breweries";
 
 export {
-    Welcome,
-    Signup,
-    Dashboard,
-    Profile,
-    BeersVenue,
-    Social,
-    Feedback, 
-    Journal,
-    Wishlist
-}
+  Welcome,
+  Signup,
+  Dashboard,
+  Profile,
+  BeersVenue,
+  Social,
+  Feedback,
+  Journal,
+  Wishlist,
+  FindABeer,
+  FindAVenue,
+  NearbyVenues,
+  TopRated,
+  Breweries
+};

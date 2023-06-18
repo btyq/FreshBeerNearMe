@@ -1,18 +1,10 @@
-// Import necessary libraries and components
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { AirbnbRating } from 'react-native-ratings';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
-
-// Import the FindABeer component
-import FindABeer from './FindABeer';
-import FindAVenue from './FindAVenue';
-import NearbyVenues from './NearbyVenues';
-import TopRated from './TopRated';
-import Breweries from './Breweries';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -42,7 +34,7 @@ const StarRating = () => {
   };
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.yellow, marginTop: -7  }}>
+    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.yellow, marginTop: -7 }}>
       {[1, 2, 3, 4, 5].map((star) => (
         <TouchableOpacity key={star} onPress={() => handleRating(star)}>
           <Ionicons
@@ -56,7 +48,29 @@ const StarRating = () => {
   );
 };
 
-const BeersVenue = ({ navigation }) => {
+const VenueItem = ({ venueName, rating }) => {
+  return (
+    <View style={styles.itemContainer}>
+      <View style={styles.leftContainer}>
+        <Text style={styles.venueName}>{venueName}</Text>
+      </View>
+      <View style={styles.rightContainer}>
+        <View style={styles.starRatingContainer}>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Ionicons
+              key={star}
+              name="star"
+              size={16}
+              color={star <= rating ? COLORS.foam : COLORS.grey}
+            />
+          ))}
+        </View>
+      </View>
+    </View>
+  );
+};
+
+const NearbyVenues = ({ navigation }) => {
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
   };
@@ -122,6 +136,18 @@ const BeersVenue = ({ navigation }) => {
               />
             ))}
           </View>
+          <View style={styles.searchContainer}>
+            <TextInput
+              placeholder="Search..."
+              style={styles.searchInput}
+            />
+            <Button
+              title="Search for Venue"
+              color={COLORS.orange}
+              filled
+              style={styles.searchButton}
+            />
+          </View>
           <View style={styles.grid}>
             {['Sort by Distance', 'Sort by Price', 'Sort by Rating'].map((title, index) => (
               <Button
@@ -145,37 +171,15 @@ const BeersVenue = ({ navigation }) => {
             ))}
           </View>
 
-          <View style={styles.cardContainer}>
-            <TouchableOpacity onPress={handleFindABeerClick} style={styles.clickableSection}>
-              <View style={styles.venueContainer}>
-                <Text style={styles.venueTitle}>Venue 1</Text>
-                <View style={styles.starRatingContainer}>
-                  <StarRating />
+          <LinearGradient style={styles.container} colors={[COLORS.foam, COLORS.foam]}>
+            <ScrollView>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <View key={index} style={styles.subContainer}>
+                  <VenueItem venueName={`Venue Name ${index + 1}`} rating={3} />
                 </View>
-              </View>
-              <View style={styles.card}>
-                <ImageBackground
-                  source={require('../assets/event1.png')}
-                  style={styles.cardImage}
-                />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={handleFindAVenueClick} style={styles.clickableSection}>
-              <View style={styles.venueContainer}>
-                <Text style={styles.venueTitle}>Venue 2</Text>
-                <View style={styles.starRatingContainer}>
-                  <StarRating />
-                </View>
-              </View>
-              <View style={styles.card}>
-                <ImageBackground
-                  source={require('../assets/specialtybeer.png')}
-                  style={styles.cardImage}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
+              ))}
+            </ScrollView>
+          </LinearGradient>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -202,6 +206,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 30,
     marginHorizontal: '1%',
+    marginTop: 10, // Adjust the top spacing here
   },
   button: {
     paddingVertical: 10,
@@ -244,30 +249,71 @@ const styles = StyleSheet.create({
   clickableSection: {
     marginBottom: 20,
   },
-  venueContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  container: {
+    width: '95%',
+    alignSelf: 'center',
+    marginTop: 10, // Adjust the margin value to make it lower
+    borderWidth: 1, // Add a border width
+    borderColor: COLORS.black, // Specify the border color
+    borderRadius: 10, // Add border radius for rounded corners
+    padding: 10, // Add padding to create space between the border and the content
+    minHeight: 340, // Adjust the height as per your requirement
+    backgroundColor: COLORS.foam,
+  },
+  subContainer: {
     marginBottom: 10,
-    backgroundColor: COLORS.yellow,
+    backgroundColor: COLORS.white,
     padding: 10,
     borderWidth: 1,
     borderColor: COLORS.black,
     borderRadius: 10,
-    height: 50, // adjust the height as per your requirement
-    width: '105%', // adjust the width as per your requirement
-    marginLeft: -10, // add left margin to move the container to the left
   },
-  venueTitle: {
-    fontSize: 20,
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  leftContainer: {
+    flex: 1,
+  },
+  rightContainer: {
+    flex: 0.3,
+    justifyContent: 'flex-end',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+  },
+  venueName: {
+    fontSize: 16,
+    fontWeight: 'bold',
     color: COLORS.black,
   },
   starRatingContainer: {
-    backgroundColor: COLORS.yellow,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginHorizontal: 20,
+    marginTop: 20, // Adjust the top spacing here
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderColor: COLORS.black,
     borderRadius: 10,
-    paddingVertical: 8,
     paddingHorizontal: 10,
+    marginRight: 10,
+  },
+  searchButton: {
+    width: '40%',
+    height: 40,
+    borderRadius: 10,
   },
 });
 
-export default BeersVenue;
+export default NearbyVenues;
