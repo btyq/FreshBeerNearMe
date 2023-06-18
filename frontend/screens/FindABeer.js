@@ -347,12 +347,23 @@ const styles = StyleSheet.create({
     icon: {
         marginLeft: 12,
     },
-    BeerContainer: {
+    containerItem: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 10,
-        paddingRight: 5, // reduce paddingRight to bring items closer together
+        paddingHorizontal: 20,
+        marginBottom: 10,
+        backgroundColor: COLORS.white,
+        height: 50, // Adjust the height value to make it bigger
+        borderRadius: 10,
+        borderWidth: 1, // Add border width
+        borderColor: COLORS.black, // Specify the border color
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        elevation: 5,
+        width: '100%',
+        alignSelf: 'center',
     },
     wishlistText: {
         fontSize: 20,
@@ -368,22 +379,6 @@ const styles = StyleSheet.create({
     },
     containerSection: {
         marginTop: 0,
-    },
-    containerItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        marginBottom: 10,
-        backgroundColor: COLORS.white,
-        height: 50, // Adjust the height value to make it bigger
-        borderRadius: 10,
-        shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        elevation: 5,
-        width: '100%',
-        alignSelf: 'center',
     },
     leftContainer: {
         flex: 1,
