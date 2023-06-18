@@ -1,18 +1,10 @@
-// Import necessary libraries and components
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { AirbnbRating } from 'react-native-ratings';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
-
-// Import the FindABeer component
-import FindABeer from './FindABeer';
-import FindAVenue from './FindAVenue';
-import NearbyVenues from './NearbyVenues';
-import TopRated from './TopRated';
-import Breweries from './Breweries';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -37,12 +29,13 @@ const Button = (props) => {
 const StarRating = () => {
   const [rating, setRating] = useState(4);
 
-  const handleRating = (value) => {
-    setRating(value);
+  const handleRating = () => {
+    const randomRating = Math.floor(Math.random() * 3) + 3; // Generate a random number between 3 and 5
+    setRating(randomRating);
   };
 
   return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.yellow, marginTop: -7  }}>
+    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.yellow, marginTop: -7 }}>
       {[1, 2, 3, 4, 5].map((star) => (
         <TouchableOpacity key={star} onPress={() => handleRating(star)}>
           <Ionicons
@@ -56,13 +49,59 @@ const StarRating = () => {
   );
 };
 
+const VenueItem = ({ venueName, rating }) => {
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  const handlePopupOpen = () => {
+    setPopupVisible(true);
+  };
+
+  const handlePopupClose = () => {
+    setPopupVisible(false);
+  };
+
+  return (
+    <View style={styles.subContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
+        <View style={styles.leftContainer}>
+          <Text style={styles.venueName}>{venueName}</Text>
+        </View>
+        <View style={styles.rightContainer}>
+          <View style={styles.starRatingContainer}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Ionicons
+                key={star}
+                name="star"
+                size={16}
+                color={star <= rating ? COLORS.foam : COLORS.grey}
+              />
+            ))}
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <Modal visible={popupVisible} transparent animationType="fade">
+        <View style={styles.modalContainer}>
+          <View style={styles.popup}>
+            <Text style={styles.popupTitle}>{venueName}</Text>
+            <Text style={styles.popupContent}>Popup Content</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={handlePopupClose}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
+  );
+};
+
 const BeersVenue = ({ navigation }) => {
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
   };
 
   const handleFindAVenueClick = () => {
-    navigation.navigate('FindAVenue');
+    navigation.navigate('BeersVenue');
   };
 
   const handleNearbyVenuesClick = () => {
@@ -122,6 +161,18 @@ const BeersVenue = ({ navigation }) => {
               />
             ))}
           </View>
+          <View style={styles.searchContainer}>
+            <TextInput
+              placeholder="Search..."
+              style={styles.searchInput}
+            />
+            <Button
+              title="Search for Venue"
+              color={COLORS.orange}
+              filled
+              style={styles.searchButton}
+            />
+          </View>
           <View style={styles.grid}>
             {['Sort by Distance', 'Sort by Price', 'Sort by Rating'].map((title, index) => (
               <Button
@@ -144,39 +195,19 @@ const BeersVenue = ({ navigation }) => {
               />
             ))}
           </View>
-
-          <View style={styles.cardContainer}>
-            <TouchableOpacity onPress={handleFindABeerClick} style={styles.clickableSection}>
-              <View style={styles.venueContainer}>
-                <Text style={styles.venueTitle}>Venue 1</Text>
-                <View style={styles.starRatingContainer}>
-                  <StarRating />
-                </View>
-              </View>
-              <View style={styles.card}>
-                <ImageBackground
-                  source={require('../assets/event1.png')}
-                  style={styles.cardImage}
-                />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={handleFindAVenueClick} style={styles.clickableSection}>
-              <View style={styles.venueContainer}>
-                <Text style={styles.venueTitle}>Venue 2</Text>
-                <View style={styles.starRatingContainer}>
-                  <StarRating />
-                </View>
-              </View>
-              <View style={styles.card}>
-                <ImageBackground
-                  source={require('../assets/specialtybeer.png')}
-                  style={styles.cardImage}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
+
+        <View style={styles.container}>
+          <ScrollView>
+            {Array.from({ length: 1 }).map((_, index) => (
+              <VenueItem
+                key={index}
+                venueName={`Venue Name ${index + 1}`}
+                rating={Math.floor(Math.random() * 3) + 3}
+              />
+            ))}
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -202,6 +233,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 30,
     marginHorizontal: '1%',
+    marginTop: 10, // Adjust the top spacing here
   },
   button: {
     paddingVertical: 10,
@@ -211,62 +243,106 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cardContainer: {
-    padding: 20,
-  },
-  card: {
-    width: '100%',
-    height: 150,
-    borderRadius: 10,
-    backgroundColor: COLORS.white,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  cardImage: {
-    width: '110%',
-    height: 150,
-    resizeMode: 'cover',
-    borderRadius: 10,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
-  },
-  clickableSection: {
-    marginBottom: 20,
-  },
-  venueContainer: {
+  searchContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    marginHorizontal: 20,
+    marginTop: 20, // Adjust the top spacing here
+  },
+  searchInput: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    paddingHorizontal: 10,
+    marginRight: 10,
+  },
+  searchButton: {
+    width: '40%',
+    height: 40,
+    borderRadius: 10,
+  },
+  container: {
+    flex: 1,
+    width: '95%',
+    alignSelf: 'center',
+    marginTop: 10, // Adjust the margin value to make it lower
+    borderWidth: 1, // Add a border width
+    borderColor: COLORS.black, // Specify the border color
+    borderRadius: 10, // Add border radius for rounded corners
+    padding: 10, // Add padding to create space between the border and the content
+    minHeight: 340, // Adjust the height as per your requirement
+    backgroundColor: COLORS.foam,
+  },
+  subContainer: {
     marginBottom: 10,
-    backgroundColor: COLORS.yellow,
+    backgroundColor: COLORS.white,
     padding: 10,
     borderWidth: 1,
     borderColor: COLORS.black,
     borderRadius: 10,
-    height: 50, // adjust the height as per your requirement
-    width: '105%', // adjust the width as per your requirement
-    marginLeft: -10, // add left margin to move the container to the left
   },
-  venueTitle: {
-    fontSize: 20,
+  itemContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  leftContainer: {
+    flex: 1,
+  },
+  rightContainer: {
+    flex: 0.3,
+    justifyContent: 'flex-end',
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+  },
+  venueName: {
+    fontSize: 16,
+    fontWeight: 'bold',
     color: COLORS.black,
   },
   starRatingContainer: {
-    backgroundColor: COLORS.yellow,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 4,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: COLORS.overlay,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  popup: {
+    width: '80%', // Adjust the width of the popup
+    height: 300, // Adjust the height of the popup
+    backgroundColor: COLORS.white,
     borderRadius: 10,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    padding: 20,
+    elevation: 5,
+  },
+  popupTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  popupContent: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: COLORS.primary,
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: '50%', // Adjust the marginTop to shift the close button down
+  },
+  closeButtonText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 

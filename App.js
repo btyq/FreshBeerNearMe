@@ -6,7 +6,6 @@ import { Welcome, Signup, Dashboard, Profile, BeersVenue, Social, Feedback, Jour
 import { AdminLogin, ManageUsers } from './frontend/components';
 import BottomTabNavigation from './frontend/navigation/BottomTabNavigation';
 import FindABeer from './frontend/screens/FindABeer';
-import FindAVenue from './frontend/screens/FindAVenue';
 import NearbyVenues from './frontend/screens/NearbyVenues';
 import TopRated from './frontend/screens/TopRated';
 import Breweries from './frontend/screens/Breweries';
@@ -30,7 +29,6 @@ export default function App() {
           <Stack.Screen name="Journal" component={Journal} options={{ headerShown: false }} />
           <Stack.Screen name="Wishlist" component={Wishlist} options={{ headerShown: false }} />
           <Stack.Screen name="FindABeer" component={FindABeer} options={{ headerShown: false }} />
-          <Stack.Screen name="FindAVenue" component={FindAVenue} options={{ headerShown: false }} />
           <Stack.Screen name="NearbyVenues" component={NearbyVenues} options={{ headerShown: false }} />
           <Stack.Screen name="TopRated" component={TopRated} options={{ headerShown: false }} />
           <Stack.Screen name="Breweries" component={Breweries} options={{ headerShown: false }} />

@@ -8,7 +8,6 @@ import Feedback from "./Feedback";
 import Journal from "./Journal";
 import Wishlist from "./Wishlist";
 import FindABeer from "./FindABeer";
-import FindAVenue from "./FindAVenue";
 import NearbyVenues from "./NearbyVenues";
 import TopRated from "./TopRated";
 import Breweries from "./Breweries";
@@ -24,7 +23,6 @@ export {
   Journal,
   Wishlist,
   FindABeer,
-  FindAVenue,
   NearbyVenues,
   TopRated,
   Breweries

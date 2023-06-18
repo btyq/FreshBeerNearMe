@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { AirbnbRating } from 'react-native-ratings';
@@ -29,8 +29,9 @@ const Button = (props) => {
 const StarRating = () => {
   const [rating, setRating] = useState(4);
 
-  const handleRating = (value) => {
-    setRating(value);
+  const handleRating = () => {
+    const randomRating = Math.floor(Math.random() * 3) + 3; // Generate a random number between 3 and 5
+    setRating(randomRating);
   };
 
   return (
@@ -49,23 +50,47 @@ const StarRating = () => {
 };
 
 const VenueItem = ({ venueName, rating }) => {
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  const handlePopupOpen = () => {
+    setPopupVisible(true);
+  };
+
+  const handlePopupClose = () => {
+    setPopupVisible(false);
+  };
+
   return (
-    <View style={styles.itemContainer}>
-      <View style={styles.leftContainer}>
-        <Text style={styles.venueName}>{venueName}</Text>
-      </View>
-      <View style={styles.rightContainer}>
-        <View style={styles.starRatingContainer}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Ionicons
-              key={star}
-              name="star"
-              size={16}
-              color={star <= rating ? COLORS.foam : COLORS.grey}
-            />
-          ))}
+    <View style={styles.subContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
+        <View style={styles.leftContainer}>
+          <Text style={styles.venueName}>{venueName}</Text>
         </View>
-      </View>
+        <View style={styles.rightContainer}>
+          <View style={styles.starRatingContainer}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Ionicons
+                key={star}
+                name="star"
+                size={16}
+                color={star <= rating ? COLORS.foam : COLORS.grey}
+              />
+            ))}
+          </View>
+        </View>
+      </TouchableOpacity>
+
+      <Modal visible={popupVisible} transparent animationType="fade">
+        <View style={styles.modalContainer}>
+          <View style={styles.popup}>
+            <Text style={styles.popupTitle}>{venueName}</Text>
+            <Text style={styles.popupContent}>Popup Content</Text>
+            <TouchableOpacity style={styles.closeButton} onPress={handlePopupClose}>
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -76,7 +101,7 @@ const NearbyVenues = ({ navigation }) => {
   };
 
   const handleFindAVenueClick = () => {
-    navigation.navigate('FindAVenue');
+    navigation.navigate('BeersVenue');
   };
 
   const handleNearbyVenuesClick = () => {
@@ -170,17 +195,19 @@ const NearbyVenues = ({ navigation }) => {
               />
             ))}
           </View>
-
-          <LinearGradient style={styles.container} colors={[COLORS.foam, COLORS.foam]}>
-            <ScrollView>
-              {Array.from({ length: 10 }).map((_, index) => (
-                <View key={index} style={styles.subContainer}>
-                  <VenueItem venueName={`Venue Name ${index + 1}`} rating={3} />
-                </View>
-              ))}
-            </ScrollView>
-          </LinearGradient>
         </ScrollView>
+
+        <View style={styles.container}>
+          <ScrollView>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <VenueItem
+                key={index}
+                venueName={`Venue Name ${index + 1}`}
+                rating={Math.floor(Math.random() * 3) + 3}
+              />
+            ))}
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -216,40 +243,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cardContainer: {
-    padding: 20,
-  },
-  card: {
-    width: '100%',
-    height: 150,
-    borderRadius: 10,
-    backgroundColor: COLORS.white,
-    justifyContent: 'center',
+  searchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
+    marginHorizontal: 20,
+    marginTop: 20, // Adjust the top spacing here
   },
-  cardImage: {
-    width: '110%',
-    height: 150,
-    resizeMode: 'cover',
+  searchInput: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderColor: COLORS.black,
     borderRadius: 10,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
+    paddingHorizontal: 10,
+    marginRight: 10,
   },
-  clickableSection: {
-    marginBottom: 20,
+  searchButton: {
+    width: '40%',
+    height: 40,
+    borderRadius: 10,
   },
   container: {
+    flex: 1,
     width: '95%',
     alignSelf: 'center',
     marginTop: 10, // Adjust the margin value to make it lower
@@ -293,26 +309,40 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 4,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginTop: 20, // Adjust the top spacing here
-  },
-  searchInput: {
+  modalContainer: {
     flex: 1,
-    height: 40,
-    borderWidth: 1,
-    borderColor: COLORS.black,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    marginRight: 10,
+    backgroundColor: COLORS.overlay,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  searchButton: {
-    width: '40%',
-    height: 40,
+  popup: {
+    width: '80%', // Adjust the width of the popup
+    height: 300, // Adjust the height of the popup
+    backgroundColor: COLORS.white,
     borderRadius: 10,
+    padding: 20,
+    elevation: 5,
+  },
+  popupTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  popupContent: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
+  closeButton: {
+    backgroundColor: COLORS.primary,
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: '50%', // Adjust the marginTop to shift the close button down
+  },
+  closeButtonText: {
+    color: COLORS.white,
+    fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 
