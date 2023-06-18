@@ -8,9 +8,27 @@ import COLORS from '../constants/colors';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
-  const outlinedColor = COLORS.white;
-  const bgColor = props.filled ? filledBgColor : outlinedColor;
+  let bgColor = COLORS.white; // Set default background color to white
+  if (props.title === 'Find a Venue') {
+    bgColor = COLORS.foam; // Set background color to foam for "Find a Venue" button
+  } else if (props.title === 'Search for Venue') {
+    bgColor = COLORS.foam; // Set background color to foam for "Search for Venue" button
+  }
   const textColor = props.filled ? COLORS.black : COLORS.primary;
+
+  const handlePressIn = () => {
+    // Adjust the opacity and scale of the button when pressed
+    if (props.onPressIn) {
+      props.onPressIn();
+    }
+  };
+
+  const handlePressOut = () => {
+    // Reset the opacity and scale of the button when released
+    if (props.onPressOut) {
+      props.onPressOut();
+    }
+  };
 
   return (
     <TouchableOpacity
@@ -20,8 +38,11 @@ const Button = (props) => {
         ...props.style,
       }}
       onPress={props.onPress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      activeOpacity={0.7} // Adjust the opacity when the button is pressed
     >
-      <Text style={{ fontSize: 12, ...{ color: textColor } }}>{props.title}</Text>
+      <Text style={{ fontSize: 12, color: textColor }}>{props.title}</Text>
     </TouchableOpacity>
   );
 };
@@ -146,7 +167,7 @@ const BeersVenue = ({ navigation }) => {
           <View style={styles.grid}>
             {[
               { title: 'Find a Beer', page: 'FindABeer', onPress: handleFindABeerClick },
-              { title: 'Find a Venue', page: 'FindAVenue', onPress: handleFindAVenueClick },
+              { title: 'Find a Venue', page: 'BeersVenue', onPress: handleFindAVenueClick },
               { title: 'Nearby Venues', page: 'NearbyVenues', onPress: handleNearbyVenuesClick },
               { title: 'Top Rated', page: 'TopRated', onPress: handleTopRatedClick },
               { title: 'Breweries', page: 'Breweries', onPress: handleBreweriesClick },
@@ -275,14 +296,22 @@ const styles = StyleSheet.create({
     padding: 10, // Add padding to create space between the border and the content
     minHeight: 340, // Adjust the height as per your requirement
     backgroundColor: COLORS.foam,
+    shadowColor: COLORS.black, // Add shadow color
+    shadowOffset: { width: 0, height: 2 }, // Add shadow offset
+    shadowOpacity: 0.3, // Add shadow opacity
+    shadowRadius: 3, // Add shadow radius
+    elevation: 5, // Add elevation for Android
   },
   subContainer: {
     marginBottom: 10,
     backgroundColor: COLORS.white,
     padding: 10,
-    borderWidth: 1,
-    borderColor: COLORS.black,
     borderRadius: 10,
+    shadowColor: COLORS.black, // Add shadow color
+    shadowOffset: { width: 0, height: 2 }, // Add shadow offset
+    shadowOpacity: 0.3, // Add shadow opacity
+    shadowRadius: 3, // Add shadow radius
+    elevation: 5, // Add elevation for Android
   },
   itemContainer: {
     flexDirection: 'row',

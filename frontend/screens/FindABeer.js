@@ -154,8 +154,8 @@ const FindABeer = ({ navigation }) => {
               <Button
                 key={title}
                 title={title}
-                color={COLORS.orange}
-                filled
+                color={title === 'Find a Beer' ? COLORS.foam : COLORS.white}
+                filled={title === 'Find a Beer' || title === 'Search for Beer'}
                 style={styles.longButton}
                 onPress={onPress}
               />
@@ -168,7 +168,7 @@ const FindABeer = ({ navigation }) => {
             />
             <Button
               title="Search for Beer"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled
               style={styles.searchButton}
             />
@@ -178,8 +178,8 @@ const FindABeer = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
-                filled
+                color={COLORS.white}
+                filled={false}
                 style={styles.shortButton}
               />
             ))}
@@ -189,8 +189,8 @@ const FindABeer = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
-                filled
+                color={COLORS.white}
+                filled={false}
                 style={styles.shortButton}
               />
             ))}

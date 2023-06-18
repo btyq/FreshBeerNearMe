@@ -165,7 +165,7 @@ const TopRated = ({ navigation }) => {
               <Button
                 key={title}
                 title={title}
-                color={COLORS.orange}
+                color={title === 'Top Rated' || title === 'Search' ? COLORS.foam : COLORS.white}
                 filled
                 style={styles.longButton}
                 onPress={onPress}
@@ -179,7 +179,7 @@ const TopRated = ({ navigation }) => {
             />
             <Button
               title="Search"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled
               style={styles.searchButton}
             />
@@ -189,7 +189,7 @@ const TopRated = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
+                color={COLORS.white}
                 filled
                 style={styles.shortButton}
               />
@@ -200,7 +200,7 @@ const TopRated = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
+                color={COLORS.white}
                 filled
                 style={styles.shortButton}
               />

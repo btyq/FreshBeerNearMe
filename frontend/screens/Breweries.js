@@ -139,7 +139,7 @@ const Breweries = ({ navigation }) => {
               <Button
                 key={title}
                 title={title}
-                color={COLORS.orange}
+                color={page === 'Breweries' ? COLORS.foam : COLORS.white}
                 filled
                 style={styles.longButton}
                 onPress={onPress}
@@ -153,7 +153,7 @@ const Breweries = ({ navigation }) => {
             />
             <Button
               title="Search for Brewery"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled
               style={styles.searchButton}
             />
@@ -163,8 +163,8 @@ const Breweries = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
-                filled
+                color={COLORS.white}
+                filled={title === 'Sort by Rating'}
                 style={styles.shortButton}
               />
             ))}
@@ -174,8 +174,8 @@ const Breweries = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
-                filled
+                color={COLORS.white}
+                filled={title === 'Descending'}
                 style={styles.shortButton}
               />
             ))}

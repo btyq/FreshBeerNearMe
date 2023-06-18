@@ -154,7 +154,7 @@ const NearbyVenues = ({ navigation }) => {
               <Button
                 key={title}
                 title={title}
-                color={COLORS.orange}
+                color={title === 'Nearby Venues' || title === 'Search for Venue' ? COLORS.foam : COLORS.white}
                 filled
                 style={styles.longButton}
                 onPress={onPress}
@@ -168,7 +168,7 @@ const NearbyVenues = ({ navigation }) => {
             />
             <Button
               title="Search for Venue"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled
               style={styles.searchButton}
             />
@@ -178,7 +178,7 @@ const NearbyVenues = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
+                color={COLORS.white}
                 filled
                 style={styles.shortButton}
               />
@@ -189,7 +189,7 @@ const NearbyVenues = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
+                color={COLORS.white}
                 filled
                 style={styles.shortButton}
               />
