@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -40,6 +40,7 @@ const Journal = () => {
   const [tastingNotes, setTastingNotes] = useState('');
   const [beerNameRating, setBeerNameRating] = useState(0);
   const [tastingNotesRating, setTastingNotesRating] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleSave = () => {
     // Handle save functionality
@@ -49,57 +50,55 @@ const Journal = () => {
     <SafeAreaView style={styles.container}>
       <LinearGradient style={styles.gradient} colors={[COLORS.white, COLORS.yellow]}>
         <Header />
-  
+
         <View style={styles.buttonContainer}>
-          <Button 
-            title="My Beer Journal" 
-            selected={selectedButton === "My Beer Journal"} 
-            onSelect={setSelectedButton} 
+          <Button
+            title="My Beer Journal"
+            selected={selectedButton === "My Beer Journal"}
+            onSelect={setSelectedButton}
           />
-          <Button 
-            title="My Statistics" 
-            selected={selectedButton === "My Statistics"} 
-            onSelect={setSelectedButton} 
+          <Button
+            title="My Statistics"
+            selected={selectedButton === "My Statistics"}
+            onSelect={setSelectedButton}
           />
         </View>
-  
-        {selectedButton === "My Beer Journal" ? (
-          // Render My Beer Journal content
-          <ScrollView style={styles.scrollView}>
-          <View style={styles.imageContainer}>
-              <Image
-                source={require('../assets/specialtybeer.png')} // Replace this with the actual path of your image
-                style={styles.userImage}
-              />
-              <TouchableOpacity
-                style={styles.editButton}
-                onPress={() => { }}
-              >
-                <Text style={{ color: COLORS.white }}>Edit</Text>
-              </TouchableOpacity>
-            </View>
 
-            <View style={styles.detailContainer}>
-              <View style={styles.titleContainer}>
-                <Text style={styles.beerName}>Beer Name</Text>
-                <View style={styles.starContainer}>
-                  <AirbnbRating
-                    count={5}
-                    defaultRating={beerNameRating}
-                    size={20}
-                    selectedColor={COLORS.foam}
-                    unSelectedColor={COLORS.gray}
-                    reviews={[]}
-                    isDisabled={false}
-                    showRating={false}
-                    onFinishRating={setBeerNameRating}
-                  />
+        {selectedButton === "My Beer Journal" ? (
+          <ScrollView style={styles.scrollView}>
+            <TouchableOpacity style={styles.beerContainer} onPress={() => setShowPopup(true)}>
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require('../assets/specialtybeer.png')}
+                  style={styles.userImage}
+                />
+                <TouchableOpacity style={styles.editButton} onPress={() => { }}>
+                  <Text style={{ color: COLORS.white }}>Edit</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.detailContainer}>
+                <View style={styles.titleContainer}>
+                  <Text style={styles.beerName}>Beer Name</Text>
+                  <View style={styles.starContainer}>
+                    <AirbnbRating
+                      count={5}
+                      defaultRating={beerNameRating}
+                      size={20}
+                      selectedColor={COLORS.foam}
+                      unSelectedColor={COLORS.gray}
+                      reviews={[]}
+                      isDisabled={false}
+                      showRating={false}
+                      onFinishRating={setBeerNameRating}
+                    />
+                  </View>
+                </View>
+                <View style={styles.tastingNoteContainer}>
+                  <Text style={styles.tastingNote}>Tasting Note</Text>
                 </View>
               </View>
-              <View style={styles.tastingNoteContainer}>
-                <Text style={styles.tastingNote}>Tasting Note</Text>
-              </View>
-            </View>
+            </TouchableOpacity>
 
             <TouchableOpacity style={styles.shortButton}>
               <Text style={styles.shortButtonText}>Add a Beer</Text>
@@ -155,20 +154,19 @@ const Journal = () => {
             </View>
           </ScrollView>
         ) : (
-          // Render My Statistics content
           <ScrollView style={styles.scrollView}>
             <View style={styles.statisticsContainer}>
               <LinearGradient style={styles.gradient} colors={[COLORS.white, COLORS.yellow]}>
                 <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyText}>Number of unique places checked in : 5</Text>
+                  <Text style={styles.emptyText}>Number of unique places checked in: 5</Text>
                   <Text style={styles.emptyText}>Types of beer tried: 10</Text>
-                  <Text style={styles.emptyText}>Your favourite tasting notes are: fruity</Text>
-                  <Text style={styles.emptyText}>Your favourite bar is: Brewerkz Orchard (Visited 20 times!)</Text>
+                  <Text style={styles.emptyText}>Your favorite tasting notes are: fruity</Text>
+                  <Text style={styles.emptyText}>Your favorite bar is: Brewerkz Orchard (Visited 20 times!)</Text>
                 </View>
                 <View style={styles.container1}>
                   <Text style={styles.label}>Most Recently Visited</Text>
                   <Image
-                    source={require('../assets/event1.png')} // Replace this with the actual path of your image
+                    source={require('../assets/event1.png')}
                     style={styles.placeImage}
                   />
                   <View style={styles.detailsContainer}>
@@ -188,7 +186,7 @@ const Journal = () => {
                 <View style={styles.container1}>
                   <Text style={styles.label}>Most Recently Tried</Text>
                   <Image
-                    source={require('../assets/specialtybeer.png')} // Replace this with the actual path of your image
+                    source={require('../assets/specialtybeer.png')}
                     style={styles.placeImage}
                   />
                   <View style={styles.detailsContainer}>
@@ -209,6 +207,19 @@ const Journal = () => {
             </View>
           </ScrollView>
         )}
+        <Modal visible={showPopup} animationType="slide" transparent>
+          <View style={styles.modalContainer}>
+            <View style={styles.popupContainer}>
+              <Text style={styles.popupText}>Container Clicked!</Text>
+              <TouchableOpacity
+                style={styles.closeButton}
+                onPress={() => setShowPopup(false)}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </LinearGradient>
     </SafeAreaView>
   );
@@ -262,17 +273,26 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.black,
   },
+  scrollView: {
+    flex: 1,
+  },
+  beerContainer: {
+    width: '90%',
+    alignSelf: 'center',
+    marginBottom: 20,
+    borderWidth: 0,
+    borderColor: COLORS.black,
+    borderRadius: 20,
+  },
   imageContainer: {
     width: '100%',
-    borderColor: 'black',
-    borderWidth: 1,
-    alignItems: 'center',
+    height: 200,
     position: 'relative',
     backgroundColor: COLORS.white,
   },
   userImage: {
     width: '100%',
-    height: 200,
+    height: '100%',
   },
   editButton: {
     position: 'absolute',
@@ -284,11 +304,8 @@ const styles = StyleSheet.create({
   },
   detailContainer: {
     flexDirection: 'column',
-    paddingHorizontal: 10,
-    paddingVertical: 10,
+    padding: 10,
     backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.black,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -313,22 +330,6 @@ const styles = StyleSheet.create({
   tastingNote: {
     fontSize: 15,
     color: COLORS.black,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
-  ratingLabel: {
-    fontSize: 16,
-    marginLeft: 5,
-  },
-  ratingStarContainer: {
-    flexDirection: 'row',
-  },
-  scrollView: {
-    flex: 1,
   },
   shortButton: {
     alignSelf: 'flex-end',
@@ -400,9 +401,6 @@ const styles = StyleSheet.create({
   statisticsContainer: {
     flex: 1,
   },
-  statisticsGradient: {
-    flex: 1,
-  },
   emptyContainer: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -413,27 +411,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: COLORS.black,
     lineHeight: 30,
-  },
-  container1: {
-    margin: 20,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  placeImage: {
-    width: 150,
-    height: 150,
-    marginBottom: 10,
-  },
-  detailsContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  placeLabel: {
-    fontSize: 16,
-    marginRight: 5,
   },
   container1: {
     marginTop: 20,
@@ -462,21 +439,35 @@ const styles = StyleSheet.create({
   placeLabel: {
     fontSize: 18,
   },
-  container2: {
-    marginTop: 20,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  popupContainer: {
     backgroundColor: COLORS.white,
-    borderWidth: 1,
-    borderColor: COLORS.gray,
+    padding: 20,
     borderRadius: 8,
+    alignItems: 'center',
   },
-  label: {
+  popupText: {
+    fontSize: 18,
+    marginBottom: 20,
+  },
+  closeButton: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: COLORS.foam,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+  },
+  closeButtonText: {
+    color: COLORS.white,
     fontSize: 16,
-
-    marginBottom: 10,
+    fontWeight: 'bold',
   },
-  
 });
 
 export default Journal;
