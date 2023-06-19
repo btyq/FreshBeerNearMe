@@ -218,7 +218,7 @@ const Welcome = ({ navigation }) => {
 
             <Button
               title="I am an admin"
-              onPress={() => navigation.navigate("AdminLogin")}
+              onPress={() => navigation.navigate("AdminDashboard")}
               color="black"
               filled
               style={{

@@ -1,7 +1,7 @@
-import AdminLogin from "./AdminLogin";
+import AdminDashboard from "./AdminDashboard";
 import ManageUsers from "./ManageUsers"
 
 export {
-    AdminLogin,
+    AdminDashboard,
     ManageUsers
 }
