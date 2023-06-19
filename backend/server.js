@@ -150,4 +150,15 @@ app.post('/editProfile', async (req, res) => {
   }
 });
 
+//Route to retrieve beer data
+app.get('/beerData', async (req, res) => {
+  try{
+    console.log("hello")
+    const beerData = await db.collection('Beer').find().toArray();
+    res.json({success: true, beerData});
+  } catch (error) {
+    console.error("Error retrieving beer data:", error);
+    res.status(500).json({ success: false, message: "An error occurred while retrieving beer data"});
+  }
+});
 //===================================================================================================================

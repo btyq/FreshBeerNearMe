@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, TextInput, Modal } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { AirbnbRating } from 'react-native-ratings';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
+import axios from "axios";
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -26,30 +27,8 @@ const Button = (props) => {
   );
 };
 
-const StarRating = () => {
-  const [rating, setRating] = useState(4);
-
-  const handleRating = () => {
-    const randomRating = Math.floor(Math.random() * 3) + 3; // Generate a random number between 3 and 5
-    setRating(randomRating);
-  };
-
-  return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.yellow, marginTop: -7 }}>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <TouchableOpacity key={star} onPress={() => handleRating(star)}>
-          <Ionicons
-            name="star"
-            size={20}
-            color={star <= rating ? COLORS.foam : COLORS.grey}
-          />
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-};
-
-const BeerItem = ({ beerName, rating }) => {
+//Function to display each beer item in a container
+const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV, IBU, communityReviews, venueAvailability }) => {
   const [popupVisible, setPopupVisible] = useState(false);
 
   const handlePopupOpen = () => {
@@ -65,6 +44,7 @@ const BeerItem = ({ beerName, rating }) => {
       <TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
         <View style={styles.leftContainer}>
           <Text style={styles.beerName}>{beerName}</Text>
+          <Text style={styles.beerName}>Price: ${beerPrice}</Text>
         </View>
         <View style={styles.rightContainer}>
           <View style={styles.starRatingContainer}>
@@ -82,13 +62,44 @@ const BeerItem = ({ beerName, rating }) => {
 
       <Modal visible={popupVisible} transparent animationType="fade">
         <View style={styles.modalContainer}>
-          <View style={styles.popup}>
-            <Text style={styles.popupTitle}>{beerName}</Text>
-            <Text style={styles.popupContent}>Popup Content</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={handlePopupClose}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
-          </View>
+            <View style={styles.popup}>
+              <ScrollView>
+                <Text style={styles.popupTitle}>{beerName}</Text>
+                <Image source={{ uri: beerImage}} style={styles.beerImage}/>
+                  <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Text style={styles.popupTitle}>Price: ${beerPrice}</Text>
+                    <View style={{...styles.starRatingContainer, marginBottom: 5}}>
+                      <Text style={styles.popupTitle}>Ratings: </Text>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Ionicons
+                          key={star}
+                          name="star"
+                          size={16}
+                          color={star <= rating ? COLORS.foam : COLORS.grey}
+                          style={{marginBottom: 4}}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                  <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Text style={styles.popupTitle}>Alcohol%: {ABV}</Text>
+                    <Text style={styles.popupTitle}>Bitter Units: {IBU}</Text>
+                  </View>
+                  <Text style={styles.popupTitle}>Beer Description</Text>
+                  <Text>{beerDescription}</Text>
+                  <Text style={{...styles.popupTitle, marginTop: 10}}>Locations </Text>
+                  <Text>{venueAvailability}</Text>
+                  <Text style={{...styles.popupTitle, marginTop: 10}}>Community Reviews </Text>
+                  <Text>{communityReviews}</Text>
+                <Button
+                  title="Close"
+                  onPress={handlePopupClose}
+                  color={COLORS.yellow}
+                  filled
+                  style={styles.closeButton}
+                />
+              </ScrollView>
+            </View>
         </View>
       </Modal>
     </View>
@@ -96,6 +107,28 @@ const BeerItem = ({ beerName, rating }) => {
 };
 
 const FindABeer = ({ navigation }) => {
+
+  const [beerData, setBeerData] = useState([]);
+
+  //Function to retrieve the list of beer data in the database
+  useEffect(() => {
+    const fetchBeerData = async () => {
+      try {
+        const response = await axios.get('http://10.0.2.2:3000/beerData');
+        const { success, beerData } = response.data;
+        if (success) {
+          setBeerData(beerData);
+        } else {
+          console.error('Error retrieving beer data:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error retrieving beer data:', error);
+      }
+    };
+  
+    fetchBeerData();
+  }, []);
+
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
   };
@@ -196,17 +229,23 @@ const FindABeer = ({ navigation }) => {
             ))}
           </View>
         </ScrollView>
-
         <View style={styles.container}>
           <ScrollView>
-            {Array.from({ length: 1 }).map((_, index) => (
+            {beerData.map((beer, index) => (
               <BeerItem
                 key={index}
-                beerName={`Beer Name ${index + 1}`}
-                rating={Math.floor(Math.random() * 3) + 3}
+                beerName={beer.beerName}
+                beerPrice={beer.price}
+                rating={beer.rating}
+                beerDescription={beer.beerDescription}
+                beerImage={beer.beerImage}
+                ABV={beer.abv}
+                IBU={beer.ibu}
+                venueAvailability={beer.venueAvailability}
+                communityReviews={beer.communityReviews}
               />
             ))}
-          </ScrollView>
+          </ScrollView> 
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -316,8 +355,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popup: {
-    width: '80%', // Adjust the width of the popup
-    height: 300, // Adjust the height of the popup
+    width: '90%', 
+    height: 550, 
     backgroundColor: COLORS.white,
     borderRadius: 10,
     padding: 20,
@@ -326,24 +365,31 @@ const styles = StyleSheet.create({
   popupTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 5,
   },
   popupContent: {
     fontSize: 16,
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.foam,
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: '50%', // Adjust the marginTop to shift the close button down
+    marginTop: '5%', 
   },
   closeButtonText: {
     color: COLORS.white,
     fontWeight: 'bold',
     fontSize: 16,
   },
+  beerImage: {
+    width: '100%', 
+    height: 200, 
+    resizeMode: 'cover', 
+    borderRadius: 10, 
+    marginBottom: 10, 
+  }
 });
 
 export default FindABeer;
