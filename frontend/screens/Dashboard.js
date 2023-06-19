@@ -6,6 +6,8 @@ import { Ionicons, MaterialIcons, Octicons, Entypo } from '@expo/vector-icons';
 import COLORS from "../constants/colors";
 import { useCookies } from "../CookieContext";
 import { Tab, TabView, ThemeProvider, Card } from '@rneui/themed';
+import { Header } from 'react-native-elements';
+
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -54,29 +56,21 @@ const Dashboard = ({ navigation }) => {
   return (
     <ScrollView>
       <LinearGradient style={{ height:950 }} colors={[COLORS.white, COLORS.yellow]}>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            padding: 10,
-            paddingTop: 30,
-            backgroundColor: COLORS.foam,
-            height: 70,
-            shadowColor: COLORS.black,
-            shadowOffset: { width: 0, height: 2 },
-            shadowOpacity: 0.3,
-            shadowRadius: 3,
-            elevation: 5,
-          }}
-        >
-          <Text style={{ fontSize: 20, color: COLORS.black, fontWeight: 'bold' }}>FreshBeer</Text>
-          <View style={{ flexDirection: 'row' }}>
-            <Octicons name="bookmark" size={24} color={COLORS.black} style={{marginRight: 12}}/>
-            <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
-          </View>
-        </View>
-        
+        <Header
+              placement="left"
+              backgroundColor={COLORS.foam}
+              centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+              rightComponent={
+                <View style={{flexDirection: 'row', marginTop: 5}}>
+                  <TouchableOpacity>
+                    <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+                  </TouchableOpacity>
+                </View>}
+            />
+          
         <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 5 }}>
           <Text style={{ fontSize: 26, fontWeight: 'bold', color: COLORS.black }}>Welcome!</Text>
           <View style={styles.grid}>
