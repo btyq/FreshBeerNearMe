@@ -53,7 +53,7 @@ const Dashboard = ({ navigation }) => {
 //=====================================================================================================
   return (
     <ScrollView>
-      <LinearGradient style={{ height:900 }} colors={[COLORS.white, COLORS.yellow]}>
+      <LinearGradient style={{ height:950 }} colors={[COLORS.white, COLORS.yellow]}>
         <View
           style={{
             flexDirection: 'row',
