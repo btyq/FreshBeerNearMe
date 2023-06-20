@@ -76,14 +76,14 @@ const Dashboard = ({ navigation }) => {
           <View style={styles.grid}>
             <Button
               title="My Profile"
-              onPress={() => navigation.navigate('BottomTabNavigation', { screen: 'Profile' })}
+              onPress={() => navigation.navigate('Profile')}
               color={COLORS.foam}
               filled
               style={styles.gridItem}
             />
             <Button
               title="Beers & Venues"
-              onPress={() => navigation.navigate('BeersVenue')}
+              onPress={() => navigation.navigate('BottomTab', {screen: 'BeersVenue'})}
               color={COLORS.foam}
               filled
               style={styles.gridItem}

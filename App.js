@@ -4,11 +4,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Welcome, Signup, Dashboard, Profile, BeersVenue, Social, Feedback, Journal, Wishlist } from './frontend/screens';
 import { AdminDashboard, ManageUsers } from './frontend/components';
+import { FindABeer, NearbyVenues, TopRated, Breweries } from './frontend/screens';
 import BottomTabNavigation from './frontend/navigation/BottomTabNavigation';
-import FindABeer from './frontend/screens/FindABeer';
-import NearbyVenues from './frontend/screens/NearbyVenues';
-import TopRated from './frontend/screens/TopRated';
-import Breweries from './frontend/screens/Breweries';
+import BottomTab from './frontend/navigation/BottomTab';
 
 const Stack = createNativeStackNavigator();
 
@@ -35,6 +33,11 @@ export default function App() {
           <Stack.Screen
             name="BottomTabNavigation"
             component={BottomTabNavigation}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="BottomTab"
+            component={BottomTab}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

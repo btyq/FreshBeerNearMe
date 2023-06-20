@@ -49,7 +49,7 @@ const Welcome = ({ navigation }) => {
         const sessionToken = 'testtoken123';
         setCookies({sessionToken, username});
         console.log("Wow it works");
-        navigation.navigate("BottomTabNavigation", { screen: 'Dashboard'});
+        navigation.navigate('BottomTabNavigation', { screen: 'Dashboard'});
       } else {
         const { message } = response.data;
         console.log("Login failed:", message);

@@ -119,7 +119,7 @@ const VenueItem = ({ venueName, rating }) => {
 
 const BeersVenue = ({ navigation }) => {
   const handleFindABeerClick = () => {
-    navigation.navigate('FindABeer');
+    navigation.navigate('BottomTab', { screen: 'FindABeer'});
   };
 
   const handleFindAVenueClick = () => {
