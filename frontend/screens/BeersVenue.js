@@ -141,26 +141,26 @@ const BeersVenue = ({ navigation }) => {
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
       <Header
-            placement="left"
-            backgroundColor={COLORS.foam}
-            centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
-            rightComponent={
-              <View style={{flexDirection: 'row', marginTop: 5}}>
-                <TouchableOpacity>
-                  <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }}/>
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
-                </TouchableOpacity>
-              </View>}
-          />
+        placement="left"
+        backgroundColor={COLORS.foam}
+        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        rightComponent={
+          <View style={{flexDirection: 'row', marginTop: 5}}>
+            <TouchableOpacity>
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }}/>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+            </TouchableOpacity>
+          </View>}
+      />
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
           <View style={styles.grid}>
             {[
-              { title: 'Find a Beer', page: 'FindABeer', onPress: handleFindABeerClick },
               { title: 'Find a Venue', page: 'BeersVenue', onPress: handleFindAVenueClick },
+              { title: 'Find a Beer', page: 'FindABeer', onPress: handleFindABeerClick },
               { title: 'Nearby Venues', page: 'NearbyVenues', onPress: handleNearbyVenuesClick },
               { title: 'Top Rated', page: 'TopRated', onPress: handleTopRatedClick },
               { title: 'Breweries', page: 'Breweries', onPress: handleBreweriesClick },

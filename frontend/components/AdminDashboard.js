@@ -67,17 +67,18 @@ const AdminLogin = () => {
   const navigation = useNavigation();
 
   const handleGoPress = () => {
-    // Perform the navigation based on the selected option
+    // perform the navigation based on the selected option
     switch (selected) {
-      case 'Dashboard':
-        navigation.navigate({ components: 'AdminDashboard' });
+      case 1:
+        navigation.navigate({ screen: './frontend/components/AdminDashboard' });
         break;
-      case 'User Management':
-        navigation.navigate({ components: 'ManageUsers' });
+      case 4:
+        navigation.navigate({ screen: './frontend/components/ManageUsers' });
         break;
       default:
         break;
     }
+    console.log('Navigation performed:', selected);
   };
 
   return (
@@ -119,13 +120,20 @@ const AdminLogin = () => {
                 />
               </View>
               <View style={{ flex: 1 }}>
-                <Button
+                <Pressable
+                onPress={handleGoPress}>
+                  <Text style={{
+                    color: COLORS.black,
+                    marginLeft: 4
+                  }}>Go</Text>
+                </Pressable>
+                {/*<Button
                   title="Go"
                   color={COLORS.foam}
                   filled
                   style={{ width: '100%' }}
-                  onPress={handleGoPress}
-                />
+                  onPress={(handleGoPress)}
+                />*/}
               </View>
             </View>
           

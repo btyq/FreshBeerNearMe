@@ -156,8 +156,8 @@ const TopRated = ({ navigation }) => {
         <ScrollView>
           <View style={styles.grid}>
             {[
-              { title: 'Find a Beer', page: 'FindABeer', onPress: handleFindABeerClick },
               { title: 'Find a Venue', page: 'FindAVenue', onPress: handleFindAVenueClick },
+              { title: 'Find a Beer', page: 'FindABeer', onPress: handleFindABeerClick },
               { title: 'Nearby Venues', page: 'NearbyVenues', onPress: handleNearbyVenuesClick },
               { title: 'Top Rated', page: 'TopRated', onPress: handleTopRatedClick },
               { title: 'Breweries', page: 'Breweries', onPress: handleBreweriesClick },

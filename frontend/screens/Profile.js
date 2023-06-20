@@ -98,19 +98,19 @@ const Profile = ( {navigation} ) => {
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
       <Header
-            placement="left"
-            backgroundColor={COLORS.foam}
-            centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
-            rightComponent={
-              <View style={{flexDirection: 'row', marginTop: 5}}>
-                <TouchableOpacity>
-                  <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
-                </TouchableOpacity>
-              </View>}
-          />
+        placement="left"
+        backgroundColor={COLORS.foam}
+        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        rightComponent={
+          <View style={{flexDirection: 'row', marginTop: 5}}>
+            <TouchableOpacity>
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+            </TouchableOpacity>
+          </View>}
+      />
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
