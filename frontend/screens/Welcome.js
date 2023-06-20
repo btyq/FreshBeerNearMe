@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, Pressable, TextInput, StyleSheet } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, Pressable, TextInput, StyleSheet, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
@@ -53,6 +53,7 @@ const Welcome = ({ navigation }) => {
       } else {
         const { message } = response.data;
         console.log("Login failed:", message);
+        Alert.alert("Unable to login!", "Please enter a valid user account credentials");
       }
     } catch (error) {
       console.log("An error occurred:", error.message);
@@ -60,13 +61,13 @@ const Welcome = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
-      <SafeAreaView>
+    <LinearGradient style={{ height: 800 }} colors={[COLORS.white, COLORS.yellow]}>
+      <ScrollView contentContainerStyle={{flexGrow : 1}}>
         <View style={{flex: 1}}>
           <Image 
             source={require("../assets/beer.png")} 
             style={{
-              height: 230, 
+              height: 220, 
               width: 250, 
               alignSelf: 'center'
               }}>
@@ -76,7 +77,7 @@ const Welcome = ({ navigation }) => {
         <View style={{
           paddingHorizontal: 20,
           position: "absolute",
-          top: 240,
+          top: 220,
           width: "100%"
         }}>
           <Text style={{
@@ -348,7 +349,7 @@ const Welcome = ({ navigation }) => {
           </View>
         </View>
         </View>
-      </SafeAreaView>
+      </ScrollView>
     </LinearGradient>
   )
 }
