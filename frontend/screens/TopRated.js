@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
-import { AirbnbRating } from 'react-native-ratings';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
+import { Header } from 'react-native-elements';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -129,28 +129,20 @@ const TopRated = ({ navigation }) => {
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 10,
-          paddingTop: 30,
-          backgroundColor: COLORS.foam,
-          height: 70,
-          shadowColor: COLORS.black,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.3,
-          shadowRadius: 3,
-          elevation: 5,
-        }}
-      >
-        <Text style={{ fontSize: 20, color: COLORS.black, fontWeight: 'bold' }}>FreshBeer</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 12 }} />
-          <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
-        </View>
-      </View>
+      <Header
+        placement="left"
+        backgroundColor={COLORS.foam}
+        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        rightComponent={
+          <View style={{flexDirection: 'row', marginTop: 5}}>
+            <TouchableOpacity>
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }}/>
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+            </TouchableOpacity>
+          </View>}
+      />
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
@@ -194,8 +186,6 @@ const TopRated = ({ navigation }) => {
                 style={styles.shortButton}
               />
             ))}
-          </View>
-          <View style={styles.grid}>
             {['Ascending', 'Descending'].map((title, index) => (
               <Button
                 key={index}
@@ -206,15 +196,28 @@ const TopRated = ({ navigation }) => {
               />
             ))}
           </View>
+          {/*<View style={styles.grid}>
+            {['Ascending', 'Descending'].map((title, index) => (
+              <Button
+                key={index}
+                title={title}
+                color={COLORS.white}
+                filled
+                style={styles.shortButton}
+              />
+            ))}
+            </View>*/}
         </ScrollView>
 
-        <ScrollView style={styles.container}>
-          {mixedNames.map((name, index) => (
-            <View key={index} style={styles.subContainer}>
-              <VenueItem venueName={name} rating={Math.floor(Math.random() * 3) + 3} />
-            </View>
-          ))}
-        </ScrollView>
+        <View style={styles.container}>
+          <ScrollView>
+            {mixedNames.map((name, index) => (
+              <View key={index} style={styles.subContainer}>
+                <VenueItem venueName={name} rating={Math.floor(Math.random() * 3) + 3} />
+              </View>
+            ))}
+          </ScrollView>
+        </View>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -254,14 +257,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    width: '100%',
-    height: 150,
+    width: '90%',
+    height: 100,
     borderRadius: 10,
     backgroundColor: COLORS.white,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,
-    marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
@@ -281,7 +283,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   clickableSection: {
-    marginBottom: 20,
+    marginBottom: 2,
   },
   container: {
     flex: 1,
