@@ -153,7 +153,6 @@ app.post('/editProfile', async (req, res) => {
 //Route to retrieve beer data
 app.get('/beerData', async (req, res) => {
   try{
-    console.log("hello")
     const beerData = await db.collection('Beer').find().toArray();
     res.json({success: true, beerData});
   } catch (error) {

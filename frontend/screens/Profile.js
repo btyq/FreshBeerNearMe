@@ -45,7 +45,7 @@ const Profile = ( {navigation} ) => {
 
     const fetchUserData = async () => {
       try {
-        const response = await axios.post('http://192.168.1.116:3000/getUserData', { username });
+        const response = await axios.post('http://10.0.2.2:3000/getUserData', { username });
 
         const userData = response.data;
         const { email, mobileNumber, password, receiveNotification } = userData;
