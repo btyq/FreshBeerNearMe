@@ -3,18 +3,7 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import COLORS from '../constants/colors';
-
-const Header = () => {
-  return (
-    <View style={styles.header}>
-      <Text style={styles.headerText}>FreshBeer</Text>
-      <View style={styles.iconContainer}>
-        <Ionicons name="bookmark" size={24} color={COLORS.black} style={styles.icon} />
-        <Ionicons name="notifications-outline" size={24} color={COLORS.black} style={styles.icon} />
-      </View>
-    </View>
-  );
-};
+import { Header } from 'react-native-elements';
 
 const MyWishlist = () => {
   const beerData = [
@@ -45,7 +34,20 @@ const MyWishlist = () => {
 
   return (
     <LinearGradient style={styles.container} colors={[COLORS.white, COLORS.yellow]}>
-      <Header />
+      <Header
+      placement="left"
+      backgroundColor={COLORS.foam}
+      centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+      rightComponent={
+        <View style={{flexDirection: 'row', marginTop: 5}}>
+          <TouchableOpacity>
+            <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+          </TouchableOpacity>
+        </View>}
+    />
       <View style={styles.wishlistContainer}>
         <Text style={styles.wishlistText}>My Wishlist</Text>
         <TouchableOpacity style={styles.editButton}>
@@ -136,31 +138,6 @@ const MyWishlist = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    paddingTop: 30, // reduce paddingTop to bring the header closer to the top
-    backgroundColor: COLORS.foam,
-    height: 70,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  headerText: {
-    fontSize: 20,
-    color: COLORS.black,
-    fontWeight: 'bold',
-  },
-  iconContainer: {
-    flexDirection: 'row',
-  },
-  icon: {
-    marginLeft: 12,
   },
   wishlistContainer: {
     flexDirection: 'row',

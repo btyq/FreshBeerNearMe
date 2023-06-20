@@ -5,6 +5,7 @@ import { Ionicons, Octicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
 import { AirbnbRating } from 'react-native-ratings';
+import { Header } from 'react-native-elements';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -26,18 +27,6 @@ const Button = (props) => {
   );
 };
 
-const Header = () => {
-  return (
-    <View style={styles.topBar}>
-      <Text style={styles.logo}>FreshBeer</Text>
-      <View style={styles.iconsContainer}>
-        <Octicons name="bookmark" size={24} color={COLORS.black} style={styles.icon} />
-        <Ionicons name="notifications-outline" size={24} color={COLORS.black} style={styles.icon} />
-      </View>
-    </View>
-  );
-};
-
 const Social = () => {
   const [comment, setComment] = useState('Bitter, but it\'s decent');
   const [comments, setComments] = useState([]);
@@ -50,7 +39,20 @@ const Social = () => {
   return (
     <View style={styles.container}>
       <LinearGradient style={styles.gradient} colors={[COLORS.white, COLORS.yellow]}>
-        <Header />
+        <Header
+      placement="left"
+      backgroundColor={COLORS.foam}
+      centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+      rightComponent={
+        <View style={{flexDirection: 'row', marginTop: 5}}>
+          <TouchableOpacity>
+            <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+          </TouchableOpacity>
+        </View>}
+    />
 
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView>
@@ -175,17 +177,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 5,
-  },
-  logo: {
-    fontSize: 20,
-    color: COLORS.black,
-    fontWeight: 'bold',
-  },
-  iconsContainer: {
-    flexDirection: 'row',
-  },
-  icon: {
-    marginRight: 12,
   },
   grid: {
     flexDirection: 'row',

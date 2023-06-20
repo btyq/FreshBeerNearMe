@@ -3,11 +3,10 @@ import { View, Text, TouchableOpacity, StyleSheet, Pressable, ScrollView } from 
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import { LinearGradient } from "expo-linear-gradient";
-import CheckBox from "expo-checkbox";
 import { SelectList } from 'react-native-dropdown-select-list';
-import { Feather } from '@expo/vector-icons'; 
 import { useNavigation } from '@react-navigation/native';
 import { Header } from 'react-native-elements';
+import { Feather } from 'react-native-vector-icons';
 import { Table, Row, Rows } from 'react-native-table-component';
 
 //CODES TO STYLE BUTTON
@@ -46,7 +45,7 @@ const tableData1 = {
   ],
 };
 
-const AdminLogin = ({ navigation }) => {
+const AdminLogin = () => {
   // for dropdown select list
   const [selected, setSelected] = React.useState("");
   
@@ -64,6 +63,22 @@ const AdminLogin = ({ navigation }) => {
 
   const [data2, setData2] = useState(tableData1);
 
+  // for selectlist navigation
+  const navigation = useNavigation();
+
+  const handleGoPress = () => {
+    // Perform the navigation based on the selected option
+    switch (selected) {
+      case 'Dashboard':
+        navigation.navigate({ components: 'AdminDashboard' });
+        break;
+      case 'User Management':
+        navigation.navigate({ components: 'ManageUsers' });
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -73,7 +88,10 @@ const AdminLogin = ({ navigation }) => {
             placement="left"
             backgroundColor={COLORS.foam}
             centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
-            rightComponent={{ icon: 'logout', color: COLORS.black }}
+            rightComponent={
+              <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
+                <Feather name="log-out" size={24} color={COLORS.black} />
+              </TouchableOpacity>}
           />
 
           <View style={{ flex: 1, marginHorizontal: 12, marginVertical: 22, justifyContent: 'center', alignItems: 'center' }}>
@@ -93,6 +111,7 @@ const AdminLogin = ({ navigation }) => {
                     position: 'absolute',
                     top: '100%',
                     width: 200,
+                    backgroundColor: COLORS.white,
                     opacity: 1
                   }}
                   defaultOption={{ key: '1', value: 'Dashboard' }}
@@ -105,13 +124,14 @@ const AdminLogin = ({ navigation }) => {
                   color={COLORS.foam}
                   filled
                   style={{ width: '100%' }}
+                  onPress={handleGoPress}
                 />
               </View>
             </View>
           
           </View>
 
-          <View style={{ flex: 1, marginHorizontal: 15 }}>
+          <View style={{ flex: 1, marginHorizontal: 15, zIndex: -5 }}>
             <Text style={{
               fontSize: 16,
               fontWeight: '500',
@@ -120,7 +140,7 @@ const AdminLogin = ({ navigation }) => {
             }}>New bug reports: 3</Text>
           </View>
 
-          <View style={{ flex: 1, marginHorizontal: 12 }}>
+          <View style={{ flex: 1, marginHorizontal: 12, zIndex: -5 }}>
             <View style={styles.container}>
               <Table borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}>
                   <Row data={data1.tableHead} style={styles.head} textStyle={styles.headText} />
@@ -129,8 +149,7 @@ const AdminLogin = ({ navigation }) => {
               <View style={{ flex: 1, marginLeft: 5, marginVertical: 10 }}>
                 <TouchableOpacity
                   style={styles.smallButton}
-                  onPress={() => { console.log("Swag press"); }}
-                >
+                  onPress={() => { console.log("Swag press"); }}>
                   <Text style={styles.smallButtonText}>See all</Text>
                 </TouchableOpacity>
               </View> 

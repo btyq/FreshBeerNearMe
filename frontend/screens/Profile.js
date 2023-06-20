@@ -7,6 +7,7 @@ import CheckBox from 'expo-checkbox';
 import COLORS from '../constants/colors';
 import { useCookies} from "../CookieContext";
 import axios from "axios"; 
+import { Header } from 'react-native-elements';
 //import { useNavigation } from '@react-navigation/native';
 
 const Button = (props) => {
@@ -96,28 +97,20 @@ const Profile = ( {navigation} ) => {
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          padding: 10,
-          paddingTop: 30,
-          backgroundColor: COLORS.foam,
-          height: 70,
-          shadowColor: COLORS.black,
-          shadowOffset: { width: 0, height: 2 },
-          shadowOpacity: 0.3,
-          shadowRadius: 3,
-          elevation: 5,
-        }}
-      >
-        <Text style={{ fontSize: 20, color: COLORS.black, fontWeight: 'bold' }}>FreshBeer</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Octicons name="bookmark" size={24} color={COLORS.black} style={{marginRight: 12}}/>
-          <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
-        </View>
-      </View>
+      <Header
+            placement="left"
+            backgroundColor={COLORS.foam}
+            centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+            rightComponent={
+              <View style={{flexDirection: 'row', marginTop: 5}}>
+                <TouchableOpacity>
+                  <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+                </TouchableOpacity>
+              </View>}
+          />
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
