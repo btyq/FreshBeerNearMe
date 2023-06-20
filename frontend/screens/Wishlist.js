@@ -41,7 +41,7 @@ const MyWishlist = () => {
         rightComponent={
           <View style={{flexDirection: 'row', marginTop: 5}}>
             <TouchableOpacity>
-              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+              <Ionicons name="bookmark-outline" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
               <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
@@ -133,7 +133,6 @@ const MyWishlist = () => {
     </LinearGradient>
   );
 };
-
 
 const styles = StyleSheet.create({
   container: {
