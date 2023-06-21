@@ -5,6 +5,7 @@ import { Ionicons, Octicons } from '@expo/vector-icons';
 import { AirbnbRating } from 'react-native-ratings';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
+import { Header } from 'react-native-elements';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -118,13 +119,20 @@ const Breweries = ({ navigation }) => {
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>FreshBeer</Text>
-        <View style={styles.headerIcons}>
-          <Octicons name="bookmark" size={24} color={COLORS.black} style={styles.headerIcon} />
-          <Ionicons name="notifications-outline" size={24} color={COLORS.black} style={styles.headerIcon} />
-        </View>
-      </View>
+      <Header
+        placement="left"
+        backgroundColor={COLORS.foam}
+        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        rightComponent={
+          <View style={{flexDirection: 'row', marginTop: 5}}>
+            <TouchableOpacity>
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+            </TouchableOpacity>
+          </View>}
+      />
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>

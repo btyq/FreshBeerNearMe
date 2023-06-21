@@ -38,21 +38,21 @@ const Social = () => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient style={styles.gradient} colors={[COLORS.white, COLORS.yellow]}>
+      <LinearGradient style={{flex: 1}} colors={[COLORS.white, COLORS.yellow]}>
         <Header
-      placement="left"
-      backgroundColor={COLORS.foam}
-      centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
-      rightComponent={
-        <View style={{flexDirection: 'row', marginTop: 5}}>
-          <TouchableOpacity>
-            <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
-          </TouchableOpacity>
-        </View>}
-    />
+          placement="left"
+          backgroundColor={COLORS.foam}
+          centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+          rightComponent={
+            <View style={{flexDirection: 'row', marginTop: 5}}>
+              <TouchableOpacity>
+                <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+              </TouchableOpacity>
+            </View>}
+       />
 
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView>
@@ -161,9 +161,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.foam,
   },
-  gradient: {
-    flex: 1,
-  },
   topBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -182,7 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    marginHorizontal: 0,
+    marginHorizontal: 10,
   },
   longButton: {
     width: '15%',

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons, Octicons } from '@expo/vector-icons';
@@ -28,6 +28,24 @@ const Button = (props) => {
   );
 };
 
+// custom alert
+const CustomAlert = ({ visible, onClose }) => {
+  return (
+    <Modal visible={visible} transparent animationType="fade">
+      <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ width: '80%', backgroundColor: COLORS.white, borderRadius: 40, padding: 30,}}>
+          <Ionicons name="md-beer" size={34} color={COLORS.foam} style={{alignSelf: 'center'}} />
+          <Text style={{fontSize: 18, fontWeight: 'bold', alignSelf: 'center', marginBottom: 20 }}>Success</Text>
+          <Text style={{ fontSize: 16, marginBottom: 20, alignSelf: 'center' }}>Profile updated!</Text>
+          <TouchableOpacity style={{ backgroundColor: COLORS.foam, padding: 10, borderRadius: 8, alignItems: 'center', marginHorizontal: 22 }} onPress={onClose}>
+            <Text style={{ color: COLORS.black, fontWeight: 'bold', fontSize: 16 }}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 const Profile = ( {navigation} ) => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -36,6 +54,7 @@ const Profile = ( {navigation} ) => {
   const [isPasswordShown, setIsPasswordShown] = useState(false);
   const [receiveNotification, setReceiveNotification] = useState(false);
   const { cookies } = useCookies();
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
   useEffect(() => {
     const sessionToken = cookies.sessionToken;
@@ -78,6 +97,7 @@ const Profile = ( {navigation} ) => {
       // Handle the response
       if (response.data.success) {
         console.log('Profile updated successfully');
+        setIsDialogVisible(true);
         
         // Update the cookies.username value
         if (response.data.success) {
@@ -93,6 +113,10 @@ const Profile = ( {navigation} ) => {
     } catch (error) {
       console.error('Error updating profile:', error.message);
     }
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogVisible(false);
   };
 
   return (
@@ -287,6 +311,10 @@ const Profile = ( {navigation} ) => {
               marginBottom: 4,
             }}>
           </Button>
+          <CustomAlert
+              visible={isDialogVisible}
+              onClose={handleCloseDialog}
+            />
           </View>
         </ScrollView>
       </SafeAreaView>
