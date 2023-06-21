@@ -1,19 +1,11 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, Pressable, TextInput, StyleSheet, Alert } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, Pressable, TextInput, StyleSheet, Alert, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import CheckBox from "expo-checkbox";
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import COLORS from "../constants/colors";
-
-//Define your custom colors
-/*const COLORS = {
-  primary: '#6D4C41', // Dark Brown color (resembles dark craft beer)
-  secondary: '#DAA520', // Golden color (resembles light craft beer)
-  white: '#FFFFFF',
-  black: '#000000',
-};*/
 
 // Button component
 const Button = (props) => {
@@ -31,6 +23,24 @@ const Button = (props) => {
   )
 }
 
+// custom alert
+const CustomAlert = ({ visible, onClose }) => {
+  return (
+    <Modal visible={visible} transparent animationType="fade">
+      <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ width: '80%', backgroundColor: COLORS.white, borderRadius: 40, padding: 30,}}>
+          <Ionicons name="md-beer" size={34} color={COLORS.foam} style={{alignSelf: 'center'}} />
+          <Text style={{fontSize: 18, fontWeight: 'bold', alignSelf: 'center', marginBottom: 20 }}>Account Signup Success</Text>
+          <Text style={{ fontSize: 16, marginBottom: 20 }}>Your account has been successfully created!</Text>
+          <TouchableOpacity style={{ backgroundColor: COLORS.foam, padding: 10, borderRadius: 8, alignItems: 'center', marginHorizontal: 22 }} onPress={onClose}>
+            <Text style={{ color: COLORS.black, fontWeight: 'bold', fontSize: 16 }}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 // Signup component
 const Signup = ({ navigation }) => {
   const ageRestriction = 18;
@@ -41,11 +51,11 @@ const Signup = ({ navigation }) => {
   const [mobileNumber, setMobileNumber] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
   const handleSignUp = () => {
     if (!username) {
       // Username is missing
-      Alert.alert("Missing Username", "Please enter your username.");
     } else if (!mobileNumber) {
       // Mobile number is missing
       Alert.alert("Missing Mobile Number", "Please enter your mobile number.");
@@ -64,8 +74,8 @@ const Signup = ({ navigation }) => {
           .then((response) => {
             if (response.data.success) {
               // Handle success response
-              Alert.alert("Account Signup Success", "Your account has been successfully created!");
-              console.log("Account signup success");
+              setIsDialogVisible(true);
+              console.log("Account Signup success");
               navigation.navigate('Welcome');
             } else {
               // Display specific error message based on response
@@ -92,6 +102,10 @@ const Signup = ({ navigation }) => {
     }
   };
 
+  const handleCloseDialog = () => {
+    setIsDialogVisible(false);
+  };
+  
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
@@ -330,6 +344,7 @@ const Signup = ({ navigation }) => {
             <Button
               title="Sign Up"
               filled
+              onPress={handleSignUp}
               style={{
                 marginTop: 15,
                 marginBottom: 5,
@@ -340,7 +355,10 @@ const Signup = ({ navigation }) => {
                 borderColor: COLORS.black, // Add black border
                 borderWidth: 1, // Set border width to 1
               }}
-              onPress={handleSignUp}
+            />
+            <CustomAlert
+              visible={isDialogVisible}
+              onClose={handleCloseDialog}
             />
 
             <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 20 }}>
@@ -424,7 +442,7 @@ const Signup = ({ navigation }) => {
                   flexDirection: 'row',
                   height: 52,
                   borderWidth: 1,
-                  borderColor: COLORS.grey,
+                  borderColor: COLORS.black,
                   marginRight: 4,
                   borderRadius: 10
                 }}>
