@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, Image, Pressable, TextInput, StyleSheet, Alert } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, Pressable, TextInput, StyleSheet, Alert, Modal } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import COLORS from "../constants/colors";
@@ -27,6 +27,24 @@ const Button = (props) => {
   );
 };
 
+// custom alert
+const CustomAlert = ({ visible, onClose }) => {
+  return (
+    <Modal visible={visible} transparent animationType="fade">
+      <View style={{ flex: 1, backgroundColor: 'rgba(0, 0, 0, 0.5)', justifyContent: 'center', alignItems: 'center' }}>
+        <View style={{ width: '80%', backgroundColor: COLORS.white, borderRadius: 40, padding: 30,}}>
+          <Ionicons name="md-beer" size={34} color={COLORS.foam} style={{alignSelf: 'center'}} />
+          <Text style={{fontSize: 18, fontWeight: 'bold', alignSelf: 'center', marginBottom: 20 }}>Login Failed</Text>
+          <Text style={{ fontSize: 16, marginBottom: 20 }}>Unable to login! Please enter a valid user account credentials</Text>
+          <TouchableOpacity style={{ backgroundColor: COLORS.foam, padding: 10, borderRadius: 8, alignItems: 'center', marginHorizontal: 22 }} onPress={onClose}>
+            <Text style={{ color: COLORS.black, fontWeight: 'bold', fontSize: 16 }}>OK</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 // CODES FOR THE MAIN PAGE
 const Welcome = ({ navigation }) => {
   const [username, setUsername] = useState("");
@@ -36,6 +54,7 @@ const Welcome = ({ navigation }) => {
   const { setCookies } = useCookies();
   const [selected, setSelected] = useState("");
   const data = [{key:'1',value:'User'}, {key:'2',value:'Venue Owner'}, {key:'3',value:'Admin'}];
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
 
   const handleLogin = async () => {
     try {
@@ -53,11 +72,15 @@ const Welcome = ({ navigation }) => {
       } else {
         const { message } = response.data;
         console.log("Login failed:", message);
-        Alert.alert("Unable to login!", "Please enter a valid user account credentials");
+        setIsDialogVisible(true);
       }
     } catch (error) {
       console.log("An error occurred:", error.message);
     }
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogVisible(false);
   };
 
   return (
@@ -154,18 +177,9 @@ const Welcome = ({ navigation }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
             alignItems: 'center',
-            marginVertical: 6
+           // marginVertical: 6
           }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <CheckBox 
-                style={{ marginRight: 8 }}
-                value={isChecked}
-                onValueChange={setIsChecked}
-                color={isChecked ? COLORS.primary : undefined}
-              />
-              <Text>Remember Me</Text>
-            </View>
-            <View style={{ flexDirection: 'row', alignItems: 'center', position: 'relative', zIndex: 1 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', position: 'relative', zIndex: 1, marginBottom: 10 }}>
               <SelectList
                 data={data}
                 value={selected}
@@ -174,14 +188,14 @@ const Welcome = ({ navigation }) => {
                   borderRadius: 20,
                   position: 'absolute',
                   right: 8,
-                  backgroundColor: "#ffe6b3", // Add background color here
+                  backgroundColor: "#ffe6b3",
                   opacity: 1, // Set opacity to 1
                 }}
                 dropdownStyles={{
                   position: 'absolute',
                   top: '100%',
                   right: 0,
-                  backgroundColor: "#ffe6b3", // Add background color here
+                  backgroundColor: "#ffe6b3",
                   opacity: 1, // Set opacity to 1
                 }}
                 defaultOption={{ key: '1', value: 'User' }}
@@ -212,10 +226,14 @@ const Welcome = ({ navigation }) => {
                 marginTop: 10,
                 paddingHorizontal: 15,
                 marginBottom: 4,
-                marginRight: 4, // Add marginRight to create spacing between buttons
+                marginRight: 4, 
                 zIndex: -5,
               }}>
             </Button>
+            <CustomAlert
+              visible={isDialogVisible}
+              onClose={handleCloseDialog}
+            />
 
             <Button
               title="I am an admin"
@@ -229,6 +247,7 @@ const Welcome = ({ navigation }) => {
               }}>
             </Button>
           </View>
+
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>
             <View style={{
               flex: 1,
@@ -305,18 +324,18 @@ const Welcome = ({ navigation }) => {
               </TouchableOpacity>
 
               <TouchableOpacity 
-              onPress={() => console.log("Pressed")}
-              style={{
-                flex: 1,
-                alignItems: 'center',
-                justifyContent: 'center',
-                flexDirection: 'row',
-                height: 52,
-                borderWidth: 1,
-                borderColor: COLORS.black,
-                marginRight: 4,
-                borderRadius: 10,
-                paddingHorizontal: 10, // Add horizontal padding to create space
+                onPress={() => console.log("Pressed")}
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexDirection: 'row',
+                  height: 52,
+                  borderWidth: 1,
+                  borderColor: COLORS.black,
+                  marginRight: 4,
+                  borderRadius: 10,
+                  paddingHorizontal: 10, // Add horizontal padding to create space
               }}>
                 <Image 
                   source={require("../assets/email.png")}
@@ -355,7 +374,7 @@ const Welcome = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-  button:{
+  button: {
       paddingBottom: 16,
       paddingVertical:10,
       borderColor: COLORS.primary,
@@ -363,6 +382,6 @@ const styles = StyleSheet.create({
       borderRadius: 12,
       alignItems: 'center',
       justifyContent: 'center'
-  }
+  },
 })
 export default Welcome
