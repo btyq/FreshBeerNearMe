@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
-import { AirbnbRating } from 'react-native-ratings';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
 import { Header } from 'react-native-elements';
@@ -24,29 +23,6 @@ const Button = (props) => {
     >
       <Text style={{ fontSize: 12, ...{ color: textColor } }}>{props.title}</Text>
     </TouchableOpacity>
-  );
-};
-
-const StarRating = () => {
-  const [rating, setRating] = useState(4);
-
-  const handleRating = () => {
-    const randomRating = Math.floor(Math.random() * 3) + 3; // Generate a random number between 3 and 5
-    setRating(randomRating);
-  };
-
-  return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.yellow, marginTop: -7 }}>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <TouchableOpacity key={star} onPress={() => handleRating(star)}>
-          <Ionicons
-            name="star"
-            size={20}
-            color={star <= rating ? COLORS.foam : COLORS.grey}
-          />
-        </TouchableOpacity>
-      ))}
-    </View>
   );
 };
 
@@ -97,6 +73,12 @@ const BreweryItem = ({ breweryName, rating }) => {
 };
 
 const Breweries = ({ navigation }) => {
+  const [sortByDistance, setSortByDistance] = useState(true);
+  const [sortByPrice, setSortByPrice] = useState(false);
+  const [sortByRating, setSortByRating] = useState(false);
+  const [sortAscending, setSortAscending] = useState(true);
+  const [sortDescending, setSortDescending] = useState(false);
+
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
   };
@@ -115,6 +97,34 @@ const Breweries = ({ navigation }) => {
 
   const handleBreweriesClick = () => {
     navigation.navigate('Breweries');
+  };
+
+  const handleSortByDistance = () => {
+    setSortByDistance(true);
+    setSortByPrice(false);
+    setSortByRating(false);
+  };
+
+  const handleSortByPrice = () => {
+    setSortByDistance(false);
+    setSortByPrice(true);
+    setSortByRating(false);
+  };
+
+  const handleSortByRating = () => {
+    setSortByDistance(false);
+    setSortByPrice(false);
+    setSortByRating(true);
+  };
+
+  const handleSortAscending = () => {
+    setSortAscending(true);
+    setSortDescending(false);
+  };
+
+  const handleSortDescending = () => {
+    setSortAscending(false);
+    setSortDescending(true);
   };
 
   return (
@@ -167,26 +177,43 @@ const Breweries = ({ navigation }) => {
             />
           </View>
           <View style={styles.grid}>
-            {['Sort by Distance', 'Sort by Price', 'Sort by Rating'].map((title, index) => (
-              <Button
-                key={index}
-                title={title}
-                color={COLORS.white}
-                filled={title === 'Sort by Rating'}
-                style={styles.shortButton}
-              />
-            ))}
+            <Button
+              title="Sort by Distance"
+              color={sortByDistance ? COLORS.foam : COLORS.white}
+              filled={sortByDistance}
+              style={styles.shortButton}
+              onPress={handleSortByDistance}
+            />
+            <Button
+              title="Sort by Price"
+              color={sortByPrice ? COLORS.foam : COLORS.white}
+              filled={sortByPrice}
+              style={styles.shortButton}
+              onPress={handleSortByPrice}
+            />
+            <Button
+              title="Sort by Rating"
+              color={sortByRating ? COLORS.foam : COLORS.white}
+              filled={sortByRating}
+              style={styles.shortButton}
+              onPress={handleSortByRating}
+            />
           </View>
           <View style={styles.grid}>
-            {['Ascending', 'Descending'].map((title, index) => (
-              <Button
-                key={index}
-                title={title}
-                color={COLORS.white}
-                filled={title === 'Descending'}
-                style={styles.shortButton}
-              />
-            ))}
+            <Button
+              title="Ascending"
+              color={sortAscending ? COLORS.foam : COLORS.white}
+              filled={sortAscending}
+              style={styles.shortButton}
+              onPress={handleSortAscending}
+            />
+            <Button
+              title="Descending"
+              color={sortDescending ? COLORS.foam : COLORS.white}
+              filled={sortDescending}
+              style={styles.shortButton}
+              onPress={handleSortDescending}
+            />
           </View>
         </ScrollView>
 
@@ -207,31 +234,6 @@ const Breweries = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    paddingTop: 30,
-    backgroundColor: COLORS.foam,
-    height: 70,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  headerText: {
-    fontSize: 20,
-    color: COLORS.black,
-    fontWeight: 'bold',
-  },
-  headerIcons: {
-    flexDirection: 'row',
-  },
-  headerIcon: {
-    marginRight: 12,
-  },
   grid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -334,12 +336,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popup: {
-    width: '80%', // Adjust the width of the popup
-    height: 300, // Adjust the height of the popup
+    width: '80%',
+    height: 300,
     backgroundColor: COLORS.white,
-    borderRadius: 10,
     padding: 20,
-    elevation: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   popupTitle: {
     fontSize: 18,
@@ -351,16 +354,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: COLORS.primary,
     padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: '50%', // Adjust the marginTop to shift the close button down
+    borderRadius: 10,
+    backgroundColor: COLORS.primary,
   },
   closeButtonText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.white,
   },
 });
 

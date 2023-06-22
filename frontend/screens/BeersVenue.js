@@ -8,14 +8,28 @@ import { Header } from 'react-native-elements';
 
 
 const Button = (props) => {
-  const filledBgColor = props.color || COLORS.primary;
   let bgColor = COLORS.white; // Set default background color to white
+  let textColor = COLORS.primary;
+
   if (props.title === 'Find a Venue') {
     bgColor = COLORS.foam; // Set background color to foam for "Find a Venue" button
-  } else if (props.title === 'Search for Venue') {
-    bgColor = COLORS.foam; // Set background color to foam for "Search for Venue" button
+    textColor = COLORS.black;
+  } else if (props.title === 'Sort by Distance' && props.activeSortBy === 'Sort by Distance') {
+    bgColor = COLORS.foam;
+    textColor = COLORS.black;
+  } else if (props.title === 'Sort by Price' && props.activeSortBy === 'Sort by Price') {
+    bgColor = COLORS.foam;
+    textColor = COLORS.black;
+  } else if (props.title === 'Sort by Rating' && props.activeSortBy === 'Sort by Rating') {
+    bgColor = COLORS.foam;
+    textColor = COLORS.black;
+  } else if (props.title === 'Ascending' && props.activeSortOrder === 'Ascending') {
+    bgColor = COLORS.foam;
+    textColor = COLORS.black;
+  } else if (props.title === 'Descending' && props.activeSortOrder === 'Descending') {
+    bgColor = COLORS.foam;
+    textColor = COLORS.black;
   }
-  const textColor = props.filled ? COLORS.black : COLORS.primary;
 
   const handlePressIn = () => {
     // Adjust the opacity and scale of the button when pressed
@@ -118,6 +132,17 @@ const VenueItem = ({ venueName, rating }) => {
 };
 
 const BeersVenue = ({ navigation }) => {
+  const [activeSortBy, setActiveSortBy] = useState('Sort by Distance');
+  const [activeSortOrder, setActiveSortOrder] = useState('Ascending');
+
+  const handleSortBy = (sortBy) => {
+    setActiveSortBy(sortBy);
+  };
+
+  const handleSortOrder = (sortOrder) => {
+    setActiveSortOrder(sortOrder);
+  };
+
   const handleFindABeerClick = () => {
     navigation.navigate('BottomTab', { screen: 'FindABeer'});
   };
@@ -158,22 +183,41 @@ const BeersVenue = ({ navigation }) => {
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
           <View style={styles.grid}>
-            {[
-              { title: 'Find a Venue', page: 'BeersVenue', onPress: handleFindAVenueClick },
-              { title: 'Find a Beer', page: 'FindABeer', onPress: handleFindABeerClick },
-              { title: 'Nearby Venues', page: 'NearbyVenues', onPress: handleNearbyVenuesClick },
-              { title: 'Top Rated', page: 'TopRated', onPress: handleTopRatedClick },
-              { title: 'Breweries', page: 'Breweries', onPress: handleBreweriesClick },
-            ].map(({ title, page, onPress }) => (
-              <Button
-                key={title}
-                title={title}
-                color={COLORS.orange}
-                filled
-                style={styles.longButton}
-                onPress={onPress}
-              />
-            ))}
+            <Button
+              title="Find a Venue"
+              color={COLORS.orange}
+              filled
+              style={styles.longButton}
+              onPress={handleFindAVenueClick}
+            />
+            <Button
+              title="Find a Beer"
+              color={COLORS.orange}
+              filled
+              style={styles.longButton}
+              onPress={handleFindABeerClick}
+            />
+            <Button
+              title="Nearby Venues"
+              color={COLORS.orange}
+              filled
+              style={styles.longButton}
+              onPress={handleNearbyVenuesClick}
+            />
+            <Button
+              title="Top Rated"
+              color={COLORS.orange}
+              filled
+              style={styles.longButton}
+              onPress={handleTopRatedClick}
+            />
+            <Button
+              title="Breweries"
+              color={COLORS.orange}
+              filled
+              style={styles.longButton}
+              onPress={handleBreweriesClick}
+            />
           </View>
           <View style={styles.searchContainer}>
             <TextInput
@@ -188,26 +232,48 @@ const BeersVenue = ({ navigation }) => {
             />
           </View>
           <View style={styles.grid}>
-            {['Sort by Distance', 'Sort by Price', 'Sort by Rating'].map((title, index) => (
-              <Button
-                key={index}
-                title={title}
-                color={COLORS.orange}
-                filled
-                style={styles.shortButton}
-              />
-            ))}
+            <Button
+              title="Sort by Distance"
+              color={COLORS.orange}
+              filled
+              style={styles.shortButton}
+              activeSortBy={activeSortBy}
+              onPress={() => handleSortBy('Sort by Distance')}
+            />
+            <Button
+              title="Sort by Price"
+              color={COLORS.orange}
+              filled
+              style={styles.shortButton}
+              activeSortBy={activeSortBy}
+              onPress={() => handleSortBy('Sort by Price')}
+            />
+            <Button
+              title="Sort by Rating"
+              color={COLORS.orange}
+              filled
+              style={styles.shortButton}
+              activeSortBy={activeSortBy}
+              onPress={() => handleSortBy('Sort by Rating')}
+            />
           </View>
           <View style={styles.grid}>
-            {['Ascending', 'Descending'].map((title, index) => (
-              <Button
-                key={index}
-                title={title}
-                color={COLORS.orange}
-                filled
-                style={styles.shortButton}
-              />
-            ))}
+            <Button
+              title="Ascending"
+              color={COLORS.orange}
+              filled
+              style={styles.shortButton}
+              activeSortOrder={activeSortOrder}
+              onPress={() => handleSortOrder('Ascending')}
+            />
+            <Button
+              title="Descending"
+              color={COLORS.orange}
+              filled
+              style={styles.shortButton}
+              activeSortOrder={activeSortOrder}
+              onPress={() => handleSortOrder('Descending')}
+            />
           </View>
         </ScrollView>
 

@@ -96,6 +96,9 @@ const VenueItem = ({ venueName, rating }) => {
 };
 
 const NearbyVenues = ({ navigation }) => {
+  const [sortType, setSortType] = useState('Distance');
+  const [sortOrder, setSortOrder] = useState('Ascending');
+
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
   };
@@ -114,6 +117,14 @@ const NearbyVenues = ({ navigation }) => {
 
   const handleBreweriesClick = () => {
     navigation.navigate('Breweries');
+  };
+
+  const handleSortTypeClick = (type) => {
+    setSortType(type);
+  };
+
+  const handleSortOrderClick = (order) => {
+    setSortOrder(order);
   };
 
   return (
@@ -170,9 +181,10 @@ const NearbyVenues = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.white}
+                color={sortType === title ? COLORS.foam : COLORS.white}
                 filled
                 style={styles.shortButton}
+                onPress={() => handleSortTypeClick(title)}
               />
             ))}
           </View>
@@ -181,9 +193,10 @@ const NearbyVenues = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={COLORS.white}
+                color={sortOrder === title ? COLORS.foam : COLORS.white}
                 filled
                 style={styles.shortButton}
+                onPress={() => handleSortOrderClick(title)}
               />
             ))}
           </View>

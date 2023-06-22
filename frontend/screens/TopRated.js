@@ -61,22 +61,24 @@ const VenueItem = ({ venueName, rating }) => {
   };
 
   return (
-    <View style={styles.itemContainer}>
-      <TouchableOpacity style={styles.leftContainer} onPress={handlePopupOpen}>
-        <Text style={styles.venueName}>{venueName}</Text>
-      </TouchableOpacity>
-      <View style={styles.rightContainer}>
-        <View style={styles.starRatingContainer}>
-          {[1, 2, 3, 4, 5].map((star) => (
-            <Ionicons
-              key={star}
-              name="star"
-              size={16}
-              color={star <= rating ? COLORS.foam : COLORS.grey}
-            />
-          ))}
+    <View style={styles.subContainer}>
+      <TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
+        <View style={styles.leftContainer}>
+          <Text style={styles.venueName}>{venueName}</Text>
         </View>
-      </View>
+        <View style={styles.rightContainer}>
+          <View style={styles.starRatingContainer}>
+            {[1, 2, 3, 4, 5].map((star) => (
+              <Ionicons
+                key={star}
+                name="star"
+                size={16}
+                color={star <= rating ? COLORS.foam : COLORS.grey}
+              />
+            ))}
+          </View>
+        </View>
+      </TouchableOpacity>
 
       <Modal visible={popupVisible} transparent animationType="fade">
         <View style={styles.modalContainer}>
@@ -94,6 +96,9 @@ const VenueItem = ({ venueName, rating }) => {
 };
 
 const TopRated = ({ navigation }) => {
+  const [sortType, setSortType] = useState('Rating');
+  const [sortOrder, setSortOrder] = useState('Descending');
+
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
   };
@@ -114,18 +119,13 @@ const TopRated = ({ navigation }) => {
     navigation.navigate('Breweries');
   };
 
-  const mixedNames = [
-    'Venue Name 1',
-    'Beer Name 1',
-    'Beer Name 2',
-    'Venue Name 2',
-    'Venue Name 3',
-    'Beer Name 3',
-    'Beer Name 4',
-    'Venue Name 4',
-    'Venue Name 5',
-    'Beer Name 5',
-  ];
+  const handleSortTypeClick = (type) => {
+    setSortType(type);
+  };
+
+  const handleSortOrderClick = (order) => {
+    setSortOrder(order);
+  };
 
   return (
     <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
@@ -136,7 +136,7 @@ const TopRated = ({ navigation }) => {
         rightComponent={
           <View style={{flexDirection: 'row', marginTop: 5}}>
             <TouchableOpacity>
-              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }}/>
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
               <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
@@ -157,7 +157,7 @@ const TopRated = ({ navigation }) => {
               <Button
                 key={title}
                 title={title}
-                color={title === 'Top Rated' || title === 'Search' ? COLORS.foam : COLORS.white}
+                color={title === 'Top Rated' ? COLORS.foam : COLORS.white}
                 filled
                 style={styles.longButton}
                 onPress={onPress}
@@ -170,51 +170,46 @@ const TopRated = ({ navigation }) => {
               style={styles.searchInput}
             />
             <Button
-              title="Search"
+              title="Search for Venue"
               color={COLORS.foam}
               filled
               style={styles.searchButton}
             />
           </View>
           <View style={styles.grid}>
-            {['Sort by Distance', 'Sort by Price', 'Sort by Rating'].map((title, index) => (
+            {['Sort by Rating', 'Sort by Price', 'Sort by Distance'].map((title, index) => (
               <Button
                 key={index}
                 title={title}
-                color={COLORS.white}
+                color={sortType === title ? COLORS.foam : COLORS.white}
                 filled
                 style={styles.shortButton}
-              />
-            ))}
-            {['Ascending', 'Descending'].map((title, index) => (
-              <Button
-                key={index}
-                title={title}
-                color={COLORS.white}
-                filled
-                style={styles.shortButton}
+                onPress={() => handleSortTypeClick(title)}
               />
             ))}
           </View>
-          {/*<View style={styles.grid}>
+          <View style={styles.grid}>
             {['Ascending', 'Descending'].map((title, index) => (
               <Button
                 key={index}
                 title={title}
-                color={COLORS.white}
+                color={sortOrder === title ? COLORS.foam : COLORS.white}
                 filled
                 style={styles.shortButton}
+                onPress={() => handleSortOrderClick(title)}
               />
             ))}
-            </View>*/}
+          </View>
         </ScrollView>
 
         <View style={styles.container}>
           <ScrollView>
-            {mixedNames.map((name, index) => (
-              <View key={index} style={styles.subContainer}>
-                <VenueItem venueName={name} rating={Math.floor(Math.random() * 3) + 3} />
-              </View>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <VenueItem
+                key={index}
+                venueName={`Venue Name ${index + 1}`}
+                rating={Math.floor(Math.random() * 3) + 3}
+              />
             ))}
           </ScrollView>
         </View>
@@ -243,7 +238,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 30,
     marginHorizontal: '1%',
-    marginTop: 10,
+    marginTop: 10, // Adjust the top spacing here
   },
   button: {
     paddingVertical: 10,
@@ -253,48 +248,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cardContainer: {
-    padding: 20,
-  },
-  card: {
-    width: '90%',
-    height: 100,
-    borderRadius: 10,
-    backgroundColor: COLORS.white,
-    justifyContent: 'center',
+  searchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
+    marginHorizontal: 20,
+    marginTop: 20, // Adjust the top spacing here
   },
-  cardImage: {
-    width: '110%',
-    height: 150,
-    resizeMode: 'cover',
+  searchInput: {
+    flex: 1,
+    height: 40,
+    borderWidth: 1,
+    borderColor: COLORS.black,
     borderRadius: 10,
-    overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.5,
-    shadowRadius: 2,
-    elevation: 5,
+    paddingHorizontal: 10,
+    marginRight: 10,
   },
-  clickableSection: {
-    marginBottom: 2,
+  searchButton: {
+    width: '40%',
+    height: 40,
+    borderRadius: 10,
   },
   container: {
     flex: 1,
     width: '95%',
     alignSelf: 'center',
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: COLORS.black,
-    borderRadius: 10,
-    padding: 10,
-    minHeight: 340,
+    marginTop: 10, // Adjust the margin value to make it lower
+    borderWidth: 1, // Add a border width
+    borderColor: COLORS.black, // Specify the border color
+    borderRadius: 10, // Add border radius for rounded corners
+    padding: 10, // Add padding to create space between the border and the content
+    minHeight: 340, // Adjust the height as per your requirement
     backgroundColor: COLORS.foam,
   },
   subContainer: {
@@ -330,27 +314,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 4,
   },
-  searchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginHorizontal: 20,
-    marginTop: 20,
-  },
-  searchInput: {
-    flex: 1,
-    height: 40,
-    borderWidth: 1,
-    borderColor: COLORS.black,
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    marginRight: 10,
-  },
-  searchButton: {
-    width: '40%',
-    height: 40,
-    borderRadius: 10,
-  },
   modalContainer: {
     flex: 1,
     backgroundColor: COLORS.overlay,
@@ -361,12 +324,13 @@ const styles = StyleSheet.create({
     width: '80%', // Adjust the width of the popup
     height: 300, // Adjust the height of the popup
     backgroundColor: COLORS.white,
-    borderRadius: 10,
     padding: 20,
-    elevation: 5,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   popupTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
   },
@@ -375,16 +339,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: COLORS.primary,
     padding: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: '50%', // Adjust the marginTop to shift the close button down
+    borderRadius: 10,
+    backgroundColor: COLORS.primary,
   },
   closeButtonText: {
-    color: COLORS.white,
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.white,
   },
 });
 
