@@ -13,7 +13,7 @@ const Button = (props) => {
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
   const textColor = props.filled ? COLORS.black : COLORS.primary;
-
+  
   return (
     <TouchableOpacity
       style={{
@@ -109,7 +109,9 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
 
 const FindABeer = ({ navigation }) => {
 
-  const [beerData, setBeerData] = useState([]);
+  const [sortedBeerData, setSortedBeerData] = useState([]);
+  const [sortBy, setSortBy] = useState('name');
+  const [sortOrder, setSortOrder] = useState('asc');
 
   //Function to retrieve the list of beer data in the database
   useEffect(() => {
@@ -118,7 +120,25 @@ const FindABeer = ({ navigation }) => {
         const response = await axios.get('http://10.0.2.2:3000/beerData');
         const { success, beerData } = response.data;
         if (success) {
-          setBeerData(beerData);
+          // Sort the beer data based on the selected sorting options
+          let sortedData = [...beerData];
+          switch (sortBy) {
+            case 'name':
+              sortedData.sort((a, b) => a.beerName.localeCompare(b.beerName));
+              break;
+            case 'price':
+              sortedData.sort((a, b) => a.beerPrice - b.beerPrice);
+              break;
+            case 'rating':
+              sortedData.sort((a, b) => b.rating - a.rating);
+              break;
+            default:
+              break;
+          }
+          if (sortOrder === 'desc') {
+            sortedData.reverse();
+          }
+          setSortedBeerData(sortedData);
         } else {
           console.error('Error retrieving beer data:', response.data.message);
         }
@@ -128,7 +148,7 @@ const FindABeer = ({ navigation }) => {
     };
   
     fetchBeerData();
-  }, []);
+  }, [sortBy, sortOrder]);
 
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
@@ -200,31 +220,48 @@ const FindABeer = ({ navigation }) => {
             />
           </View>
           <View style={styles.grid}>
-            {['Sort by Name', 'Sort by Price', 'Sort by Rating'].map((title, index) => (
-              <Button
-                key={index}
-                title={title}
-                color={COLORS.white}
-                filled={false}
-                style={styles.shortButton}
-              />
-            ))}
+            <Button
+              title="Sort by Name"
+              color={COLORS.white}
+              filled={false}
+              style={styles.shortButton}
+              onPress={() => setSortBy('name')}
+            />
+            <Button
+              title="Sort by Price"
+              color={COLORS.white}
+              filled={false}
+              style={styles.shortButton}
+              onPress={() => setSortBy('price')}
+            />
+            <Button
+              title="Sort by Rating"
+              color={COLORS.white}
+              filled={false}
+              style={styles.shortButton}
+              onPress={() => setSortBy('rating')}
+            />
           </View>
           <View style={styles.grid}>
-            {['Ascending', 'Descending'].map((title, index) => (
-              <Button
-                key={index}
-                title={title}
-                color={COLORS.white}
-                filled={false}
-                style={styles.shortButton}
-              />
-            ))}
+            <Button
+              title="Ascending"
+              color={COLORS.white}
+              filled={false}
+              style={styles.shortButton}
+              onPress={() => setSortOrder('asc')}
+            />
+            <Button
+              title="Descending"
+              color={COLORS.white}
+              filled={false}
+              style={styles.shortButton}
+              onPress={() => setSortOrder('desc')}
+            />
           </View>
         </ScrollView>
         <View style={styles.container}>
           <ScrollView>
-            {beerData.map((beer, index) => (
+            {sortedBeerData.map((beer, index) => (
               <BeerItem
                 key={index}
                 beerName={beer.beerName}

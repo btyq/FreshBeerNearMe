@@ -124,7 +124,6 @@ app.post('/getUserData', async (req, res) => {
 app.post('/editProfile', async (req, res) => {
   try {
     if (globalUser) {
-      console.log(globalUser.userID);
       // Store the existing user data in 'oldData'
       const oldData = {
         userID: globalUser.userID,
