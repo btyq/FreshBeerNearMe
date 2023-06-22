@@ -9,16 +9,11 @@ import axios from "axios";
 import { Header } from 'react-native-elements';
 
 const Button = (props) => {
-  const isSelected = props.option === props.selectedOption; // Check if the button is selected
-  const bgColor = isSelected ? COLORS.foam : COLORS.white; // Update color based on isSelected
-  const textColor = isSelected ? COLORS.black : COLORS.primary; // Set the text color based on selection
-
-  const handlePress = () => {
-    if (!isSelected) {
-      props.onPress(); // Call the onPress function from props only if not selected
-    }
-  };
-
+  const filledBgColor = props.color || COLORS.primary;
+  const outlinedColor = COLORS.white;
+  const bgColor = props.filled ? filledBgColor : outlinedColor;
+  const textColor = props.filled ? COLORS.black : COLORS.primary;
+  
   return (
     <TouchableOpacity
       style={{
@@ -26,13 +21,14 @@ const Button = (props) => {
         ...{ backgroundColor: bgColor },
         ...props.style,
       }}
-      onPress={handlePress} // Use the custom handlePress function for onPress event
+      onPress={props.onPress}
     >
       <Text style={{ fontSize: 12, ...{ color: textColor } }}>{props.title}</Text>
     </TouchableOpacity>
   );
 };
 
+//Function to display each beer item in a container
 const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV, IBU, communityReviews, venueAvailability }) => {
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -67,44 +63,44 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
 
       <Modal visible={popupVisible} transparent animationType="fade">
         <View style={styles.modalContainer}>
-          <View style={styles.popup}>
-            <ScrollView>
-              <Text style={styles.popupTitle}>{beerName}</Text>
-              <Image source={{ uri: beerImage }} style={styles.beerImage} />
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={styles.popupTitle}>Price: ${beerPrice}</Text>
-                <View style={{ ...styles.starRatingContainer, marginBottom: 5 }}>
-                  <Text style={styles.popupTitle}>Ratings: </Text>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Ionicons
-                      key={star}
-                      name="star"
-                      size={16}
-                      color={star <= rating ? COLORS.foam : COLORS.grey}
-                      style={{ marginBottom: 4 }}
-                    />
-                  ))}
-                </View>
-              </View>
-              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={styles.popupTitle}>Alcohol%: {ABV}</Text>
-                <Text style={styles.popupTitle}>Bitter Units: {IBU}</Text>
-              </View>
-              <Text style={styles.popupTitle}>Beer Description</Text>
-              <Text>{beerDescription}</Text>
-              <Text style={{ ...styles.popupTitle, marginTop: 10 }}>Locations </Text>
-              <Text>{venueAvailability}</Text>
-              <Text style={{ ...styles.popupTitle, marginTop: 10 }}>Community Reviews </Text>
-              <Text>{communityReviews}</Text>
-              <Button
-                title="Close"
-                onPress={handlePopupClose}
-                color={COLORS.yellow}
-                filled
-                style={styles.closeButton}
-              />
-            </ScrollView>
-          </View>
+            <View style={styles.popup}>
+              <ScrollView>
+                <Text style={styles.popupTitle}>{beerName}</Text>
+                <Image source={{ uri: beerImage}} style={styles.beerImage}/>
+                  <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Text style={styles.popupTitle}>Price: ${beerPrice}</Text>
+                    <View style={{...styles.starRatingContainer, marginBottom: 5}}>
+                      <Text style={styles.popupTitle}>Ratings: </Text>
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Ionicons
+                          key={star}
+                          name="star"
+                          size={16}
+                          color={star <= rating ? COLORS.foam : COLORS.grey}
+                          style={{marginBottom: 4}}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                  <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+                    <Text style={styles.popupTitle}>Alcohol%: {ABV}</Text>
+                    <Text style={styles.popupTitle}>Bitter Units: {IBU}</Text>
+                  </View>
+                  <Text style={styles.popupTitle}>Beer Description</Text>
+                  <Text>{beerDescription}</Text>
+                  <Text style={{...styles.popupTitle, marginTop: 10}}>Locations </Text>
+                  <Text>{venueAvailability}</Text>
+                  <Text style={{...styles.popupTitle, marginTop: 10}}>Community Reviews </Text>
+                  <Text>{communityReviews}</Text>
+                <Button
+                  title="Close"
+                  onPress={handlePopupClose}
+                  color={COLORS.yellow}
+                  filled
+                  style={styles.closeButton}
+                />
+              </ScrollView>
+            </View>
         </View>
       </Modal>
     </View>
@@ -112,17 +108,19 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
 };
 
 const FindABeer = ({ navigation }) => {
+
   const [sortedBeerData, setSortedBeerData] = useState([]);
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
-  const [sortOption, setSortOption] = useState('name');
 
+  //Function to retrieve the list of beer data in the database
   useEffect(() => {
     const fetchBeerData = async () => {
       try {
         const response = await axios.get('http://10.0.2.2:3000/beerData');
         const { success, beerData } = response.data;
         if (success) {
+          // Sort the beer data based on the selected sorting options
           let sortedData = [...beerData];
           switch (sortBy) {
             case 'name':
@@ -148,7 +146,7 @@ const FindABeer = ({ navigation }) => {
         console.error('Error retrieving beer data:', error);
       }
     };
-
+  
     fetchBeerData();
   }, [sortBy, sortOrder]);
 
@@ -177,14 +175,14 @@ const FindABeer = ({ navigation }) => {
       <Header
         placement="left"
         backgroundColor={COLORS.foam}
-        centerComponent={{ text: 'FreshBeer', style: { fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row' } }}
+        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
         rightComponent={
-          <View style={{ flexDirection: 'row', marginTop: 5 }}>
+          <View style={{flexDirection: 'row', marginTop: 5}}>
             <TouchableOpacity>
               <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
             </TouchableOpacity>
           </View>}
       />
@@ -224,57 +222,37 @@ const FindABeer = ({ navigation }) => {
           <View style={styles.grid}>
             <Button
               title="Sort by Name"
-              option="name"
-              selectedOption={sortOption}
               color={COLORS.white}
               filled={false}
               style={styles.shortButton}
-              onPress={() => {
-                setSortBy('name');
-                setSortOption('name');
-              }}
+              onPress={() => setSortBy('name')}
             />
             <Button
               title="Sort by Price"
-              option="price"
-              selectedOption={sortOption}
               color={COLORS.white}
               filled={false}
               style={styles.shortButton}
-              onPress={() => {
-                setSortBy('price');
-                setSortOption('price');
-              }}
+              onPress={() => setSortBy('price')}
             />
             <Button
               title="Sort by Rating"
-              option="rating"
-              selectedOption={sortOption}
               color={COLORS.white}
               filled={false}
               style={styles.shortButton}
-              onPress={() => {
-                setSortBy('rating');
-                setSortOption('rating');
-              }}
+              onPress={() => setSortBy('rating')}
             />
           </View>
-
           <View style={styles.grid}>
             <Button
               title="Ascending"
-              option="asc"
-              selectedOption={sortOrder}
-              color={sortOrder === 'asc' ? COLORS.foam : COLORS.white}
+              color={COLORS.white}
               filled={false}
               style={styles.shortButton}
               onPress={() => setSortOrder('asc')}
             />
             <Button
               title="Descending"
-              option="desc"
-              selectedOption={sortOrder}
-              color={sortOrder === 'desc' ? COLORS.foam : COLORS.white}
+              color={COLORS.white}
               filled={false}
               style={styles.shortButton}
               onPress={() => setSortOrder('desc')}
@@ -297,7 +275,7 @@ const FindABeer = ({ navigation }) => {
                 communityReviews={beer.communityReviews}
               />
             ))}
-          </ScrollView>
+          </ScrollView> 
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -324,7 +302,7 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     borderRadius: 30,
     marginHorizontal: '1%',
-    marginTop: 10,
+    marginTop: 10, // Adjust the top spacing here
   },
   button: {
     paddingVertical: 10,
@@ -333,14 +311,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row',
   },
   searchContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginHorizontal: 20,
-    marginTop: 20,
+    marginTop: 20, // Adjust the top spacing here
   },
   searchInput: {
     flex: 1,
@@ -360,12 +337,12 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '95%',
     alignSelf: 'center',
-    marginTop: 10,
-    borderWidth: 1,
-    borderColor: COLORS.black,
-    borderRadius: 10,
-    padding: 10,
-    minHeight: 340,
+    marginTop: 10, // Adjust the margin value to make it lower
+    borderWidth: 1, // Add a border width
+    borderColor: COLORS.black, // Specify the border color
+    borderRadius: 10, // Add border radius for rounded corners
+    padding: 10, // Add padding to create space between the border and the content
+    minHeight: 340, // Adjust the height as per your requirement
     backgroundColor: COLORS.foam,
   },
   subContainer: {
@@ -408,8 +385,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popup: {
-    width: '90%',
-    height: 550,
+    width: '90%', 
+    height: 550, 
     backgroundColor: COLORS.white,
     borderRadius: 10,
     padding: 20,
@@ -429,7 +406,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: '5%',
+    marginTop: '5%', 
   },
   closeButtonText: {
     color: COLORS.white,
@@ -437,11 +414,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   beerImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 10,
-    marginBottom: 10,
+    width: '100%', 
+    height: 200, 
+    resizeMode: 'cover', 
+    borderRadius: 10, 
+    marginBottom: 10, 
   }
 });
 
