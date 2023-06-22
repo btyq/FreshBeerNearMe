@@ -37,10 +37,10 @@ const Dashboard = ({ navigation }) => {
 
   useEffect(() => {
     const sessionToken = cookies.sessionToken;
-    const username = cookies.username;
+    const userID = cookies.userID;
     // Use the sessionToken and username as needed
     console.log("Session Token:", sessionToken);
-    console.log("Username:", username);
+    console.log("UserID:", userID);
   }, []);
 
   // ================================== Functions for different button ==================================

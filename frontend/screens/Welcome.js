@@ -64,9 +64,9 @@ const Welcome = ({ navigation }) => {
       });
 
       if (response.data.success) {
-        const { username, password } = response.data;
+        const { userID, password } = response.data;
         const sessionToken = 'testtoken123';
-        setCookies({sessionToken, username});
+        setCookies({sessionToken, userID});
         console.log("Wow it works");
         navigation.navigate('BottomTabNavigation', { screen: 'Dashboard'});
       } else {

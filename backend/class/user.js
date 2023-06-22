@@ -34,7 +34,7 @@ class User {
         //Set object id in a separate cookie
         res.cookie('userID', result.userID, { httpOnly: true});
         
-        res.json({ success: true, username: result.username, password: result.password });
+        res.json({ success: true, userID: result.userID, password: result.password });
       } else {
         res.json({ success: false, message: 'Invalid username or password' });
       }
@@ -48,14 +48,14 @@ class User {
     try {
       const db = this.client.db('FreshBearNearMe');
       const collection = db.collection('User');
-  
+      
       // Check if the old data exists in the database
-      const existingUser = await collection.findOne(oldData);
+      const existingUser = await collection.findOne({ userID: oldData.userID });
   
       if (existingUser) {
         // Update the user's profile in the database
         const result = await collection.updateOne(
-          oldData,
+          { userID: oldData.userID }, // Use userID as the filter
           { $set: newData }
         );
   

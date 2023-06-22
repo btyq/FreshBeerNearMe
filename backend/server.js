@@ -101,17 +101,16 @@ app.post('/signup', async (req, res) => {
 
 //Route to retrieve user data at userProfile
 app.post('/getUserData', async (req, res) => {
-  const { username } = req.body;
+  const { userID } = req.body;
 
   try {
     // Find the user document that matches the provided username
-    const user = await collection.findOne({ username });
+    const user = await collection.findOne({ userID });
     if (user) {
       // Extract the necessary data from the user document
-      const { email, mobileNumber, password, receiveNotification } = user;
-
+      const { username, email, mobileNumber, password, receiveNotification } = user;
       // Send the user data as the response
-      res.json({ success: true, email, mobileNumber, password, receiveNotification });
+      res.json({ success: true, username, email, mobileNumber, password, receiveNotification });
     } else {
       res.json({ success: false, message: 'User not found' });
     }
@@ -125,8 +124,10 @@ app.post('/getUserData', async (req, res) => {
 app.post('/editProfile', async (req, res) => {
   try {
     if (globalUser) {
+      console.log(globalUser.userID);
       // Store the existing user data in 'oldData'
       const oldData = {
+        userID: globalUser.userID,
         username: globalUser.username,
         password: globalUser.password,
         email: globalUser.email,

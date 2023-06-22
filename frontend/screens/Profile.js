@@ -47,6 +47,7 @@ const CustomAlert = ({ visible, onClose }) => {
 };
 
 const Profile = ( {navigation} ) => {
+  const [userID, setUserID] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [mobileNumber, setMobileNumber] = useState('');
@@ -58,17 +59,18 @@ const Profile = ( {navigation} ) => {
 
   useEffect(() => {
     const sessionToken = cookies.sessionToken;
-    const username = cookies.username;
+    const userID = cookies.userID;
     console.log(sessionToken);
-    console.log(username);
+    console.log(userID);
 
     const fetchUserData = async () => {
       try {
-        const response = await axios.post('http://10.0.2.2:3000/getUserData', { username });
+        const response = await axios.post('http://10.0.2.2:3000/getUserData', { userID });
 
         const userData = response.data;
-        const { email, mobileNumber, password, receiveNotification } = userData;
+        const { username, email, mobileNumber, password, receiveNotification } = userData;
 
+        setUserID(userID);
         setUsername(username);
         setEmail(email);
         setMobileNumber(mobileNumber);
@@ -86,6 +88,7 @@ const Profile = ( {navigation} ) => {
   const saveChanges = async () => {
     try {
       const newData = {
+        userID: userID,
         username: username,
         password: password,
         email: email,
