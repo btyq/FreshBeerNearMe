@@ -13,7 +13,7 @@ const Button = (props) => {
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
   const textColor = props.filled ? COLORS.black : COLORS.primary;
-  
+
   return (
     <TouchableOpacity
       style={{
@@ -63,44 +63,44 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
 
       <Modal visible={popupVisible} transparent animationType="fade">
         <View style={styles.modalContainer}>
-            <View style={styles.popup}>
-              <ScrollView>
-                <Text style={styles.popupTitle}>{beerName}</Text>
-                <Image source={{ uri: beerImage}} style={styles.beerImage}/>
-                  <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <Text style={styles.popupTitle}>Price: ${beerPrice}</Text>
-                    <View style={{...styles.starRatingContainer, marginBottom: 5}}>
-                      <Text style={styles.popupTitle}>Ratings: </Text>
-                      {[1, 2, 3, 4, 5].map((star) => (
-                        <Ionicons
-                          key={star}
-                          name="star"
-                          size={16}
-                          color={star <= rating ? COLORS.foam : COLORS.grey}
-                          style={{marginBottom: 4}}
-                        />
-                      ))}
-                    </View>
-                  </View>
-                  <View style= {{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <Text style={styles.popupTitle}>Alcohol%: {ABV}</Text>
-                    <Text style={styles.popupTitle}>Bitter Units: {IBU}</Text>
-                  </View>
-                  <Text style={styles.popupTitle}>Beer Description</Text>
-                  <Text>{beerDescription}</Text>
-                  <Text style={{...styles.popupTitle, marginTop: 10}}>Locations </Text>
-                  <Text>{venueAvailability}</Text>
-                  <Text style={{...styles.popupTitle, marginTop: 10}}>Community Reviews </Text>
-                  <Text>{communityReviews}</Text>
-                <Button
-                  title="Close"
-                  onPress={handlePopupClose}
-                  color={COLORS.yellow}
-                  filled
-                  style={styles.closeButton}
-                />
-              </ScrollView>
-            </View>
+          <View style={styles.popup}>
+            <ScrollView>
+              <Text style={styles.popupTitle}>{beerName}</Text>
+              <Image source={{ uri: beerImage }} style={styles.beerImage} />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={styles.popupTitle}>Price: ${beerPrice}</Text>
+                <View style={{ ...styles.starRatingContainer, marginBottom: 5 }}>
+                  <Text style={styles.popupTitle}>Ratings: </Text>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Ionicons
+                      key={star}
+                      name="star"
+                      size={16}
+                      color={star <= rating ? COLORS.foam : COLORS.grey}
+                      style={{ marginBottom: 4 }}
+                    />
+                  ))}
+                </View>
+              </View>
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Text style={styles.popupTitle}>Alcohol%: {ABV}</Text>
+                <Text style={styles.popupTitle}>Bitter Units: {IBU}</Text>
+              </View>
+              <Text style={styles.popupTitle}>Beer Description</Text>
+              <Text>{beerDescription}</Text>
+              <Text style={{ ...styles.popupTitle, marginTop: 10 }}>Locations </Text>
+              <Text>{venueAvailability}</Text>
+              <Text style={{ ...styles.popupTitle, marginTop: 10 }}>Community Reviews </Text>
+              <Text>{communityReviews}</Text>
+              <Button
+                title="Close"
+                onPress={handlePopupClose}
+                color={COLORS.yellow}
+                filled
+                style={styles.closeButton}
+              />
+            </ScrollView>
+          </View>
         </View>
       </Modal>
     </View>
@@ -146,7 +146,7 @@ const FindABeer = ({ navigation }) => {
         console.error('Error retrieving beer data:', error);
       }
     };
-  
+
     fetchBeerData();
   }, [sortBy, sortOrder]);
 
@@ -175,14 +175,14 @@ const FindABeer = ({ navigation }) => {
       <Header
         placement="left"
         backgroundColor={COLORS.foam}
-        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        centerComponent={{ text: 'FreshBeer', style: { fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row' } }}
         rightComponent={
-          <View style={{flexDirection: 'row', marginTop: 5}}>
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <TouchableOpacity>
               <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
             </TouchableOpacity>
           </View>}
       />
@@ -222,38 +222,47 @@ const FindABeer = ({ navigation }) => {
           <View style={styles.grid}>
             <Button
               title="Sort by Name"
-              color={COLORS.white}
-              filled={false}
+              color={sortBy === 'name' && sortOrder === 'asc' ? COLORS.foam : COLORS.white}
+              filled={sortBy === 'name' && sortOrder === 'asc'}
               style={styles.shortButton}
-              onPress={() => setSortBy('name')}
+              onPress={() => {
+                setSortBy('name');
+                setSortOrder('asc');
+              }}
             />
             <Button
               title="Sort by Price"
-              color={COLORS.white}
-              filled={false}
+              color={sortBy === 'price' && sortOrder === 'asc' ? COLORS.foam : COLORS.white}
+              filled={sortBy === 'price' && sortOrder === 'asc'}
               style={styles.shortButton}
-              onPress={() => setSortBy('price')}
+              onPress={() => {
+                setSortBy('price');
+                setSortOrder('asc');
+              }}
             />
             <Button
               title="Sort by Rating"
-              color={COLORS.white}
-              filled={false}
+              color={sortBy === 'rating' && sortOrder === 'asc' ? COLORS.foam : COLORS.white}
+              filled={sortBy === 'rating' && sortOrder === 'asc'}
               style={styles.shortButton}
-              onPress={() => setSortBy('rating')}
+              onPress={() => {
+                setSortBy('rating');
+                setSortOrder('asc');
+              }}
             />
           </View>
           <View style={styles.grid}>
             <Button
               title="Ascending"
-              color={COLORS.white}
-              filled={false}
+              color={sortOrder === 'asc' ? COLORS.foam : COLORS.white}
+              filled={sortOrder === 'asc'}
               style={styles.shortButton}
               onPress={() => setSortOrder('asc')}
             />
             <Button
               title="Descending"
-              color={COLORS.white}
-              filled={false}
+              color={sortOrder === 'desc' ? COLORS.foam : COLORS.white}
+              filled={sortOrder === 'desc'}
               style={styles.shortButton}
               onPress={() => setSortOrder('desc')}
             />
@@ -275,7 +284,7 @@ const FindABeer = ({ navigation }) => {
                 communityReviews={beer.communityReviews}
               />
             ))}
-          </ScrollView> 
+          </ScrollView>
         </View>
       </SafeAreaView>
     </LinearGradient>
@@ -385,8 +394,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   popup: {
-    width: '90%', 
-    height: 550, 
+    width: '90%',
+    height: 550,
     backgroundColor: COLORS.white,
     borderRadius: 10,
     padding: 20,
@@ -406,7 +415,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: '5%', 
+    marginTop: '5%',
   },
   closeButtonText: {
     color: COLORS.white,
@@ -414,11 +423,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   beerImage: {
-    width: '100%', 
-    height: 200, 
-    resizeMode: 'cover', 
-    borderRadius: 10, 
-    marginBottom: 10, 
+    width: '100%',
+    height: 200,
+    resizeMode: 'cover',
+    borderRadius: 10,
+    marginBottom: 10,
   }
 });
 
