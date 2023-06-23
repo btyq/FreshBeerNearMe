@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Image,
+  TextInput,
+  Modal,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
-import axios from "axios";
+import axios from 'axios';
 import { Header } from 'react-native-elements';
 
 const Button = (props) => {
@@ -27,8 +36,17 @@ const Button = (props) => {
   );
 };
 
-//Function to display each beer item in a container
-const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV, IBU, communityReviews, venueAvailability }) => {
+const BeerItem = ({
+  beerName,
+  price,
+  rating,
+  beerDescription,
+  beerImage,
+  ABV,
+  IBU,
+  communityReviews,
+  venueAvailability,
+}) => {
   const [popupVisible, setPopupVisible] = useState(false);
 
   const handlePopupOpen = () => {
@@ -44,7 +62,7 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
       <TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
         <View style={styles.leftContainer}>
           <Text style={styles.beerName}>{beerName}</Text>
-          <Text style={styles.beerName}>Price: ${beerPrice}</Text>
+          <Text style={styles.beerName}>Price: ${price}</Text>
         </View>
         <View style={styles.rightContainer}>
           <View style={styles.starRatingContainer}>
@@ -67,7 +85,7 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
               <Text style={styles.popupTitle}>{beerName}</Text>
               <Image source={{ uri: beerImage }} style={styles.beerImage} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={styles.popupTitle}>Price: ${beerPrice}</Text>
+                <Text style={styles.popupTitle}>Price: ${price}</Text>
                 <View style={{ ...styles.starRatingContainer, marginBottom: 5 }}>
                   <Text style={styles.popupTitle}>Ratings: </Text>
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -87,10 +105,14 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
               </View>
               <Text style={styles.popupTitle}>Beer Description</Text>
               <Text>{beerDescription}</Text>
-              <Text style={{ ...styles.popupTitle, marginTop: 10 }}>Locations </Text>
-              <Text>{venueAvailability}</Text>
-              <Text style={{ ...styles.popupTitle, marginTop: 10 }}>Community Reviews </Text>
-              <Text>{communityReviews}</Text>
+              <Text style={{ ...styles.popupTitle, marginTop: 10 }}>Locations</Text>
+              {venueAvailability && venueAvailability.map((location, index) => (
+                <Text key={index}>{location}</Text>
+              ))}
+              <Text style={{ ...styles.popupTitle, marginTop: 10 }}>Community Reviews</Text>
+              {communityReviews && communityReviews.map((review, index) => (
+                <Text key={index}>{review}</Text>
+              ))}
               <Button
                 title="Close"
                 onPress={handlePopupClose}
@@ -107,26 +129,23 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
 };
 
 const FindABeer = ({ navigation }) => {
-
   const [sortedBeerData, setSortedBeerData] = useState([]);
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
 
-  //Function to retrieve the list of beer data in the database
   useEffect(() => {
     const fetchBeerData = async () => {
       try {
         const response = await axios.get('http://10.0.2.2:3000/beerData');
         const { success, beerData } = response.data;
         if (success) {
-          // Sort the beer data based on the selected sorting options
           let sortedData = [...beerData];
           switch (sortBy) {
             case 'name':
               sortedData.sort((a, b) => a.beerName.localeCompare(b.beerName));
               break;
             case 'price':
-              sortedData.sort((a, b) => a.beerPrice - b.beerPrice);
+              sortedData.sort((a, b) => a.price - b.price);
               break;
             case 'rating':
               sortedData.sort((a, b) => b.rating - a.rating);
@@ -170,14 +189,13 @@ const FindABeer = ({ navigation }) => {
   };
 
   const handleSortByClick = (by) => {
-    if (by === sortBy) return; // Prevent unnecessary re-render
+    if (by === sortBy) return;
     setSortBy(by);
   };
 
   const handleSortOrderClick = (order) => {
-    if (order === sortOrder) return; // Prevent unnecessary re-render
+    if (order === sortOrder) return;
     setSortOrder(order);
-    // Update the sorted data based on the selected sort order
     let sortedData = [...sortedBeerData];
     if (order === 'desc') {
       sortedData.reverse();
@@ -190,16 +208,34 @@ const FindABeer = ({ navigation }) => {
       <Header
         placement="left"
         backgroundColor={COLORS.foam}
-        centerComponent={{ text: 'FreshBeer', style: { fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row' } }}
+        centerComponent={{
+          text: 'FreshBeer',
+          style: {
+            fontSize: 20,
+            color: COLORS.black,
+            fontWeight: 'bold',
+            flexDirection: 'row',
+          },
+        }}
         rightComponent={
           <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <TouchableOpacity>
-              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+              <Octicons
+                name="bookmark"
+                size={24}
+                color={COLORS.black}
+                style={{ marginRight: 5 }}
+              />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+              <Ionicons
+                name="notifications-outline"
+                size={24}
+                color={COLORS.black}
+              />
             </TouchableOpacity>
-          </View>}
+          </View>
+        }
       />
 
       <SafeAreaView style={{ flex: 1 }}>
@@ -212,7 +248,7 @@ const FindABeer = ({ navigation }) => {
               style={styles.longButton}
               onPress={handleFindAVenueClick}
             />
-             <Button
+            <Button
               title="Find a Beer"
               color={COLORS.foam}
               filled
@@ -300,12 +336,12 @@ const FindABeer = ({ navigation }) => {
               <BeerItem
                 key={beer._id}
                 beerName={beer.beerName}
-                beerPrice={beer.beerPrice}
+                price={beer.price}
                 rating={beer.rating}
                 beerDescription={beer.beerDescription}
                 beerImage={beer.beerImage}
-                ABV={beer.ABV}
-                IBU={beer.IBU}
+                ABV={beer.abv}
+                IBU={beer.ibu}
                 communityReviews={beer.communityReviews}
                 venueAvailability={beer.venueAvailability}
               />
