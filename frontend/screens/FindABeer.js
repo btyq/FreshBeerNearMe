@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  Modal,
-} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -132,6 +123,8 @@ const FindABeer = ({ navigation }) => {
   const [sortedBeerData, setSortedBeerData] = useState([]);
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
+  const [searchInput, setSearchInput] = useState('');
+  const [beerData, setBeerData] = useState([]);
 
   useEffect(() => {
     const fetchBeerData = async () => {
@@ -157,6 +150,7 @@ const FindABeer = ({ navigation }) => {
             sortedData.reverse();
           }
           setSortedBeerData(sortedData);
+          setBeerData(beerData);
         } else {
           console.error('Error retrieving beer data:', response.data.message);
         }
@@ -281,12 +275,19 @@ const FindABeer = ({ navigation }) => {
             <TextInput
               placeholder="Search..."
               style={styles.searchInput}
+              onChangeText={setSearchInput}
             />
             <Button
               title="Search for Beer"
               color={COLORS.orange}
               filled
               style={styles.searchButton}
+              onPress={() => {
+                const filteredData = beerData.filter((beer) =>
+                  beer.beerName.toLowerCase().includes(searchInput.toLowerCase())
+                );
+                setSortedBeerData(filteredData);
+              }}
             />
           </View>
           <View style={styles.grid}>
