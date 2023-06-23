@@ -206,36 +206,36 @@ const FindABeer = ({ navigation }) => {
         <ScrollView>
           <View style={styles.grid}>
             <Button
+              title="Find a Venue"
+              color={COLORS.white}
+              filled
+              style={styles.longButton}
+              onPress={handleFindAVenueClick}
+            />
+             <Button
               title="Find a Beer"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled
               style={styles.longButton}
               onPress={handleFindABeerClick}
             />
             <Button
-              title="Find a Venue"
-              color={COLORS.orange}
-              filled
-              style={styles.longButton}
-              onPress={handleFindAVenueClick}
-            />
-            <Button
               title="Nearby Venues"
-              color={COLORS.orange}
+              color={COLORS.white}
               filled
               style={styles.longButton}
               onPress={handleNearbyVenuesClick}
             />
             <Button
               title="Top Rated"
-              color={COLORS.orange}
+              color={COLORS.white}
               filled
               style={styles.longButton}
               onPress={handleTopRatedClick}
             />
             <Button
               title="Breweries"
-              color={COLORS.orange}
+              color={COLORS.white}
               filled
               style={styles.longButton}
               onPress={handleBreweriesClick}
