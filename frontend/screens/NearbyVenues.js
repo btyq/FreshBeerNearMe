@@ -96,7 +96,7 @@ const VenueItem = ({ venueName, rating }) => {
 };
 
 const NearbyVenues = ({ navigation }) => {
-  const [sortType, setSortType] = useState('Distance');
+  const [sortType, setSortType] = useState('Sort by Distance');
   const [sortOrder, setSortOrder] = useState('Ascending');
 
   const handleFindABeerClick = () => {

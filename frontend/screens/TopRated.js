@@ -96,8 +96,8 @@ const VenueItem = ({ venueName, rating }) => {
 };
 
 const TopRated = ({ navigation }) => {
-  const [sortType, setSortType] = useState('Rating');
-  const [sortOrder, setSortOrder] = useState('Descending');
+  const [sortType, setSortType] = useState('Sort by Rating');
+  const [sortOrder, setSortOrder] = useState('Ascending');
 
   const handleFindABeerClick = () => {
     navigation.navigate('FindABeer');
