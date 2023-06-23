@@ -483,7 +483,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   closeButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.foam,
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
