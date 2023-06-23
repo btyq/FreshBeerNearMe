@@ -107,7 +107,7 @@ const BeerItem = ({
               <Button
                 title="Close"
                 onPress={handlePopupClose}
-                color={COLORS.yellow}
+                color={COLORS.foam}
                 filled
                 style={styles.closeButton}
               />
@@ -279,7 +279,7 @@ const FindABeer = ({ navigation }) => {
             />
             <Button
               title="Search for Beer"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled
               style={styles.searchButton}
               onPress={() => {
@@ -293,21 +293,21 @@ const FindABeer = ({ navigation }) => {
           <View style={styles.grid}>
             <Button
               title="Sort by Name"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled={sortBy === 'name'}
               style={styles.shortButton}
               onPress={() => handleSortByClick('name')}
             />
             <Button
               title="Sort by Price"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled={sortBy === 'price'}
               style={styles.shortButton}
               onPress={() => handleSortByClick('price')}
             />
             <Button
               title="Sort by Rating"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled={sortBy === 'rating'}
               style={styles.shortButton}
               onPress={() => handleSortByClick('rating')}
@@ -316,14 +316,14 @@ const FindABeer = ({ navigation }) => {
           <View style={styles.grid}>
             <Button
               title="Ascending"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled={sortOrder === 'asc'}
               style={styles.shortButton}
               onPress={() => handleSortOrderClick('asc')}
             />
             <Button
               title="Descending"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled={sortOrder === 'desc'}
               style={styles.shortButton}
               onPress={() => handleSortOrderClick('desc')}
