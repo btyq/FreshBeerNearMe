@@ -160,4 +160,15 @@ app.get('/beerData', async (req, res) => {
     res.status(500).json({ success: false, message: "An error occurred while retrieving beer data"});
   }
 });
+
+//Route to retrieve venue data
+app.get('/venueData', async(req, res) => {
+  try{
+    const venueData = await db.collection('Venue').find().toArray();
+    res.json({success: true, venueData});
+  } catch (error) {
+    console.error("Error retrieving venue data:", error);
+    res.status(500).json({ success: false, message: "An error occurred while retrieving venue data"});
+  }
+});
 //===================================================================================================================

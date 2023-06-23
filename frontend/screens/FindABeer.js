@@ -141,7 +141,7 @@ const FindABeer = ({ navigation }) => {
               sortedData.sort((a, b) => a.price - b.price);
               break;
             case 'rating':
-              sortedData.sort((a, b) => b.rating - a.rating);
+              sortedData.sort((a, b) => a.rating - b.rating);
               break;
             default:
               break;

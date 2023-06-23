@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
 import { Header } from 'react-native-elements';
+import axios from 'axios';
 
 
 const Button = (props) => {
@@ -17,7 +18,7 @@ const Button = (props) => {
   } else if (props.title === 'Sort by Distance' && props.activeSortBy === 'Sort by Distance') {
     bgColor = COLORS.foam;
     textColor = COLORS.black;
-  } else if (props.title === 'Sort by Price' && props.activeSortBy === 'Sort by Price') {
+  } else if (props.title === 'Sort by Name' && props.activeSortBy === 'Sort by Name') {
     bgColor = COLORS.foam;
     textColor = COLORS.black;
   } else if (props.title === 'Sort by Rating' && props.activeSortBy === 'Sort by Rating') {
@@ -29,6 +30,12 @@ const Button = (props) => {
   } else if (props.title === 'Descending' && props.activeSortOrder === 'Descending') {
     bgColor = COLORS.foam;
     textColor = COLORS.black;
+  } else if (props.title === 'Search for Venue') {
+    bgColor = COLORS.foam;
+    textColor = COLORS.black;
+  } else if (props.title === 'Close') {
+      bgColor = COLORS.foam;
+      textColor = COLORS.black;
   } else if (props.title === 'View Reviews') {
     bgColor = COLORS.foam;
     textColor = COLORS.black;
@@ -146,18 +153,57 @@ const VenueItem = ({ venueName, venueAddress, venueContact, venueRating, venueIm
 };
 
 const BeersVenue = ({ navigation }) => {
+  const [sortedVenueData, setSortedVenueData] = useState([]);
   const [activeSortBy, setActiveSortBy] = useState('Sort by Distance');
   const [activeSortOrder, setActiveSortOrder] = useState('Ascending');
-
-  const venueData = [{venueName: "Almost Famous Craft Beer Bar", venueAddress: "30 Victoria St, #01-06 Singapore 187996", venueContact: "97721787", venueRating: 5, venueImage: "https://i.imgur.com/xipkISs.jpg",
-                      venueOperatingHours: "Monday 5pm - 10pm\nTuesday 5pm - 11pm\nWednesday 5pm - 11pm\nThursday 5pm - 11pm\nFriday 5pm - 12am\nSaturday 2pm - 12am\nSunday 2pm - 12am"}]
-
-  const handleSortBy = (sortBy) => {
-    setActiveSortBy(sortBy);
+  const [searchInput, setSearchInput] = useState('');
+  const [venueData, setVenueData] = useState([]);
+  
+  useEffect(() => {
+    const fetchVenueData = async () => {
+      try {
+        const response = await axios.get('http://10.0.2.2:3000/venueData');
+        const { success, venueData } = response.data;
+        if (success) {
+          let sortedData = [...venueData];
+          switch (activeSortBy) {
+            case 'Sort by Name':
+              sortedData.sort((a, b) => a.venueName.localeCompare(b.venueName));
+              break;
+            case 'Sort by Rating':
+              sortedData.sort((a, b) => a.venueRating - b.venueRating);
+              break;
+            default:
+              break;
+          }
+          if (activeSortOrder === 'Descending') {
+            sortedData.reverse();
+          }
+          setSortedVenueData(sortedData);
+          setVenueData(venueData);
+        } else {
+          console.error("Error retrieving venue data:", response.data.message);
+        }
+      } catch (error) {
+        console.error("Error retrieving venue data:", error);
+      }
+    };
+    fetchVenueData();
+  }, [activeSortBy, activeSortOrder]);
+              
+  const handleSortBy = (by) => {
+    if (by === activeSortBy) return;
+    setActiveSortBy(by);
   };
-
-  const handleSortOrder = (sortOrder) => {
-    setActiveSortOrder(sortOrder);
+  
+  const handleSortOrder = (order) => {
+    if (order === activeSortOrder) return;
+    setActiveSortOrder(order);
+    let sortedData = [...sortedVenueData];
+    if (order === "Descending") {
+      sortedData.reverse();
+    }
+    setSortedVenueData(sortedData);
   };
 
   const handleFindABeerClick = () => {
@@ -178,6 +224,21 @@ const BeersVenue = ({ navigation }) => {
 
   const handleBreweriesClick = () => {
     navigation.navigate('Breweries');
+  };
+
+  const handleSortByClick = (by) => {
+    if (by === activeSortBy) return;
+    setActiveSortBy(by);
+  };
+
+  const handleSortOrderClick = (order) => {
+    if (order === activeSortOrder) return;
+    setActiveSortOrder(order);
+    let sortedData = [...sortedVenueData];
+    if (order === "Descending") {
+      sortedData.reverse();
+    }
+    setSortedVenueData(sortedData);
   };
 
   return (
@@ -240,38 +301,44 @@ const BeersVenue = ({ navigation }) => {
             <TextInput
               placeholder="Search..."
               style={styles.searchInput}
+              onChangeText={setSearchInput}
             />
             <Button
               title="Search for Venue"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled
               style={styles.searchButton}
+              onPress={() => {
+                const filteredData = venueData.filter((venue) =>
+                venue.venueName.toLowerCase().includes(searchInput.toLowerCase())
+                );
+                setSortedVenueData(filteredData);
+              }}
             />
           </View>
           <View style={styles.grid}>
             <Button
               title="Sort by Distance"
               color={COLORS.orange}
-              filled
               style={styles.shortButton}
               activeSortBy={activeSortBy}
               onPress={() => handleSortBy('Sort by Distance')}
             />
             <Button
-              title="Sort by Price"
+              title="Sort by Name"
               color={COLORS.orange}
-              filled
+              filled={activeSortBy === "Sort By Name"}
               style={styles.shortButton}
               activeSortBy={activeSortBy}
-              onPress={() => handleSortBy('Sort by Price')}
+              onPress={() => handleSortByClick('Sort by Name')}
             />
             <Button
               title="Sort by Rating"
               color={COLORS.orange}
-              filled
+              filled={activeSortBy === "Sort By Rating"}
               style={styles.shortButton}
               activeSortBy={activeSortBy}
-              onPress={() => handleSortBy('Sort by Rating')}
+              onPress={() => handleSortByClick('Sort by Rating')}
             />
           </View>
           <View style={styles.grid}>
@@ -281,7 +348,7 @@ const BeersVenue = ({ navigation }) => {
               filled
               style={styles.shortButton}
               activeSortOrder={activeSortOrder}
-              onPress={() => handleSortOrder('Ascending')}
+              onPress={() => handleSortOrderClick('Ascending')}
             />
             <Button
               title="Descending"
@@ -289,16 +356,16 @@ const BeersVenue = ({ navigation }) => {
               filled
               style={styles.shortButton}
               activeSortOrder={activeSortOrder}
-              onPress={() => handleSortOrder('Descending')}
+              onPress={() => handleSortOrderClick('Descending')}
             />
           </View>
         </ScrollView>
 
         <View style={styles.container}>
           <ScrollView>
-            {venueData.map((venue, index) => (
+            {sortedVenueData.map((venue) => (
               <VenueItem
-                key={index}
+                key={venue._id}
                 venueName={venue.venueName}
                 venueAddress={venue.venueAddress}
                 venueContact={venue.venueContact}
