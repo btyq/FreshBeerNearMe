@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, ImageBackground, TextInput, Modal } from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -27,6 +27,9 @@ const Button = (props) => {
     bgColor = COLORS.foam;
     textColor = COLORS.black;
   } else if (props.title === 'Descending' && props.activeSortOrder === 'Descending') {
+    bgColor = COLORS.foam;
+    textColor = COLORS.black;
+  } else if (props.title === 'View Reviews') {
     bgColor = COLORS.foam;
     textColor = COLORS.black;
   }
@@ -62,30 +65,7 @@ const Button = (props) => {
   );
 };
 
-const StarRating = () => {
-  const [rating, setRating] = useState(4);
-
-  const handleRating = () => {
-    const randomRating = Math.floor(Math.random() * 3) + 3; // Generate a random number between 3 and 5
-    setRating(randomRating);
-  };
-
-  return (
-    <View style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.yellow, marginTop: -7 }}>
-      {[1, 2, 3, 4, 5].map((star) => (
-        <TouchableOpacity key={star} onPress={() => handleRating(star)}>
-          <Ionicons
-            name="star"
-            size={20}
-            color={star <= rating ? COLORS.foam : COLORS.grey}
-          />
-        </TouchableOpacity>
-      ))}
-    </View>
-  );
-};
-
-const VenueItem = ({ venueName, rating }) => {
+const VenueItem = ({ venueName, venueAddress, venueContact, venueRating, venueImage, venueOperatingHours }) => {
   const [popupVisible, setPopupVisible] = useState(false);
 
   const handlePopupOpen = () => {
@@ -109,7 +89,8 @@ const VenueItem = ({ venueName, rating }) => {
                 key={star}
                 name="star"
                 size={16}
-                color={star <= rating ? COLORS.foam : COLORS.grey}
+                color={star <= venueRating ? COLORS.foam : COLORS.grey}
+                style={{ marginBottom: 4 }}
               />
             ))}
           </View>
@@ -119,11 +100,44 @@ const VenueItem = ({ venueName, rating }) => {
       <Modal visible={popupVisible} transparent animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.popup}>
-            <Text style={styles.popupTitle}>{venueName}</Text>
-            <Text style={styles.popupContent}>Popup Content</Text>
-            <TouchableOpacity style={styles.closeButton} onPress={handlePopupClose}>
-              <Text style={styles.closeButtonText}>Close</Text>
-            </TouchableOpacity>
+            <ScrollView>
+              <Text style={styles.popupTitle}>{venueName}</Text>
+              <Image source={{ uri: venueImage}} style={styles.venueImage} />
+              <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                <View style={{ ...styles.starRatingContainer}}>
+                  <Text style={styles.popupTitle}>Ratings: </Text>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Ionicons
+                      key={star}
+                      name="star"
+                      size={16}
+                      color={star <= venueRating ? COLORS.foam : COLORS.grey}
+                      style={{ marginBottom: 9 }}
+                    />
+                  ))}
+                </View>
+                <Button
+                  title="View Reviews"
+                  style={styles.shortButton}
+                />
+              </View>
+              <Text style={{...styles.popupTitle, marginTop: 5}}>Address </Text>
+              <Text style>{venueAddress}</Text>
+              <Text style={{...styles.popupTitle, marginTop: 5}}>Contact </Text>
+              <Text style>{venueContact}</Text>
+              <Text style={{...styles.popupTitle, marginTop: 5}}>Operating Hours </Text>
+              <Text style>{venueOperatingHours}</Text>
+              <View style={{ borderTopColor: 'black', borderTopWidth: 1, marginTop: 15}}>
+                <Text style={{...styles.popupTitle, marginTop: 5}}>Menu </Text>
+              </View>
+              <Button
+                title="Close"
+                onPress={handlePopupClose}
+                color={COLORS.yellow}
+                filled
+                style={styles.closeButton}
+              />
+            </ScrollView>
           </View>
         </View>
       </Modal>
@@ -134,6 +148,9 @@ const VenueItem = ({ venueName, rating }) => {
 const BeersVenue = ({ navigation }) => {
   const [activeSortBy, setActiveSortBy] = useState('Sort by Distance');
   const [activeSortOrder, setActiveSortOrder] = useState('Ascending');
+
+  const venueData = [{venueName: "Almost Famous Craft Beer Bar", venueAddress: "30 Victoria St, #01-06 Singapore 187996", venueContact: "97721787", venueRating: 5, venueImage: "https://i.imgur.com/xipkISs.jpg",
+                      venueOperatingHours: "Monday 5pm - 10pm\nTuesday 5pm - 11pm\nWednesday 5pm - 11pm\nThursday 5pm - 11pm\nFriday 5pm - 12am\nSaturday 2pm - 12am\nSunday 2pm - 12am"}]
 
   const handleSortBy = (sortBy) => {
     setActiveSortBy(sortBy);
@@ -279,11 +296,15 @@ const BeersVenue = ({ navigation }) => {
 
         <View style={styles.container}>
           <ScrollView>
-            {Array.from({ length: 1 }).map((_, index) => (
+            {venueData.map((venue, index) => (
               <VenueItem
                 key={index}
-                venueName={`Venue Name ${index + 1}`}
-                rating={Math.floor(Math.random() * 3) + 3}
+                venueName={venue.venueName}
+                venueAddress={venue.venueAddress}
+                venueContact={venue.venueContact}
+                venueRating={venue.venueRating}
+                venueImage={venue.venueImage}
+                venueOperatingHours={venue.venueOperatingHours}
               />
             ))}
           </ScrollView>
@@ -405,7 +426,7 @@ const styles = StyleSheet.create({
   },
   popup: {
     width: '80%', // Adjust the width of the popup
-    height: 300, // Adjust the height of the popup
+    height: 500, // Adjust the height of the popup
     backgroundColor: COLORS.white,
     borderRadius: 10,
     padding: 20,
@@ -421,7 +442,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: COLORS.primary,
+    backgroundColor: COLORS.foam,
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
@@ -432,6 +453,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 16,
   },
+  venueImage: {
+    width: '100%',
+    height: 200,
+    resizeMode: 'contain',
+    marginBottom: 10,
+  }
 });
 
 export default BeersVenue;
