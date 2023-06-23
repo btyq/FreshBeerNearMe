@@ -29,7 +29,7 @@ const Button = (props) => {
 };
 
 //Function to display each beer item in a container
-const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV, IBU, communityReviews, venueAvailability }) => {
+const BeerItem = ({ beerName, price, rating, beerDescription, beerImage, ABV, IBU, communityReviews, venueAvailability }) => {
   const [popupVisible, setPopupVisible] = useState(false);
 
   const handlePopupOpen = () => {
@@ -45,7 +45,7 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
       <TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
         <View style={styles.leftContainer}>
           <Text style={styles.beerName}>{beerName}</Text>
-          <Text style={styles.beerName}>Price: ${beerPrice}</Text>
+          <Text style={styles.beerName}>Price: ${price}</Text>
         </View>
         <View style={styles.rightContainer}>
           <View style={styles.starRatingContainer}>
@@ -68,7 +68,7 @@ const BeerItem = ({ beerName, beerPrice, rating, beerDescription, beerImage, ABV
               <Text style={styles.popupTitle}>{beerName}</Text>
               <Image source={{ uri: beerImage }} style={styles.beerImage} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Text style={styles.popupTitle}>Price: ${beerPrice}</Text>
+                <Text style={styles.popupTitle}>Price: ${price}</Text>
                 <View style={{ ...styles.starRatingContainer, marginBottom: 5 }}>
                   <Text style={styles.popupTitle}>Ratings: </Text>
                   {[1, 2, 3, 4, 5].map((star) => (
@@ -127,7 +127,7 @@ const FindABeer = ({ navigation }) => {
               sortedData.sort((a, b) => a.beerName.localeCompare(b.beerName));
               break;
             case 'price':
-              sortedData.sort((a, b) => a.beerPrice - b.beerPrice);
+              sortedData.sort((a, b) => a.price - b.price);
               break;
             case 'rating':
               sortedData.sort((a, b) => b.rating - a.rating);
@@ -274,7 +274,7 @@ const FindABeer = ({ navigation }) => {
               <BeerItem
                 key={index}
                 beerName={beer.beerName}
-                beerPrice={beer.price}
+                price={beer.price}
                 rating={beer.rating}
                 beerDescription={beer.beerDescription}
                 beerImage={beer.beerImage}
