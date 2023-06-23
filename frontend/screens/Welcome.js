@@ -224,9 +224,8 @@ const Welcome = ({ navigation }) => {
               filled
               style={{
                 marginTop: 10,
-                paddingHorizontal: 15,
+                paddingHorizontal: 110,
                 marginBottom: 4,
-                marginRight: 4, 
                 zIndex: -5,
               }}>
             </Button>
@@ -234,18 +233,6 @@ const Welcome = ({ navigation }) => {
               visible={isDialogVisible}
               onClose={handleCloseDialog}
             />
-
-            <Button
-              title="I am an admin"
-              onPress={() => navigation.navigate("AdminDashboard")}
-              color="black"
-              filled
-              style={{
-                marginTop: 10,
-                marginBottom: 4,
-                zIndex: -5,
-              }}>
-            </Button>
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginVertical: 10}}>

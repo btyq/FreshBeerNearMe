@@ -37,8 +37,8 @@ const Social = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <LinearGradient style={{flex: 1}} colors={[COLORS.white, COLORS.yellow]}>
+    <ScrollView>
+      <LinearGradient style={{ height: 1500 }} colors={[COLORS.white, COLORS.yellow]}>
         <Header
           placement="left"
           backgroundColor={COLORS.foam}
@@ -55,104 +55,107 @@ const Social = () => {
        />
 
         <SafeAreaView style={{ flex: 1 }}>
-          <ScrollView>
-            <View style={styles.grid}>
-              {['My Feed', 'Forums', 'Rate & Review', 'Refer a friend'].map((title, index) => (
-                <Button
-                  key={index}
-                  title={title}
-                  color={COLORS.orange}
-                  filled
-                  style={styles.longButton}
-                />
-              ))}
+          <View style={styles.grid}>
+            {['My Feed', 'Forums', 'Rate & Review', 'Refer a friend'].map((title, index) => (
               <Button
-                title="Recommendation"
+                key={index}
+                title={title}
                 color={COLORS.orange}
                 filled
-                style={styles.mediumButton}
+                style={styles.longButton}
               />
-            </View>
+            ))}
+            <Button
+              title="Recommendation"
+              color={COLORS.orange}
+              filled
+              style={styles.mediumButton}
+            />
+          </View>
 
-            <View style={styles.searchContainer}>
-              <TextInput
-                placeholder="Search..."
-                style={styles.searchInput}
-              />
+          <View style={styles.searchContainer}>
+            <TextInput
+              placeholder="Search..."
+              style={styles.searchInput}
+            />
+            <Button
+              title="Search for user"
+              color={COLORS.orange}
+              filled
+              style={styles.searchButton}
+            />
+          </View>
+
+          <View style={styles.userContainer}>
+            <View style={styles.nameContainer}>
+              <Text style={styles.userName}>Fred</Text>
               <Button
-                title="Search for user"
-                color={COLORS.orange}
+                title="Follow +"
+                color={COLORS.foam}
                 filled
-                style={styles.searchButton}
+                style={styles.followButton}
               />
             </View>
+            <View style={styles.locationContainer}>
+              <Text style={styles.locationText}>Location 1 Rating</Text>
+            </View>
+            <Image
+              source={require('../assets/specialtybeer.png')} // Replace this with the actual path of your image
+              style={styles.userImage}
+            />
+            <Text style={styles.commentText}>{comment}</Text>
+            <View style={styles.ratingContainer}>
+              <View style={styles.ratingStarContainer}>
+                <AirbnbRating
+                  count={5}
+                  defaultRating={3}
+                  size={20}
+                  selectedColor={COLORS.foam}
+                  unSelectedColor={COLORS.gray}
+                  reviews={[]}
+                  isDisabled={false}
+                  style={styles.ratingStyle}
+                />
+              </View>
+            </View>
+          </View>
 
-            <View style={styles.userContainer}>
-              <View style={styles.nameContainer}>
-                <Text style={styles.userName}>Fred</Text>
-                <Button
-                  title="Follow +"
-                  color={COLORS.foam}
-                  filled
-                  style={styles.followButton}
-                />
-              </View>
-              <View style={styles.locationContainer}>
-                <Text style={styles.locationText}>Location 1 Rating</Text>
-              </View>
-              <Image
-                source={require('../assets/specialtybeer.png')} // Replace this with the actual path of your image
-                style={styles.userImage}
+          <View style={styles.userContainer}>
+            <View style={styles.nameContainer}>
+              <Text style={styles.userName}>Fred</Text>
+              <Button
+                title="Follow +"
+                color={COLORS.foam}
+                filled
+                style={styles.followButton}
               />
-              <Text style={styles.commentText}>{comment}</Text>
-              <View style={styles.ratingContainer}>
-                <View style={styles.ratingStarContainer}>
-                  <AirbnbRating
-                    count={5}
-                    defaultRating={3}
-                    size={20}
-                    selectedColor={COLORS.foam}
-                    unSelectedColor={COLORS.gray}
-                    reviews={[]}
-                    isDisabled={false}
-                    style={styles.ratingStyle}
-                  />
-                </View>
-              </View>
             </View>
-            <View style={styles.userContainer}>
-              <View style={styles.nameContainer}>
-                <Text style={styles.userName}>Fred</Text>
-                <Button
-                  title="Follow +"
-                  color={COLORS.foam}
-                  filled
-                  style={styles.followButton}
+            <View style={styles.locationContainer}>
+              <Text style={styles.locationText}>Location 2 Rating</Text>
+            </View>
+            <Image
+              source={require('../assets/brewlander.jpg')} // Replace this with the actual path of your image
+              style={styles.userImage}
+            />
+            <Text style={styles.commentText}>Drink is nice!!!</Text>
+            <View style={styles.ratingContainer}>
+              <View style={styles.ratingStarContainer}>
+                <AirbnbRating
+                  count={5}
+                  defaultRating={3}
+                  size={20}
+                  selectedColor={COLORS.foam}
+                  unSelectedColor={COLORS.gray}
+                  reviews={[]}
+                  isDisabled={false}
+                  style={styles.ratingStyle}
                 />
               </View>
-              <View style={styles.locationContainer}>
-                <Text style={styles.locationText}>Location 2 Rating</Text>
-              </View>
-              <Text style={styles.commentText}>Drink is nice!!!</Text>
-              <View style={styles.ratingContainer}>
-                <View style={styles.ratingStarContainer}>
-                  <AirbnbRating
-                    count={5}
-                    defaultRating={3}
-                    size={20}
-                    selectedColor={COLORS.foam}
-                    unSelectedColor={COLORS.gray}
-                    reviews={[]}
-                    isDisabled={false}
-                    style={styles.ratingStyle}
-                  />
-                </View>
-              </View>
             </View>
-          </ScrollView>
+          </View>
         </SafeAreaView>
       </LinearGradient>
-    </View>
+    </ScrollView>
   );
 };
 
