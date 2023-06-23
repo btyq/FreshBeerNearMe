@@ -146,7 +146,11 @@ const NearbyVenues = ({ navigation }) => {
 
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
-          <View style={styles.grid}>
+          <View style={{    
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            marginHorizontal: 20}}>
             {[
               { title: 'Find a Venue', page: 'FindAVenue', onPress: handleFindAVenueClick },
               { title: 'Find a Beer', page: 'FindABeer', onPress: handleFindABeerClick },
@@ -176,7 +180,12 @@ const NearbyVenues = ({ navigation }) => {
               style={styles.searchButton}
             />
           </View>
-          <View style={styles.grid}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            marginHorizontal: 20
+          }}>
             {['Sort by Distance', 'Sort by Price', 'Sort by Rating'].map((title, index) => (
               <Button
                 key={index}
@@ -188,7 +197,12 @@ const NearbyVenues = ({ navigation }) => {
               />
             ))}
           </View>
-          <View style={styles.grid}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            marginHorizontal: 20
+          }}>
             {['Ascending', 'Descending'].map((title, index) => (
               <Button
                 key={index}
@@ -203,7 +217,7 @@ const NearbyVenues = ({ navigation }) => {
         </ScrollView>
 
         <View style={styles.container}>
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
             {Array.from({ length: 10 }).map((_, index) => (
               <VenueItem
                 key={index}
@@ -219,12 +233,6 @@ const NearbyVenues = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  grid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    marginHorizontal: 20,
-  },
   longButton: {
     width: '20%',
     height: 55,
@@ -273,13 +281,13 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '95%',
     alignSelf: 'center',
-    marginTop: 10, // Adjust the margin value to make it lower
-    borderWidth: 1, // Add a border width
-    borderColor: COLORS.black, // Specify the border color
-    borderRadius: 10, // Add border radius for rounded corners
-    padding: 10, // Add padding to create space between the border and the content
-    minHeight: 340, // Adjust the height as per your requirement
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    padding: 10,
+    minHeight: 340,
     backgroundColor: COLORS.foam,
+    marginTop: 10, // Add margin bottom to create space between the containers
   },
   subContainer: {
     marginBottom: 10,
