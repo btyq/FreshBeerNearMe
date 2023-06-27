@@ -129,7 +129,7 @@ const Dashboard = ({ navigation }) => {
 						<Button
 							title="My Profile"
 							onPress={() => navigation.navigate("Profile")}
-							color={COLORS.yellow}
+							color={COLORS.orange}
 							filled
 							style={styles.gridItem}
 						/>
@@ -138,35 +138,35 @@ const Dashboard = ({ navigation }) => {
 							onPress={() =>
 								navigation.navigate("BottomTab", { screen: "BeersVenue" })
 							}
-							color={COLORS.yellow}
+							color={COLORS.orange}
 							filled
 							style={styles.gridItem}
 						/>
 						<Button
 							title="Social & Community"
 							onPress={() => navigation.navigate("Social")}
-							color={COLORS.yellow}
+							color={COLORS.orange}
 							filled
 							style={styles.gridItem}
 						/>
 						<Button
 							title="Feedback & Requests"
 							onPress={() => navigation.navigate("Feedback")}
-							color={COLORS.yellow}
+							color={COLORS.orange}
 							filled
 							style={styles.gridItem}
 						/>
 						<Button
 							title="My Journal & Achievements"
 							onPress={() => navigation.navigate("Journal")}
-							color={COLORS.yellow}
+							color={COLORS.orange}
 							filled
 							style={styles.gridItem}
 						/>
 						<Button
 							title="My Wishlist"
 							onPress={() => navigation.navigate("Wishlist")}
-							color={COLORS.yellow}
+							color={COLORS.orange}
 							filled
 							style={styles.gridItem}
 						/>
@@ -288,8 +288,8 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		paddingVertical: 3, // increased padding
-		borderColor: COLORS.yellow,
-		borderWidth: 2,
+		borderColor: COLORS.black,
+		borderWidth: 1,
 		borderRadius: 30,
 		alignItems: "center",
 		justifyContent: "center",

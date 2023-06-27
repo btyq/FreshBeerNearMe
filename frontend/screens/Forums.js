@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
 import { AirbnbRating } from 'react-native-ratings';
 import { Header } from 'react-native-elements';
@@ -28,159 +27,244 @@ const Button = (props) => {
   );
 };
 
-const PopOut = (props) => {
+const BigContainer = () => {
+  const comments = [
+    {
+      text: "Bitter, but it's decent",
+      image: require('../assets/beer.png'),
+    },
+    {
+      text: "Smooth and refreshing",
+      image: require('../assets/beer1.png'),
+    },
+    {
+      text: "Great aroma and flavor",
+      image: require('../assets/beer3.png'),
+    },
+    {
+      text: "Not my favorite, too hoppy",
+      image: require('../assets/beer.png'),
+    },
+    {
+      text: "Love the rich maltiness",
+      image: require('../assets/beer1.png'),
+    },
+    {
+      text: "Too bitter for my taste",
+      image: require('../assets/beer3.png'),
+    },
+    {
+      text: "Lacks complexity",
+      image: require('../assets/beer.png'),
+    },
+    {
+      text: "Delicious and well-balanced",
+      image: require('../assets/beer1.png'),
+    },
+    {
+      text: "A bit watery, but still enjoyable",
+      image: require('../assets/beer3.png'),
+    },
+    {
+      text: "Strong and full-bodied",
+      image: require('../assets/beer.png'),
+    },
+  ];
+
+  const handleSubContainerPress = (index) => {
+    console.log('Subcontainer clicked:', index);
+    // Handle subcontainer click event here
+    // You can navigate to another screen, show more details, etc.
+  };
+
   return (
-    <Modal visible={props.visible} transparent={true} animationType="fade">
-      <View style={styles.popOutContainer}>
-        <View style={styles.popOutContent}>
-          <Text style={styles.popOutText}>{props.text}</Text>
-          <TouchableOpacity style={styles.popOutButton} onPress={props.onPress}>
-            <Text style={styles.popOutButtonText}>Close</Text>
-          </TouchableOpacity>
+    <View style={styles.bigContainer}>
+      <ScrollView>
+        <View style={styles.content}>
+          {/* Your content goes here */}
+          {comments.map((comment, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.subContainer}
+              onPress={() => handleSubContainerPress(index)}
+            >
+              <Text style={styles.subContainerText}>Posted by User {index + 1}</Text>
+              {/* Second Subcontainer */}
+              <View style={styles.secondSubContainer}>
+                <Text style={styles.secondSubContainerText}>{comment.text}</Text>
+                <Image
+                  source={comment.image}
+                  style={styles.image}
+                  resizeMode="contain"
+                />
+              </View>
+            </TouchableOpacity>
+          ))}
         </View>
-      </View>
-    </Modal>
+      </ScrollView>
+    </View>
   );
 };
 
-const Social = () => {
+const Forum = () => {
   const navigation = useNavigation();
-  const [comment, setComment] = useState('Bitter, but it\'s decent');
-  const [comments, setComments] = useState([]);
-  const [popOutVisible, setPopOutVisible] = useState(false);
-
-  const handleComment = () => {
-    setComments([...comments, comment]);
-    setComment('');
-  };
-
-
-  const showPopOut = () => {
-    setPopOutVisible(true);
-  };
-
-  const closePopOut = () => {
-    setPopOutVisible(false);
-  };
 
   const navigateToSocial = () => {
-    // Navigate to the Forums.js page
     navigation.navigate('Social');
-  }; 
+  };
 
   const navigateToForums = () => {
-    // Navigate to the Forums.js page
     navigation.navigate('Forums');
   };
 
   const navigateToRateNReview = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('RateNReview');
   };
 
   const navigateToReferAFriend = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('ReferAFriend');
   };
 
   const navigateToRecommendation = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('Recommendation');
   };
 
+  const navigateToNewPost = () => {
+    navigation.navigate('NewPost');
+  };
+
   return (
-    <ScrollView>
-      <LinearGradient style={{ height: 1500 }} colors={[COLORS.white, COLORS.yellow]}>
-        <Header
-          placement="left"
-          backgroundColor={COLORS.foam}
-          centerComponent={{ text: 'FreshBeer', style: { fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row' } }}
-          rightComponent={
-            <View style={{ flexDirection: 'row', marginTop: 5 }}>
-              <TouchableOpacity>
-                <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
-              </TouchableOpacity>
-            </View>}
-        />
-
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={styles.grid}>
-            <Button
-              title="My Feed"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={navigateToSocial}
-            />
-           <Button
-              title="Forums"
-              color={COLORS.foam}
-              filled
-              style={styles.longButton}
-              onPress={navigateToForums}
-            />
-            <Button
-              title="Rate & Review"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={navigateToRateNReview}
-            />
-            <Button
-              title="Refer a friend"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={navigateToReferAFriend}
-            />
-            <Button
-              title="Recommendation"
-              color={COLORS.white}
-              filled
-              style={styles.mediumButton}
-              onPress={navigateToRecommendation}
-            />
+    <View style={styles.container}>
+      <Header
+        placement="left"
+        backgroundColor={COLORS.primary}
+        containerStyle={{
+          height: 100,
+          borderBottomLeftRadius: 40,
+          borderBottomRightRadius: 40,
+        }}
+        centerComponent={{
+          text: 'FreshBeer',
+          style: {
+            fontSize: 20,
+            color: COLORS.black,
+            fontWeight: 'bold',
+            flexDirection: 'row',
+          },
+        }}
+        rightComponent={
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
+            <TouchableOpacity>
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+            </TouchableOpacity>
           </View>
+        }
+      />
 
-          <View style={styles.searchContainer}>
-            <TextInput
-              placeholder="Search..."
-              style={styles.searchInput}
-            />
-            <Button
-              title="Search for user"
-              color={COLORS.foam}
-              filled
-              style={styles.searchButton}
-            />
-          </View>
-        </SafeAreaView>
-      </LinearGradient>
-    </ScrollView>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.grid}>
+          <Button
+            title="My Feed"
+            color={COLORS.white}
+            filled
+            style={styles.longButton}
+            onPress={navigateToSocial}
+          />
+          <Button
+            title="Forums"
+            color={COLORS.orange}
+            filled
+            style={styles.longButton}
+            onPress={navigateToForums}
+          />
+          <Button
+            title="Rate & Review"
+            color={COLORS.white}
+            filled
+            style={styles.longButton}
+            onPress={navigateToRateNReview}
+          />
+          <Button
+            title="Refer a friend"
+            color={COLORS.white}
+            filled
+            style={styles.longButton}
+            onPress={navigateToReferAFriend}
+          />
+          <Button
+            title="Recommendation"
+            color={COLORS.white}
+            filled
+            style={styles.mediumButton}
+            onPress={navigateToRecommendation}
+          />
+          <Button
+            title="+ New Post"
+            color={COLORS.orange}
+            filled
+            style={{ ...styles.mediumButton, marginRight: 0, marginLeft: 'auto', marginTop: 5 }}
+            onPress={navigateToNewPost}
+          />
+        </View>
+        <BigContainer />
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.white,
   },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    paddingTop: 30,
-    backgroundColor: COLORS.foam,
-    height: 70,
+  bigContainer: {
+    height: 450, // Adjust the height value according to your requirement
+    backgroundColor: COLORS.white,
+    marginHorizontal: 10,
+    marginTop: 10,
+    padding: 20,
+    borderRadius: 10,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 5,
+    borderWidth: 1,
+  },
+  subContainer: {
+    height: 120,
+    backgroundColor: COLORS.orange,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    padding: 10,
+    marginVertical: 10,
+  },
+  secondSubContainer: {
+    height: 55, // Adjust the height value according to your requirement
+    backgroundColor: COLORS.white,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 10,
+  },
+  secondSubContainerText: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: COLORS.black,
+  },
+  image: {
+    width: 50,
+    height: 50,
+    alignSelf: 'flex-end',
+    marginTop: -35,
+  },
+  content: {
+    flexGrow: 1,
   },
   grid: {
     flexDirection: 'row',
@@ -200,140 +284,75 @@ const styles = StyleSheet.create({
     height: 40,
     marginVertical: 4,
     borderRadius: 30,
-    marginHorizontal: '0%',
+    marginLeft: 0,
   },
   button: {
     paddingVertical: 10,
     borderColor: COLORS.black,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
+  subContainerText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.black,
+  },
   searchContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
     alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 20,
   },
-  searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingLeft: 10,
+  inputContainer: {
     flex: 1,
-    marginRight: 10,
-  },
-  searchButton: {
-    width: '30%',
-    height: 40,
-    borderRadius: 30,
-  },
-  userContainer: {
-    padding: 10,
-    margin: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
     backgroundColor: COLORS.white,
-    borderColor: COLORS.black,
-    borderWidth: 2,
-    borderRadius: 10,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: COLORS.foam,
-    padding: 5,
-    marginBottom: 10,
-    borderRadius: 8,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
-  followButton: {
-    width: '20%',
-    height: 40,
+    paddingHorizontal: 20,
     borderRadius: 30,
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: -3,
-  },
-  locationText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  userImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  commentText: {
-    marginTop: 10,
-    fontSize: 16,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 10,
-    backgroundColor: COLORS.yellow,
-    padding: 5,
-    borderRadius: 8,
-    height: 30,
-  },
-  ratingStarContainer: {
-    position: 'relative',
-    top: -10,
-    marginLeft: 'auto',
+    height: 50,
     marginRight: 10,
+    borderWidth: 1,
+    borderColor: COLORS.primary,
   },
-  ratingStyle: {
-    position: 'relative',
+  textInput: {
+    flex: 1,
+    fontSize: 16,
+    color: COLORS.black,
+  },
+  icon: {
+    marginRight: 10,
   },
   popOutContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
+    flex: 1,
+    backgroundColor: COLORS.modal,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 999,
+    alignItems: 'center',
   },
   popOutContent: {
     backgroundColor: COLORS.white,
     padding: 20,
     borderRadius: 10,
-    alignItems: 'center',
   },
   popOutText: {
     fontSize: 18,
-    marginBottom: 20,
+    marginBottom: 10,
     textAlign: 'center',
   },
   popOutButton: {
-    backgroundColor: COLORS.primary,
     paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 10,
+    backgroundColor: COLORS.primary,
+    borderRadius: 8,
+    alignSelf: 'center',
   },
   popOutButtonText: {
-    color: COLORS.white,
     fontSize: 16,
+    fontWeight: 'bold',
+    color: COLORS.white,
   },
 });
 
-export default Social;
+export default Forum;

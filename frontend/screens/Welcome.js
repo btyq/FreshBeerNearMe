@@ -20,7 +20,7 @@ import COLORS from "../constants/colors";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
-	const filledBgColor = props.color || COLORS.yellow;
+	const filledBgColor = props.color || COLORS.yellow2;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
 	const textColor = props.filled ? COLORS.white : COLORS.primary;
@@ -82,7 +82,7 @@ const CustomAlert = ({ visible, onClose }) => {
 					</Text>
 					<TouchableOpacity
 						style={{
-							backgroundColor: COLORS.foam,
+							backgroundColor: COLORS.yellow2,
 							padding: 10,
 							borderRadius: 8,
 							alignItems: "center",
@@ -145,7 +145,7 @@ const Welcome = ({ navigation }) => {
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.yellow}>
+		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.yellow2}>
 			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				<View style={{ flex: 1 }}>
 					<Image
@@ -486,7 +486,7 @@ const styles = StyleSheet.create({
 	button: {
 		paddingBottom: 16,
 		paddingVertical: 10,
-		borderColor: COLORS.yellow,
+		borderColor: COLORS.yellow2,
 		borderWidth: 2,
 		borderRadius: 12,
 		alignItems: "center",

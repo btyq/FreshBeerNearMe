@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
 import { AirbnbRating } from 'react-native-ratings';
 import { Header } from 'react-native-elements';
@@ -66,7 +65,7 @@ const Social = () => {
   const navigateToSocial = () => {
     // Navigate to the Forums.js page
     navigation.navigate('Social');
-  }; 
+  };
 
   const navigateToForums = () => {
     // Navigate to the Forums.js page
@@ -90,11 +89,24 @@ const Social = () => {
 
   return (
     <ScrollView>
-      <LinearGradient style={{ height: 1500 }} colors={[COLORS.white, COLORS.yellow]}>
+      <View style={{ height: 1500, backgroundColor: COLORS.white }}>
         <Header
           placement="left"
-          backgroundColor={COLORS.foam}
-          centerComponent={{ text: 'FreshBeer', style: { fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row' } }}
+          backgroundColor={COLORS.primary}
+          containerStyle={{
+            height: 100,
+            borderBottomLeftRadius: 40,
+            borderBottomRightRadius: 40,
+          }}
+          centerComponent={{
+            text: 'FreshBeer',
+            style: {
+              fontSize: 20,
+              color: COLORS.black,
+              fontWeight: 'bold',
+              flexDirection: 'row',
+            },
+          }}
           rightComponent={
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <TouchableOpacity>
@@ -103,19 +115,20 @@ const Social = () => {
               <TouchableOpacity>
                 <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
               </TouchableOpacity>
-            </View>}
+            </View>
+          }
         />
 
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.grid}>
             <Button
               title="My Feed"
-              color={COLORS.foam}
+              color={COLORS.orange}
               filled
               style={styles.longButton}
               onPress={navigateToSocial}
             />
-           <Button
+            <Button
               title="Forums"
               color={COLORS.white}
               filled
@@ -152,7 +165,7 @@ const Social = () => {
             />
             <Button
               title="Search for user"
-              color={COLORS.foam}
+              color={COLORS.orange}
               filled
               style={styles.searchButton}
             />
@@ -163,7 +176,7 @@ const Social = () => {
               <Text style={styles.userName}>Fred</Text>
               <Button
                 title="Follow +"
-                color={COLORS.foam}
+                color={COLORS.orange}
                 filled
                 style={styles.followButton}
               />
@@ -197,7 +210,7 @@ const Social = () => {
               <Text style={styles.userName}>Fred</Text>
               <Button
                 title="Follow +"
-                color={COLORS.foam}
+                color={COLORS.orange}
                 filled
                 style={styles.followButton}
               />
@@ -228,7 +241,7 @@ const Social = () => {
 
           <PopOut visible={popOutVisible} text="This is a pop-out!" onPress={closePopOut} />
         </SafeAreaView>
-      </LinearGradient>
+      </View>
     </ScrollView>
   );
 };
@@ -236,7 +249,7 @@ const Social = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
   },
   topBar: {
     flexDirection: 'row',
@@ -244,7 +257,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     paddingTop: 30,
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
     height: 70,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
@@ -275,7 +288,7 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 10,
     borderColor: COLORS.black,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -288,7 +301,7 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: 'black',
     borderWidth: 1,
     borderRadius: 10,
     paddingLeft: 10,
@@ -305,7 +318,7 @@ const styles = StyleSheet.create({
     margin: 10,
     backgroundColor: COLORS.white,
     borderColor: COLORS.black,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 10,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
@@ -317,7 +330,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
     padding: 5,
     marginBottom: 10,
     borderRadius: 8,
@@ -358,7 +371,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginTop: 10,
-    backgroundColor: COLORS.yellow,
+    backgroundColor: COLORS.orange,
     padding: 5,
     borderRadius: 8,
     height: 30,
