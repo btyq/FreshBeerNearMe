@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
 import { AirbnbRating } from 'react-native-ratings';
 import { Header } from 'react-native-elements';
+import { useNavigation } from '@react-navigation/native';
 
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
@@ -27,13 +28,38 @@ const Button = (props) => {
   );
 };
 
+const PopOut = (props) => {
+  return (
+    <Modal visible={props.visible} transparent={true} animationType="fade">
+      <View style={styles.popOutContainer}>
+        <View style={styles.popOutContent}>
+          <Text style={styles.popOutText}>{props.text}</Text>
+          <TouchableOpacity style={styles.popOutButton} onPress={props.onPress}>
+            <Text style={styles.popOutButtonText}>Close</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
 const Social = () => {
+  const navigation = useNavigation();
   const [comment, setComment] = useState('Bitter, but it\'s decent');
   const [comments, setComments] = useState([]);
+  const [popOutVisible, setPopOutVisible] = useState(false);
 
   const handleComment = () => {
     setComments([...comments, comment]);
     setComment('');
+  };
+
+  const showPopOut = () => {
+    setPopOutVisible(true);
+  };
+
+  const closePopOut = () => {
+    setPopOutVisible(false);
   };
 
   return (
@@ -42,32 +68,39 @@ const Social = () => {
         <Header
           placement="left"
           backgroundColor={COLORS.foam}
-          centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+          centerComponent={{ text: 'FreshBeer', style: { fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row' } }}
           rightComponent={
-            <View style={{flexDirection: 'row', marginTop: 5}}>
+            <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <TouchableOpacity>
                 <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
               </TouchableOpacity>
               <TouchableOpacity>
-                <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+                <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
               </TouchableOpacity>
             </View>}
-       />
+        />
 
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.grid}>
-            {['My Feed', 'Forums', 'Rate & Review', 'Refer a friend'].map((title, index) => (
+            <Button
+              title="My Feed"
+              color={COLORS.foam}
+              filled
+              style={styles.longButton}
+              onPress={goToMyFeed}
+            />
+            {['Forums', 'Rate & Review', 'Refer a friend'].map((title, index) => (
               <Button
                 key={index}
                 title={title}
-                color={COLORS.orange}
+                color={COLORS.white}
                 filled
                 style={styles.longButton}
               />
             ))}
             <Button
               title="Recommendation"
-              color={COLORS.orange}
+              color={COLORS.white}
               filled
               style={styles.mediumButton}
             />
@@ -80,13 +113,13 @@ const Social = () => {
             />
             <Button
               title="Search for user"
-              color={COLORS.orange}
+              color={COLORS.foam}
               filled
               style={styles.searchButton}
             />
           </View>
 
-          <View style={styles.userContainer}>
+          <TouchableOpacity style={styles.userContainer} onPress={showPopOut}>
             <View style={styles.nameContainer}>
               <Text style={styles.userName}>Fred</Text>
               <Button
@@ -118,9 +151,9 @@ const Social = () => {
                 />
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
 
-          <View style={styles.userContainer}>
+          <TouchableOpacity style={styles.userContainer} onPress={showPopOut}>
             <View style={styles.nameContainer}>
               <Text style={styles.userName}>Fred</Text>
               <Button
@@ -152,7 +185,9 @@ const Social = () => {
                 />
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
+
+          <PopOut visible={popOutVisible} text="This is a pop-out!" onPress={closePopOut} />
         </SafeAreaView>
       </LinearGradient>
     </ScrollView>
@@ -297,6 +332,38 @@ const styles = StyleSheet.create({
   },
   ratingStyle: {
     position: 'relative',
+  },
+  popOutContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    zIndex: 999,
+  },
+  popOutContent: {
+    backgroundColor: COLORS.white,
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  popOutText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  popOutButton: {
+    backgroundColor: COLORS.primary,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  popOutButtonText: {
+    color: COLORS.white,
+    fontSize: 16,
   },
 });
 
