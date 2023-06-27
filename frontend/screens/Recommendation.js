@@ -110,7 +110,7 @@ const Social = () => {
           <View style={styles.grid}>
             <Button
               title="My Feed"
-              color={COLORS.foam}
+              color={COLORS.white}
               filled
               style={styles.longButton}
               onPress={navigateToSocial}
@@ -138,7 +138,7 @@ const Social = () => {
             />
             <Button
               title="Recommendation"
-              color={COLORS.white}
+              color={COLORS.foam}
               filled
               style={styles.mediumButton}
               onPress={navigateToRecommendation}
@@ -157,76 +157,6 @@ const Social = () => {
               style={styles.searchButton}
             />
           </View>
-
-          <TouchableOpacity style={styles.userContainer} onPress={showPopOut}>
-            <View style={styles.nameContainer}>
-              <Text style={styles.userName}>Fred</Text>
-              <Button
-                title="Follow +"
-                color={COLORS.foam}
-                filled
-                style={styles.followButton}
-              />
-            </View>
-            <View style={styles.locationContainer}>
-              <Text style={styles.locationText}>Location 1 Rating</Text>
-            </View>
-            <Image
-              source={require('../assets/specialtybeer.png')} // Replace this with the actual path of your image
-              style={styles.userImage}
-            />
-            <Text style={styles.commentText}>{comment}</Text>
-            <View style={styles.ratingContainer}>
-              <View style={styles.ratingStarContainer}>
-                <AirbnbRating
-                  count={5}
-                  defaultRating={3}
-                  size={20}
-                  selectedColor={COLORS.foam}
-                  unSelectedColor={COLORS.gray}
-                  reviews={[]}
-                  isDisabled={false}
-                  style={styles.ratingStyle}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.userContainer} onPress={showPopOut}>
-            <View style={styles.nameContainer}>
-              <Text style={styles.userName}>Fred</Text>
-              <Button
-                title="Follow +"
-                color={COLORS.foam}
-                filled
-                style={styles.followButton}
-              />
-            </View>
-            <View style={styles.locationContainer}>
-              <Text style={styles.locationText}>Location 2 Rating</Text>
-            </View>
-            <Image
-              source={require('../assets/brewlander.jpg')} // Replace this with the actual path of your image
-              style={styles.userImage}
-            />
-            <Text style={styles.commentText}>Drink is nice!!!</Text>
-            <View style={styles.ratingContainer}>
-              <View style={styles.ratingStarContainer}>
-                <AirbnbRating
-                  count={5}
-                  defaultRating={3}
-                  size={20}
-                  selectedColor={COLORS.foam}
-                  unSelectedColor={COLORS.gray}
-                  reviews={[]}
-                  isDisabled={false}
-                  style={styles.ratingStyle}
-                />
-              </View>
-            </View>
-          </TouchableOpacity>
-
-          <PopOut visible={popOutVisible} text="This is a pop-out!" onPress={closePopOut} />
         </SafeAreaView>
       </LinearGradient>
     </ScrollView>

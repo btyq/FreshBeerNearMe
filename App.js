@@ -2,7 +2,8 @@ import React from 'react';
 import { CookieProvider } from './frontend/CookieContext';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Welcome, Signup, Dashboard, Profile, BeersVenue, Social, Feedback, Journal, Wishlist } from './frontend/screens';
+import { Welcome, Signup, Dashboard, Profile, BeersVenue, Social, Feedback, Journal, Wishlist} from './frontend/screens';
+import {Forums, ReferAFriend, RateNReview, Recommendation} from './frontend/screens';
 import { AdminDashboard, ManageUsers } from './frontend/components';
 import { FindABeer, NearbyVenues, TopRated, Breweries } from './frontend/screens';
 import BottomTabNavigation from './frontend/navigation/BottomTabNavigation';
@@ -30,6 +31,10 @@ export default function App() {
           <Stack.Screen name="NearbyVenues" component={NearbyVenues} options={{ headerShown: false }} />
           <Stack.Screen name="TopRated" component={TopRated} options={{ headerShown: false }} />
           <Stack.Screen name="Breweries" component={Breweries} options={{ headerShown: false }} />
+          <Stack.Screen name="Forums" component={Forums} options={{ headerShown: false }} />
+          <Stack.Screen name="RateNReview" component={RateNReview} options={{ headerShown: false }} />
+          <Stack.Screen name="ReferAFriend" component={ReferAFriend} options={{ headerShown: false }} />
+          <Stack.Screen name="Recommendation" component={Recommendation} options={{ headerShown: false }} />
           <Stack.Screen
             name="BottomTabNavigation"
             component={BottomTabNavigation}

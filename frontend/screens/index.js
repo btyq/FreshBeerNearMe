@@ -11,6 +11,10 @@ import FindABeer from "./FindABeer";
 import NearbyVenues from "./NearbyVenues";
 import TopRated from "./TopRated";
 import Breweries from "./Breweries";
+import Forums from "./Forums"
+import RateNReview from "./RateNReview"
+import ReferAFriend from "./ReferAFriend"
+import Recommendation from "./Recommendation"
 
 export {
   Welcome,
@@ -25,5 +29,9 @@ export {
   FindABeer,
   NearbyVenues,
   TopRated,
-  Breweries
+  Breweries,
+  Forums,
+  RateNReview,
+  ReferAFriend,
+  Recommendation
 };
