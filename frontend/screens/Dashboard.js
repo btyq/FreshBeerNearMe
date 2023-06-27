@@ -29,6 +29,7 @@ const Button = (props) => {
 				...styles.button,
 				...{ backgroundColor: bgColor },
 				...props.style,
+				alignSelf: 'center', // Align the button to the center
 			}}
 			onPress={props.onPress}
 		>
@@ -177,7 +178,7 @@ const Dashboard = ({ navigation }) => {
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 10,
+								marginLeft: 35,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -209,7 +210,7 @@ const Dashboard = ({ navigation }) => {
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 10,
+								marginLeft: 35,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -273,7 +274,7 @@ const Dashboard = ({ navigation }) => {
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 10,
+								marginLeft: 35,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -284,20 +285,33 @@ const Dashboard = ({ navigation }) => {
 						>
 							<View
 								style={{
-									flexDirection: "row",
+									flexDirection: "column",
 									paddingTop: 10,
 									paddingHorizontal: 10,
+									alignItems: "center",
 								}}
 							>
 								<Text
 									style={{
 										fontWeight: "bold",
+										textAlign: "center",
+										width: 100,
 									}}
 								>
-									My Journal & Achievements
+									My Journal
+								</Text>
+								<Text
+									style={{
+										fontWeight: "bold",
+										textAlign: "center",
+										width: 100,
+									}}
+								>
+									& Achievements
 								</Text>
 							</View>
 						</TouchableOpacity>
+
 
 						<TouchableOpacity
 							onPress={() => navigation.navigate("Wishlist")}
@@ -305,7 +319,7 @@ const Dashboard = ({ navigation }) => {
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 10,
+								marginLeft: 35,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -441,13 +455,16 @@ const styles = StyleSheet.create({
 	// 	marginBottom: 10,
 	// },
 	button: {
-		paddingVertical: 3, // increased padding
+		paddingVertical: 3,
 		borderColor: COLORS.black,
 		borderWidth: 1,
 		borderRadius: 30,
 		alignItems: "center",
 		justifyContent: "center",
 		elevation: 20,
+		width: 100, // Add a fixed width to the button
+		marginHorizontal: 10, // Add horizontal margin to create space between buttons
+		marginTop: 10,
 	},
 	cardContainer: {
 		height: 50,
