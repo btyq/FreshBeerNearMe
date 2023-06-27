@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal} from 'react-native';
+import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image, TextInput, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -8,10 +8,10 @@ import axios from 'axios';
 import { Header } from 'react-native-elements';
 
 const Button = (props) => {
-  const filledBgColor = props.color || COLORS.primary;
+  const filledBgColor = props.color || COLORS.orange;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
-  const textColor = props.filled ? COLORS.black : COLORS.primary;
+  const textColor = props.filled ? COLORS.black : COLORS.black;
 
   return (
     <TouchableOpacity
@@ -198,10 +198,15 @@ const FindABeer = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
+    <View style={{ height: 630, backgroundColor: COLORS.white }}>
       <Header
         placement="left"
-        backgroundColor={COLORS.foam}
+        backgroundColor={COLORS.primary}
+        containerStyle={{
+          height: 100,
+          borderBottomLeftRadius: 40,
+          borderBottomRightRadius: 40,
+        }}
         centerComponent={{
           text: 'FreshBeer',
           style: {
@@ -214,143 +219,132 @@ const FindABeer = ({ navigation }) => {
         rightComponent={
           <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <TouchableOpacity>
-              <Octicons
-                name="bookmark"
-                size={24}
-                color={COLORS.black}
-                style={{ marginRight: 5 }}
-              />
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Ionicons
-                name="notifications-outline"
-                size={24}
-                color={COLORS.black}
-              />
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
             </TouchableOpacity>
           </View>
         }
       />
 
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
-          <View style={styles.grid}>
-            <Button
-              title="Find a Venue"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={handleFindAVenueClick}
-            />
-            <Button
-              title="Find a Beer"
-              color={COLORS.foam}
-              filled
-              style={styles.longButton}
-              onPress={handleFindABeerClick}
-            />
-            <Button
-              title="Nearby Venues"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={handleNearbyVenuesClick}
-            />
-            <Button
-              title="Top Rated"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={handleTopRatedClick}
-            />
-            <Button
-              title="Breweries"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={handleBreweriesClick}
-            />
-          </View>
-          <View style={styles.searchContainer}>
-            <TextInput
-              placeholder="Search..."
-              style={styles.searchInput}
-              onChangeText={setSearchInput}
-            />
-            <Button
-              title="Search for Beer"
-              color={COLORS.foam}
-              filled
-              style={styles.searchButton}
-              onPress={() => {
-                const filteredData = beerData.filter((beer) =>
-                  beer.beerName.toLowerCase().includes(searchInput.toLowerCase())
-                );
-                setSortedBeerData(filteredData);
-              }}
-            />
-          </View>
-          <View style={styles.grid}>
-            <Button
-              title="Sort by Name"
-              color={COLORS.foam}
-              filled={sortBy === 'name'}
-              style={styles.shortButton}
-              onPress={() => handleSortByClick('name')}
-            />
-            <Button
-              title="Sort by Price"
-              color={COLORS.foam}
-              filled={sortBy === 'price'}
-              style={styles.shortButton}
-              onPress={() => handleSortByClick('price')}
-            />
-            <Button
-              title="Sort by Rating"
-              color={COLORS.foam}
-              filled={sortBy === 'rating'}
-              style={styles.shortButton}
-              onPress={() => handleSortByClick('rating')}
-            />
-          </View>
-          <View style={styles.grid}>
-            <Button
-              title="Ascending"
-              color={COLORS.foam}
-              filled={sortOrder === 'asc'}
-              style={styles.shortButton}
-              onPress={() => handleSortOrderClick('asc')}
-            />
-            <Button
-              title="Descending"
-              color={COLORS.foam}
-              filled={sortOrder === 'desc'}
-              style={styles.shortButton}
-              onPress={() => handleSortOrderClick('desc')}
-            />
-          </View>
-        </ScrollView>
+        <View style={styles.grid}>
+          <Button
+            title="Find a Venue"
+            color={COLORS.white}
+            filled
+            style={styles.longButton}
+            onPress={handleFindAVenueClick}
+          />
+          <Button
+            title="Find a Beer"
+            color={COLORS.orange}
+            filled
+            style={styles.longButton}
+            onPress={handleFindABeerClick}
+          />
+          <Button
+            title="Nearby Venues"
+            color={COLORS.white}
+            filled
+            style={styles.longButton}
+            onPress={handleNearbyVenuesClick}
+          />
+          <Button
+            title="Top Rated"
+            color={COLORS.white}
+            filled
+            style={styles.longButton}
+            onPress={handleTopRatedClick}
+          />
+          <Button
+            title="Breweries"
+            color={COLORS.white}
+            filled
+            style={styles.longButton}
+            onPress={handleBreweriesClick}
+          />
+        </View>
+        <View style={styles.searchContainer}>
+          <TextInput
+            placeholder="Search..."
+            style={styles.searchInput}
+            onChangeText={setSearchInput}
+          />
+          <Button
+            title="Search for Beer"
+            color={COLORS.orange}
+            filled
+            style={styles.searchButton}
+            onPress={() => {
+              const filteredData = beerData.filter((beer) =>
+                beer.beerName.toLowerCase().includes(searchInput.toLowerCase())
+              );
+              setSortedBeerData(filteredData);
+            }}
+          />
+        </View>
+        <View style={styles.grid}>
+          <Button
+            title="Sort by Name"
+            color={COLORS.orange}
+            filled={sortBy === 'name'}
+            style={styles.shortButton}
+            onPress={() => handleSortByClick('name')}
+          />
+          <Button
+            title="Sort by Price"
+            color={COLORS.orange}
+            filled={sortBy === 'price'}
+            style={styles.shortButton}
+            onPress={() => handleSortByClick('price')}
+          />
+          <Button
+            title="Sort by Rating"
+            color={COLORS.orange}
+            filled={sortBy === 'rating'}
+            style={styles.shortButton}
+            onPress={() => handleSortByClick('rating')}
+          />
+        </View>
+        <View style={styles.grid}>
+          <Button
+            title="Ascending"
+            color={COLORS.orange}
+            filled={sortOrder === 'asc'}
+            style={styles.shortButton}
+            onPress={() => handleSortOrderClick('asc')}
+          />
+          <Button
+            title="Descending"
+            color={COLORS.orange}
+            filled={sortOrder === 'desc'}
+            style={styles.shortButton}
+            onPress={() => handleSortOrderClick('desc')}
+          />
+        </View>
 
         <View style={styles.container}>
-          <ScrollView>
-            {sortedBeerData.map((beer) => (
-              <BeerItem
-                key={beer._id}
-                beerName={beer.beerName}
-                price={beer.price}
-                rating={beer.rating}
-                beerDescription={beer.beerDescription}
-                beerImage={beer.beerImage}
-                ABV={beer.abv}
-                IBU={beer.ibu}
-                communityReviews={beer.communityReviews}
-                venueAvailability={beer.venueAvailability}
-              />
-            ))}
+        <ScrollView>
+          {sortedBeerData.map((beer) => (
+            <BeerItem
+              key={beer._id}
+              beerName={beer.beerName}
+              price={beer.price}
+              rating={beer.rating}
+              beerDescription={beer.beerDescription}
+              beerImage={beer.beerImage}
+              ABV={beer.abv}
+              IBU={beer.ibu}
+              communityReviews={beer.communityReviews}
+              venueAvailability={beer.venueAvailability}
+            />
+          ))}
           </ScrollView>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -379,7 +373,7 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 10,
     borderColor: COLORS.black,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -409,24 +403,25 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '95%',
     alignSelf: 'center',
-    marginTop: 10, // Adjust the margin value to make it lower
-    borderWidth: 1, // Add a border width
-    borderColor: COLORS.black, // Specify the border color
-    borderRadius: 10, // Add border radius for rounded corners
-    padding: 10, // Add padding to create space between the border and the content
-    minHeight: 340, // Adjust the height as per your requirement
-    backgroundColor: COLORS.foam,
-    shadowColor: COLORS.black, // Add shadow color
-    shadowOffset: { width: 0, height: 2 }, // Add shadow offset
-    shadowOpacity: 0.3, // Add shadow opacity
-    shadowRadius: 3, // Add shadow radius
-    elevation: 5, // Add elevation for Android
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    padding: 10,
+    minHeight: 50, // Adjust the height as per your requirement
+    backgroundColor: COLORS.white,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
   subContainer: {
     marginBottom: 10,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.orange,
     padding: 10,
-    borderRadius: 10,
+    borderRadius: 12,
+    borderWidth: 1,
     shadowColor: COLORS.black, // Add shadow color
     shadowOffset: { width: 0, height: 2 }, // Add shadow offset
     shadowOpacity: 0.3, // Add shadow opacity
@@ -484,7 +479,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   closeButton: {
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
