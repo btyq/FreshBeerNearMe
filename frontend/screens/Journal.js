@@ -11,7 +11,7 @@ const Button = ({ title, selected, onSelect }) => {
     <TouchableOpacity
       style={[
         styles.button,
-        { backgroundColor: selected ? COLORS.foam : COLORS.white },
+        { backgroundColor: selected ? COLORS.orange : COLORS.white },
       ]}
       onPress={() => onSelect(title)}
     >
@@ -22,17 +22,67 @@ const Button = ({ title, selected, onSelect }) => {
   );
 };
 
-const Header = () => {
+const Header = ({
+  placement = "left",
+  backgroundColor = COLORS.primary,
+  containerStyle = {
+    height: 100,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+  },
+  centerComponent = {
+    text: 'FreshBeer',
+    style: {
+      fontSize: 20,
+      color: COLORS.black,
+      fontWeight: 'bold',
+      flexDirection: 'row',
+    },
+  },
+  rightComponent = (
+    <View style={{ flexDirection: 'row', marginTop: 5 }}>
+      <TouchableOpacity>
+        <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+      </TouchableOpacity>
+    </View>
+  ),
+}) => {
   return (
-    <View style={styles.topBar}>
-      <Text style={styles.logo}>FreshBeer</Text>
-      <View style={styles.iconsContainer}>
-        <Octicons name="bookmark" size={24} color={COLORS.black} style={styles.icon} />
-        <Ionicons name="notifications-outline" size={24} color={COLORS.black} style={styles.icon} />
-      </View>
+    <View
+      style={{
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        paddingTop: 30,
+        backgroundColor,
+        height: 70,
+        shadowColor: COLORS.black,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        elevation: 5,
+        ...containerStyle,
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 20,
+          color: COLORS.black,
+          fontWeight: 'bold',
+          ...centerComponent.style,
+        }}
+      >
+        {centerComponent.text}
+      </Text>
+      {rightComponent}
     </View>
   );
 };
+
 
 const Journal = () => {
   const [selectedButton, setSelectedButton] = useState("My Beer Journal");
@@ -48,7 +98,7 @@ const Journal = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LinearGradient style={styles.gradient} colors={[COLORS.white, COLORS.yellow]}>
+      <View style={styles.container}>
         <Header />
 
         <View style={styles.buttonContainer}>
@@ -156,7 +206,7 @@ const Journal = () => {
         ) : (
           <ScrollView style={styles.scrollView}>
             <View style={styles.statisticsContainer}>
-              <LinearGradient style={styles.gradient} colors={[COLORS.white, COLORS.yellow]}>
+              <View style={{ height: 750, backgroundColor: COLORS.white2 }}>
                 <View style={styles.emptyContainer}>
                   <Text style={styles.emptyText}>Number of unique places checked in: 5</Text>
                   <Text style={styles.emptyText}>Types of beer tried: 10</Text>
@@ -203,7 +253,7 @@ const Journal = () => {
                     />
                   </View>
                 </View>
-              </LinearGradient>
+              </View>
             </View>
           </ScrollView>
         )}
@@ -220,7 +270,7 @@ const Journal = () => {
             </View>
           </View>
         </Modal>
-      </LinearGradient>
+      </View>
     </SafeAreaView>
   );
 };
@@ -239,7 +289,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
     paddingTop: 30,
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
     height: 70,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
@@ -287,6 +337,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: '100%',
     height: 200,
+    borderWidth: 1,
     position: 'relative',
     backgroundColor: COLORS.white,
   },
@@ -306,6 +357,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 10,
     backgroundColor: COLORS.white,
+    borderWidth: 1,
   },
   titleContainer: {
     flexDirection: 'row',
@@ -322,9 +374,10 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   tastingNoteContainer: {
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
     padding: 10,
     borderRadius: 8,
+    borderWidth: 1,
     width: '100%',
   },
   tastingNote: {
@@ -338,15 +391,14 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: COLORS.black,
   },
   shortButtonText: {
-    color: COLORS.white,
+    color: COLORS.black,
     fontSize: 15,
-    fontWeight: 'bold',
   },
   line: {
     height: 1,
@@ -388,18 +440,23 @@ const styles = StyleSheet.create({
     marginRight: 0,
     paddingVertical: 5,
     paddingHorizontal: 20,
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: COLORS.black,
   },
   saveButtonText: {
-    color: COLORS.white,
-    fontSize: 20,
-    fontWeight: 'bold',
+    color: COLORS.black,
+    fontSize: 16,
   },
   statisticsContainer: {
     flex: 1,
+    backgroundColor: COLORS.white2,
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: COLORS.black,
   },
   emptyContainer: {
     flex: 1,
@@ -467,6 +524,20 @@ const styles = StyleSheet.create({
     color: COLORS.white,
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 20,
+  },
+  ratingLabel: {
+    fontSize: 16,
+  },
+  ratingStarContainer: {
+    marginLeft: 200,
+    flex: 1,  // Added flex: 1 to make the rating take remaining space
+    height: 20,  // Added a fixed height to align with the testing rating
   },
 });
 

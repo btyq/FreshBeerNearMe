@@ -1,11 +1,15 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Modal, Button } from 'react-native';
+import { Ionicons, Octicons } from '@expo/vector-icons';
 import COLORS from '../constants/colors';
 import { Header } from 'react-native-elements';
 
 const MyWishlist = () => {
+  const [beerModalVisible, setBeerModalVisible] = useState(false);
+  const [venueModalVisible, setVenueModalVisible] = useState(false);
+  const [selectedBeer, setSelectedBeer] = useState(null);
+  const [selectedVenue, setSelectedVenue] = useState(null);
+
   const beerData = [
     { beerName: 'Beer Name 1', rating: 3 },
     { beerName: 'Beer Name 2', rating: 4 },
@@ -32,21 +36,44 @@ const MyWishlist = () => {
     { venueName: 'Venue Name 10', rating: 4 },
   ];
 
+  const openBeerModal = (beer) => {
+    setSelectedBeer(beer);
+    setBeerModalVisible(true);
+  };
+
+  const openVenueModal = (venue) => {
+    setSelectedVenue(venue);
+    setVenueModalVisible(true);
+  };
+
   return (
-    <LinearGradient style={styles.container} colors={[COLORS.white, COLORS.yellow]}>
+    <View style={{ flex: 1, backgroundColor: COLORS.white2 }}>
       <Header
         placement="left"
-        backgroundColor={COLORS.foam}
-        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        backgroundColor={COLORS.primary}
+        containerStyle={{
+          height: 100,
+          borderBottomLeftRadius: 40,
+          borderBottomRightRadius: 40,
+        }}
+        centerComponent={{
+          text: 'FreshBeer',
+          style: {
+            fontSize: 20,
+            color: COLORS.black,
+            fontWeight: 'bold',
+          },
+        }}
         rightComponent={
-          <View style={{flexDirection: 'row', marginTop: 5}}>
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <TouchableOpacity>
-              <Ionicons name="bookmark-outline" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
             </TouchableOpacity>
-          </View>}
+          </View>
+        }
       />
       <View style={styles.wishlistContainer}>
         <Text style={styles.wishlistText}>My Wishlist</Text>
@@ -55,11 +82,9 @@ const MyWishlist = () => {
         </TouchableOpacity>
       </View>
       <ScrollView>
-        <View style={styles.wishlistContainer}>
-        </View>
         <View style={styles.containerSection}>
           {beerData.map((item, index) => (
-            <View key={index} style={styles.containerItem}>
+            <TouchableOpacity key={index} style={styles.containerItem} onPress={() => openBeerModal(item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.beerName}>{item.beerName}</Text>
               </View>
@@ -90,12 +115,12 @@ const MyWishlist = () => {
                   color={item.rating >= 7 ? COLORS.foam : COLORS.grey}
                 />
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
         <View style={styles.containerSection}>
           {venueData.map((item, index) => (
-            <View key={index} style={styles.containerItem}>
+            <TouchableOpacity key={index} style={styles.containerItem} onPress={() => openVenueModal(item)}>
               <View style={styles.leftContainer}>
                 <Text style={styles.venueName}>{item.venueName}</Text>
               </View>
@@ -126,24 +151,55 @@ const MyWishlist = () => {
                   color={item.rating >= 7 ? COLORS.foam : COLORS.grey}
                 />
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </ScrollView>
-    </LinearGradient>
+
+      {/* Beer Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={beerModalVisible}
+        onRequestClose={() => setBeerModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Beer Details</Text>
+            <Text style={styles.modalText}>Beer Name: {selectedBeer?.beerName}</Text>
+            {/* Add more beer details here */}
+            <Button title="Close" onPress={() => setBeerModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+
+      {/* Venue Modal */}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={venueModalVisible}
+        onRequestClose={() => setVenueModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Venue Details</Text>
+            <Text style={styles.modalText}>Venue Name: {selectedVenue?.venueName}</Text>
+            {/* Add more venue details here */}
+            <Button title="Close" onPress={() => setVenueModalVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   wishlistContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 10,
-    paddingRight: 5, // reduce paddingRight to bring items closer together
+    marginTop: 20,
   },
   wishlistText: {
     fontSize: 20,
@@ -155,26 +211,22 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   editButtonText: {
-    color: 'white', 
+    color: 'white',
   },
   containerSection: {
-    marginTop: 20,
+    marginTop: 5,
+    paddingHorizontal: 10,
   },
   containerItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 20,
     marginBottom: 10,
     backgroundColor: COLORS.white,
     height: 50,
     borderRadius: 10,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-    width: '80%',
-    alignSelf: 'center',
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    paddingHorizontal: 20,
   },
   leftContainer: {
     flex: 1,
@@ -195,6 +247,28 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: COLORS.black,
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: COLORS.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+    alignItems: 'center',
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
   },
 });
 

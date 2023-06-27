@@ -1,5 +1,6 @@
 const COLORS = {
 	white: "#FFFFFF",
+	white2: "#F5F5F5",
 	foam: "#FFCC00",
 	black: "#222222",
 	primary: "#FFD51F",
