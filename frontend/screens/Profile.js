@@ -123,26 +123,39 @@ const Profile = ( {navigation} ) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
-      <Header
-        placement="left"
-        backgroundColor={COLORS.foam}
-        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
-        rightComponent={
-          <View style={{flexDirection: 'row', marginTop: 5}}>
-            <TouchableOpacity>
-              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
-            </TouchableOpacity>
-          </View>}
-      />
-
+<View style={{ height: 1500, backgroundColor: COLORS.white }}>
+<Header
+  placement="left"
+  backgroundColor={COLORS.primary}
+  containerStyle={{
+    height: 100,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+  }}
+  centerComponent={{
+    text: 'FreshBeer',
+    style: {
+      fontSize: 20,
+      color: COLORS.black,
+      fontWeight: 'bold',
+      flexDirection: 'row',
+    },
+  }}
+  rightComponent={
+    <View style={{ flexDirection: 'row', marginTop: 5 }}>
+      <TouchableOpacity>
+        <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+      </TouchableOpacity>
+    </View>
+  }
+/>
       <SafeAreaView style={{ flex: 1 }}>
         <ScrollView>
-          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 20 }}>
-            <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.black }}>My Profile</Text>
+          <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 0 }}>
+            <Text style={{ fontSize: 24, fontWeight: 'bold', color: COLORS.black}}>My Profile</Text>
           </View>
 
           <View style={{flex: 1, marginHorizontal: 32, marginBottom: 12}}>
@@ -321,7 +334,7 @@ const Profile = ( {navigation} ) => {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 
