@@ -10,34 +10,34 @@ import axios from 'axios';
 
 const Button = (props) => {
   let bgColor = COLORS.white; // Set default background color to white
-  let textColor = COLORS.primary;
+  let textColor = COLORS.black;
 
   if (props.title === 'Find a Venue') {
-    bgColor = COLORS.foam; // Set background color to foam for "Find a Venue" button
+    bgColor = COLORS.orange; // Set background color to foam for "Find a Venue" button
     textColor = COLORS.black;
   } else if (props.title === 'Sort by Distance' && props.activeSortBy === 'Sort by Distance') {
-    bgColor = COLORS.foam;
+    bgColor = COLORS.orange;
     textColor = COLORS.black;
   } else if (props.title === 'Sort by Name' && props.activeSortBy === 'Sort by Name') {
-    bgColor = COLORS.foam;
+    bgColor = COLORS.orange;
     textColor = COLORS.black;
   } else if (props.title === 'Sort by Rating' && props.activeSortBy === 'Sort by Rating') {
-    bgColor = COLORS.foam;
+    bgColor = COLORS.orange;
     textColor = COLORS.black;
   } else if (props.title === 'Ascending' && props.activeSortOrder === 'Ascending') {
-    bgColor = COLORS.foam;
+    bgColor = COLORS.orange;
     textColor = COLORS.black;
   } else if (props.title === 'Descending' && props.activeSortOrder === 'Descending') {
-    bgColor = COLORS.foam;
+    bgColor = COLORS.orange;
     textColor = COLORS.black;
   } else if (props.title === 'Search for Venue') {
-    bgColor = COLORS.foam;
+    bgColor = COLORS.orange;
     textColor = COLORS.black;
   } else if (props.title === 'Close') {
-      bgColor = COLORS.foam;
-      textColor = COLORS.black;
+    bgColor = COLORS.orange;
+    textColor = COLORS.black;
   } else if (props.title === 'View Reviews') {
-    bgColor = COLORS.foam;
+    bgColor = COLORS.orange;
     textColor = COLORS.black;
   }
 
@@ -109,9 +109,9 @@ const VenueItem = ({ venueName, venueAddress, venueContact, venueRating, venueIm
           <View style={styles.popup}>
             <ScrollView>
               <Text style={styles.popupTitle}>{venueName}</Text>
-              <Image source={{ uri: venueImage}} style={styles.venueImage} />
+              <Image source={{ uri: venueImage }} style={styles.venueImage} />
               <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                <View style={{ ...styles.starRatingContainer}}>
+                <View style={{ ...styles.starRatingContainer }}>
                   <Text style={styles.popupTitle}>Ratings: </Text>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Ionicons
@@ -128,14 +128,14 @@ const VenueItem = ({ venueName, venueAddress, venueContact, venueRating, venueIm
                   style={styles.shortButton}
                 />
               </View>
-              <Text style={{...styles.popupTitle, marginTop: 5}}>Address </Text>
+              <Text style={{ ...styles.popupTitle, marginTop: 5 }}>Address </Text>
               <Text style>{venueAddress}</Text>
-              <Text style={{...styles.popupTitle, marginTop: 5}}>Contact </Text>
+              <Text style={{ ...styles.popupTitle, marginTop: 5 }}>Contact </Text>
               <Text style>{venueContact}</Text>
-              <Text style={{...styles.popupTitle, marginTop: 5}}>Operating Hours </Text>
+              <Text style={{ ...styles.popupTitle, marginTop: 5 }}>Operating Hours </Text>
               <Text style>{venueOperatingHours}</Text>
-              <View style={{ borderTopColor: 'black', borderTopWidth: 1, marginTop: 15}}>
-                <Text style={{...styles.popupTitle, marginTop: 5}}>Menu </Text>
+              <View style={{ borderTopColor: 'black', borderTopWidth: 1, marginTop: 15 }}>
+                <Text style={{ ...styles.popupTitle, marginTop: 5 }}>Menu </Text>
               </View>
               <Button
                 title="Close"
@@ -158,7 +158,7 @@ const BeersVenue = ({ navigation }) => {
   const [activeSortOrder, setActiveSortOrder] = useState('Ascending');
   const [searchInput, setSearchInput] = useState('');
   const [venueData, setVenueData] = useState([]);
-  
+
   useEffect(() => {
     const fetchVenueData = async () => {
       try {
@@ -190,12 +190,12 @@ const BeersVenue = ({ navigation }) => {
     };
     fetchVenueData();
   }, [activeSortBy, activeSortOrder]);
-              
+
   const handleSortBy = (by) => {
     if (by === activeSortBy) return;
     setActiveSortBy(by);
   };
-  
+
   const handleSortOrder = (order) => {
     if (order === activeSortOrder) return;
     setActiveSortOrder(order);
@@ -207,7 +207,7 @@ const BeersVenue = ({ navigation }) => {
   };
 
   const handleFindABeerClick = () => {
-    navigation.navigate('BottomTab', { screen: 'FindABeer'});
+    navigation.navigate('BottomTab', { screen: 'FindABeer' });
   };
 
   const handleFindAVenueClick = () => {
@@ -242,24 +242,36 @@ const BeersVenue = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
+    <View style={{ height: 620, backgroundColor: COLORS.white }}>
       <Header
         placement="left"
-        backgroundColor={COLORS.foam}
-        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        backgroundColor={COLORS.primary}
+        containerStyle={{
+          height: 100,
+          borderBottomLeftRadius: 40,
+          borderBottomRightRadius: 40,
+        }}
+        centerComponent={{
+          text: 'FreshBeer',
+          style: {
+            fontSize: 20,
+            color: COLORS.black,
+            fontWeight: 'bold',
+            flexDirection: 'row',
+          },
+        }}
         rightComponent={
-          <View style={{flexDirection: 'row', marginTop: 5}}>
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <TouchableOpacity>
-              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }}/>
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
             </TouchableOpacity>
-          </View>}
+          </View>
+        }
       />
-
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
           <View style={styles.grid}>
             <Button
               title="Find a Venue"
@@ -305,12 +317,12 @@ const BeersVenue = ({ navigation }) => {
             />
             <Button
               title="Search for Venue"
-              color={COLORS.foam}
+              color={COLORS.orange}
               filled
               style={styles.searchButton}
               onPress={() => {
                 const filteredData = venueData.filter((venue) =>
-                venue.venueName.toLowerCase().includes(searchInput.toLowerCase())
+                  venue.venueName.toLowerCase().includes(searchInput.toLowerCase())
                 );
                 setSortedVenueData(filteredData);
               }}
@@ -359,7 +371,6 @@ const BeersVenue = ({ navigation }) => {
               onPress={() => handleSortOrderClick('Descending')}
             />
           </View>
-        </ScrollView>
 
         <View style={styles.container}>
           <ScrollView>
@@ -377,7 +388,7 @@ const BeersVenue = ({ navigation }) => {
           </ScrollView>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -436,22 +447,22 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '95%',
     alignSelf: 'center',
-    marginTop: 10, // Adjust the margin value to make it lower
-    borderWidth: 1, // Add a border width
-    borderColor: COLORS.black, // Specify the border color
-    borderRadius: 10, // Add border radius for rounded corners
-    padding: 10, // Add padding to create space between the border and the content
-    minHeight: 340, // Adjust the height as per your requirement
-    backgroundColor: COLORS.foam,
-    shadowColor: COLORS.black, // Add shadow color
-    shadowOffset: { width: 0, height: 2 }, // Add shadow offset
-    shadowOpacity: 0.3, // Add shadow opacity
-    shadowRadius: 3, // Add shadow radius
-    elevation: 5, // Add elevation for Android
+    marginTop: 10,
+    borderWidth: 1,
+    borderColor: COLORS.black,
+    borderRadius: 10,
+    padding: 10,
+    minHeight: 50, // Adjust the height as per your requirement
+    backgroundColor: COLORS.white,
+    shadowColor: COLORS.black,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
   },
   subContainer: {
     marginBottom: 10,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.orange,
     padding: 10,
     borderRadius: 10,
     shadowColor: COLORS.black, // Add shadow color
@@ -509,7 +520,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   closeButton: {
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.orange,
     padding: 10,
     borderRadius: 8,
     alignItems: 'center',
