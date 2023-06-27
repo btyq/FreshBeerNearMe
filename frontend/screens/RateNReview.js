@@ -238,6 +238,12 @@ const RateNReview = () => {
               marginRight: 20,
             }}
           />
+          <View style={{
+            borderBottomWidth: 2,
+            borderBottomColor: COLORS.grey,
+            marginHorizontal: 10,
+            marginTop: 10,
+          }} />
           <TouchableOpacity
             style={{
               backgroundColor: COLORS.white,
@@ -246,7 +252,7 @@ const RateNReview = () => {
               borderWidth: 1,
               borderColor: COLORS.grey,
               borderRadius: 10,
-              marginTop: 30,
+              marginTop: 10,
               alignSelf: 'center',
               ...styles.containerContent,
             }}
@@ -305,6 +311,12 @@ const RateNReview = () => {
               marginRight: 20,
             }}
           />
+          <View style={{
+            borderBottomWidth: 2,
+            borderBottomColor: COLORS.grey,
+            marginHorizontal: 10,
+            marginTop: 10,
+          }} />
           <TouchableOpacity
             style={{
               backgroundColor: COLORS.white,
@@ -313,7 +325,7 @@ const RateNReview = () => {
               borderWidth: 1,
               borderColor: COLORS.grey,
               borderRadius: 10,
-              marginTop: 30,
+              marginTop: 10,
               alignSelf: 'center',
               ...styles.containerContent,
             }}
