@@ -3,6 +3,7 @@ import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect } from "react";
 import {
+	Image,
 	ImageBackground,
 	ScrollView,
 	StyleSheet,
@@ -120,56 +121,215 @@ const Dashboard = ({ navigation }) => {
 							fontWeight: "bold",
 							color: COLORS.black,
 							marginTop: 20,
-							marginBottom: 20,
+							marginBottom: 12,
 						}}
 					>
-						Welcome!
+						Joe, Welcome Back!
 					</Text>
-					<View style={styles.grid}>
-						<Button
-							title="My Profile"
+					<Text
+						style={{
+							fontSize: 15,
+							color: COLORS.black,
+							marginBottom: 5,
+						}}
+					>
+						What would you like to do?
+					</Text>
+
+					<View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+						<TouchableOpacity
 							onPress={() => navigation.navigate("Profile")}
-							color={COLORS.orange}
-							filled
-							style={styles.gridItem}
-						/>
-						<Button
-							title="Beers & Venues"
+							style={{
+								height: 100,
+								elevation: 2,
+								backgroundColor: COLORS.grey,
+								marginLeft: 20,
+								marginTop: 10,
+								borderRadius: 15,
+								marginBottom: 10,
+								width: 100,
+								justifyContent: "center", // Center the content vertically
+								alignItems: "center",
+							}}
+						>
+							<View
+								style={{
+									flexDirection: "row",
+									paddingTop: 10,
+									paddingHorizontal: 10,
+								}}
+							>
+								<Text
+									style={{
+										fontWeight: "bold",
+									}}
+								>
+									My Profile
+								</Text>
+							</View>
+						</TouchableOpacity>
+
+						<TouchableOpacity
 							onPress={() =>
 								navigation.navigate("BottomTab", { screen: "BeersVenue" })
 							}
-							color={COLORS.orange}
-							filled
-							style={styles.gridItem}
-						/>
-						<Button
-							title="Social & Community"
+							style={{
+								height: 100,
+								elevation: 2,
+								backgroundColor: COLORS.grey,
+								marginLeft: 10,
+								marginTop: 10,
+								borderRadius: 15,
+								marginBottom: 10,
+								width: 100,
+								justifyContent: "center", // Center the content vertically
+								alignItems: "center",
+							}}
+						>
+							<View
+								style={{
+									flexDirection: "row",
+									paddingTop: 10,
+									paddingHorizontal: 10,
+								}}
+							>
+								<Text
+									style={{
+										fontWeight: "bold",
+									}}
+								>
+									Beers & Venues
+								</Text>
+							</View>
+						</TouchableOpacity>
+
+						<TouchableOpacity
 							onPress={() => navigation.navigate("Social")}
-							color={COLORS.orange}
-							filled
-							style={styles.gridItem}
-						/>
-						<Button
-							title="Feedback & Requests"
+							style={{
+								height: 100,
+								elevation: 2,
+								backgroundColor: COLORS.grey,
+								marginLeft: 10,
+								marginTop: 10,
+								borderRadius: 15,
+								marginBottom: 10,
+								width: 100,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<View
+								style={{
+									flexDirection: "row",
+									paddingTop: 10,
+									paddingHorizontal: 10,
+								}}
+							>
+								<Text
+									style={{
+										fontWeight: "bold",
+									}}
+								>
+									Social & Community
+								</Text>
+							</View>
+						</TouchableOpacity>
+
+						<TouchableOpacity
 							onPress={() => navigation.navigate("Feedback")}
-							color={COLORS.orange}
-							filled
-							style={styles.gridItem}
-						/>
-						<Button
-							title="My Journal & Achievements"
+							style={{
+								height: 100,
+								elevation: 2,
+								backgroundColor: COLORS.grey,
+								marginLeft: 20,
+								marginTop: 10,
+								borderRadius: 15,
+								marginBottom: 10,
+								width: 100,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<View
+								style={{
+									flexDirection: "row",
+									paddingTop: 10,
+									paddingHorizontal: 10,
+								}}
+							>
+								<Text
+									style={{
+										fontWeight: "bold",
+									}}
+								>
+									Feedback & Requests
+								</Text>
+							</View>
+						</TouchableOpacity>
+
+						<TouchableOpacity
 							onPress={() => navigation.navigate("Journal")}
-							color={COLORS.orange}
-							filled
-							style={styles.gridItem}
-						/>
-						<Button
-							title="My Wishlist"
+							style={{
+								height: 100,
+								elevation: 2,
+								backgroundColor: COLORS.grey,
+								marginLeft: 10,
+								marginTop: 10,
+								borderRadius: 15,
+								marginBottom: 10,
+								width: 100,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<View
+								style={{
+									flexDirection: "row",
+									paddingTop: 10,
+									paddingHorizontal: 10,
+								}}
+							>
+								<Text
+									style={{
+										fontWeight: "bold",
+									}}
+								>
+									My Journal & Achievements
+								</Text>
+							</View>
+						</TouchableOpacity>
+
+						<TouchableOpacity
 							onPress={() => navigation.navigate("Wishlist")}
-							color={COLORS.orange}
-							filled
-							style={styles.gridItem}
-						/>
+							style={{
+								height: 100,
+								elevation: 2,
+								backgroundColor: COLORS.grey,
+								marginLeft: 10,
+								marginTop: 10,
+								borderRadius: 15,
+								marginBottom: 10,
+								width: 100,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<View
+								style={{
+									flexDirection: "row",
+									paddingTop: 10,
+									paddingHorizontal: 10,
+								}}
+							>
+								<Text
+									style={{
+										fontWeight: "bold",
+									}}
+								>
+									My Wishlist
+								</Text>
+							</View>
+						</TouchableOpacity>
 					</View>
 				</View>
 
@@ -274,18 +434,12 @@ const Dashboard = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	grid: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		flexWrap: "wrap",
-		marginBottom: 10,
-	},
-	gridItem: {
-		width: "45%",
-		height: 50, // increased height
-		marginVertical: 5,
-		marginHorizontal: "2.5%",
-	},
+	// grid: {
+	// 	flexDirection: "row",
+	// 	justifyContent: "space-between",
+	// 	flexWrap: "wrap",
+	// 	marginBottom: 10,
+	// },
 	button: {
 		paddingVertical: 3, // increased padding
 		borderColor: COLORS.black,

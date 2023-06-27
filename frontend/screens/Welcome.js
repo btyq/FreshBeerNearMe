@@ -20,10 +20,10 @@ import COLORS from "../constants/colors";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
-	const filledBgColor = props.color || COLORS.yellow2;
+	const filledBgColor = props.color || COLORS.yellow;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.white : COLORS.primary;
+	const textColor = props.filled ? COLORS.black : COLORS.primary;
 
 	return (
 		<TouchableOpacity
@@ -34,7 +34,9 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 15, ...{ color: textColor } }}>
+			<Text
+				style={{ fontSize: 15, ...{ color: textColor, fontWeight: "bold" } }}
+			>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
@@ -82,7 +84,7 @@ const CustomAlert = ({ visible, onClose }) => {
 					</Text>
 					<TouchableOpacity
 						style={{
-							backgroundColor: COLORS.yellow2,
+							backgroundColor: COLORS.foam,
 							padding: 10,
 							borderRadius: 8,
 							alignItems: "center",
@@ -145,13 +147,13 @@ const Welcome = ({ navigation }) => {
 	};
 
 	return (
-		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.yellow2}>
+		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.foam}>
 			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				<View style={{ flex: 1 }}>
 					<Image
 						source={require("../assets/freshbeer.png")}
 						style={{
-							marginTop: 20,
+							//marginTop: 20,
 							height: 250,
 							width: 270,
 							alignSelf: "center",
@@ -164,34 +166,22 @@ const Welcome = ({ navigation }) => {
 					style={{
 						paddingHorizontal: 20,
 						position: "absolute",
-						top: 220,
+						top: 200,
 						width: "100%",
 					}}
 				>
-					{/* <Text
-						style={{
-							fontSize: 25,
-							fontWeight: 700,
-							textAlign: "center",
-							color: COLORS.black,
-						}}
-					>
-						FRESH BEER NEAR ME
-					</Text> */}
-
 					<View style={{ flex: 1, marginHorizontal: 22 }}>
 						<View style={{ marginBottom: 12 }}>
 							<View
 								style={{
 									width: "100%",
-									height: 45,
-									borderColor: COLORS.black,
-									borderWidth: 1,
-									borderRadius: 8,
+									height: 50,
+									borderRadius: 12,
 									alignItems: "center",
 									justifyContent: "center",
 									paddingLeft: 22,
 									marginTop: 15,
+									backgroundColor: COLORS.white,
 								}}
 							>
 								<TextInput
@@ -211,13 +201,12 @@ const Welcome = ({ navigation }) => {
 							<View
 								style={{
 									width: "100%",
-									height: 48,
-									borderColor: COLORS.black,
-									borderWidth: 1,
-									borderRadius: 8,
+									height: 50,
+									borderRadius: 12,
 									alignItems: "center",
 									justifyContent: "center",
 									paddingLeft: 22,
+									backgroundColor: COLORS.white,
 								}}
 							>
 								<TextInput
@@ -254,50 +243,11 @@ const Welcome = ({ navigation }) => {
 								</TouchableOpacity>
 							</View>
 						</View>
+
 						<View
 							style={{
 								flexDirection: "row",
-								justifyContent: "space-between",
-								alignItems: "center",
-								// marginVertical: 6
-							}}
-						>
-							<View
-								style={{
-									flexDirection: "row",
-									alignItems: "center",
-									position: "relative",
-									//	zIndex: 1,
-									marginBottom: 10,
-								}}
-							>
-								<SelectList
-									data={data}
-									value={selected}
-									setSelected={setSelected}
-									boxStyles={{
-										borderRadius: 20,
-										position: "absolute",
-										right: 8,
-										backgroundColor: COLORS.white,
-										opacity: 1, // Set opacity to 1
-									}}
-									dropdownStyles={{
-										position: "absolute",
-										top: "100%",
-										right: 0,
-										backgroundColor: COLORS.white,
-										opacity: 1, // Set opacity to 1
-									}}
-									defaultOption={{ key: "1", value: "User" }}
-									search={false}
-								/>
-							</View>
-						</View>
-						<View
-							style={{
-								flexDirection: "row",
-								marginVertical: 6,
+								marginBottom: 22,
 							}}
 						>
 							<Pressable onPress={() => navigation.navigate("Signup")}>
@@ -305,6 +255,7 @@ const Welcome = ({ navigation }) => {
 									style={{
 										color: COLORS.black,
 										marginLeft: 4,
+										elevation: 2,
 									}}
 								>
 									Forgot your password?
@@ -312,23 +263,52 @@ const Welcome = ({ navigation }) => {
 							</Pressable>
 						</View>
 
+						<View style={{ marginBottom: 22 }}>
+							<SelectList
+								data={data}
+								value={selected}
+								setSelected={setSelected}
+								boxStyles={{
+									borderRadius: 12,
+									borderColor: 0,
+									position: "absolute",
+									backgroundColor: COLORS.white,
+									opacity: 1,
+									width: "100%",
+									//	marginTop: 10,
+									//	marginVertical: 12,
+								}}
+								dropdownStyles={{
+									position: "absolute",
+									top: "110%",
+									width: "100%",
+									right: 0,
+									borderColor: 0,
+									backgroundColor: COLORS.white,
+									opacity: 1,
+								}}
+								defaultOption={{ key: "1", value: "User" }}
+								search={false}
+							/>
+						</View>
+
 						<View
 							style={{
 								flexDirection: "row",
 								justifyContent: "center",
 								zIndex: -5,
+								marginVertical: 18,
 							}}
 						>
 							<Button
 								title="Login"
 								onPress={handleLogin}
-								color="black"
+								color={COLORS.white}
 								filled
 								style={{
-									marginTop: 10,
-									paddingHorizontal: 110,
+									marginTop: 15,
+									width: "100%",
 									marginBottom: 4,
-									//	zIndex: -5,
 								}}
 							></Button>
 							<CustomAlert
@@ -378,11 +358,10 @@ const Welcome = ({ navigation }) => {
 									justifyContent: "center",
 									flexDirection: "row",
 									height: 52,
-									borderWidth: 1,
-									borderColor: COLORS.black,
 									marginRight: 4,
 									borderRadius: 10,
 									paddingHorizontal: 15, // Add horizontal padding to create space
+									backgroundColor: COLORS.white,
 								}}
 							>
 								<Image
@@ -405,11 +384,10 @@ const Welcome = ({ navigation }) => {
 									justifyContent: "center",
 									flexDirection: "row",
 									height: 52,
-									borderWidth: 1,
-									borderColor: COLORS.black,
 									marginRight: 4,
 									borderRadius: 10,
 									paddingHorizontal: 10, // Add horizontal padding to create space
+									backgroundColor: COLORS.white,
 								}}
 							>
 								<Image
@@ -432,11 +410,10 @@ const Welcome = ({ navigation }) => {
 									justifyContent: "center",
 									flexDirection: "row",
 									height: 52,
-									borderWidth: 1,
-									borderColor: COLORS.black,
 									marginRight: 4,
 									borderRadius: 10,
 									paddingHorizontal: 10, // Add horizontal padding to create space
+									backgroundColor: COLORS.white,
 								}}
 							>
 								<Image
@@ -486,7 +463,7 @@ const styles = StyleSheet.create({
 	button: {
 		paddingBottom: 16,
 		paddingVertical: 10,
-		borderColor: COLORS.yellow2,
+		borderColor: COLORS.yellow,
 		borderWidth: 2,
 		borderRadius: 12,
 		alignItems: "center",

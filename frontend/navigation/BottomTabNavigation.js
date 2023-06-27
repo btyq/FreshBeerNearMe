@@ -48,7 +48,7 @@ const BottomTabNavigation = () => {
 							<Feather
 								name="home"
 								size={24}
-								color={focused ? COLORS.black : COLORS.grey}
+								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},
@@ -63,7 +63,7 @@ const BottomTabNavigation = () => {
 							<FontAwesome
 								name="user-circle"
 								size={24}
-								color={focused ? COLORS.black : COLORS.grey}
+								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},
@@ -78,7 +78,7 @@ const BottomTabNavigation = () => {
 							<Entypo
 								name="shop"
 								size={24}
-								color={focused ? COLORS.black : COLORS.grey}
+								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},
@@ -93,7 +93,7 @@ const BottomTabNavigation = () => {
 							<Ionicons
 								name="people"
 								size={24}
-								color={focused ? COLORS.black : COLORS.grey}
+								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},
@@ -108,7 +108,7 @@ const BottomTabNavigation = () => {
 							<MaterialIcons
 								name="feedback"
 								size={24}
-								color={focused ? COLORS.black : COLORS.grey}
+								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},
@@ -123,7 +123,7 @@ const BottomTabNavigation = () => {
 							<Ionicons
 								name="journal"
 								size={24}
-								color={focused ? COLORS.black : COLORS.grey}
+								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},
@@ -138,7 +138,7 @@ const BottomTabNavigation = () => {
 							<AntDesign
 								name="logout"
 								size={24}
-								color={focused ? COLORS.black : COLORS.grey}
+								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},

@@ -1,6 +1,5 @@
 const COLORS = {
 	white: "#FFFFFF",
-	white2: "#F5F5F5",
 	foam: "#FFCC00",
 	black: "#222222",
 	primary: "#FFD51F",
@@ -8,7 +7,7 @@ const COLORS = {
 	yellow: "#FCFFA4",
 	orange: "#FFECBE",
 	red: "#FF0000",
-	grey: "#808080",
+	grey: "#F0F0F0",
 	yellow2: "#FDE9CF",
 };
 
