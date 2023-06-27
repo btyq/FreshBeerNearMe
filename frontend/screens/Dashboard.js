@@ -138,7 +138,11 @@ const Dashboard = ({ navigation }) => {
 
 					<View style={{ flexDirection: "row", flexWrap: "wrap" }}>
 						<TouchableOpacity
-							onPress={() => navigation.navigate("Profile")}
+							onPress={() =>
+								navigation.navigate("BottomTabNavigation", {
+									screen: "Profile",
+								})
+							}
 							style={{
 								height: 100,
 								elevation: 2,
@@ -170,9 +174,7 @@ const Dashboard = ({ navigation }) => {
 						</TouchableOpacity>
 
 						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate("BottomTab", { screen: "BeersVenue" })
-							}
+							onPress={() => navigation.navigate("BeersVenue")}
 							style={{
 								height: 100,
 								elevation: 2,
@@ -343,42 +345,32 @@ const Dashboard = ({ navigation }) => {
 				>
 					<Card.Title>Upcoming Events</Card.Title>
 					<Card.Divider />
-					<ThemeProvider
-						theme={{
-							Tab: {
-								primary: {
-									backgroundColor: COLORS.foam, // Change the background color here
-								},
-							},
-						}}
-					>
-						<TabView value={index} onChange={setIndex} animationType="spring">
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-									<ImageBackground
-										source={require("../assets/event1.png")}
-										style={styles.cardImage}
-									/>
-								</Card>
-							</TabView.Item>
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-									<ImageBackground
-										source={require("../assets/event2.png")}
-										style={styles.cardImage}
-									/>
-								</Card>
-							</TabView.Item>
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-									<ImageBackground
-										source={require("../assets/event3.png")}
-										style={styles.cardImage}
-									/>
-								</Card>
-							</TabView.Item>
-						</TabView>
-					</ThemeProvider>
+					<TabView value={index} onChange={setIndex} animationType="spring">
+						<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+							<Card containerStyle={styles.cardContainer}>
+								<ImageBackground
+									source={require("../assets/event1.png")}
+									style={styles.cardImage}
+								/>
+							</Card>
+						</TabView.Item>
+						<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+							<Card containerStyle={styles.cardContainer}>
+								<ImageBackground
+									source={require("../assets/event2.png")}
+									style={styles.cardImage}
+								/>
+							</Card>
+						</TabView.Item>
+						<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+							<Card containerStyle={styles.cardContainer}>
+								<ImageBackground
+									source={require("../assets/event3.png")}
+									style={styles.cardImage}
+								/>
+							</Card>
+						</TabView.Item>
+					</TabView>
 				</Card>
 
 				<Card
@@ -434,12 +426,6 @@ const Dashboard = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	// grid: {
-	// 	flexDirection: "row",
-	// 	justifyContent: "space-between",
-	// 	flexWrap: "wrap",
-	// 	marginBottom: 10,
-	// },
 	button: {
 		paddingVertical: 3, // increased padding
 		borderColor: COLORS.black,
@@ -461,7 +447,6 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: 150,
 		borderRadius: 10,
-		//backgroundColor: COLORS.white,
 		justifyContent: "center",
 		alignItems: "center",
 		padding: 10,
@@ -470,7 +455,6 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.5,
 		shadowRadius: 2,
 		elevation: 5,
-		//marginBottom: 5,
 	},
 	cardImage: {
 		width: "100%",
@@ -495,7 +479,6 @@ const styles = StyleSheet.create({
 		left: 0,
 	},
 	tabViewItem: {
-		//backgroundColor: 'transparent',
 		width: "100%",
 		height: "100%",
 	},
