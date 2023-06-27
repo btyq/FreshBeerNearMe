@@ -203,15 +203,15 @@ const styles = StyleSheet.create({
   },
   wishlistText: {
     fontSize: 20,
-    fontWeight: 'bold',
   },
   editButton: {
     backgroundColor: COLORS.foam,
     padding: 10,
     borderRadius: 5,
+    borderWidth:1,
   },
   editButtonText: {
-    color: 'white',
+    color: 'black',
   },
   containerSection: {
     marginTop: 5,

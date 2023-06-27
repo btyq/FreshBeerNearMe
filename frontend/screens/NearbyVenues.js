@@ -128,29 +128,43 @@ const NearbyVenues = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
+    <View style={{ height: 630, backgroundColor: COLORS.white }}>
       <Header
         placement="left"
-        backgroundColor={COLORS.foam}
-        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        backgroundColor={COLORS.primary}
+        containerStyle={{
+          height: 100,
+          borderBottomLeftRadius: 40,
+          borderBottomRightRadius: 40,
+        }}
+        centerComponent={{
+          text: 'FreshBeer',
+          style: {
+            fontSize: 20,
+            color: COLORS.black,
+            fontWeight: 'bold',
+            flexDirection: 'row',
+          },
+        }}
         rightComponent={
-          <View style={{flexDirection: 'row', marginTop: 5}}>
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <TouchableOpacity>
               <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
             </TouchableOpacity>
-          </View>}
+          </View>
+        }
       />
 
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
-          <View style={{    
+          <View style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             flexWrap: 'wrap',
-            marginHorizontal: 20}}>
+            marginHorizontal: 20
+          }}>
             {[
               { title: 'Find a Venue', page: 'FindAVenue', onPress: handleFindAVenueClick },
               { title: 'Find a Beer', page: 'FindABeer', onPress: handleFindABeerClick },
@@ -161,7 +175,7 @@ const NearbyVenues = ({ navigation }) => {
               <Button
                 key={title}
                 title={title}
-                color={title === 'Nearby Venues' || title === 'Search for Venue' ? COLORS.foam : COLORS.white}
+                color={title === 'Nearby Venues' || title === 'Search for Venue' ? COLORS.orange : COLORS.white}
                 filled
                 style={styles.longButton}
                 onPress={onPress}
@@ -175,7 +189,7 @@ const NearbyVenues = ({ navigation }) => {
             />
             <Button
               title="Search for Venue"
-              color={COLORS.foam}
+              color={COLORS.orange}
               filled
               style={styles.searchButton}
             />
@@ -190,7 +204,7 @@ const NearbyVenues = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={sortType === title ? COLORS.foam : COLORS.white}
+                color={sortType === title ? COLORS.orange : COLORS.white}
                 filled
                 style={styles.shortButton}
                 onPress={() => handleSortTypeClick(title)}
@@ -207,14 +221,13 @@ const NearbyVenues = ({ navigation }) => {
               <Button
                 key={index}
                 title={title}
-                color={sortOrder === title ? COLORS.foam : COLORS.white}
+                color={sortOrder === title ? COLORS.orange : COLORS.white}
                 filled
                 style={styles.shortButton}
                 onPress={() => handleSortOrderClick(title)}
               />
             ))}
           </View>
-        </ScrollView>
 
         <View style={styles.container}>
           <ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
@@ -228,7 +241,7 @@ const NearbyVenues = ({ navigation }) => {
           </ScrollView>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -286,12 +299,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     minHeight: 340,
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.white,
     marginTop: 10, // Add margin bottom to create space between the containers
   },
   subContainer: {
     marginBottom: 10,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.orange,
     padding: 10,
     borderWidth: 1,
     borderColor: COLORS.black,

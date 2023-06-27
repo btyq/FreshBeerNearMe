@@ -10,7 +10,7 @@ const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
-  const textColor = props.filled ? COLORS.black : COLORS.primary;
+  const textColor = props.filled ? COLORS.black : COLORS.black;
 
   return (
     <TouchableOpacity
@@ -128,24 +128,37 @@ const Breweries = ({ navigation }) => {
   };
 
   return (
-    <LinearGradient style={{ flex: 1 }} colors={[COLORS.white, COLORS.yellow]}>
+    <View style={{ height: 630, backgroundColor: COLORS.white }}>
       <Header
         placement="left"
-        backgroundColor={COLORS.foam}
-        centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
+        backgroundColor={COLORS.primary}
+        containerStyle={{
+          height: 100,
+          borderBottomLeftRadius: 40,
+          borderBottomRightRadius: 40,
+        }}
+        centerComponent={{
+          text: 'FreshBeer',
+          style: {
+            fontSize: 20,
+            color: COLORS.black,
+            fontWeight: 'bold',
+            flexDirection: 'row',
+          },
+        }}
         rightComponent={
-          <View style={{flexDirection: 'row', marginTop: 5}}>
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
             <TouchableOpacity>
               <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
             </TouchableOpacity>
-          </View>}
+          </View>
+        }
       />
 
       <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView>
           <View style={styles.grid}>
             {[
               { title: 'Find a Venue', page: 'FindAVenue', onPress: handleFindAVenueClick },
@@ -157,7 +170,7 @@ const Breweries = ({ navigation }) => {
               <Button
                 key={title}
                 title={title}
-                color={page === 'Breweries' ? COLORS.foam : COLORS.white}
+                color={page === 'Breweries' ? COLORS.orange : COLORS.white}
                 filled
                 style={styles.longButton}
                 onPress={onPress}
@@ -171,7 +184,7 @@ const Breweries = ({ navigation }) => {
             />
             <Button
               title="Search for Brewery"
-              color={COLORS.foam}
+              color={COLORS.orange}
               filled
               style={styles.searchButton}
             />
@@ -179,21 +192,21 @@ const Breweries = ({ navigation }) => {
           <View style={styles.grid}>
             <Button
               title="Sort by Distance"
-              color={sortByDistance ? COLORS.foam : COLORS.white}
+              color={sortByDistance ? COLORS.orange : COLORS.white}
               filled={sortByDistance}
               style={styles.shortButton}
               onPress={handleSortByDistance}
             />
             <Button
               title="Sort by Price"
-              color={sortByPrice ? COLORS.foam : COLORS.white}
+              color={sortByPrice ? COLORS.orange : COLORS.white}
               filled={sortByPrice}
               style={styles.shortButton}
               onPress={handleSortByPrice}
             />
             <Button
               title="Sort by Rating"
-              color={sortByRating ? COLORS.foam : COLORS.white}
+              color={sortByRating ? COLORS.orange : COLORS.white}
               filled={sortByRating}
               style={styles.shortButton}
               onPress={handleSortByRating}
@@ -202,20 +215,19 @@ const Breweries = ({ navigation }) => {
           <View style={styles.grid}>
             <Button
               title="Ascending"
-              color={sortAscending ? COLORS.foam : COLORS.white}
+              color={sortAscending ? COLORS.orange : COLORS.white}
               filled={sortAscending}
               style={styles.shortButton}
               onPress={handleSortAscending}
             />
             <Button
               title="Descending"
-              color={sortDescending ? COLORS.foam : COLORS.white}
+              color={sortDescending ? COLORS.orange : COLORS.white}
               filled={sortDescending}
               style={styles.shortButton}
               onPress={handleSortDescending}
             />
           </View>
-        </ScrollView>
 
         <View style={styles.container}>
           <ScrollView>
@@ -229,7 +241,7 @@ const Breweries = ({ navigation }) => {
           </ScrollView>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 
@@ -294,11 +306,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     minHeight: 340,
-    backgroundColor: COLORS.foam,
+    backgroundColor: COLORS.white,
   },
   subContainer: {
     marginBottom: 10,
-    backgroundColor: COLORS.white,
+    backgroundColor: COLORS.orange,
     padding: 10,
     borderWidth: 1,
     borderColor: COLORS.black,
@@ -361,7 +373,8 @@ const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: COLORS.white,
+    color: COLORS.black
+    ,
   },
 });
 
