@@ -7,10 +7,10 @@ import COLORS from '../constants/colors';
 import { Header } from 'react-native-elements';
 
 const Button = (props) => {
-  const filledBgColor = props.color || COLORS.primary;
+  const filledBgColor = props.color || COLORS.orange;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
-  const textColor = props.filled ? COLORS.black : COLORS.primary;
+  const textColor = props.filled ? COLORS.black : COLORS.black;
   const fontSize = props.selected ? 16 : 15;
 
   return (
@@ -42,21 +42,36 @@ const Feedback = () => {
 
   return (
     <View style={styles.container}>
-      <LinearGradient style={styles.gradient} colors={[COLORS.white, COLORS.yellow]}>
-        <Header
-          placement="left"
-          backgroundColor={COLORS.foam}
-          centerComponent={{ text: 'FreshBeer', style: {fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row'} }}
-          rightComponent={
-            <View style={{flexDirection: 'row', marginTop: 5}}>
-              <TouchableOpacity>
-                <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Ionicons name="notifications-outline" size={24} color={COLORS.black} />                    
-              </TouchableOpacity>
-            </View>}
-        />
+<View style={{ height: 1500, backgroundColor: COLORS.white }}>
+
+<Header
+  placement="left"
+  backgroundColor={COLORS.primary}
+  containerStyle={{
+    height: 100,
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+  }}
+  centerComponent={{
+    text: 'FreshBeer',
+    style: {
+      fontSize: 20,
+      color: COLORS.black,
+      fontWeight: 'bold',
+      flexDirection: 'row',
+    },
+  }}
+  rightComponent={
+    <View style={{ flexDirection: 'row', marginTop: 5 }}>
+      <TouchableOpacity>
+        <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+      </TouchableOpacity>
+      <TouchableOpacity>
+        <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+      </TouchableOpacity>
+    </View>
+  }
+/>
 
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView>
@@ -94,7 +109,7 @@ const Feedback = () => {
 
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      </View>
     </View>
   );
 };
@@ -117,6 +132,7 @@ const styles = StyleSheet.create({
     width: '48%',
     height: 48,
     borderRadius: 30,
+    borderWidth: 1,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -127,6 +143,7 @@ const styles = StyleSheet.create({
     width: '50%',
     height: 48,
     borderRadius: 30,
+    borderWidth: 1,
     shadowColor: COLORS.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
@@ -136,7 +153,7 @@ const styles = StyleSheet.create({
   button: {
     paddingVertical: 10,
     borderColor: COLORS.black,
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
@@ -154,7 +171,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    borderWidth: 2,
+    borderWidth: 1,
     borderColor: COLORS.black,
     borderRadius: 10,
     textAlignVertical: 'top', // Align text to start at the top
@@ -166,7 +183,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
     paddingVertical: 12,
     alignItems: 'center',
-    borderWidth: 2, // Add border width
+    borderWidth: 1, // Add border width
     borderColor: COLORS.black, // Add border color
   },  
   submitButtonText: {
