@@ -1,4 +1,10 @@
-import { Ionicons, Octicons } from "@expo/vector-icons";
+import {
+	Entypo,
+	FontAwesome,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -14,8 +20,6 @@ import {
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
-import { Entypo } from '@expo/vector-icons';
-import { FontAwesome } from '@expo/vector-icons'; 
 
 const Button = (props) => {
 	let bgColor = COLORS.white; // Set default background color to white
@@ -103,7 +107,7 @@ const VenueItem = ({
 	venueContact,
 	venueRating,
 	venueImage,
-	venueOperatingHours
+	venueOperatingHours,
 }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [venueMenu, setVenueMenu] = useState([]);
@@ -119,14 +123,16 @@ const VenueItem = ({
 	useEffect(() => {
 		const fetchVenueMenu = async () => {
 			try {
-				const response = await axios.get('http://10.0.2.2:3000/getVenueMenu', { params: { venueID } });
+				const response = await axios.get("http://10.0.2.2:3000/getVenueMenu", {
+					params: { venueID },
+				});
 				const { success, beers } = response.data;
 
 				if (success) {
 					setVenueMenu(beers);
 				}
 			} catch (error) {
-				console.error('Error fetching venue menu:', error);
+				console.error("Error fetching venue menu:", error);
 			}
 		};
 
@@ -162,9 +168,14 @@ const VenueItem = ({
 						<ScrollView>
 							<Image source={{ uri: venueImage }} style={styles.venueImage} />
 							<Text style={styles.popupTitle}>{venueName}</Text>
-							<Entypo name="location-pin" size={24} color="black"/>
+							<Entypo name="location-pin" size={24} color="black" />
 							<Text style>{venueAddress}</Text>
-							<FontAwesome name="phone" size={24} color="black" style={{marginLeft: 2}}/>
+							<FontAwesome
+								name="phone"
+								size={24}
+								color="black"
+								style={{ marginLeft: 2 }}
+							/>
 							<Text style>{venueContact}</Text>
 							<Text style={{ ...styles.popupTitle, marginTop: 5 }}>
 								Operating Hours{" "}
@@ -174,7 +185,7 @@ const VenueItem = ({
 								style={{
 									borderTopColor: "black",
 									borderBottomWidth: 1,
-									marginTop: 10
+									marginTop: 10,
 								}}
 							></View>
 							<View
@@ -196,7 +207,15 @@ const VenueItem = ({
 										/>
 									))}
 								</View>
-								<Button title="View Reviews" style={{...styles.shortButton, width: "40%", borderRadius: 10, marginBottom: 15}} />
+								<Button
+									title="View Reviews"
+									style={{
+										...styles.shortButton,
+										width: "40%",
+										borderRadius: 10,
+										marginBottom: 15,
+									}}
+								/>
 							</View>
 							<View
 								style={{
@@ -211,9 +230,12 @@ const VenueItem = ({
 										<Text>{beer.abv}</Text>
 										<Text>{beer.ibu}</Text>
 										<Text>{beer.price}</Text>
-										<Image source={{ uri: beer.beerImage }} style={styles.venueImage} />
+										<Image
+											source={{ uri: beer.beerImage }}
+											style={styles.venueImage}
+										/>
 									</View>
-									))}
+								))}
 							</View>
 							<Button
 								title="Close"
@@ -320,6 +342,21 @@ const BeersVenue = ({ navigation }) => {
 						borderBottomLeftRadius: 40,
 						borderBottomRightRadius: 40,
 					}}
+					leftComponent={
+						<View
+							style={{
+								flexDirection: "row",
+							}}
+						>
+							<TouchableOpacity onPress={() => navigation.goBack()}>
+								<MaterialIcons
+									name="keyboard-arrow-left"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
 					centerComponent={{
 						text: "FreshBeer",
 						style: {
