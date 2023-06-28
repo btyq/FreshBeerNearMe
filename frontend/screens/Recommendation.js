@@ -43,30 +43,35 @@ const PopOut = (props) => {
   );
 };
 
-const Social = () => {
+const Recommendation = () => {
   const navigation = useNavigation();
   const [comment, setComment] = useState('Bitter, but it\'s decent');
   const [comments, setComments] = useState([]);
-  const [popOutVisible, setPopOutVisible] = useState(false);
+  const [popOutVisible1, setPopOutVisible1] = useState(false);
+  const [popOutVisible2, setPopOutVisible2] = useState(false);
 
   const handleComment = () => {
     setComments([...comments, comment]);
     setComment('');
   };
 
+  const showPopOut1 = () => {
+    setPopOutVisible1(true);
+  };
 
-  const showPopOut = () => {
-    setPopOutVisible(true);
+  const showPopOut2 = () => {
+    setPopOutVisible2(true);
   };
 
   const closePopOut = () => {
-    setPopOutVisible(false);
+    setPopOutVisible1(false);
+    setPopOutVisible2(false);
   };
 
   const navigateToSocial = () => {
     // Navigate to the Forums.js page
     navigation.navigate('Social');
-  }; 
+  };
 
   const navigateToForums = () => {
     // Navigate to the Forums.js page
@@ -90,11 +95,24 @@ const Social = () => {
 
   return (
     <ScrollView>
-      <LinearGradient style={{ height: 1500 }} colors={[COLORS.white, COLORS.yellow]}>
+      <View style={{ height: 1500, backgroundColor: COLORS.white }}>
         <Header
           placement="left"
-          backgroundColor={COLORS.foam}
-          centerComponent={{ text: 'FreshBeer', style: { fontSize: 20, color: COLORS.black, fontWeight: 'bold', flexDirection: 'row' } }}
+          backgroundColor={COLORS.primary}
+          containerStyle={{
+            height: 100,
+            borderBottomLeftRadius: 40,
+            borderBottomRightRadius: 40,
+          }}
+          centerComponent={{
+            text: 'FreshBeer',
+            style: {
+              fontSize: 20,
+              color: COLORS.black,
+              fontWeight: 'bold',
+              flexDirection: 'row',
+            },
+          }}
           rightComponent={
             <View style={{ flexDirection: 'row', marginTop: 5 }}>
               <TouchableOpacity>
@@ -103,9 +121,9 @@ const Social = () => {
               <TouchableOpacity>
                 <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
               </TouchableOpacity>
-            </View>}
+            </View>
+          }
         />
-
         <SafeAreaView style={{ flex: 1 }}>
           <View style={styles.grid}>
             <Button
@@ -115,7 +133,7 @@ const Social = () => {
               style={styles.longButton}
               onPress={navigateToSocial}
             />
-           <Button
+            <Button
               title="Forums"
               color={COLORS.white}
               filled
@@ -138,50 +156,201 @@ const Social = () => {
             />
             <Button
               title="Recommendation"
-              color={COLORS.foam}
+              color={COLORS.grey}
               filled
               style={styles.mediumButton}
               onPress={navigateToRecommendation}
             />
           </View>
-
-          <View style={styles.searchContainer}>
+          <View>
+            <Text style={{
+              marginTop: 50,
+              marginLeft: 15,
+              fontSize: 15,
+              color: COLORS.black,
+            }}>Your Friend Recommendation</Text>
+            <View style={{
+            borderBottomWidth: 2,
+            borderBottomColor: COLORS.grey,
+            marginHorizontal: 10,
+            marginTop: -6,
+            marginLeft: 220,
+            width: '45%',
+          }} />
+          </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: COLORS.white,
+              width: '95%',
+              height: '3%',
+              borderWidth: 1,
+              borderColor: COLORS.grey,
+              borderRadius: 10,
+              marginTop: 20,
+              marginLeft: 0,
+              alignSelf: 'center',
+              ...styles.containerContent,
+            }}
+            onPress={showPopOut1}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                marginLeft: 10,
+                marginTop: 6,
+                ...styles.beerName,
+              }}
+            >
+              Beer Name
+            </Text>
+            <View
+              style={{
+                position: 'relative',
+                top: -13,
+                marginLeft: 'auto',
+                marginRight: 0,
+                ...styles.starContainer,
+              }}
+            >
+              {/* Add Airbnb star component here */}
+              <AirbnbRating
+                count={5}
+                defaultRating={4}
+                showRating={false}
+                size={20}
+                starContainerStyle={{
+                  marginLeft: -8, // Adjust the value to bring the stars closer
+                  marginTop: -5,
+                  ...styles.ratingStarContainer,
+                }}
+                starStyle={styles.ratingStyle}
+                isDisabled={true} // Make the star rating read-only
+              />
+            </View>
+          </TouchableOpacity>
+          <View>
+            <Text style={{
+              marginTop: 50,
+              marginLeft: 20,
+              fontSize: 15,
+              color: COLORS.black,
+            }}>Recommend a Beer</Text>
+          </View>
+          <View style={{
+            borderBottomWidth: 2,
+            borderBottomColor: COLORS.grey,
+            marginHorizontal: 10,
+            marginTop: -8,
+            marginLeft: 160,
+            marginBottom: 10,
+            width: '60%',
+          }} />
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: 10,
+            alignItems: 'center',
+            borderColor: COLORS.grey,
+          }}>
             <TextInput
-              placeholder="Search..."
-              style={styles.searchInput}
+              placeholder="Search for beer"
+              style={{
+                height: 40,
+                borderColor: 'grey',
+                borderWidth: 1,
+                borderRadius: 10,
+                paddingLeft: 10,
+                flex: 1,
+                marginRight: 10,
+              }}
             />
             <Button
-              title="Search for user"
-              color={COLORS.foam}
+              title="Search"
+              color={COLORS.grey}
               filled
-              style={styles.searchButton}
+              style={{
+                width: '30%',
+                height: 40,
+                borderRadius: 30,
+                borderWidth: 1,
+                borderColor: COLORS.grey,
+              }}
             />
           </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: COLORS.white,
+              width: '95%',
+              height: '3%',
+              borderWidth: 1,
+              borderColor: COLORS.grey,
+              borderRadius: 10,
+              marginTop: 20,
+              marginLeft: 0,
+              alignSelf: 'center',
+              ...styles.containerContent,
+            }}
+            onPress={showPopOut2}
+          >
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                marginLeft: 10,
+                marginTop: 6,
+                ...styles.beerName,
+              }}
+            >
+              Beer Name
+            </Text>
+            <View
+              style={{
+                position: 'relative',
+                top: -13,
+                marginLeft: 'auto',
+                marginRight: 0,
+                ...styles.starContainer,
+              }}
+            >
+              {/* Add Airbnb star component here */}
+              <AirbnbRating
+                count={5}
+                defaultRating={4}
+                showRating={false}
+                size={20}
+                starContainerStyle={{
+                  marginLeft: -8, // Adjust the value to bring the stars closer
+                  marginTop: -5,
+                  ...styles.ratingStarContainer,
+                }}
+                starStyle={styles.ratingStyle}
+                isDisabled={true} // Make the star rating read-only
+              />
+            </View>
+          </TouchableOpacity>
+          <Button
+            title="Recommend"
+            color={COLORS.grey}
+            filled
+            style={{
+              marginLeft: 280,
+              width: '30%',
+              height: 40,
+              borderRadius: 30,
+              borderWidth: 1,
+              borderColor: COLORS.grey,
+            }}
+          />
         </SafeAreaView>
-      </LinearGradient>
+      </View>
+      <PopOut visible={popOutVisible1} text="Pop-up 1 Content" onPress={closePopOut} />
+      <PopOut visible={popOutVisible2} text="Pop-up 2 Content" onPress={closePopOut} />
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.foam,
-  },
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    paddingTop: 30,
-    backgroundColor: COLORS.foam,
-    height: 70,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
   grid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -204,136 +373,49 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingVertical: 10,
-    borderColor: COLORS.black,
-    borderWidth: 2,
+    borderColor: COLORS.grey,
+    borderWidth: 1,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  searchContainer: {
+  containerContent: {
+    marginBottom: 20,
+  },
+  beerName: {
+    marginBottom: 5,
+  },
+  starContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
     alignItems: 'center',
-  },
-  searchInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingLeft: 10,
-    flex: 1,
-    marginRight: 10,
-  },
-  searchButton: {
-    width: '30%',
-    height: 40,
-    borderRadius: 30,
-  },
-  userContainer: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: COLORS.white,
-    borderColor: COLORS.black,
-    borderWidth: 2,
-    borderRadius: 10,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: COLORS.foam,
-    padding: 5,
-    marginBottom: 10,
-    borderRadius: 8,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
-  followButton: {
-    width: '20%',
-    height: 40,
-    borderRadius: 30,
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: -3,
-  },
-  locationText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  userImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  commentText: {
-    marginTop: 10,
-    fontSize: 16,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 10,
-    backgroundColor: COLORS.yellow,
-    padding: 5,
-    borderRadius: 8,
-    height: 30,
-  },
-  ratingStarContainer: {
-    position: 'relative',
-    top: -10,
-    marginLeft: 'auto',
-    marginRight: 10,
-  },
-  ratingStyle: {
-    position: 'relative',
   },
   popOutContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    alignItems: 'center',
-    justifyContent: 'center',
+    flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 999,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   popOutContent: {
     backgroundColor: COLORS.white,
     padding: 20,
     borderRadius: 10,
-    alignItems: 'center',
+    width: '80%',
   },
   popOutText: {
-    fontSize: 18,
+    fontSize: 16,
     marginBottom: 20,
-    textAlign: 'center',
   },
   popOutButton: {
     backgroundColor: COLORS.primary,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    padding: 10,
     borderRadius: 10,
+    alignItems: 'center',
   },
   popOutButtonText: {
     color: COLORS.white,
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });
 
-export default Social;
+export default Recommendation;
