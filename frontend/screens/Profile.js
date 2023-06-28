@@ -1,4 +1,4 @@
-import { Ionicons, Octicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
 import axios from "axios";
 import CheckBox from "expo-checkbox";
 import { LinearGradient } from "expo-linear-gradient";
@@ -180,7 +180,7 @@ const Profile = ({ navigation }) => {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 800 }}>
+		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 750 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -225,8 +225,6 @@ const Profile = ({ navigation }) => {
 					}
 				/>
 
-				{/* <SafeAreaView style={{ flex: 1 }}>
-					<ScrollView> */}
 				<View
 					style={{
 						justifyContent: "center",
@@ -241,20 +239,17 @@ const Profile = ({ navigation }) => {
 							fontWeight: "bold",
 							color: COLORS.black,
 							marginTop: 20,
-							marginBottom: 12,
+							marginHorizontal: 12,
 						}}
 					>
 						My Profile
 					</Text>
-					<Button
-						title="Edit Profile"
-						filled
+					<AntDesign
+						name="edit"
+						size={24}
+						color="black"
 						onPress={handleEditProfile}
-						style={{
-							backgroundColor: COLORS.foam,
-							marginTop: 10,
-							marginBottom: 4,
-						}}
+						style={{ marginHorizontal: 12 }}
 					/>
 				</View>
 
@@ -276,12 +271,10 @@ const Profile = ({ navigation }) => {
 								width: "100%",
 								height: 45,
 								borderColor: COLORS.black,
-								borderWidth: 1,
-								borderRadius: 8,
+								borderBottomWidth: 1,
 								alignItems: "center",
 								justifyContent: "center",
-								paddingLeft: 22,
-								marginTop: 10,
+								marginTop: 5,
 							}}
 						>
 							<TextInput
@@ -316,12 +309,10 @@ const Profile = ({ navigation }) => {
 								width: "100%",
 								height: 45,
 								borderColor: COLORS.black,
-								borderWidth: 1,
-								borderRadius: 8,
+								borderBottomWidth: 1,
 								alignItems: "center",
 								justifyContent: "center",
-								paddingLeft: 22,
-								marginTop: 10,
+								marginTop: 5,
 							}}
 						>
 							<TextInput
@@ -356,12 +347,10 @@ const Profile = ({ navigation }) => {
 								width: "100%",
 								height: 45,
 								borderColor: COLORS.black,
-								borderWidth: 1,
-								borderRadius: 8,
+								borderBottomWidth: 1,
 								alignItems: "center",
 								justifyContent: "center",
-								paddingLeft: 22,
-								marginTop: 10,
+								marginTop: 5,
 							}}
 						>
 							<TextInput
@@ -394,14 +383,12 @@ const Profile = ({ navigation }) => {
 						<View
 							style={{
 								width: "100%",
-								height: 48,
+								height: 45,
 								borderColor: COLORS.black,
-								borderWidth: 1,
-								borderRadius: 8,
+								borderBottomWidth: 1,
 								alignItems: "center",
 								justifyContent: "center",
-								paddingLeft: 22,
-								flexDirection: "row",
+								marginTop: 5,
 							}}
 						>
 							<TextInput
@@ -457,8 +444,6 @@ const Profile = ({ navigation }) => {
 					></Button>
 					<CustomAlert visible={isDialogVisible} onClose={handleCloseDialog} />
 				</View>
-				{/* </ScrollView>
-				</SafeAreaView> */}
 			</SafeAreaView>
 		</ScrollView>
 	);
