@@ -1,5 +1,5 @@
 class Venue {
-    constructor(client, venueID, venueName, venueAddress, venueContact, venueRating, venueImage){
+    constructor(client, venueID, venueName, venueAddress, venueContact, venueRating, venueImage, venueOperatingHours, venueMenu){
         this.client = client;
         this.venueID = venueID;
         this.venueName = venueName;
@@ -7,7 +7,11 @@ class Venue {
         this.venueContact = venueContact;
         this.venueRating = venueRating;
         this.venueImage = venueImage;
+        this.venueOperatingHours = venueOperatingHours;
+        this.venueMenu = venueMenu;
     }
+
+    
 }
 
-module.exports = User;
+module.exports = Venue;

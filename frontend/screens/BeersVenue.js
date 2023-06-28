@@ -1,6 +1,5 @@
 import { Ionicons, Octicons } from "@expo/vector-icons";
 import axios from "axios";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import {
 	Image,
@@ -15,6 +14,8 @@ import {
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
+import { Entypo } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons'; 
 
 const Button = (props) => {
 	let bgColor = COLORS.white; // Set default background color to white
@@ -138,8 +139,23 @@ const VenueItem = ({
 				<View style={styles.modalContainer}>
 					<View style={styles.popup}>
 						<ScrollView>
-							<Text style={styles.popupTitle}>{venueName}</Text>
 							<Image source={{ uri: venueImage }} style={styles.venueImage} />
+							<Text style={styles.popupTitle}>{venueName}</Text>
+							<Entypo name="location-pin" size={24} color="black"/>
+							<Text style>{venueAddress}</Text>
+							<FontAwesome name="phone" size={24} color="black" style={{marginLeft: 2}}/>
+							<Text style>{venueContact}</Text>
+							<Text style={{ ...styles.popupTitle, marginTop: 5 }}>
+								Operating Hours{" "}
+							</Text>
+							<Text style>{venueOperatingHours}</Text>
+							<View
+								style={{
+									borderTopColor: "black",
+									borderBottomWidth: 1,
+									marginTop: 10
+								}}
+							></View>
 							<View
 								style={{
 									flexDirection: "row",
@@ -159,25 +175,12 @@ const VenueItem = ({
 										/>
 									))}
 								</View>
-								<Button title="View Reviews" style={styles.shortButton} />
+								<Button title="View Reviews" style={{...styles.shortButton, width: "40%", borderRadius: 10, marginBottom: 15}} />
 							</View>
-							<Text style={{ ...styles.popupTitle, marginTop: 5 }}>
-								Address{" "}
-							</Text>
-							<Text style>{venueAddress}</Text>
-							<Text style={{ ...styles.popupTitle, marginTop: 5 }}>
-								Contact{" "}
-							</Text>
-							<Text style>{venueContact}</Text>
-							<Text style={{ ...styles.popupTitle, marginTop: 5 }}>
-								Operating Hours{" "}
-							</Text>
-							<Text style>{venueOperatingHours}</Text>
 							<View
 								style={{
 									borderTopColor: "black",
 									borderTopWidth: 1,
-									marginTop: 15,
 								}}
 							>
 								<Text style={{ ...styles.popupTitle, marginTop: 5 }}>
@@ -241,16 +244,6 @@ const BeersVenue = ({ navigation }) => {
 	const handleSortBy = (by) => {
 		if (by === activeSortBy) return;
 		setActiveSortBy(by);
-	};
-
-	const handleSortOrder = (order) => {
-		if (order === activeSortOrder) return;
-		setActiveSortOrder(order);
-		let sortedData = [...sortedVenueData];
-		if (order === "Descending") {
-			sortedData.reverse();
-		}
-		setSortedVenueData(sortedData);
 	};
 
 	const handleFindABeerClick = () => {
@@ -574,7 +567,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	popup: {
-		width: "80%", // Adjust the width of the popup
+		width: "90%", // Adjust the width of the popup
 		height: 500, // Adjust the height of the popup
 		backgroundColor: COLORS.white,
 		borderRadius: 10,

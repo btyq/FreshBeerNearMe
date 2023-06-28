@@ -92,7 +92,8 @@ const Profile = ( {navigation} ) => {
         username: username,
         password: password,
         email: email,
-        mobileNumber: mobileNumber
+        mobileNumber: mobileNumber,
+        receiveNotification: receiveNotification
       };
       // Make a POST request to the /updateProfile endpoint with the new data
       const response = await axios.post('http://10.0.2.2:3000/editProfile', newData);
@@ -101,17 +102,9 @@ const Profile = ( {navigation} ) => {
       if (response.data.success) {
         console.log('Profile updated successfully');
         setIsDialogVisible(true);
-        
-        // Update the cookies.username value
-        if (response.data.success) {
-          const updatedUsername = response.data.username;
-          // Update the value in the cookies
-          const updatedCookies = { ...cookies, username: updatedUsername };
-          // Update the context with the new cookies
-          //setCookies(updatedCookies);
-        }
-      } else {
-        console.log('Failed to update profile:', response.data.message);
+      }
+      else{
+        console.log('No changes made to profile!');
       }
     } catch (error) {
       console.error('Error updating profile:', error.message);

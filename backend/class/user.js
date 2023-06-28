@@ -44,6 +44,28 @@ class User {
     }
   }
 
+  async getUserData(req, res) {
+    const { userID } = req.body;
+
+    try {
+      const db = this.client.db('FreshBearNearMe');
+      const collection = db.collection('User');
+      //Find the user document that matches the provided userID
+      const user = await collection.findOne({ userID });
+      if (user) {
+        //Extract the necessary data from the user document
+        const { username, email, mobileNumber, password, receiveNotification } = user;
+        //Send the user data as the response
+        res.json({ success: true, username, email, mobileNumber, password, receiveNotification });
+      } else {
+        res.json({ success: false, message: 'User not found' });
+      }
+    } catch (error) {
+      console.error('Error retrieving user data:', error);
+      res.status(500).json({ success: false, message: 'An error occurred while retrieving user data' });
+    }
+  }
+
   async editProfile(res, oldData, newData) {
     try {
       const db = this.client.db('FreshBearNearMe');

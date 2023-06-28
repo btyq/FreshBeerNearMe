@@ -1,4 +1,5 @@
 const User = require('./class/user');
+const Venue = require('./class/venue');
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -32,7 +33,6 @@ app.listen(port, () => {
 });
 
 //=======================================All Route Functions=============================================
-
 // Custom middleware to store 'user' object in a global variable
 let globalUser = null;
 app.use((req, res, next) => {
@@ -40,19 +40,6 @@ app.use((req, res, next) => {
     globalUser = new User(client, "", "", "", "", "", false);
   } 
   next();
-});
-
-//Route to verify username and password
-app.post('/', async (req, res) => {
-  const { username, password } = req.body;
-
-  if (!globalUser) {
-    globalUser = new User(client, "", username, password, "", "", false);
-  } else {
-    globalUser.username = username;
-    globalUser.password = password;
-  }
-  await globalUser.login(res, username, password);
 });
 
 //Route to verify username and password
@@ -98,22 +85,24 @@ app.post('/signup', async (req, res) => {
     res.status(500).json({ success: false, message: 'An error occurred during signup' });
   }
 });
+//=======================================All User Routes=============================================
+//Route to verify username and password
+app.post('/', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!globalUser) {
+    globalUser = new User(client, "", username, password, "", "", false);
+  } else {
+    globalUser.username = username;
+    globalUser.password = password;
+  }
+  await globalUser.login(res, username, password);
+});
 
 //Route to retrieve user data at userProfile
 app.post('/getUserData', async (req, res) => {
-  const { userID } = req.body;
-
   try {
-    // Find the user document that matches the provided username
-    const user = await collection.findOne({ userID });
-    if (user) {
-      // Extract the necessary data from the user document
-      const { username, email, mobileNumber, password, receiveNotification } = user;
-      // Send the user data as the response
-      res.json({ success: true, username, email, mobileNumber, password, receiveNotification });
-    } else {
-      res.json({ success: false, message: 'User not found' });
-    }
+    await globalUser.getUserData(req,res);
   } catch (error) {
     console.error('Error retrieving user data:', error);
     res.status(500).json({ success: false, message: 'An error occurred while retrieving user data' });
@@ -131,13 +120,14 @@ app.post('/editProfile', async (req, res) => {
         password: globalUser.password,
         email: globalUser.email,
         mobileNumber: globalUser.mobileNumber,               
-        //receiveNotification wait
+        receiveNotification: globalUser.receiveNotification
       };
       const newData = {
         username: req.body.username,
         password: req.body.password,
         email: req.body.email,
-        mobileNumber: req.body.mobileNumber
+        mobileNumber: req.body.mobileNumber,
+        receiveNotification: req.body.receiveNotification
       };
       
       await globalUser.editProfile(res, oldData, newData);
@@ -149,7 +139,8 @@ app.post('/editProfile', async (req, res) => {
     res.status(500).json({ success: false, message: 'An error occurred while updating the profile' });
   }
 });
-
+//===================================================================================================================
+//=================================================All Beer Routes===================================================
 //Route to retrieve beer data
 app.get('/beerData', async (req, res) => {
   try{
@@ -160,7 +151,8 @@ app.get('/beerData', async (req, res) => {
     res.status(500).json({ success: false, message: "An error occurred while retrieving beer data"});
   }
 });
-
+//===================================================================================================================
+//=================================================All Venue Routes===================================================
 //Route to retrieve venue data
 app.get('/venueData', async(req, res) => {
   try{

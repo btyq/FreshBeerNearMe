@@ -516,7 +516,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 	},
 	popup: {
-		width: "80%", // Adjust the width of the popup
+		width: "90%", // Adjust the width of the popup
 		height: 500, // Adjust the height of the popup
 		backgroundColor: COLORS.white,
 		borderRadius: 10,
