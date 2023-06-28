@@ -1,4 +1,9 @@
-import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
+import {
+	AntDesign,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
 import axios from "axios";
 import CheckBox from "expo-checkbox";
 import { LinearGradient } from "expo-linear-gradient";
@@ -176,7 +181,7 @@ const Profile = ({ navigation }) => {
 
 	// function to handle "edit profile"
 	const handleEditProfile = () => {
-		setEditMode(true);
+		setEditMode(!editMode);
 	};
 
 	return (
@@ -190,6 +195,21 @@ const Profile = ({ navigation }) => {
 						borderBottomLeftRadius: 40,
 						borderBottomRightRadius: 40,
 					}}
+					leftComponent={
+						<View
+							style={{
+								flexDirection: "row",
+							}}
+						>
+							<TouchableOpacity onPress={() => navigation.goBack()}>
+								<MaterialIcons
+									name="keyboard-arrow-left"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
 					centerComponent={{
 						text: "FreshBeer",
 						style: {
@@ -247,7 +267,7 @@ const Profile = ({ navigation }) => {
 					<AntDesign
 						name="edit"
 						size={24}
-						color="black"
+						color={COLORS.black}
 						onPress={handleEditProfile}
 						style={{ marginHorizontal: 12 }}
 					/>
@@ -287,7 +307,8 @@ const Profile = ({ navigation }) => {
 									width: "100%",
 									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
 								}}
-								editable={editMode} // Disable editing if editMode is false
+								editable={editMode}
+								disabled={!editMode}
 							></TextInput>
 						</View>
 					</View>
@@ -326,6 +347,7 @@ const Profile = ({ navigation }) => {
 									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
 								}}
 								editable={editMode}
+								disabled={!editMode}
 							></TextInput>
 						</View>
 					</View>
@@ -364,6 +386,7 @@ const Profile = ({ navigation }) => {
 									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
 								}}
 								editable={editMode}
+								disabled={!editMode}
 							></TextInput>
 						</View>
 					</View>
@@ -399,8 +422,10 @@ const Profile = ({ navigation }) => {
 								secureTextEntry={!isPasswordShown}
 								style={{
 									width: "100%",
-									color: COLORS.black,
+									color: editMode ? COLORS.black : COLORS.gray,
 								}}
+								editable={editMode}
+								disabled={!editMode}
 							/>
 
 							<TouchableOpacity
@@ -421,10 +446,15 @@ const Profile = ({ navigation }) => {
 
 					<View style={styles.checkboxContainer}>
 						<CheckBox
-							style={styles.checkbox}
 							value={receiveNotification}
 							onValueChange={setReceiveNotification}
 							tintColors={COLORS.black}
+							style={{
+								marginRight: 5,
+								color: editMode,
+							}}
+							editable={editMode}
+							disabled={!editMode}
 						/>
 						<Text style={styles.checkboxLabel}>
 							Receive notifications for new releases, events & personalized
