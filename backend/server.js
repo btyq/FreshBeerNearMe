@@ -1,5 +1,10 @@
 const User = require('./class/user');
 const Venue = require('./class/venue');
+
+const venueArray = [];
+
+//===================================================================================================================
+//==============================================Connect to MongoDB===================================================
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -9,7 +14,6 @@ const client = new MongoClient(uri);
 const db = client.db('FreshBearNearMe');
 const collection = db.collection('User');
 
-//Connect to MongoDB
 async function connectToMongoDB() {
   try {
     await client.connect();
@@ -31,8 +35,8 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
-//=======================================All Route Functions=============================================
+//===================================================================================================================
+//==============================================All Route Functions==================================================
 // Custom middleware to store 'user' object in a global variable
 let globalUser = null;
 app.use((req, res, next) => {
@@ -154,13 +158,13 @@ app.get('/beerData', async (req, res) => {
 //===================================================================================================================
 //=================================================All Venue Routes===================================================
 //Route to retrieve venue data
-app.get('/venueData', async(req, res) => {
-  try{
-    const venueData = await db.collection('Venue').find().toArray();
-    res.json({success: true, venueData});
-  } catch (error) {
-    console.error("Error retrieving venue data:", error);
-    res.status(500).json({ success: false, message: "An error occurred while retrieving venue data"});
-  }
+app.get('/getVenueData', async(req, res) => {
+  await Venue.getVenueData(client, venueArray, res);
+});
+
+//Route to retrieve menu data inside venue container
+app.get('/getVenueMenu', async (req, res) => {
+  const venueID = parseInt(req.query.venueID);
+  Venue.getVenueMenu(client, venueID, venueArray, res);
 });
 //===================================================================================================================
