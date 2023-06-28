@@ -29,7 +29,6 @@ const Button = (props) => {
 				...styles.button,
 				...{ backgroundColor: bgColor },
 				...props.style,
-				alignSelf: 'center', // Align the button to the center
 			}}
 			onPress={props.onPress}
 		>
@@ -137,18 +136,21 @@ const Dashboard = ({ navigation }) => {
 						What would you like to do?
 					</Text>
 
-					<View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+					<View
+						style={{
+							flexDirection: "row",
+							flexWrap: "wrap",
+							marginBottom: 10,
+							justifyContent: "space-between",
+							marginHorizontal: 15,
+						}}
+					>
 						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate("BottomTabNavigation", {
-									screen: "Profile",
-								})
-							}
+							onPress={() => navigation.navigate("Profile")}
 							style={{
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 20,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -175,12 +177,14 @@ const Dashboard = ({ navigation }) => {
 						</TouchableOpacity>
 
 						<TouchableOpacity
-							onPress={() => navigation.navigate("BeersVenue")}
+							onPress={() =>
+								navigation.navigate("BottomTab", { screen: "BeersVenue" })
+							}
 							style={{
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 35,
+								marginLeft: 10,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -212,7 +216,7 @@ const Dashboard = ({ navigation }) => {
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 35,
+								marginLeft: 10,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -244,7 +248,6 @@ const Dashboard = ({ navigation }) => {
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 20,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -276,7 +279,7 @@ const Dashboard = ({ navigation }) => {
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 35,
+								marginLeft: 10,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -288,8 +291,8 @@ const Dashboard = ({ navigation }) => {
 							<View
 								style={{
 									flexDirection: "column",
-									paddingTop: 10,
-									paddingHorizontal: 10,
+									paddingTop: 6,
+									paddingHorizontal: 6,
 									alignItems: "center",
 								}}
 							>
@@ -314,14 +317,13 @@ const Dashboard = ({ navigation }) => {
 							</View>
 						</TouchableOpacity>
 
-
 						<TouchableOpacity
 							onPress={() => navigation.navigate("Wishlist")}
 							style={{
 								height: 100,
 								elevation: 2,
 								backgroundColor: COLORS.grey,
-								marginLeft: 35,
+								marginLeft: 10,
 								marginTop: 10,
 								borderRadius: 15,
 								marginBottom: 10,
@@ -359,32 +361,42 @@ const Dashboard = ({ navigation }) => {
 				>
 					<Card.Title>Upcoming Events</Card.Title>
 					<Card.Divider />
-					<TabView value={index} onChange={setIndex} animationType="spring">
-						<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-							<Card containerStyle={styles.cardContainer}>
-								<ImageBackground
-									source={require("../assets/event1.png")}
-									style={styles.cardImage}
-								/>
-							</Card>
-						</TabView.Item>
-						<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-							<Card containerStyle={styles.cardContainer}>
-								<ImageBackground
-									source={require("../assets/event2.png")}
-									style={styles.cardImage}
-								/>
-							</Card>
-						</TabView.Item>
-						<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-							<Card containerStyle={styles.cardContainer}>
-								<ImageBackground
-									source={require("../assets/event3.png")}
-									style={styles.cardImage}
-								/>
-							</Card>
-						</TabView.Item>
-					</TabView>
+					<ThemeProvider
+						theme={{
+							Tab: {
+								primary: {
+									backgroundColor: COLORS.foam, // Change the background color here
+								},
+							},
+						}}
+					>
+						<TabView value={index} onChange={setIndex} animationType="spring">
+							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+								<Card containerStyle={styles.cardContainer}>
+									<ImageBackground
+										source={require("../assets/event1.png")}
+										style={styles.cardImage}
+									/>
+								</Card>
+							</TabView.Item>
+							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+								<Card containerStyle={styles.cardContainer}>
+									<ImageBackground
+										source={require("../assets/event2.png")}
+										style={styles.cardImage}
+									/>
+								</Card>
+							</TabView.Item>
+							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+								<Card containerStyle={styles.cardContainer}>
+									<ImageBackground
+										source={require("../assets/event3.png")}
+										style={styles.cardImage}
+									/>
+								</Card>
+							</TabView.Item>
+						</TabView>
+					</ThemeProvider>
 				</Card>
 
 				<Card
@@ -440,17 +452,20 @@ const Dashboard = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+	// grid: {
+	// 	flexDirection: "row",
+	// 	justifyContent: "space-between",
+	// 	flexWrap: "wrap",
+	// 	marginBottom: 10,
+	// },
 	button: {
-		paddingVertical: 3,
+		paddingVertical: 3, // increased padding
 		borderColor: COLORS.black,
 		borderWidth: 1,
 		borderRadius: 30,
 		alignItems: "center",
 		justifyContent: "center",
 		elevation: 20,
-		width: 100, // Add a fixed width to the button
-		marginHorizontal: 10, // Add horizontal margin to create space between buttons
-		marginTop: 10,
 	},
 	cardContainer: {
 		height: 50,
@@ -464,6 +479,7 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: 150,
 		borderRadius: 10,
+		//backgroundColor: COLORS.white,
 		justifyContent: "center",
 		alignItems: "center",
 		padding: 10,
@@ -472,6 +488,7 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.5,
 		shadowRadius: 2,
 		elevation: 5,
+		//marginBottom: 5,
 	},
 	cardImage: {
 		width: "100%",
@@ -496,6 +513,7 @@ const styles = StyleSheet.create({
 		left: 0,
 	},
 	tabViewItem: {
+		//backgroundColor: 'transparent',
 		width: "100%",
 		height: "100%",
 	},
