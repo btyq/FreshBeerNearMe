@@ -305,7 +305,7 @@ const Profile = ({ navigation }) => {
 								keyboardType="default"
 								style={{
 									width: "100%",
-									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
+									color: editMode,
 								}}
 								editable={editMode}
 								disabled={!editMode}
@@ -344,7 +344,7 @@ const Profile = ({ navigation }) => {
 								keyboardType="email-address"
 								style={{
 									width: "100%",
-									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
+									color: editMode,
 								}}
 								editable={editMode}
 								disabled={!editMode}
@@ -383,7 +383,7 @@ const Profile = ({ navigation }) => {
 								keyboardType="default"
 								style={{
 									width: "100%",
-									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
+									color: editMode,
 								}}
 								editable={editMode}
 								disabled={!editMode}
@@ -422,7 +422,7 @@ const Profile = ({ navigation }) => {
 								secureTextEntry={!isPasswordShown}
 								style={{
 									width: "100%",
-									color: editMode ? COLORS.black : COLORS.gray,
+									color: editMode,
 								}}
 								editable={editMode}
 								disabled={!editMode}
