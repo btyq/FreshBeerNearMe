@@ -1,9 +1,13 @@
-import { Entypo, Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
+import {
+	Entypo,
+	FontAwesome,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
-import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect } from "react";
 import {
-	Image,
 	ImageBackground,
 	ScrollView,
 	StyleSheet,
@@ -63,7 +67,7 @@ const Dashboard = ({ navigation }) => {
 
 	//=====================================================================================================
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1100 }}>
+		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1110 }}>
 			<SafeAreaView backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -155,7 +159,6 @@ const Dashboard = ({ navigation }) => {
 								borderRadius: 15,
 								marginBottom: 10,
 								width: 100,
-								justifyContent: "center", // Center the content vertically
 								alignItems: "center",
 							}}
 						>
@@ -164,6 +167,7 @@ const Dashboard = ({ navigation }) => {
 									flexDirection: "row",
 									paddingTop: 10,
 									paddingHorizontal: 10,
+									marginVertical: 10,
 								}}
 							>
 								<Text
@@ -174,6 +178,15 @@ const Dashboard = ({ navigation }) => {
 									My Profile
 								</Text>
 							</View>
+							<MaterialIcons
+								name="face"
+								size={44}
+								color={COLORS.foam}
+								style={{
+									paddingLeft: 35,
+									alignItems: "flex-end",
+								}}
+							/>
 						</TouchableOpacity>
 
 						<TouchableOpacity
@@ -189,8 +202,9 @@ const Dashboard = ({ navigation }) => {
 								borderRadius: 15,
 								marginBottom: 10,
 								width: 100,
-								justifyContent: "center", // Center the content vertically
 								alignItems: "center",
+								// marginHorizontal: 5,
+								// marginVertical: 5,
 							}}
 						>
 							<View
@@ -208,6 +222,16 @@ const Dashboard = ({ navigation }) => {
 									Beers & Venues
 								</Text>
 							</View>
+							<Ionicons
+								name="beer"
+								size={44}
+								color={COLORS.foam}
+								style={{
+									paddingLeft: 35,
+									//		paddingBottom: 12,
+									alignItems: "flex-end",
+								}}
+							/>
 						</TouchableOpacity>
 
 						<TouchableOpacity
@@ -221,8 +245,9 @@ const Dashboard = ({ navigation }) => {
 								borderRadius: 15,
 								marginBottom: 10,
 								width: 100,
-								justifyContent: "center",
 								alignItems: "center",
+								// marginHorizontal: 5,
+								// marginVertical: 5,
 							}}
 						>
 							<View
@@ -240,6 +265,16 @@ const Dashboard = ({ navigation }) => {
 									Social & Community
 								</Text>
 							</View>
+							<Ionicons
+								name="md-people-circle"
+								size={44}
+								color={COLORS.foam}
+								style={{
+									paddingLeft: 35,
+									//			paddingBottom: 12,
+									alignItems: "flex-end",
+								}}
+							/>
 						</TouchableOpacity>
 
 						<TouchableOpacity
@@ -271,6 +306,16 @@ const Dashboard = ({ navigation }) => {
 									Feedback & Requests
 								</Text>
 							</View>
+							<MaterialIcons
+								name="feedback"
+								size={44}
+								color={COLORS.foam}
+								style={{
+									paddingLeft: 35,
+									//			paddingBottom: 12,
+									alignItems: "flex-end",
+								}}
+							/>
 						</TouchableOpacity>
 
 						<TouchableOpacity
@@ -284,14 +329,15 @@ const Dashboard = ({ navigation }) => {
 								borderRadius: 15,
 								marginBottom: 10,
 								width: 100,
-								justifyContent: "center",
 								alignItems: "center",
+								// marginHorizontal: 5,
+								// marginVertical: 5,
 							}}
 						>
 							<View
 								style={{
 									flexDirection: "column",
-									paddingTop: 6,
+									paddingTop: 10,
 									paddingHorizontal: 6,
 									alignItems: "center",
 								}}
@@ -303,7 +349,7 @@ const Dashboard = ({ navigation }) => {
 										width: 100,
 									}}
 								>
-									My Journal
+									My Journal &
 								</Text>
 								<Text
 									style={{
@@ -312,9 +358,19 @@ const Dashboard = ({ navigation }) => {
 										width: 100,
 									}}
 								>
-									& Achievements
+									Achievements
 								</Text>
 							</View>
+							<Ionicons
+								name="md-people-circle"
+								size={44}
+								color={COLORS.foam}
+								style={{
+									paddingLeft: 35,
+									//			paddingBottom: 12,
+									alignItems: "flex-end",
+								}}
+							/>
 						</TouchableOpacity>
 
 						<TouchableOpacity
@@ -328,8 +384,9 @@ const Dashboard = ({ navigation }) => {
 								borderRadius: 15,
 								marginBottom: 10,
 								width: 100,
-								justifyContent: "center",
 								alignItems: "center",
+								// marginHorizontal: 5,
+								// marginVertical: 5,
 							}}
 						>
 							<View
@@ -337,6 +394,7 @@ const Dashboard = ({ navigation }) => {
 									flexDirection: "row",
 									paddingTop: 10,
 									paddingHorizontal: 10,
+									marginVertical: 10,
 								}}
 							>
 								<Text
@@ -347,6 +405,16 @@ const Dashboard = ({ navigation }) => {
 									My Wishlist
 								</Text>
 							</View>
+							<Ionicons
+								name="list-circle"
+								size={44}
+								color={COLORS.foam}
+								style={{
+									paddingLeft: 35,
+									//			paddingBottom: 12,
+									alignItems: "flex-end",
+								}}
+							/>
 						</TouchableOpacity>
 					</View>
 				</View>
