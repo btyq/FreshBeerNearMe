@@ -69,7 +69,7 @@ const BottomTabNavigation = () => {
 					},
 				}}
 			/>
-			{/* <Tab.Screen
+			<Tab.Screen
 				name="BeersVenue"
 				component={BeersVenue}
 				options={{
@@ -128,7 +128,7 @@ const BottomTabNavigation = () => {
 						);
 					},
 				}}
-			/> */}
+			/>
 			<Tab.Screen
 				name="Welcome"
 				component={Welcome}
