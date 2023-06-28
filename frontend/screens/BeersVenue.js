@@ -97,14 +97,16 @@ const Button = (props) => {
 };
 
 const VenueItem = ({
+	venueID,
 	venueName,
 	venueAddress,
 	venueContact,
 	venueRating,
 	venueImage,
-	venueOperatingHours,
+	venueOperatingHours
 }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
+	const [venueMenu, setVenueMenu] = useState([]);
 
 	const handlePopupOpen = () => {
 		setPopupVisible(true);
@@ -113,6 +115,25 @@ const VenueItem = ({
 	const handlePopupClose = () => {
 		setPopupVisible(false);
 	};
+
+	useEffect(() => {
+		const fetchVenueMenu = async () => {
+			try {
+				const response = await axios.get('http://10.0.2.2:3000/getVenueMenu', { params: { venueID } });
+				const { success, beers } = response.data;
+
+				if (success) {
+					setVenueMenu(beers);
+				}
+			} catch (error) {
+				console.error('Error fetching venue menu:', error);
+			}
+		};
+
+		if (popupVisible) {
+			fetchVenueMenu();
+		}
+	}, [popupVisible, venueID]);
 
 	return (
 		<View style={styles.subContainer}>
@@ -183,9 +204,16 @@ const VenueItem = ({
 									borderTopWidth: 1,
 								}}
 							>
-								<Text style={{ ...styles.popupTitle, marginTop: 5 }}>
-									Menu{" "}
-								</Text>
+								<Text style={{ ...styles.popupTitle, marginTop: 5 }}>Menu</Text>
+								{venueMenu.map((beer) => (
+									<View key={beer.beerID}>
+										<Text>{beer.beerName}</Text>
+										<Text>{beer.abv}</Text>
+										<Text>{beer.ibu}</Text>
+										<Text>{beer.price}</Text>
+										<Image source={{ uri: beer.beerImage }} style={styles.venueImage} />
+									</View>
+									))}
 							</View>
 							<Button
 								title="Close"
@@ -212,7 +240,7 @@ const BeersVenue = ({ navigation }) => {
 	useEffect(() => {
 		const fetchVenueData = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/venueData");
+				const response = await axios.get("http://10.0.2.2:3000/getVenueData");
 				const { success, venueData } = response.data;
 				if (success) {
 					let sortedData = [...venueData];
@@ -435,6 +463,7 @@ const BeersVenue = ({ navigation }) => {
 							{sortedVenueData.map((venue) => (
 								<VenueItem
 									key={venue._id}
+									venueID={venue.venueID}
 									venueName={venue.venueName}
 									venueAddress={venue.venueAddress}
 									venueContact={venue.venueContact}
