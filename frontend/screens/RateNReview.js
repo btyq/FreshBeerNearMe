@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, Octicons } from '@expo/vector-icons';
@@ -7,6 +7,7 @@ import COLORS from '../constants/colors';
 import { AirbnbRating } from 'react-native-ratings';
 import { Header } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
+import axios from "axios";
 
 // Button component for displaying buttons
 const Button = (props) => {
@@ -46,13 +47,87 @@ const ModalContainer = (props) => {
   );
 };
 
+const BeerItem = ({
+	beerName,
+	rating,
+}) => {
+  const [popupVisible, setPopupVisible] = useState(false);
+
+  const handlePopupOpen = () => {
+    setPopupVisible(true);
+  };
+
+  const handlePopupClose = () => {
+    setPopupVisible(false);
+  };
+
+	return (
+		<View style={styles.subContainer}>
+			<TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
+				<View style={styles.leftContainer}>
+					<Text style={styles.beerName}>{beerName}</Text>
+				</View>
+				<View style={styles.rightContainer}>
+					<View style={styles.starContainer}>
+						{[1, 2, 3, 4, 5].map((star) => (
+							<Ionicons
+								key={star}
+								name="star"
+								size={16}
+								color={star <= rating ? COLORS.foam : COLORS.grey}
+							/>
+						))}
+					</View>
+				</View>
+			</TouchableOpacity>
+		</View>
+	);
+};
+
+const VenueItem = ({
+	venueName,
+	venueRating,
+}) => {
+	const [popupVisible, setPopupVisible] = useState(false);
+	const [venueMenu, setVenueMenu] = useState([]);
+
+	const handlePopupOpen = () => {
+		setPopupVisible(true);
+	};
+
+	const handlePopupClose = () => {
+		setPopupVisible(false);
+	};
+
+	return (
+		<View style={styles.subContainer}>
+			<TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
+				<View style={styles.leftContainer}>
+					<Text style={styles.venueName}>{venueName}</Text>
+				</View>
+				<View style={styles.rightContainer}>
+					<View style={styles.starContainer}>
+						{[1, 2, 3, 4, 5].map((star) => (
+							<Ionicons
+								key={star}
+								name="star"
+								size={16}
+								color={star <= venueRating ? COLORS.foam : COLORS.grey}
+								style={{ marginBottom: 4 }}
+							/>
+						))}
+					</View>
+				</View>
+			</TouchableOpacity>
+		</View>
+	);
+};
+
 const RateNReview = () => {
   const navigation = useNavigation();
   const [comment, setComment] = useState('Bitter, but it\'s decent');
   const [comments, setComments] = useState([]);
-  const [modalVisible1, setModalVisible1] = useState(false);
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [modalVisible3, setModalVisible3] = useState(false);
+  const [popOutVisible, setPopOutVisible] = useState(false);
 
   // Handle adding a new comment
   const handleComment = () => {
@@ -218,7 +293,6 @@ const RateNReview = () => {
             />
           </View>
 
-          {/* Beer Name 1 */}
           <TouchableOpacity
             style={{
               backgroundColor: COLORS.white,

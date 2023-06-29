@@ -31,7 +31,7 @@ const screenOptions = {
 		right: 0,
 		left: 0,
 		elevation: 20,
-		height: 65,
+		height: 50,
 		backgroundColor: COLORS.secondary,
 	},
 };
@@ -45,9 +45,9 @@ const BottomTabNavigation = () => {
 				options={{
 					tabBarIcon: ({ focused }) => {
 						return (
-							<Feather
+							<FontAwesome
 								name="home"
-								size={24}
+								size={26}
 								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);

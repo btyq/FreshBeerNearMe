@@ -1,9 +1,15 @@
-import { AntDesign, Ionicons, Octicons } from "@expo/vector-icons";
+import {
+	AntDesign,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
 import axios from "axios";
 import CheckBox from "expo-checkbox";
 import { LinearGradient } from "expo-linear-gradient";
 import React, { useEffect, useState } from "react";
 import {
+	Image,
 	Modal,
 	ScrollView,
 	StyleSheet,
@@ -176,11 +182,11 @@ const Profile = ({ navigation }) => {
 
 	// function to handle "edit profile"
 	const handleEditProfile = () => {
-		setEditMode(true);
+		setEditMode(!editMode);
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 750 }}>
+		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 950 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -190,6 +196,21 @@ const Profile = ({ navigation }) => {
 						borderBottomLeftRadius: 40,
 						borderBottomRightRadius: 40,
 					}}
+					leftComponent={
+						<View
+							style={{
+								flexDirection: "row",
+							}}
+						>
+							<TouchableOpacity onPress={() => navigation.goBack()}>
+								<MaterialIcons
+									name="keyboard-arrow-left"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
 					centerComponent={{
 						text: "FreshBeer",
 						style: {
@@ -227,7 +248,7 @@ const Profile = ({ navigation }) => {
 
 				<View
 					style={{
-						justifyContent: "center",
+						flexDirection: "row",
 						alignItems: "center",
 						marginHorizontal: 32,
 						marginTop: 5,
@@ -247,10 +268,43 @@ const Profile = ({ navigation }) => {
 					<AntDesign
 						name="edit"
 						size={24}
-						color="black"
+						color={COLORS.black}
 						onPress={handleEditProfile}
-						style={{ marginHorizontal: 12 }}
+						style={{ marginTop: 15, marginLeft: "auto" }}
 					/>
+				</View>
+				<View
+					style={{
+						justifyContent: "center",
+						alignItems: "center",
+						marginHorizontal: 32,
+						marginTop: 5,
+					}}
+				>
+					<Image
+						source={require("../assets/beer.png")}
+						style={{
+							height: 140,
+							width: 140,
+							borderRadius: 85,
+							borderWidth: 5,
+							borderColor: COLORS.primary,
+						}}
+					/>
+					<View
+						style={{
+							position: "absolute",
+							bottom: 0,
+							right: 80,
+							zIndex: 9999,
+						}}
+					>
+						<MaterialIcons
+							name="photo-camera"
+							size={32}
+							color={COLORS.primary}
+						/>
+					</View>
 				</View>
 
 				<View style={{ flex: 1, marginHorizontal: 32, marginBottom: 12 }}>
@@ -270,11 +324,14 @@ const Profile = ({ navigation }) => {
 							style={{
 								width: "100%",
 								height: 45,
-								borderColor: COLORS.black,
-								borderBottomWidth: 1,
+								borderColor: 0,
+								borderWidth: 1,
+								borderRadius: 12,
 								alignItems: "center",
 								justifyContent: "center",
-								marginTop: 5,
+								paddingLeft: 22,
+								marginTop: 10,
+								backgroundColor: COLORS.grey,
 							}}
 						>
 							<TextInput
@@ -285,9 +342,10 @@ const Profile = ({ navigation }) => {
 								keyboardType="default"
 								style={{
 									width: "100%",
-									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
+									color: editMode,
 								}}
-								editable={editMode} // Disable editing if editMode is false
+								editable={editMode}
+								disabled={!editMode}
 							></TextInput>
 						</View>
 					</View>
@@ -308,11 +366,14 @@ const Profile = ({ navigation }) => {
 							style={{
 								width: "100%",
 								height: 45,
-								borderColor: COLORS.black,
-								borderBottomWidth: 1,
+								borderColor: 0,
+								borderWidth: 1,
+								borderRadius: 12,
 								alignItems: "center",
 								justifyContent: "center",
-								marginTop: 5,
+								paddingLeft: 22,
+								marginTop: 10,
+								backgroundColor: COLORS.grey,
 							}}
 						>
 							<TextInput
@@ -323,9 +384,10 @@ const Profile = ({ navigation }) => {
 								keyboardType="email-address"
 								style={{
 									width: "100%",
-									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
+									color: editMode,
 								}}
 								editable={editMode}
+								disabled={!editMode}
 							></TextInput>
 						</View>
 					</View>
@@ -346,11 +408,14 @@ const Profile = ({ navigation }) => {
 							style={{
 								width: "100%",
 								height: 45,
-								borderColor: COLORS.black,
-								borderBottomWidth: 1,
+								borderColor: 0,
+								borderWidth: 1,
+								borderRadius: 12,
 								alignItems: "center",
 								justifyContent: "center",
-								marginTop: 5,
+								paddingLeft: 22,
+								marginTop: 10,
+								backgroundColor: COLORS.grey,
 							}}
 						>
 							<TextInput
@@ -361,9 +426,10 @@ const Profile = ({ navigation }) => {
 								keyboardType="default"
 								style={{
 									width: "100%",
-									color: editMode ? COLORS.black : COLORS.gray, // Disable editing if editMode is false
+									color: editMode,
 								}}
 								editable={editMode}
+								disabled={!editMode}
 							></TextInput>
 						</View>
 					</View>
@@ -373,7 +439,7 @@ const Profile = ({ navigation }) => {
 							style={{
 								fontSize: 16,
 								fontWeight: "bold",
-								marginVertical: 8,
+								marginTop: 10,
 								color: COLORS.black,
 							}}
 						>
@@ -384,11 +450,14 @@ const Profile = ({ navigation }) => {
 							style={{
 								width: "100%",
 								height: 45,
-								borderColor: COLORS.black,
-								borderBottomWidth: 1,
+								borderColor: 0,
+								borderWidth: 1,
+								borderRadius: 12,
 								alignItems: "center",
 								justifyContent: "center",
-								marginTop: 5,
+								paddingLeft: 22,
+								marginTop: 10,
+								backgroundColor: COLORS.grey,
 							}}
 						>
 							<TextInput
@@ -399,8 +468,10 @@ const Profile = ({ navigation }) => {
 								secureTextEntry={!isPasswordShown}
 								style={{
 									width: "100%",
-									color: COLORS.black,
+									color: editMode,
 								}}
+								editable={editMode}
+								disabled={!editMode}
 							/>
 
 							<TouchableOpacity
@@ -421,10 +492,15 @@ const Profile = ({ navigation }) => {
 
 					<View style={styles.checkboxContainer}>
 						<CheckBox
-							style={styles.checkbox}
 							value={receiveNotification}
 							onValueChange={setReceiveNotification}
 							tintColors={COLORS.black}
+							style={{
+								marginRight: 5,
+								color: editMode,
+							}}
+							editable={editMode}
+							disabled={!editMode}
 						/>
 						<Text style={styles.checkboxLabel}>
 							Receive notifications for new releases, events & personalized
