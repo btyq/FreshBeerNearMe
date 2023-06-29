@@ -38,40 +38,11 @@ const Button = (props) => {
 	);
 };
 
-const PopOut = (props) => {
-	return (
-		<Modal visible={props.visible} transparent={true} animationType="fade">
-			<View style={styles.popOutContainer}>
-				<View style={styles.popOutContent}>
-					<Text style={styles.popOutText}>{props.text}</Text>
-					<TouchableOpacity style={styles.popOutButton} onPress={props.onPress}>
-						<Text style={styles.popOutButtonText}>Close</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-		</Modal>
-	);
-};
 
 const Social = () => {
 	const navigation = useNavigation();
 	const [comment, setComment] = useState("Bitter, but it's decent");
 	const [comments, setComments] = useState([]);
-	const [popOutVisible, setPopOutVisible] = useState(false);
-
-	const handleComment = () => {
-		setComments([...comments, comment]);
-		setComment("");
-	};
-
-	const showPopOut = () => {
-		setPopOutVisible(true);
-	};
-
-	const closePopOut = () => {
-		setPopOutVisible(false);
-	};
-
 	const navigateToSocial = () => {
 		// Navigate to the Forums.js page
 		navigation.navigate("Social");
@@ -98,192 +69,216 @@ const Social = () => {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 750 }}>
-			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
-				<Header
-					placement="left"
-					backgroundColor={COLORS.primary}
-					containerStyle={{
-						height: 100,
-						borderBottomLeftRadius: 40,
-						borderBottomRightRadius: 40,
-					}}
-					leftComponent={
-						<View
-							style={{
-								flexDirection: "row",
-							}}
-						>
-							<TouchableOpacity onPress={() => navigation.goBack()}>
-								<MaterialIcons
-									name="keyboard-arrow-left"
-									size={24}
-									color={COLORS.black}
-								/>
-							</TouchableOpacity>
-						</View>
-					}
-					centerComponent={{
-						text: "FreshBeer",
-						style: {
-							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
+			<Header
+				placement="left"
+				backgroundColor={COLORS.primary}
+				containerStyle={{
+					height: 100,
+					borderBottomLeftRadius: 40,
+					borderBottomRightRadius: 40,
+				}}
+				leftComponent={
+					<View
+						style={{
 							flexDirection: "row",
-						},
-					}}
-					rightComponent={
-						<View style={{ flexDirection: "row", marginTop: 5 }}>
-							<TouchableOpacity>
-								<Octicons
-									name="bookmark"
-									size={24}
-									color={COLORS.black}
-									style={{ marginRight: 5 }}
-								/>
-							</TouchableOpacity>
-							<TouchableOpacity>
-								<Ionicons
-									name="notifications-outline"
-									size={24}
-									color={COLORS.black}
-								/>
-							</TouchableOpacity>
-						</View>
-					}
-				/>
-				<View style={{ flex: 1, marginTop: 15 }}>
-					<View style={styles.grid}>
-						<Button
-							title="My Feed"
-							color={COLORS.orange}
-							filled
-							style={styles.longButton}
-							onPress={navigateToSocial}
-						/>
-						<Button
-							title="Forums"
-							color={COLORS.white}
-							filled
-							style={styles.longButton}
-							onPress={navigateToForums}
-						/>
-						<Button
-							title="Rate & Review"
-							color={COLORS.white}
-							filled
-							style={styles.longButton}
-							onPress={navigateToRateNReview}
-						/>
-						<Button
-							title="Refer a friend"
-							color={COLORS.white}
-							filled
-							style={styles.longButton}
-							onPress={navigateToReferAFriend}
-						/>
-						<Button
-							title="Recommendation"
-							color={COLORS.white}
-							filled
-							style={styles.mediumButton}
-							onPress={navigateToRecommendation}
-						/>
-					</View>
-
-					<View style={styles.searchContainer}>
-						<TextInput placeholder="Search..." style={styles.searchInput} />
-						<Button
-							title="Search for user"
-							color={COLORS.orange}
-							filled
-							style={styles.searchButton}
-						/>
-					</View>
-
-					<TouchableOpacity style={styles.userContainer} onPress={showPopOut}>
-						<View style={styles.nameContainer}>
-							<Text style={styles.userName}>Fred</Text>
-							<Button
-								title="Follow +"
-								color={COLORS.orange}
-								filled
-								style={styles.followButton}
+						}}
+					>
+						<TouchableOpacity onPress={() => navigation.goBack()}>
+							<MaterialIcons
+								name="keyboard-arrow-left"
+								size={24}
+								color={COLORS.black}
 							/>
-						</View>
-						<View style={styles.locationContainer}>
-							<Text style={styles.locationText}>Location 1 Rating</Text>
-						</View>
-						<Image
-							source={require("../assets/specialtybeer.png")} // Replace this with the actual path of your image
-							style={styles.userImage}
-						/>
-						<Text style={styles.commentText}>{comment}</Text>
-						<View style={styles.ratingContainer}>
-							<View style={styles.ratingStarContainer}>
-								<AirbnbRating
-									count={5}
-									defaultRating={3}
-									size={20}
-									selectedColor={COLORS.foam}
-									unSelectedColor={COLORS.gray}
-									reviews={[]}
-									isDisabled={false}
-									style={styles.ratingStyle}
-								/>
-							</View>
-						</View>
-					</TouchableOpacity>
-
-					<TouchableOpacity style={styles.userContainer} onPress={showPopOut}>
-						<View style={styles.nameContainer}>
-							<Text style={styles.userName}>Fred</Text>
-							<Button
-								title="Follow +"
-								color={COLORS.orange}
-								filled
-								style={styles.followButton}
+						</TouchableOpacity>
+					</View>
+				}
+				centerComponent={{
+					text: "FreshBeer",
+					style: {
+						fontSize: 20,
+						color: COLORS.black,
+						fontWeight: "bold",
+						flexDirection: "row",
+					},
+				}}
+				rightComponent={
+					<View style={{ flexDirection: "row", marginTop: 5 }}>
+						<TouchableOpacity>
+							<Octicons
+								name="bookmark"
+								size={24}
+								color={COLORS.black}
+								style={{ marginRight: 5 }}
 							/>
-						</View>
-						<View style={styles.locationContainer}>
-							<Text style={styles.locationText}>Location 2 Rating</Text>
-						</View>
-						<Image
-							source={require("../assets/brewlander.jpg")} // Replace this with the actual path of your image
-							style={styles.userImage}
-						/>
-						<Text style={styles.commentText}>Drink is nice!!!</Text>
-						<View style={styles.ratingContainer}>
-							<View style={styles.ratingStarContainer}>
-								<AirbnbRating
-									count={5}
-									defaultRating={3}
-									size={20}
-									selectedColor={COLORS.foam}
-									unSelectedColor={COLORS.gray}
-									reviews={[]}
-									isDisabled={false}
-									style={styles.ratingStyle}
-								/>
-							</View>
-						</View>
-					</TouchableOpacity>
-
-					<PopOut
-						visible={popOutVisible}
-						text="This is a pop-out!"
-						onPress={closePopOut}
+						</TouchableOpacity>
+						<TouchableOpacity>
+							<Ionicons
+								name="notifications-outline"
+								size={24}
+								color={COLORS.black}
+							/>
+						</TouchableOpacity>
+					</View>
+				}
+			/>
+			<View style={{ flex: 1, marginTop: 15 }}>
+				<View style={styles.grid}>
+					<Button
+						title="My Feed"
+						color={COLORS.grey}
+						filled
+						style={styles.longButton}
+						onPress={navigateToSocial}
+					/>
+					<Button
+						title="Forums"
+						color={COLORS.white}
+						filled
+						style={styles.longButton}
+						onPress={navigateToForums}
+					/>
+					<Button
+						title="Rate & Review"
+						color={COLORS.white}
+						filled
+						style={styles.longButton}
+						onPress={navigateToRateNReview}
+					/>
+					<Button
+						title="Refer a friend"
+						color={COLORS.white}
+						filled
+						style={styles.longButton}
+						onPress={navigateToReferAFriend}
+					/>
+					<Button
+						title="Recommendation"
+						color={COLORS.white}
+						filled
+						style={styles.mediumButton}
+						onPress={navigateToRecommendation}
 					/>
 				</View>
-			</SafeAreaView>
-		</ScrollView>
+
+				<View style={{
+					flexDirection: "row",
+					justifyContent: "space-between",
+					padding: 10,
+					alignItems: "center",
+				}}>
+					<TextInput placeholder="Search..." style={{
+						height: 40,
+						borderColor: COLORS.grey,
+						borderWidth: 1,
+						borderRadius: 10,
+						paddingLeft: 10,
+						flex: 1,
+						marginRight: 10,
+					}} />
+					<Button
+						title="Search for user"
+						color={COLORS.grey}
+						filled
+						style={{
+							width: "30%",
+							height: 40,
+							borderRadius: 30,
+						}}
+					/>
+				</View>
+				<View style={{
+					height: 'auto',
+					width: '98%',
+					backgroundColor: COLORS.white,
+					marginTop: 15,
+					borderRadius: 10,
+					shadowColor: COLORS.black,
+					shadowOffset: { width: 0, height: 2 },
+					shadowOpacity: 0.3,
+					shadowRadius: 3,
+					elevation: 5,
+					alignSelf: 'center', // Center horizontally
+					justifyContent: 'center', // Center vertically
+				}}>
+					<ScrollView contentContainerStyle={{ paddingBottom: 180 }}>
+						<TouchableOpacity style={styles.userContainer} >
+							<View style={styles.nameContainer}>
+								<Text style={styles.userName}>Fred</Text>
+								<Button
+									title="Follow +"
+									color={COLORS.grey}
+									filled
+									style={styles.followButton}
+								/>
+							</View>
+							<View style={styles.locationContainer}>
+								<Text style={styles.locationText}>Location 1 Rating</Text>
+							</View>
+							<Image
+								source={require("../assets/specialtybeer.png")} // Replace this with the actual path of your image
+								style={styles.userImage}
+							/>
+							<Text style={styles.commentText}>{comment}</Text>
+							<View style={styles.ratingContainer}>
+								<View style={styles.ratingStarContainer}>
+									<AirbnbRating
+										count={5}
+										defaultRating={3}
+										size={20}
+										selectedColor={COLORS.foam}
+										unSelectedColor={COLORS.gray}
+										reviews={[]}
+										isDisabled={false}
+										style={styles.ratingStyle}
+									/>
+								</View>
+							</View>
+						</TouchableOpacity>
+
+						<TouchableOpacity style={styles.userContainer}>
+							<View style={styles.nameContainer}>
+								<Text style={styles.userName}>Fred</Text>
+								<Button
+									title="Follow +"
+									color={COLORS.grey}
+									filled
+									style={styles.followButton}
+								/>
+							</View>
+							<View style={styles.locationContainer}>
+								<Text style={styles.locationText}>Location 2 Rating</Text>
+							</View>
+							<Image
+								source={require("../assets/brewlander.jpg")} // Replace this with the actual path of your image
+								style={styles.userImage}
+							/>
+							<Text style={styles.commentText}>Drink is nice!!!</Text>
+							<View style={styles.ratingContainer}>
+								<View style={styles.ratingStarContainer}>
+									<AirbnbRating
+										count={5}
+										defaultRating={3}
+										size={20}
+										selectedColor={COLORS.foam}
+										unSelectedColor={COLORS.gray}
+										reviews={[]}
+										isDisabled={false}
+										style={styles.ratingStyle}
+									/>
+								</View>
+							</View>
+						</TouchableOpacity>
+					</ScrollView>
+				</View>
+			</View>
+		</SafeAreaView>
 	);
 };
 
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: COLORS.orange,
 	},
 	topBar: {
 		flexDirection: "row",
@@ -321,37 +316,17 @@ const styles = StyleSheet.create({
 	},
 	button: {
 		paddingVertical: 10,
-		borderColor: COLORS.black,
+		borderColor: COLORS.grey,
 		borderWidth: 1,
 		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	searchContainer: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		padding: 10,
-		alignItems: "center",
-	},
-	searchInput: {
-		height: 40,
-		borderColor: "black",
-		borderWidth: 1,
-		borderRadius: 10,
-		paddingLeft: 10,
-		flex: 1,
-		marginRight: 10,
-	},
-	searchButton: {
-		width: "30%",
-		height: 40,
-		borderRadius: 30,
-	},
 	userContainer: {
 		padding: 10,
 		margin: 10,
 		backgroundColor: COLORS.white,
-		borderColor: COLORS.black,
+		borderColor: COLORS.grey,
 		borderWidth: 1,
 		borderRadius: 10,
 		shadowColor: COLORS.black,
@@ -364,7 +339,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
-		backgroundColor: COLORS.orange,
+		backgroundColor: COLORS.grey,
 		padding: 5,
 		marginBottom: 10,
 		borderRadius: 8,

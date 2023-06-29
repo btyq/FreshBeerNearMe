@@ -9,6 +9,7 @@ import { Header } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 import axios from "axios";
 
+
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
   const outlinedColor = COLORS.white;
@@ -29,15 +30,205 @@ const Button = (props) => {
   );
 };
 
-const PopOut = (props) => {
+const CloseButton = ({ onPress }) => (
+  <TouchableOpacity onPress={onPress} style={{ alignSelf: 'flex-end' }}>
+    <Ionicons name="close" size={24} color={COLORS.black} />
+  </TouchableOpacity>
+);
+
+const BeerPopOut = (props) => {
+  const defaultComment = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla ac felis nisl. Vestibulum condimentum libero nec dui ullamcorper, vitae cursus nisi commodo.';
+
+  const [comment, setComment] = useState(defaultComment);
+
+  const handleCommentChange = (text) => {
+    if (text.length <= 300) {
+      setComment(text);
+    }
+  };
+
+  const handleClose = () => {
+    setComment(defaultComment);
+    props.onPress();
+  };
+
   return (
     <Modal visible={props.visible} transparent={true} animationType="fade">
-      <View style={styles.popOutContainer}>
-        <View style={styles.popOutContent}>
-          <Text style={styles.popOutText}>{props.text}</Text>
-          <TouchableOpacity style={styles.popOutButton} onPress={props.onPress}>
-            <Text style={styles.popOutButtonText}>Close</Text>
-          </TouchableOpacity>
+      <View style={{
+        flex: 1,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <View style={{
+          backgroundColor: COLORS.white,
+          padding: 20,
+          borderRadius: 10,
+          width: '90%',
+          height: 550, // Adjust the height value as needed
+        }}>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: 20,
+          }}>
+            {/* Picture */}
+            <View style={{
+              width: '80%',
+              height: '30%',
+              backgroundColor: 'gray',
+              borderRadius: 10,
+            }} />
+          </View>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 10,
+          }}>
+            {/* Beer Name */}
+            <Text style={{
+              fontSize: 20,
+              fontWeight: 'bold',
+            }}>{props.beerName}</Text>
+          </View>
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: 10,
+          }}>
+            {/* Address */}
+            <Text style={{
+              fontSize: 16,
+            }}>{props.address}</Text>
+            {/* Write a Review button */}
+            <TouchableOpacity style={{
+              backgroundColor: COLORS.grey,
+              padding: 10,
+              borderRadius: 20,
+            }} onPress={props.onPress}>
+              <Text style={{
+                color: COLORS.black,
+                fontSize: 14,
+                fontWeight: 'bold',
+              }}>Write a Review</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={[styles.numbersContainer, { paddingTop: 5 }]}>
+            <View style={styles.numberContainer}>
+              <Text style={styles.number}>5</Text>
+              <View style={[styles.bar, { width: '90%', height: 10, backgroundColor: 'yellow', marginTop: -14, marginLeft: 25 }]} />
+            </View>
+            <View style={styles.numberContainer}>
+              <Text style={styles.number}>4</Text>
+              <View style={[styles.bar, { width: '75%', height: 10, backgroundColor: 'yellow', marginTop: -14, marginLeft: 25 }]} />
+            </View>
+            <View style={styles.numberContainer}>
+              <Text style={styles.number}>3</Text>
+              <View style={[styles.bar, { width: '50%', height: 10, backgroundColor: 'yellow', marginTop: -14, marginLeft: 25 }]} />
+            </View>
+            <View style={styles.numberContainer}>
+              <Text style={styles.number}>2</Text>
+              <View style={[styles.bar, { width: '25%', height: 10, backgroundColor: 'yellow', marginTop: -14, marginLeft: 25 }]} />
+            </View>
+            <View style={styles.numberContainer}>
+              <Text style={styles.number}>1</Text>
+              <View style={[styles.bar, { width: '10%', height: 10, backgroundColor: 'yellow', marginTop: -14, marginLeft: 25 }]} />
+            </View>
+          </View>
+
+          <View
+            style={{
+              borderBottomColor: COLORS.grey,
+              borderBottomWidth: 2,
+              marginTop: 10,
+            }}
+          />
+          <View style={styles.postedByContainer}>
+            <Text style={{ fontSize: 20, marginTop: 20 }}>Posted by User</Text>
+          </View>
+          <ScrollView style={{ maxHeight: 200 }}>
+            <TextInput
+              style={{ fontSize: 15, marginTop: 10, height: 200, textAlignVertical: 'top' }}
+              multiline
+              placeholder="Comment Section"
+              value={comment}
+              onChangeText={handleCommentChange}
+              editable={false}
+            />
+          </ScrollView>
+          <Button
+            title="Close"
+            onPress={props.onPress}
+            color={COLORS.foam}
+            filled
+            style={{
+              backgroundColor: COLORS.foam,
+              padding: 10,
+              borderRadius: 8,
+              alignItems: 'center',
+              marginTop: 10,
+            }}
+          />
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+const VenuePopOut = (props) => {
+  const handleClose = () => {
+    props.onPress();
+  };
+
+  return (
+    <Modal visible={props.visible} transparent={true} animationType="fade">
+      <View style={styles.modalContainer}>
+        <View style={styles.popOutContainer}>
+          <CloseButton onPress={handleClose} />
+          <View style={styles.pictureContainer}>
+            <View style={styles.picture} />
+          </View>
+          <Text style={styles.popOutTitle}>{props.venueName}</Text>
+          <Text style={styles.popOutText}>{props.address}</Text>
+          <Button
+            title="Write a Review"
+            onPress={props.onPress}
+            color={COLORS.black}
+            filled
+            style={styles.writeReviewButton}
+          />
+          <View style={styles.border} />
+          <View style={styles.ratingContainer}>
+            {[5, 4, 3, 2, 1].map((rating) => (
+              <View key={rating} style={styles.numberContainer}>
+                <Text style={[styles.number, { fontSize: 20 }]}>{rating}</Text>
+                <View style={[styles.bar, { width: `${rating * 20}%` }]} />
+              </View>
+            ))}
+          </View>
+          <View style={styles.border} />
+          <View style={styles.postedUserContainer}>
+            <Text style={styles.postedUserText}>Posted by User</Text>
+          </View>
+          <View style={styles.commentSection}>
+            <TextInput
+              style={styles.commentInput}
+              multiline
+              placeholder="Comment Section"
+              value=""
+              editable={false}
+            />
+            <Button
+              title="Close"
+              onPress={handleClose}
+              color={COLORS.foam}
+              filled
+              style={styles.closeButton}
+            />
+          </View>
         </View>
       </View>
     </Modal>
@@ -45,8 +236,8 @@ const PopOut = (props) => {
 };
 
 const BeerItem = ({
-	beerName,
-	rating,
+  beerName,
+  rating,
 }) => {
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -58,76 +249,74 @@ const BeerItem = ({
     setPopupVisible(false);
   };
 
-	return (
-		<View style={styles.subContainer}>
-			<TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
-				<View style={styles.leftContainer}>
-					<Text style={styles.beerName}>{beerName}</Text>
-				</View>
-				<View style={styles.rightContainer}>
-					<View style={styles.starContainer}>
-						{[1, 2, 3, 4, 5].map((star) => (
-							<Ionicons
-								key={star}
-								name="star"
-								size={16}
-								color={star <= rating ? COLORS.foam : COLORS.grey}
-							/>
-						))}
-					</View>
-				</View>
-			</TouchableOpacity>
-		</View>
-	);
+  return (
+    <View style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemButton} onPress={handlePopupOpen}>
+        <View style={styles.itemInfo}>
+          <Text style={styles.itemTitle}>{beerName}</Text>
+        </View>
+        <View style={styles.ratingContainer}>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Ionicons
+              key={star}
+              name="star"
+              size={16}
+              color={star <= rating ? COLORS.foam : COLORS.grey}
+            />
+          ))}
+        </View>
+      </TouchableOpacity>
+      <BeerPopOut visible={popupVisible} beerName={beerName} address="123 Main St" onPress={handlePopupClose} />
+    </View>
+  );
 };
 
 const VenueItem = ({
-	venueName,
-	venueRating,
+  venueName,
+  venueRating,
+  venueImage,
+  venueAddress,
+  venueOperatingHours,
 }) => {
-	const [popupVisible, setPopupVisible] = useState(false);
-	const [venueMenu, setVenueMenu] = useState([]);
+  const [popupVisible, setPopupVisible] = useState(false);
 
-	const handlePopupOpen = () => {
-		setPopupVisible(true);
-	};
+  const handlePopupOpen = () => {
+    setPopupVisible(true);
+  };
 
-	const handlePopupClose = () => {
-		setPopupVisible(false);
-	};
+  const handlePopupClose = () => {
+    setPopupVisible(false);
+  };
 
-	return (
-		<View style={styles.subContainer}>
-			<TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
-				<View style={styles.leftContainer}>
-					<Text style={styles.venueName}>{venueName}</Text>
-				</View>
-				<View style={styles.rightContainer}>
-					<View style={styles.starContainer}>
-						{[1, 2, 3, 4, 5].map((star) => (
-							<Ionicons
-								key={star}
-								name="star"
-								size={16}
-								color={star <= venueRating ? COLORS.foam : COLORS.grey}
-								style={{ marginBottom: 4 }}
-							/>
-						))}
-					</View>
-				</View>
-			</TouchableOpacity>
-		</View>
-	);
+  return (
+    <View style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemButton} onPress={handlePopupOpen}>
+        <View style={styles.itemInfo}>
+          <Text style={styles.itemTitle}>{venueName}</Text>
+          <Text style={styles.itemText}>{venueAddress}</Text>
+          <Text style={styles.itemText}>{venueOperatingHours}</Text>
+        </View>
+        <View style={styles.ratingContainer}>
+          {[1, 2, 3, 4, 5].map((star) => (
+            <Ionicons
+              key={star}
+              name="star"
+              size={16}
+              color={star <= venueRating ? COLORS.foam : COLORS.grey}
+            />
+          ))}
+        </View>
+      </TouchableOpacity>
+      <VenuePopOut visible={popupVisible} venueName={venueName} address={venueAddress} onPress={handlePopupClose} />
+    </View>
+  );
 };
 
 const RateNReview = () => {
   const navigation = useNavigation();
-  const [comment, setComment] = useState('Bitter, but it\'s decent');
-  const [comments, setComments] = useState([]);
-  const [popOutVisible, setPopOutVisible] = useState(false);
   const [beerData, setBeerData] = useState([]);
   const [venueData, setVenueData] = useState([]);
-  
+
   useEffect(() => {
     const fetchBeerData = async () => {
       try {
@@ -142,409 +331,295 @@ const RateNReview = () => {
         console.error('Error retrieving beer data:', error);
       }
     };
-    
+
     const fetchVenueData = async () => {
-			try {
-				const response = await axios.get("http://10.0.2.2:3000/getVenueData");
-				const { success, venueData } = response.data;
-				if (success) {
-					setVenueData(venueData);
-				} else {
-					console.error("Error retrieving venue data:", response.data.message);
-				}
-			} catch (error) {
-				console.error("Error retrieving venue data:", error);
-			}
-		};
+      try {
+        const response = await axios.get('http://10.0.2.2:3000/getVenueData');
+        const { success, venueData } = response.data;
+        if (success) {
+          setVenueData(venueData);
+        } else {
+          console.error('Error retrieving venue data:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error retrieving venue data:', error);
+      }
+    };
 
     fetchBeerData();
     fetchVenueData();
   }, []);
 
-  const handleComment = () => {
-    setComments([...comments, comment]);
-    setComment('');
-  };
-
-
-  const showPopOut = () => {
-    setPopOutVisible(true);
-  };
-
-  const closePopOut = () => {
-    setPopOutVisible(false);
-  };
-
   const navigateToSocial = () => {
-    // Navigate to the Forums.js page
     navigation.navigate('Social');
   };
 
   const navigateToForums = () => {
-    // Navigate to the Forums.js page
     navigation.navigate('Forums');
   };
 
   const navigateToRateNReview = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('RateNReview');
   };
 
   const navigateToReferAFriend = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('ReferAFriend');
   };
 
   const navigateToRecommendation = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('Recommendation');
   };
 
   return (
-    <ScrollView>
-      <View style={{ height: 1500, backgroundColor: COLORS.white }}>
-        <Header
-          placement="left"
-          backgroundColor={COLORS.primary}
-          containerStyle={{
-            height: 100,
-            borderBottomLeftRadius: 40,
-            borderBottomRightRadius: 40,
-          }}
-          centerComponent={{
-            text: 'FreshBeer',
-            style: {
-              fontSize: 20,
-              color: COLORS.black,
-              fontWeight: 'bold',
-              flexDirection: 'row',
-            },
-          }}
-          rightComponent={
-            <View style={{ flexDirection: 'row', marginTop: 5 }}>
-              <TouchableOpacity>
-                <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
-              </TouchableOpacity>
-              <TouchableOpacity>
-                <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
-              </TouchableOpacity>
-            </View>
-          }
-        />
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={styles.grid}>
-            <Button
-              title="My Feed"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={navigateToSocial}
-            />
-            <Button
-              title="Forums"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={navigateToForums}
-            />
-            <Button
-              title="Rate & Review"
-              color={COLORS.grey}
-              filled
-              style={styles.longButton}
-              onPress={navigateToRateNReview}
-            />
-            <Button
-              title="Refer a friend"
-              color={COLORS.white}
-              filled
-              style={styles.longButton}
-              onPress={navigateToReferAFriend}
-            />
-            <Button
-              title="Recommendation"
-              color={COLORS.white}
-              filled
-              style={styles.mediumButton}
-              onPress={navigateToRecommendation}
-            />
+    <View style={{ height: 680, backgroundColor: COLORS.white }}>
+      <Header
+        placement="left"
+        backgroundColor={COLORS.primary}
+        containerStyle={{
+          height: 100,
+          borderBottomLeftRadius: 40,
+          borderBottomRightRadius: 40,
+        }}
+        centerComponent={{
+          text: 'FreshBeer',
+          style: {
+            fontSize: 20,
+            color: COLORS.black,
+            fontWeight: 'bold',
+            flexDirection: 'row',
+          },
+        }}
+        rightComponent={
+          <View style={{ flexDirection: 'row', marginTop: 5 }}>
+            <TouchableOpacity>
+              <Octicons name="bookmark" size={24} color={COLORS.black} style={{ marginRight: 5 }} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Ionicons name="notifications-outline" size={24} color={COLORS.black} />
+            </TouchableOpacity>
           </View>
-
-          <View style={styles.searchContainer}>
-            <TextInput
-              placeholder="Search..."
-              style={styles.searchInput}
-            />
-            <Button
-              title="Search"
-              color={COLORS.grey}
-              filled
-              style={styles.searchButton}
-            />
-          </View>
-
-          {beerData.map((beer, index) => (
-            <BeerItem
-              key={index}
-              beerName={beer.beerName}
-              beerPrice={beer.price}
-              rating={beer.rating}
-              beerDescription={beer.beerDescription}
-              beerImage={beer.beerImage}
-              ABV={beer.abv}
-              IBU={beer.ibu}
-              venueAvailability={beer.venueAvailability}
-              communityReviews={beer.communityReviews}
-            />
-          ))}
-          {venueData.map((venue) => (
-            <VenueItem
-              key={venue._id}
-              venueID={venue.venueID}
-              venueName={venue.venueName}
-              venueAddress={venue.venueAddress}
-              venueContact={venue.venueContact}
-              venueRating={venue.venueRating}
-              venueImage={venue.venueImage}
-              venueOperatingHours={venue.venueOperatingHours}
-            />
-          ))}
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.white,
-              width: '90%',
-              height: '3%',
-              borderWidth: 1,
-              borderColor: COLORS.grey,
-              borderRadius: 10,
-              marginTop: 10,
-              alignSelf: 'center',
-              ...styles.containerContent,
-            }}
-            onPress={showPopOut}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                marginLeft: 10,
-                marginTop: 6,
-                ...styles.beerName,
-              }}
-            >
-              Beer Name
-            </Text>
-            <View
-              style={{
-                position: 'relative',
-                top: -13,
-                marginLeft: 'auto',
-                marginRight: 0,
-                ...styles.starContainer,
-              }}
-            >
-              {/* Add Airbnb star component here */}
-              <AirbnbRating
-                count={5}
-                defaultRating={4}
-                showRating={false}
-                size={20}
-                starContainerStyle={{
-                  marginLeft: -8, // Adjust the value to bring the stars closer
-                  marginTop: -5,
-                  ...styles.ratingStarContainer,
-                }}
-                starStyle={styles.ratingStyle}
-                isDisabled={true} // Make the star rating read-only
-              />
-            </View>
-          </TouchableOpacity>
-          <PopOut visible={popOutVisible} text="This is a pop-up" onPress={closePopOut} />
+        }
+      />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.buttonContainer}>
           <Button
-            title="Write a Review"
-            color={COLORS.primary}
+            title="My Feed"
+            color={COLORS.white}
             filled
-            onPress={() => {
-              // Handle button press
-            }}
-            style={{
-              ...styles.rateButton,
-              backgroundColor: COLORS.grey, // Set the desired background color
-              borderColor: COLORS.grey, // Set the desired border color
-              borderWidth: 1, // Set the desired border thickness
-              marginTop: 0,
-              marginRight: 20,
-            }}
+            style={styles.longButton}
+            onPress={navigateToSocial}
           />
-          <View style={{
-            borderBottomWidth: 2,
-            borderBottomColor: COLORS.grey,
-            marginHorizontal: 10,
-            marginTop: 10,
-          }} />
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.white,
-              width: '90%',
-              height: '3%',
-              borderWidth: 1,
-              borderColor: COLORS.grey,
-              borderRadius: 10,
-              marginTop: 10,
-              alignSelf: 'center',
-              ...styles.containerContent,
-            }}
-            onPress={showPopOut}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                marginLeft: 10,
-                marginTop: 6,
-                ...styles.beerName,
-              }}
-            >
-              Beer Name
-            </Text>
-            <View
-              style={{
-                position: 'relative',
-                top: -13,
-                marginLeft: 'auto',
-                marginRight: 0,
-                ...styles.starContainer,
-              }}
-            >
-              {/* Add Airbnb star component here */}
-              <AirbnbRating
-                count={5}
-                defaultRating={4}
-                showRating={false}
-                size={20}
-                starContainerStyle={{
-                  marginLeft: -8, // Adjust the value to bring the stars closer
-                  marginTop: -5,
-                  ...styles.ratingStarContainer,
-                }}
-                starStyle={styles.ratingStyle}
-                isDisabled={true} // Make the star rating read-only
-              />
-            </View>
-          </TouchableOpacity>
-          <PopOut visible={popOutVisible} text="This is a pop-up" onPress={closePopOut} />
           <Button
-            title="Write a Review"
-            color={COLORS.primary}
+            title="Forums"
+            color={COLORS.white}
             filled
-            onPress={() => {
-              // Handle button press
-            }}
-            style={{
-              ...styles.rateButton,
-              backgroundColor: COLORS.grey, // Set the desired background color
-              borderColor: COLORS.grey, // Set the desired border color
-              borderWidth: 1, // Set the desired border thickness
-              marginTop: 0,
-              marginRight: 20,
-            }}
+            style={styles.longButton}
+            onPress={navigateToForums}
           />
-          <View style={{
-            borderBottomWidth: 2,
-            borderBottomColor: COLORS.grey,
-            marginHorizontal: 10,
-            marginTop: 10,
-          }} />
-          <TouchableOpacity
-            style={{
-              backgroundColor: COLORS.white,
-              width: '90%',
-              height: '3%',
-              borderWidth: 1,
-              borderColor: COLORS.grey,
-              borderRadius: 10,
-              marginTop: 10,
-              alignSelf: 'center',
-              ...styles.containerContent,
-            }}
-            onPress={showPopOut}
-          >
-            <Text
-              style={{
-                fontSize: 16,
-                fontWeight: 'bold',
-                marginLeft: 10,
-                marginTop: 6,
-                ...styles.beerName,
-              }}
-            >
-              Venue Name
-            </Text>
-            <View
-              style={{
-                position: 'relative',
-                top: -13,
-                marginLeft: 'auto',
-                marginRight: 0,
-                ...styles.starContainer,
-              }}
-            >
-              {/* Add Airbnb star component here */}
-              <AirbnbRating
-                count={5}
-                defaultRating={4}
-                showRating={false}
-                size={20}
-                starContainerStyle={{
-                  marginLeft: -8, // Adjust the value to bring the stars closer
-                  marginTop: -5,
-                  ...styles.ratingStarContainer,
-                }}
-                starStyle={styles.ratingStyle}
-                isDisabled={true} // Make the star rating read-only
-              />
-            </View>
-          </TouchableOpacity>
-          <PopOut visible={popOutVisible} text="This is a pop-up" onPress={closePopOut} />
           <Button
-            title="Write a Review"
-            color={COLORS.primary}
+            title="Rate & Review"
+            color={COLORS.grey}
             filled
-            onPress={() => {
-              // Handle button press
-            }}
-            style={{
-              ...styles.rateButton,
-              backgroundColor: COLORS.grey, // Set the desired background color
-              borderColor: COLORS.grey, // Set the desired border color
-              borderWidth: 1, // Set the desired border thickness
-              marginTop: 0,
-              marginRight: 20,
-            }}
+            style={styles.longButton}
+            onPress={navigateToRateNReview}
           />
+          <Button
+            title="Refer a friend"
+            color={COLORS.white}
+            filled
+            style={styles.longButton}
+            onPress={navigateToReferAFriend}
+          />
+          <Button
+            title="Recommendation"
+            color={COLORS.white}
+            filled
+            style={styles.mediumButton}
+            onPress={navigateToRecommendation}
+          />
+        </View>
 
-        </SafeAreaView>
-      </View>
-    </ScrollView>
+        <View style={styles.searchContainer}>
+          <TextInput
+            placeholder="Search..."
+            style={styles.searchInput}
+          />
+          <Button
+            title="Search"
+            color={COLORS.grey}
+            filled
+            style={styles.searchButton}
+          />
+        </View>
+
+        <View style={styles.container}>
+          <ScrollView>
+            {beerData.map((beer, index) => (
+              <BeerItem
+                key={index}
+                beerName={beer.beerName}
+                rating={beer.rating}
+              />
+            ))}
+            {venueData.map((venue, index) => (
+              <VenueItem
+                key={index}
+                venueName={venue.venueName}
+                venueRating={venue.venueRating}
+                venueImage={venue.venueImage}
+                venueAddress={venue.venueAddress}
+                venueOperatingHours={venue.venueOperatingHours}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  topBar: {
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  popOutContainer: {
+    backgroundColor: COLORS.white,
+    padding: 20,
+    borderRadius: 10,
+    width: '80%',
+  },
+  pictureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  picture: {
+    width: '80%',
+    height: '30%',
+    backgroundColor: 'gray',
+    borderRadius: 10,
+  },
+  popOutTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  popOutText: {
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  writeReviewButton: {
+    backgroundColor: COLORS.grey,
+    padding: 10,
+    borderRadius: 20,
+  },
+  border: {
+    borderBottomColor: COLORS.grey,
+    borderBottomWidth: 2,
+    marginTop: 10,
+  },
+  ratingContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    paddingTop: 30,
-    backgroundColor: COLORS.foam,
-    height: 70,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
+    marginTop: 10,
+    marginBottom: 5,
   },
-  grid: {
+  numbersContainer: {
+    flexDirection: 'column',
+  },
+  number: {
+    marginRight: 5,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  bar: {
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: 'yellow',
+    marginTop: -14,
+    marginLeft: 20,
+  },
+  postedUserContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  postedUserText: {
+    fontSize: 20,
+    marginTop: 20,
+  },
+  commentSection: {
+    marginTop: 10,
+  },
+  commentInput: {
+    fontSize: 15,
+    marginTop: 20,
+  },
+  closeButton: {
+    backgroundColor: COLORS.foam,
+    padding: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  itemContainer: {
+    marginBottom: 10,
+    marginTop: 5,
+    borderWidth: 1,
+    borderColor: COLORS.grey,
+    borderRadius: 8,
+    padding: 1,
+    width: '95%',
+    alignSelf: 'center',
+  },
+  itemButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    padding: 10,
+    marginHorizontal: 10,
+    borderRadius: 8,
+  },
+  itemInfo: {
+    flex: 1,
+    marginRight: 10,
+  },
+  itemTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    alignItems: 'center',
+  },
+  searchInput: {
+    height: 40,
+    borderColor: 'grey',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingLeft: 10,
+    flex: 1,
+    marginRight: 10,
+  },
+  searchButton: {
+    width: '30%',
+    height: 40,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: COLORS.grey,
+  },
+  buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
@@ -571,141 +646,6 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  searchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    alignItems: 'center',
-  },
-  searchInput: {
-    height: 40,
-    borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingLeft: 10,
-    flex: 1,
-    marginRight: 10,
-  },
-  searchButton: {
-    width: '30%',
-    height: 40,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: COLORS.grey,
-  },
-  userContainer: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: COLORS.white,
-    borderColor: COLORS.black,
-    borderWidth: 1,
-    borderRadius: 10,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: COLORS.foam,
-    padding: 5,
-    marginBottom: 10,
-    borderRadius: 8,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
-  followButton: {
-    width: '20%',
-    height: 40,
-    borderRadius: 30,
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: -3,
-  },
-  locationText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  userImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  commentText: {
-    marginTop: 10,
-    fontSize: 16,
-  },
-  ratingContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 10,
-    backgroundColor: COLORS.yellow,
-    padding: 5,
-    borderRadius: 8,
-    height: 30,
-  },
-  ratingStarContainer: {
-    position: 'relative',
-    top: -10,
-    marginLeft: 'auto',
-    marginRight: 10,
-  },
-  ratingStyle: {
-    position: 'relative',
-  },
-  rateButton: {
-    marginLeft: 'auto',
-    marginRight: 10,
-  },
-  containerContent: {
-    marginBottom: 20,
-  },
-  beerName: {
-    marginBottom: 5,
-  },
-  starContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  popOutContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  popOutContent: {
-    backgroundColor: COLORS.white,
-    padding: 20,
-    borderRadius: 10,
-    width: '80%',
-  },
-  popOutText: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  popOutButton: {
-    backgroundColor: COLORS.primary,
-    padding: 10,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  popOutButtonText: {
-    color: COLORS.white,
-    fontSize: 14,
-    fontWeight: 'bold',
   },
 });
 
