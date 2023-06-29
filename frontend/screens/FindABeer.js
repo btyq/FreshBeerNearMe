@@ -229,7 +229,8 @@ const FindABeer = ({ navigation }) => {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1000 }}>
+		<View style={{ flex: 1 }}>
+			{/* // <ScrollView contentContainerStyle={{ flexGrow: 1, height: 1000 }}> */}
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -374,7 +375,7 @@ const FindABeer = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView>
+						<ScrollView contentContainerStyle={{ flexGrow: 1, height: 600 }}>
 							{sortedBeerData.map((beer) => (
 								<BeerItem
 									key={beer._id}
@@ -393,7 +394,7 @@ const FindABeer = ({ navigation }) => {
 					</View>
 				</SafeAreaView>
 			</SafeAreaView>
-		</ScrollView>
+		</View>
 	);
 };
 

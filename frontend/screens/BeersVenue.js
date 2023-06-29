@@ -332,7 +332,7 @@ const BeersVenue = ({ navigation }) => {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1000 }}>
+		<View style={{ flex: 1 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -496,7 +496,7 @@ const BeersVenue = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView>
+						<ScrollView contentContainerStyle={{ flexGrow: 1, height: 600 }}>
 							{sortedVenueData.map((venue) => (
 								<VenueItem
 									key={venue._id}
@@ -513,7 +513,7 @@ const BeersVenue = ({ navigation }) => {
 					</View>
 				</SafeAreaView>
 			</SafeAreaView>
-		</ScrollView>
+		</View>
 	);
 };
 
