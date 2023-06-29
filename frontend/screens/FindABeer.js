@@ -160,7 +160,7 @@ const FindABeer = ({ navigation }) => {
 	useEffect(() => {
 		const fetchBeerData = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/beerData");
+				const response = await axios.get("http://10.0.2.2:3000/getBeerData");
 				const { success, beerData } = response.data;
 				if (success) {
 					let sortedData = [...beerData];
