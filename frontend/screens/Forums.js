@@ -175,7 +175,7 @@ const Forum = () => {
           />
           <Button
             title="Forums"
-            color={COLORS.orange}
+            color={COLORS.grey}
             filled
             style={styles.longButton}
             onPress={navigateToForums}
@@ -203,7 +203,7 @@ const Forum = () => {
           />
           <Button
             title="+ New Post"
-            color={COLORS.orange}
+            color={COLORS.grey}
             filled
             style={{ ...styles.mediumButton, marginRight: 0, marginLeft: 'auto', marginTop: 5 }}
             onPress={navigateToNewPost}
@@ -233,12 +233,13 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 5,
     borderWidth: 1,
+    borderColor: COLORS.grey
   },
   subContainer: {
     height: 120,
-    backgroundColor: COLORS.orange,
+    backgroundColor: COLORS.grey,
     borderWidth: 1,
-    borderColor: COLORS.black,
+    borderColor: COLORS.grey,
     borderRadius: 10,
     padding: 10,
     marginVertical: 10,
@@ -247,7 +248,7 @@ const styles = StyleSheet.create({
     height: 55, // Adjust the height value according to your requirement
     backgroundColor: COLORS.white,
     borderWidth: 1,
-    borderColor: COLORS.black,
+    borderColor: COLORS.grey,
     borderRadius: 10,
     padding: 10,
     marginTop: 10,
@@ -288,7 +289,7 @@ const styles = StyleSheet.create({
   },
   button: {
     paddingVertical: 10,
-    borderColor: COLORS.black,
+    borderColor: COLORS.grey,
     borderWidth: 1,
     borderRadius: 12,
     alignItems: 'center',
@@ -316,7 +317,7 @@ const styles = StyleSheet.create({
     height: 50,
     marginRight: 10,
     borderWidth: 1,
-    borderColor: COLORS.primary,
+    borderColor: COLORS.grey,
   },
   textInput: {
     flex: 1,
