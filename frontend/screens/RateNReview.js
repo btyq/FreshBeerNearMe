@@ -453,7 +453,7 @@ const RateNReview = () => {
         </View>
 
         <View style={styles.container}>
-          <ScrollView>
+        <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
             {beerData.map((beer, index) => (
               <BeerItem
                 key={index}
