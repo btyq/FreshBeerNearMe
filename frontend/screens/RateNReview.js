@@ -8,7 +8,9 @@ import { AirbnbRating } from 'react-native-ratings';
 import { Header } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
+// Button component for displaying buttons
 const Button = (props) => {
+  // Set button colors based on props
   const filledBgColor = props.color || COLORS.primary;
   const outlinedColor = COLORS.white;
   const bgColor = props.filled ? filledBgColor : outlinedColor;
@@ -28,14 +30,15 @@ const Button = (props) => {
   );
 };
 
-const PopOut = (props) => {
+// ModalContainer component for displaying a modal with text and a close button
+const ModalContainer = (props) => {
   return (
     <Modal visible={props.visible} transparent={true} animationType="fade">
-      <View style={styles.popOutContainer}>
-        <View style={styles.popOutContent}>
-          <Text style={styles.popOutText}>{props.text}</Text>
-          <TouchableOpacity style={styles.popOutButton} onPress={props.onPress}>
-            <Text style={styles.popOutButtonText}>Close</Text>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>{props.text}</Text>
+          <TouchableOpacity style={styles.modalButton} onPress={props.onPress}>
+            <Text style={styles.modalButtonText}>Close</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -47,50 +50,66 @@ const RateNReview = () => {
   const navigation = useNavigation();
   const [comment, setComment] = useState('Bitter, but it\'s decent');
   const [comments, setComments] = useState([]);
-  const [popOutVisible, setPopOutVisible] = useState(false);
+  const [modalVisible1, setModalVisible1] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisible3, setModalVisible3] = useState(false);
 
+  // Handle adding a new comment
   const handleComment = () => {
     setComments([...comments, comment]);
     setComment('');
   };
 
-
-  const showPopOut = () => {
-    setPopOutVisible(true);
+  // Functions to control the visibility of modals
+  const showModal1 = () => {
+    setModalVisible1(true);
   };
 
-  const closePopOut = () => {
-    setPopOutVisible(false);
+  const showModal2 = () => {
+    setModalVisible2(true);
   };
 
+  const showModal3 = () => {
+    setModalVisible3(true);
+  };
+
+  const closeModal1 = () => {
+    setModalVisible1(false);
+  };
+
+  const closeModal2 = () => {
+    setModalVisible2(false);
+  };
+
+  const closeModal3 = () => {
+    setModalVisible3(false);
+  };
+
+  // Navigation functions
   const navigateToSocial = () => {
-    // Navigate to the Forums.js page
     navigation.navigate('Social');
   };
 
   const navigateToForums = () => {
-    // Navigate to the Forums.js page
     navigation.navigate('Forums');
   };
 
   const navigateToRateNReview = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('RateNReview');
   };
 
   const navigateToReferAFriend = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('ReferAFriend');
   };
 
   const navigateToRecommendation = () => {
-    // Navigate to the RateNReview.js page
     navigation.navigate('Recommendation');
   };
 
   return (
     <ScrollView>
       <View style={{ height: 1500, backgroundColor: COLORS.white }}>
+        {/* Header */}
         <Header
           placement="left"
           backgroundColor={COLORS.primary}
@@ -100,7 +119,7 @@ const RateNReview = () => {
             borderBottomRightRadius: 40,
           }}
           centerComponent={{
-            text: 'FreshBeer',
+            text: 'Fresh Beer',
             style: {
               fontSize: 20,
               color: COLORS.black,
@@ -119,8 +138,16 @@ const RateNReview = () => {
             </View>
           }
         />
+
+        {/* SafeAreaView */}
         <SafeAreaView style={{ flex: 1 }}>
-          <View style={styles.grid}>
+          {/* Buttons */}
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            marginHorizontal: 10,
+          }}>
             <Button
               title="My Feed"
               color={COLORS.white}
@@ -158,19 +185,40 @@ const RateNReview = () => {
             />
           </View>
 
-          <View style={styles.searchContainer}>
+          {/* Search */}
+          <View style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            padding: 10,
+            alignItems: 'center',
+          }}>
             <TextInput
               placeholder="Search..."
-              style={styles.searchInput}
+              style={{
+                height: 40,
+                borderColor: 'grey',
+                borderWidth: 1,
+                borderRadius: 10,
+                paddingLeft: 10,
+                flex: 1,
+                marginRight: 10,
+              }}
             />
             <Button
               title="Search"
               color={COLORS.grey}
               filled
-              style={styles.searchButton}
+              style={{
+                width: '30%',
+                height: 40,
+                borderRadius: 30,
+                borderWidth: 1,
+                borderColor: COLORS.grey,
+              }}
             />
           </View>
 
+          {/* Beer Name 1 */}
           <TouchableOpacity
             style={{
               backgroundColor: COLORS.white,
@@ -183,7 +231,7 @@ const RateNReview = () => {
               alignSelf: 'center',
               ...styles.containerContent,
             }}
-            onPress={showPopOut}
+            onPress={showModal1}
           >
             <Text
               style={{
@@ -194,7 +242,7 @@ const RateNReview = () => {
                 ...styles.beerName,
               }}
             >
-              Beer Name
+              Beer Name 1
             </Text>
             <View
               style={{
@@ -205,23 +253,22 @@ const RateNReview = () => {
                 ...styles.starContainer,
               }}
             >
-              {/* Add Airbnb star component here */}
               <AirbnbRating
                 count={5}
                 defaultRating={4}
                 showRating={false}
                 size={20}
                 starContainerStyle={{
-                  marginLeft: -8, // Adjust the value to bring the stars closer
+                  marginLeft: -8,
                   marginTop: -5,
                   ...styles.ratingStarContainer,
                 }}
                 starStyle={styles.ratingStyle}
-                isDisabled={true} // Make the star rating read-only
+                isDisabled={true}
               />
             </View>
           </TouchableOpacity>
-          <PopOut visible={popOutVisible} text="This is a pop-up" onPress={closePopOut} />
+          <ModalContainer visible={modalVisible1} text="This is a pop-up for Beer Name 1" onPress={closeModal1} />
           <Button
             title="Write a Review"
             color={COLORS.primary}
@@ -231,9 +278,9 @@ const RateNReview = () => {
             }}
             style={{
               ...styles.rateButton,
-              backgroundColor: COLORS.grey, // Set the desired background color
-              borderColor: COLORS.grey, // Set the desired border color
-              borderWidth: 1, // Set the desired border thickness
+              backgroundColor: COLORS.grey,
+              borderColor: COLORS.grey,
+              borderWidth: 1,
               marginTop: 0,
               marginRight: 20,
             }}
@@ -244,6 +291,8 @@ const RateNReview = () => {
             marginHorizontal: 10,
             marginTop: 10,
           }} />
+
+          {/* Beer Name 2 */}
           <TouchableOpacity
             style={{
               backgroundColor: COLORS.white,
@@ -256,7 +305,7 @@ const RateNReview = () => {
               alignSelf: 'center',
               ...styles.containerContent,
             }}
-            onPress={showPopOut}
+            onPress={showModal2}
           >
             <Text
               style={{
@@ -267,7 +316,7 @@ const RateNReview = () => {
                 ...styles.beerName,
               }}
             >
-              Beer Name
+              Beer Name 2
             </Text>
             <View
               style={{
@@ -278,23 +327,22 @@ const RateNReview = () => {
                 ...styles.starContainer,
               }}
             >
-              {/* Add Airbnb star component here */}
               <AirbnbRating
                 count={5}
                 defaultRating={4}
                 showRating={false}
                 size={20}
                 starContainerStyle={{
-                  marginLeft: -8, // Adjust the value to bring the stars closer
+                  marginLeft: -8,
                   marginTop: -5,
                   ...styles.ratingStarContainer,
                 }}
                 starStyle={styles.ratingStyle}
-                isDisabled={true} // Make the star rating read-only
+                isDisabled={true}
               />
             </View>
           </TouchableOpacity>
-          <PopOut visible={popOutVisible} text="This is a pop-up" onPress={closePopOut} />
+          <ModalContainer visible={modalVisible2} text="This is a pop-up for Beer Name 2" onPress={closeModal2} />
           <Button
             title="Write a Review"
             color={COLORS.primary}
@@ -304,9 +352,9 @@ const RateNReview = () => {
             }}
             style={{
               ...styles.rateButton,
-              backgroundColor: COLORS.grey, // Set the desired background color
-              borderColor: COLORS.grey, // Set the desired border color
-              borderWidth: 1, // Set the desired border thickness
+              backgroundColor: COLORS.grey,
+              borderColor: COLORS.grey,
+              borderWidth: 1,
               marginTop: 0,
               marginRight: 20,
             }}
@@ -317,6 +365,8 @@ const RateNReview = () => {
             marginHorizontal: 10,
             marginTop: 10,
           }} />
+
+          {/* Venue Name */}
           <TouchableOpacity
             style={{
               backgroundColor: COLORS.white,
@@ -329,7 +379,7 @@ const RateNReview = () => {
               alignSelf: 'center',
               ...styles.containerContent,
             }}
-            onPress={showPopOut}
+            onPress={showModal3}
           >
             <Text
               style={{
@@ -351,23 +401,22 @@ const RateNReview = () => {
                 ...styles.starContainer,
               }}
             >
-              {/* Add Airbnb star component here */}
               <AirbnbRating
                 count={5}
                 defaultRating={4}
                 showRating={false}
                 size={20}
                 starContainerStyle={{
-                  marginLeft: -8, // Adjust the value to bring the stars closer
+                  marginLeft: -8,
                   marginTop: -5,
                   ...styles.ratingStarContainer,
                 }}
                 starStyle={styles.ratingStyle}
-                isDisabled={true} // Make the star rating read-only
+                isDisabled={true}
               />
             </View>
           </TouchableOpacity>
-          <PopOut visible={popOutVisible} text="This is a pop-up" onPress={closePopOut} />
+          <ModalContainer visible={modalVisible3} text="This is a pop-up for Venue Name" onPress={closeModal3} />
           <Button
             title="Write a Review"
             color={COLORS.primary}
@@ -377,9 +426,9 @@ const RateNReview = () => {
             }}
             style={{
               ...styles.rateButton,
-              backgroundColor: COLORS.grey, // Set the desired background color
-              borderColor: COLORS.grey, // Set the desired border color
-              borderWidth: 1, // Set the desired border thickness
+              backgroundColor: COLORS.grey,
+              borderColor: COLORS.grey,
+              borderWidth: 1,
               marginTop: 0,
               marginRight: 20,
             }}
@@ -392,26 +441,6 @@ const RateNReview = () => {
 };
 
 const styles = StyleSheet.create({
-  topBar: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    paddingTop: 30,
-    backgroundColor: COLORS.foam,
-    height: 70,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  grid: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    flexWrap: 'wrap',
-    marginHorizontal: 10,
-  },
   longButton: {
     width: '15%',
     height: 55,
@@ -434,81 +463,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  searchContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    padding: 10,
-    alignItems: 'center',
-  },
-  searchInput: {
-    height: 40,
-    borderColor: 'grey',
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingLeft: 10,
-    flex: 1,
-    marginRight: 10,
-  },
-  searchButton: {
-    width: '30%',
-    height: 40,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: COLORS.grey,
-  },
-  userContainer: {
-    padding: 10,
-    margin: 10,
-    backgroundColor: COLORS.white,
-    borderColor: COLORS.black,
-    borderWidth: 1,
-    borderRadius: 10,
-    shadowColor: COLORS.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
-  },
-  nameContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    backgroundColor: COLORS.foam,
-    padding: 5,
-    marginBottom: 10,
-    borderRadius: 8,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
-  followButton: {
-    width: '20%',
-    height: 40,
-    borderRadius: 30,
-  },
-  locationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: -3,
-  },
-  locationText: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  userImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  commentText: {
-    marginTop: 10,
-    fontSize: 16,
-  },
+
   ratingContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -542,29 +497,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  popOutContainer: {
+  modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  popOutContent: {
+  modalContent: {
     backgroundColor: COLORS.white,
     padding: 20,
     borderRadius: 10,
     width: '80%',
   },
-  popOutText: {
+  modalText: {
     fontSize: 16,
     marginBottom: 20,
   },
-  popOutButton: {
+  modalButton: {
     backgroundColor: COLORS.primary,
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
   },
-  popOutButtonText: {
+  modalButtonText: {
     color: COLORS.white,
     fontSize: 14,
     fontWeight: 'bold',
