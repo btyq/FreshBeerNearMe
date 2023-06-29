@@ -8,6 +8,7 @@ import { AirbnbRating } from 'react-native-ratings';
 import { Header } from 'react-native-elements';
 import { useNavigation } from '@react-navigation/native';
 
+// Button component
 const Button = (props) => {
   const filledBgColor = props.color || COLORS.primary;
   const outlinedColor = COLORS.white;
@@ -28,14 +29,15 @@ const Button = (props) => {
   );
 };
 
-const PopOut = (props) => {
+// Modal component
+const ModalWindow = (props) => {
   return (
     <Modal visible={props.visible} transparent={true} animationType="fade">
-      <View style={styles.popOutContainer}>
-        <View style={styles.popOutContent}>
-          <Text style={styles.popOutText}>{props.text}</Text>
-          <TouchableOpacity style={styles.popOutButton} onPress={props.onPress}>
-            <Text style={styles.popOutButtonText}>Close</Text>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.modalText}>{props.text}</Text>
+          <TouchableOpacity style={styles.modalButton} onPress={props.onPress}>
+            <Text style={styles.modalButtonText}>Close</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -47,29 +49,29 @@ const Recommendation = () => {
   const navigation = useNavigation();
   const [comment, setComment] = useState('Bitter, but it\'s decent');
   const [comments, setComments] = useState([]);
-  const [popOutVisible1, setPopOutVisible1] = useState(false);
-  const [popOutVisible2, setPopOutVisible2] = useState(false);
+  const [modalVisible1, setModalVisible1] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
 
   const handleComment = () => {
     setComments([...comments, comment]);
     setComment('');
   };
 
-  const showPopOut1 = () => {
-    setPopOutVisible1(true);
+  const showModal1 = () => {
+    setModalVisible1(true);
   };
 
-  const showPopOut2 = () => {
-    setPopOutVisible2(true);
+  const showModal2 = () => {
+    setModalVisible2(true);
   };
 
-  const closePopOut = () => {
-    setPopOutVisible1(false);
-    setPopOutVisible2(false);
+  const closeModal = () => {
+    setModalVisible1(false);
+    setModalVisible2(false);
   };
 
   const navigateToSocial = () => {
-    // Navigate to the Forums.js page
+    // Navigate to the Social.js page
     navigation.navigate('Social');
   };
 
@@ -84,12 +86,12 @@ const Recommendation = () => {
   };
 
   const navigateToReferAFriend = () => {
-    // Navigate to the RateNReview.js page
+    // Navigate to the ReferAFriend.js page
     navigation.navigate('ReferAFriend');
   };
 
   const navigateToRecommendation = () => {
-    // Navigate to the RateNReview.js page
+    // Navigate to the Recommendation.js page
     navigation.navigate('Recommendation');
   };
 
@@ -170,13 +172,13 @@ const Recommendation = () => {
               color: COLORS.black,
             }}>Your Friend Recommendation</Text>
             <View style={{
-            borderBottomWidth: 2,
-            borderBottomColor: COLORS.grey,
-            marginHorizontal: 10,
-            marginTop: -6,
-            marginLeft: 220,
-            width: '45%',
-          }} />
+              borderBottomWidth: 2,
+              borderBottomColor: COLORS.grey,
+              marginHorizontal: 10,
+              marginTop: -6,
+              marginLeft: 220,
+              width: '45%',
+            }} />
           </View>
           <TouchableOpacity
             style={{
@@ -191,7 +193,7 @@ const Recommendation = () => {
               alignSelf: 'center',
               ...styles.containerContent,
             }}
-            onPress={showPopOut1}
+            onPress={showModal1}
           >
             <Text
               style={{
@@ -221,7 +223,7 @@ const Recommendation = () => {
                 size={20}
                 starContainerStyle={{
                   marginLeft: -8, // Adjust the value to bring the stars closer
-                  marginTop: -5,
+                  marginTop: -15,
                   ...styles.ratingStarContainer,
                 }}
                 starStyle={styles.ratingStyle}
@@ -291,7 +293,7 @@ const Recommendation = () => {
               alignSelf: 'center',
               ...styles.containerContent,
             }}
-            onPress={showPopOut2}
+            onPress={showModal2}
           >
             <Text
               style={{
@@ -320,8 +322,8 @@ const Recommendation = () => {
                 showRating={false}
                 size={20}
                 starContainerStyle={{
-                  marginLeft: -8, // Adjust the value to bring the stars closer
-                  marginTop: -5,
+                  marginLeft: -1, // Adjust the value to bring the stars closer
+                  marginTop: -15,
                   ...styles.ratingStarContainer,
                 }}
                 starStyle={styles.ratingStyle}
@@ -344,8 +346,8 @@ const Recommendation = () => {
           />
         </SafeAreaView>
       </View>
-      <PopOut visible={popOutVisible1} text="Pop-up 1 Content" onPress={closePopOut} />
-      <PopOut visible={popOutVisible2} text="Pop-up 2 Content" onPress={closePopOut} />
+      <ModalWindow visible={modalVisible1} text="Modal 1 Content" onPress={closeModal} />
+      <ModalWindow visible={modalVisible2} text="Modal 2 Content" onPress={closeModal} />
     </ScrollView>
   );
 };
@@ -389,32 +391,39 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  popOutContainer: {
+  modalContainer: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
   },
-  popOutContent: {
+  modalContent: {
     backgroundColor: COLORS.white,
     padding: 20,
     borderRadius: 10,
     width: '80%',
   },
-  popOutText: {
+  modalText: {
     fontSize: 16,
     marginBottom: 20,
   },
-  popOutButton: {
+  modalButton: {
     backgroundColor: COLORS.primary,
     padding: 10,
     borderRadius: 10,
     alignItems: 'center',
   },
-  popOutButtonText: {
+  modalButtonText: {
     color: COLORS.white,
     fontSize: 14,
     fontWeight: 'bold',
+  },
+  ratingStarContainer: {
+    marginLeft: -8,
+    marginTop: -15,
+  },
+  ratingStyle: {
+    marginRight: 2,
   },
 });
 
