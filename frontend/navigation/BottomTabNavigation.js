@@ -7,19 +7,83 @@ import {
 	MaterialIcons,
 } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import COLORS from "../constants/colors";
 import {
 	BeersVenue,
+	Breweries,
 	Dashboard,
 	Feedback,
+	FindABeer,
 	Journal,
+	NearbyVenues,
 	Profile,
 	Social,
+	TopRated,
 	Welcome,
+	Wishlist,
 } from "../screens";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const DashboardStack = () => {
+	return (
+		<Stack.Navigator>
+			<Stack.Screen
+				name="Home"
+				component={Dashboard}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="BeersVenue"
+				component={BeersVenue}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="FindABeer"
+				component={FindABeer}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="NearbyVenues"
+				component={NearbyVenues}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="TopRated"
+				component={TopRated}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="Breweries"
+				component={Breweries}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="Social"
+				component={Social}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="Feedback"
+				component={Feedback}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="Journal"
+				component={Journal}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="Wishlist"
+				component={Wishlist}
+				options={{ headerShown: false }}
+			/>
+		</Stack.Navigator>
+	);
+};
 
 const screenOptions = {
 	tabBarShowLabel: false,
@@ -41,7 +105,7 @@ const BottomTabNavigation = () => {
 		<Tab.Navigator screenOptions={screenOptions}>
 			<Tab.Screen
 				name="Dashboard"
-				component={Dashboard}
+				component={DashboardStack}
 				options={{
 					tabBarIcon: ({ focused }) => {
 						return (
@@ -69,7 +133,7 @@ const BottomTabNavigation = () => {
 					},
 				}}
 			/>
-			<Tab.Screen
+			{/* <Tab.Screen
 				name="BeersVenue"
 				component={BeersVenue}
 				options={{
@@ -128,7 +192,7 @@ const BottomTabNavigation = () => {
 						);
 					},
 				}}
-			/>
+			/> */}
 			<Tab.Screen
 				name="Welcome"
 				component={Welcome}

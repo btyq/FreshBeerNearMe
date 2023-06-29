@@ -190,9 +190,7 @@ const Dashboard = ({ navigation }) => {
 						</TouchableOpacity>
 
 						<TouchableOpacity
-							onPress={() =>
-								navigation.navigate("BottomTab", { screen: "BeersVenue" })
-							}
+							onPress={() => navigation.navigate("BeersVenue")}
 							style={{
 								height: 100,
 								elevation: 2,

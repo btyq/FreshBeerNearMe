@@ -297,7 +297,7 @@ const BeersVenue = ({ navigation }) => {
 	};
 
 	const handleFindABeerClick = () => {
-		navigation.navigate("BottomTab", { screen: "FindABeer" });
+		navigation.navigate("FindABeer");
 	};
 
 	const handleFindAVenueClick = () => {
