@@ -81,8 +81,7 @@ const Dashboard = ({ navigation }) => {
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+							fontFamily: "Poppins-Bold",
 							flexDirection: "row",
 							justifyContent: "flex-start",
 						},
@@ -122,7 +121,7 @@ const Dashboard = ({ navigation }) => {
 					<Text
 						style={{
 							fontSize: 26,
-							fontWeight: "bold",
+							fontFamily: "Poppins-Bold",
 							color: COLORS.black,
 							marginTop: 20,
 							marginBottom: 12,
@@ -133,7 +132,7 @@ const Dashboard = ({ navigation }) => {
 					<Text
 						style={{
 							fontSize: 15,
-							color: COLORS.black,
+							fontFamily: "Poppins-Bold",
 							marginBottom: 5,
 						}}
 					>
@@ -167,12 +166,13 @@ const Dashboard = ({ navigation }) => {
 									flexDirection: "row",
 									paddingTop: 10,
 									paddingHorizontal: 10,
-									marginVertical: 10,
+									marginVertical: 8,
 								}}
 							>
 								<Text
 									style={{
-										fontWeight: "bold",
+										fontSize: 14,
+										fontFamily: "Poppins-Bold",
 									}}
 								>
 									My Profile
@@ -198,11 +198,9 @@ const Dashboard = ({ navigation }) => {
 								marginLeft: 10,
 								marginTop: 10,
 								borderRadius: 15,
-								marginBottom: 10,
+								marginBottom: 3,
 								width: 100,
 								alignItems: "center",
-								// marginHorizontal: 5,
-								// marginVertical: 5,
 							}}
 						>
 							<View
@@ -214,7 +212,8 @@ const Dashboard = ({ navigation }) => {
 							>
 								<Text
 									style={{
-										fontWeight: "bold",
+										fontSize: 13,
+										fontFamily: "Poppins-Bold",
 									}}
 								>
 									Beers & Venues
@@ -226,7 +225,6 @@ const Dashboard = ({ navigation }) => {
 								color={COLORS.foam}
 								style={{
 									paddingLeft: 35,
-									//		paddingBottom: 12,
 									alignItems: "flex-end",
 								}}
 							/>
@@ -244,20 +242,19 @@ const Dashboard = ({ navigation }) => {
 								marginBottom: 10,
 								width: 100,
 								alignItems: "center",
-								// marginHorizontal: 5,
-								// marginVertical: 5,
 							}}
 						>
 							<View
 								style={{
 									flexDirection: "row",
 									paddingTop: 10,
-									paddingHorizontal: 10,
+									paddingHorizontal: 8,
 								}}
 							>
 								<Text
 									style={{
-										fontWeight: "bold",
+										fontSize: 13,
+										fontFamily: "Poppins-Bold",
 									}}
 								>
 									Social & Community
@@ -269,7 +266,6 @@ const Dashboard = ({ navigation }) => {
 								color={COLORS.foam}
 								style={{
 									paddingLeft: 35,
-									//			paddingBottom: 12,
 									alignItems: "flex-end",
 								}}
 							/>
@@ -298,7 +294,8 @@ const Dashboard = ({ navigation }) => {
 							>
 								<Text
 									style={{
-										fontWeight: "bold",
+										fontSize: 13,
+										fontFamily: "Poppins-Bold",
 									}}
 								>
 									Feedback & Requests
@@ -310,7 +307,6 @@ const Dashboard = ({ navigation }) => {
 								color={COLORS.foam}
 								style={{
 									paddingLeft: 35,
-									//			paddingBottom: 12,
 									alignItems: "flex-end",
 								}}
 							/>
@@ -336,13 +332,14 @@ const Dashboard = ({ navigation }) => {
 								style={{
 									flexDirection: "column",
 									paddingTop: 10,
-									paddingHorizontal: 6,
+									paddingHorizontal: 4,
 									alignItems: "center",
 								}}
 							>
 								<Text
 									style={{
-										fontWeight: "bold",
+										fontSize: 13,
+										fontFamily: "Poppins-Bold",
 										textAlign: "center",
 										width: 100,
 									}}
@@ -351,7 +348,8 @@ const Dashboard = ({ navigation }) => {
 								</Text>
 								<Text
 									style={{
-										fontWeight: "bold",
+										fontSize: 13,
+										fontFamily: "Poppins-Bold",
 										textAlign: "center",
 										width: 100,
 									}}
@@ -391,13 +389,14 @@ const Dashboard = ({ navigation }) => {
 								style={{
 									flexDirection: "row",
 									paddingTop: 10,
-									paddingHorizontal: 10,
+									paddingHorizontal: 8,
 									marginVertical: 10,
 								}}
 							>
 								<Text
 									style={{
-										fontWeight: "bold",
+										fontSize: 14,
+										fontFamily: "Poppins-Bold",
 									}}
 								>
 									My Wishlist
