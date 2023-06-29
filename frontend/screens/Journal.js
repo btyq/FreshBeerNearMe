@@ -46,7 +46,6 @@ const Journal = () => {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1100 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -130,6 +129,7 @@ const Journal = () => {
 
 				{selectedButton === "My Beer Journal" ? (
 					<View style={{ flex: 1 }}>
+					<ScrollView>
 						<TouchableOpacity
 							style={{
 								width: "90%",
@@ -310,9 +310,11 @@ const Journal = () => {
 								<Text>Save</Text>
 							</TouchableOpacity>
 						</View>
+						</ScrollView>
 					</View>
 				) : (
 					<View style={{ flex: 1, marginHorizontal: 15 }}>
+					<ScrollView>
 						<View style={styles.statisticsContainer}>
 							<View style={{ height: 750, backgroundColor: COLORS.white }}>
 								<View style={styles.emptyContainer}>
@@ -329,6 +331,7 @@ const Journal = () => {
 										Your favorite bar is: Brewerkz Orchard (Visited 20 times!)
 									</Text>
 								</View>
+								<View style={{ flex: 1 }}></View>
 								<View style={styles.container1}>
 									<Text style={styles.label}>Most Recently Visited</Text>
 									<Image
@@ -371,7 +374,9 @@ const Journal = () => {
 								</View>
 							</View>
 						</View>
+						</ScrollView>
 					</View>
+					
 				)}
 				<Modal visible={showPopup} animationType="slide" transparent>
 					<View style={styles.modalContainer}>
@@ -387,7 +392,6 @@ const Journal = () => {
 					</View>
 				</Modal>
 			</SafeAreaView>
-		</ScrollView>
 	);
 };
 
