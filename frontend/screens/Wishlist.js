@@ -58,7 +58,6 @@ const Wishlist = () => {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1000 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -293,7 +292,6 @@ const Wishlist = () => {
 					</View>
 				</Modal>
 			</SafeAreaView>
-		</ScrollView>
 	);
 };
 
