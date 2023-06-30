@@ -14,6 +14,7 @@ import {
 	Signup,
 	Welcome,
 	WriteAReview,
+	VenueOwnerHome,
 } from "./frontend/screens";
 
 const Stack = createNativeStackNavigator();
@@ -88,6 +89,11 @@ export default function App() {
 					<Stack.Screen
 						name="WriteAReview"
 						component={WriteAReview}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="VenueOwnerHome"
+						component={VenueOwnerHome}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>

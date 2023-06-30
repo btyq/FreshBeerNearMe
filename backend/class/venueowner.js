@@ -22,7 +22,6 @@ class VenueOwner {
                 this.email = result.email;
                 this.mobileNumber = result.mobileNumber;
                 this.venueID = result.venueID;
-
                 //Create a session token
                 const sessionToken = 'testtoken123';
 
@@ -35,7 +34,7 @@ class VenueOwner {
                 //Set object id in a separate cookie
                 res.cookie('venueOwnerID', result.venueOwnerID, { httpOnly: true});
 
-                res.json({ success: true, userID: result.venueOwnerID, password: result.password });
+                res.json({ success: true, venueOwnerID: result.venueOwnerID, password: result.password });
             } else {
                 res.json({ success: false, message: 'Invalid username or password' });
             }

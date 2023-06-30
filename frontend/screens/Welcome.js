@@ -152,7 +152,7 @@ const Welcome = ({ navigation }) => {
 				const { venueOwnerID, password } = response.data;
 				const sessionToken = "testtoken123";
 				setCookies({ sessionToken, venueOwnerID });
-				navigation.navigate("BottomTabNavigation", { screen: "Dashboard" });
+				navigation.navigate("VenueOwnerHome");
 			} else {
 				const { message } = response.data;
 				console.log("Login failed:", message);
