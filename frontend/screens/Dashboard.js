@@ -1,10 +1,4 @@
-import {
-	Entypo,
-	FontAwesome,
-	Ionicons,
-	MaterialIcons,
-	Octicons,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect } from "react";
 import {
@@ -16,9 +10,10 @@ import {
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
-import { SafeAreaView, useFocusEffect } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../CookieContext";
 import COLORS from "../constants/colors";
+import GlobalStyle from "../utils/GlobalStyle";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -81,7 +76,7 @@ const Dashboard = ({ navigation }) => {
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							fontFamily: "Poppins-Bold",
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
 							justifyContent: "flex-start",
 						},
@@ -121,10 +116,10 @@ const Dashboard = ({ navigation }) => {
 					<Text
 						style={{
 							fontSize: 26,
-							fontFamily: "Poppins-Bold",
 							color: COLORS.black,
 							marginTop: 20,
 							marginBottom: 12,
+							...GlobalStyle.headerFont,
 						}}
 					>
 						Joe, Welcome Back!
@@ -132,7 +127,7 @@ const Dashboard = ({ navigation }) => {
 					<Text
 						style={{
 							fontSize: 15,
-							fontFamily: "Poppins-Bold",
+							...GlobalStyle.headerFont,
 							marginBottom: 5,
 						}}
 					>
@@ -172,7 +167,7 @@ const Dashboard = ({ navigation }) => {
 								<Text
 									style={{
 										fontSize: 14,
-										fontFamily: "Poppins-Bold",
+										...GlobalStyle.bodyFont,
 									}}
 								>
 									My Profile
@@ -213,7 +208,7 @@ const Dashboard = ({ navigation }) => {
 								<Text
 									style={{
 										fontSize: 13,
-										fontFamily: "Poppins-Bold",
+										...GlobalStyle.bodyFont,
 									}}
 								>
 									Beers & Venues
@@ -254,7 +249,7 @@ const Dashboard = ({ navigation }) => {
 								<Text
 									style={{
 										fontSize: 13,
-										fontFamily: "Poppins-Bold",
+										...GlobalStyle.bodyFont,
 									}}
 								>
 									Social & Community
@@ -295,7 +290,7 @@ const Dashboard = ({ navigation }) => {
 								<Text
 									style={{
 										fontSize: 13,
-										fontFamily: "Poppins-Bold",
+										...GlobalStyle.bodyFont,
 									}}
 								>
 									Feedback & Requests
@@ -324,8 +319,6 @@ const Dashboard = ({ navigation }) => {
 								marginBottom: 10,
 								width: 100,
 								alignItems: "center",
-								// marginHorizontal: 5,
-								// marginVertical: 5,
 							}}
 						>
 							<View
@@ -339,7 +332,7 @@ const Dashboard = ({ navigation }) => {
 								<Text
 									style={{
 										fontSize: 13,
-										fontFamily: "Poppins-Bold",
+										...GlobalStyle.bodyFont,
 										textAlign: "center",
 										width: 100,
 									}}
@@ -349,7 +342,7 @@ const Dashboard = ({ navigation }) => {
 								<Text
 									style={{
 										fontSize: 13,
-										fontFamily: "Poppins-Bold",
+										...GlobalStyle.bodyFont,
 										textAlign: "center",
 										width: 100,
 									}}
@@ -363,7 +356,6 @@ const Dashboard = ({ navigation }) => {
 								color={COLORS.foam}
 								style={{
 									paddingLeft: 35,
-									//			paddingBottom: 12,
 									alignItems: "flex-end",
 								}}
 							/>
@@ -381,8 +373,6 @@ const Dashboard = ({ navigation }) => {
 								marginBottom: 10,
 								width: 100,
 								alignItems: "center",
-								// marginHorizontal: 5,
-								// marginVertical: 5,
 							}}
 						>
 							<View
@@ -396,7 +386,7 @@ const Dashboard = ({ navigation }) => {
 								<Text
 									style={{
 										fontSize: 14,
-										fontFamily: "Poppins-Bold",
+										...GlobalStyle.bodyFont,
 									}}
 								>
 									My Wishlist
@@ -408,7 +398,6 @@ const Dashboard = ({ navigation }) => {
 								color={COLORS.foam}
 								style={{
 									paddingLeft: 35,
-									//			paddingBottom: 12,
 									alignItems: "flex-end",
 								}}
 							/>
@@ -430,7 +419,7 @@ const Dashboard = ({ navigation }) => {
 						theme={{
 							Tab: {
 								primary: {
-									backgroundColor: COLORS.foam, // Change the background color here
+									backgroundColor: COLORS.grey,
 								},
 							},
 						}}
@@ -478,7 +467,7 @@ const Dashboard = ({ navigation }) => {
 						theme={{
 							Tab: {
 								primary: {
-									backgroundColor: COLORS.foam, // Change the background color here
+									backgroundColor: COLORS.grey, // Change the background color here
 								},
 							},
 						}}
@@ -517,12 +506,6 @@ const Dashboard = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	// grid: {
-	// 	flexDirection: "row",
-	// 	justifyContent: "space-between",
-	// 	flexWrap: "wrap",
-	// 	marginBottom: 10,
-	// },
 	button: {
 		paddingVertical: 3, // increased padding
 		borderColor: COLORS.black,
@@ -533,7 +516,7 @@ const styles = StyleSheet.create({
 		elevation: 20,
 	},
 	cardContainer: {
-		height: 50,
+		height: 10,
 		borderRadius: 10,
 		marginBottom: 5,
 		borderWidth: 0, // Make the border transparent
@@ -544,7 +527,6 @@ const styles = StyleSheet.create({
 		width: "100%",
 		height: 150,
 		borderRadius: 10,
-		//backgroundColor: COLORS.white,
 		justifyContent: "center",
 		alignItems: "center",
 		padding: 10,
@@ -553,7 +535,6 @@ const styles = StyleSheet.create({
 		shadowOpacity: 0.5,
 		shadowRadius: 2,
 		elevation: 5,
-		//marginBottom: 5,
 	},
 	cardImage: {
 		width: "100%",
@@ -578,7 +559,6 @@ const styles = StyleSheet.create({
 		left: 0,
 	},
 	tabViewItem: {
-		//backgroundColor: 'transparent',
 		width: "100%",
 		height: "100%",
 	},

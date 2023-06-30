@@ -15,12 +15,13 @@ import {
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
+import GlobalStyle from "../utils/GlobalStyle";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.orange;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.black : COLORS.black;
+	const textColor = COLORS.black;
 
 	return (
 		<TouchableOpacity
@@ -230,7 +231,6 @@ const FindABeer = ({ navigation }) => {
 
 	return (
 		<View style={{ flex: 1 }}>
-			{/* // <ScrollView contentContainerStyle={{ flexGrow: 1, height: 1000 }}> */}
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -244,8 +244,7 @@ const FindABeer = ({ navigation }) => {
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
 							justifyContent: "flex-start",
 						},

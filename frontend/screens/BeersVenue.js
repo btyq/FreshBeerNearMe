@@ -20,6 +20,7 @@ import {
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
+import GlobalStyle from "../utils/GlobalStyle";
 
 const Button = (props) => {
 	let bgColor = COLORS.white; // Set default background color to white
@@ -361,8 +362,7 @@ const BeersVenue = ({ navigation }) => {
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
 							justifyContent: "flex-start",
 						},

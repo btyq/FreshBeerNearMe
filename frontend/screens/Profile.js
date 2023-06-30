@@ -22,7 +22,7 @@ import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../CookieContext";
 import COLORS from "../constants/colors";
-//import { useNavigation } from '@react-navigation/native';
+import GlobalStyle from "../utils/GlobalStyle";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -39,7 +39,9 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 15, color: textColor }}>{props.title}</Text>
+			<Text style={{ fontSize: 15, ...GlobalStyle.bodyFont, color: textColor }}>
+				{props.title}
+			</Text>
 		</TouchableOpacity>
 	);
 };
@@ -215,8 +217,7 @@ const Profile = ({ navigation }) => {
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
 							justifyContent: "flex-start",
 						},
@@ -257,8 +258,7 @@ const Profile = ({ navigation }) => {
 					<Text
 						style={{
 							fontSize: 24,
-							fontWeight: "bold",
-							color: COLORS.black,
+							...GlobalStyle.headerFont,
 							marginTop: 20,
 							marginHorizontal: 12,
 						}}
@@ -311,9 +311,8 @@ const Profile = ({ navigation }) => {
 					<View style={{ marginBottom: 8 }}>
 						<Text
 							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								color: COLORS.black,
+								fontSize: 14,
+								...GlobalStyle.bodyFont,
 								marginTop: 10,
 							}}
 						>
@@ -353,9 +352,8 @@ const Profile = ({ navigation }) => {
 					<View style={{ marginBottom: 8 }}>
 						<Text
 							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								color: COLORS.black,
+								fontSize: 14,
+								...GlobalStyle.bodyFont,
 								marginTop: 10,
 							}}
 						>
@@ -395,9 +393,8 @@ const Profile = ({ navigation }) => {
 					<View style={{ marginBottom: 8 }}>
 						<Text
 							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								color: COLORS.black,
+								fontSize: 14,
+								...GlobalStyle.bodyFont,
 								marginTop: 10,
 							}}
 						>
@@ -437,10 +434,9 @@ const Profile = ({ navigation }) => {
 					<View style={{ marginBottom: 12 }}>
 						<Text
 							style={{
-								fontSize: 16,
-								fontWeight: "bold",
+								fontSize: 14,
+								...GlobalStyle.bodyFont,
 								marginTop: 10,
-								color: COLORS.black,
 							}}
 						>
 							Password
@@ -502,7 +498,7 @@ const Profile = ({ navigation }) => {
 							editable={editMode}
 							disabled={!editMode}
 						/>
-						<Text style={styles.checkboxLabel}>
+						<Text style={[GlobalStyle.bodyFont, styles.checkboxLabel]}>
 							Receive notifications for new releases, events & personalized
 							recommendations
 						</Text>
@@ -516,6 +512,7 @@ const Profile = ({ navigation }) => {
 						style={{
 							marginTop: 10,
 							marginBottom: 4,
+							elevation: 2,
 						}}
 					></Button>
 					<CustomAlert visible={isDialogVisible} onClose={handleCloseDialog} />
@@ -550,7 +547,7 @@ const styles = StyleSheet.create({
 	checkboxLabel: {
 		color: COLORS.black,
 		marginHorizontal: 12,
-		fontSize: 14,
+		fontSize: 13,
 	},
 	button: {
 		marginTop: 20,
