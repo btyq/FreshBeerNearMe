@@ -34,7 +34,7 @@ class VenueOwner {
                 //Set object id in a separate cookie
                 res.cookie('venueOwnerID', result.venueOwnerID, { httpOnly: true});
 
-                res.json({ success: true, venueOwnerID: result.venueOwnerID, password: result.password });
+                res.json({ success: true, venueOwnerID: result.venueOwnerID, username: result.username});
             } else {
                 res.json({ success: false, message: 'Invalid username or password' });
             }
