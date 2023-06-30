@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import COLORS from '../constants/colors';
 import { AirbnbRating } from 'react-native-ratings';
 import { Header } from 'react-native-elements';
-import { useNavigation } from '@react-navigation/native';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import axios from "axios";
 
 
@@ -47,6 +47,7 @@ const BeerItem = ({
   IBU,
   communityReviews,
   venueAvailability,
+  navigation, // Add navigation prop
 }) => {
   const [popupVisible, setPopupVisible] = useState(false);
 
@@ -59,62 +60,77 @@ const BeerItem = ({
   };
 
   return (
+<View style={{
+  marginBottom: 10,
+  backgroundColor: COLORS.white,
+  padding: 10,
+  borderRadius: 12,
+  borderWidth: 1,
+  shadowColor: COLORS.black,
+  shadowOffset: { width: 0, height: 2 },
+  shadowOpacity: 0.3,
+  shadowRadius: 3,
+  elevation: 5,
+  borderColor: 0,
+}}>
+  <TouchableOpacity style={{
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 10,
+    borderColor: 0,
+  }} onPress={handlePopupOpen}>
     <View style={{
-      marginBottom: 10,
-      backgroundColor: COLORS.white,
-      padding: 10,
-      borderRadius: 12,
-      borderWidth: 1,
-      shadowColor: COLORS.black, // Add shadow color
-      shadowOffset: { width: 0, height: 2 }, // Add shadow offset
-      shadowOpacity: 0.3, // Add shadow opacity
-      shadowRadius: 3, // Add shadow radius
-      elevation: 5, // Add elevation for Android
-      borderColor: 0,
+      flex: 1,
     }}>
-      <TouchableOpacity style={{
+      <Text style={{
+        fontSize: 16,
+        fontWeight: "bold",
+        color: COLORS.black,
+        marginBottom: 6, // Adjust marginBottom to reduce the height of the sub-container
+      }}>{beerName}</Text>
+      <Text style={{
+        fontSize: 16,
+        fontWeight: "bold",
+        color: COLORS.black,
+      }}>Price: ${price}</Text>
+    </View>
+    <View style={{
+      flexDirection: "column",
+      alignItems: "center",
+      marginLeft: "auto",
+    }}>
+      <View style={{
         flexDirection: "row",
-        justifyContent: "space-between",
         alignItems: "center",
-        marginBottom: 10,
-        borderColor: 0,
-      }} onPress={handlePopupOpen}>
-        <View style={{
-          flex: 1,
-        }}>
-          <Text style={{
-            fontSize: 16,
-            fontWeight: "bold",
-            color: COLORS.black,
-          }}>{beerName}</Text>
-          <Text style={{
-            fontSize: 16,
-            fontWeight: "bold",
-            color: COLORS.black,
-          }}>Price: ${price}</Text>
-        </View>
-        <View style={{
-          flex: 0.3,
-          marginRight: 12,
-          flexDirection: "row-reverse",
-          alignItems: "center",
-        }}>
-          <View style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 4,
-          }}>
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Ionicons
-                key={star}
-                name="star"
-                size={16}
-                color={star <= rating ? COLORS.foam : COLORS.grey}
-              />
-            ))}
-          </View>
-        </View>
-      </TouchableOpacity>
+        marginBottom: 6, // Adjust marginBottom to reduce the height of the sub-container
+      }}>
+        {[1, 2, 3, 4, 5].map((star) => (
+          <Ionicons
+            key={star}
+            name="star"
+            size={16}
+            color={star <= rating ? COLORS.foam : COLORS.grey}
+          />
+        ))}
+      </View>
+      <Button
+        title="Write a Review"
+        color={COLORS.grey}
+        filled
+        style={{
+          width: 120,
+          height: 40,
+          borderRadius: 30,
+          borderWidth: 1,
+          borderColor: COLORS.grey,
+          marginTop: 8,
+        }}
+        onPress={() => navigation.navigate('WriteAReview')}
+      />
+    </View>
+  </TouchableOpacity>
+
 
       <Modal visible={popupVisible} transparent animationType="fade">
         <View style={{
@@ -143,7 +159,7 @@ const BeerItem = ({
                   height: 200,
                   resizeMode: "contain",
                   marginTop: 10,
-                    marginBottom: 10,
+                  marginBottom: 10,
                 }} />
                 <View
                   style={{
@@ -169,7 +185,7 @@ const BeerItem = ({
                       fontSize: 18,
                       fontWeight: "bold",
                       marginTop: 10,
-                    marginBottom: 10,
+                      marginBottom: 10,
                     }}>Ratings: </Text>
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Ionicons
@@ -216,6 +232,7 @@ const BeerItem = ({
                     marginBottom: 10,
                     marginLeft: 'auto',
                   }}
+                  onPress={() => navigation.navigate('WriteAReview')}
                 />
                 <View style={{
                   borderBottomColor: COLORS.grey, borderBottomWidth: 2, marginTop: 10,
@@ -281,6 +298,7 @@ const VenueItem = ({
   venueRating,
   venueImage,
   venueOperatingHours,
+  navigation, // Add navigation prop
 }) => {
   const [popupVisible, setPopupVisible] = useState(false);
   const [venueMenu, setVenueMenu] = useState([]);
@@ -299,11 +317,11 @@ const VenueItem = ({
       backgroundColor: COLORS.white,
       padding: 10,
       borderRadius: 10,
-      shadowColor: COLORS.black, // Add shadow color
-      shadowOffset: { width: 0, height: 2 }, // Add shadow offset
-      shadowOpacity: 0.3, // Add shadow opacity
-      shadowRadius: 3, // Add shadow radius
-      elevation: 5, // Add elevation for Android
+      shadowColor: COLORS.black,
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 3,
+      elevation: 5,
     }}>
       <TouchableOpacity style={{
         flexDirection: "row",
@@ -318,18 +336,17 @@ const VenueItem = ({
             fontSize: 16,
             fontWeight: "bold",
             color: COLORS.black,
+            marginBottom: 6,
           }}>{venueName}</Text>
         </View>
         <View style={{
-          flex: 0.3,
-          marginRight: 12,
-          flexDirection: "row-reverse",
+          flexDirection: "column",
           alignItems: "center",
         }}>
           <View style={{
             flexDirection: "row",
             alignItems: "center",
-            marginTop: 4,
+            marginBottom: 6,
           }}>
             {[1, 2, 3, 4, 5].map((star) => (
               <Ionicons
@@ -341,8 +358,23 @@ const VenueItem = ({
               />
             ))}
           </View>
+          <Button
+            title="Write a Review"
+            color={COLORS.grey}
+            filled
+            style={{
+              width: 120,
+              height: 40,
+              borderRadius: 30,
+              borderWidth: 1,
+              borderColor: COLORS.grey,
+              marginTop: 8,
+            }}
+            onPress={() => navigation.navigate('WriteAReview')}
+          />
         </View>
       </TouchableOpacity>
+
       <Modal visible={popupVisible} transparent animationType="fade">
         <View style={{
           flex: 1,
@@ -435,6 +467,7 @@ const VenueItem = ({
                     marginBottom: 10,
                     marginLeft: 'auto',
                   }}
+                  onPress={() => navigation.navigate('WriteAReview')}
                 />
               </View>
               <View
@@ -545,6 +578,10 @@ const RateNReview = () => {
     navigation.navigate('Recommendation');
   };
 
+  const navigateToWriteAReview = () => {
+    navigation.navigate('WriteAReview');
+  };
+
   return (
     <View style={{ height: 680, backgroundColor: COLORS.white }}>
       <Header
@@ -626,8 +663,7 @@ const RateNReview = () => {
             style={styles.searchButton}
           />
         </View>
-
-        <View style={[styles.container, { width: '98%', borderColor: COLORS.grey, borderWidth: 1, marginLeft: 5, borderRadius: 10 }]}>
+        <View style={[styles.container, { width: '98%', borderColor: COLORS.grey, borderWidth: 1, marginLeft: 5, marginTop: 20, borderRadius: 10 }]}>
           <ScrollView contentContainerStyle={{ paddingBottom: 150 }}>
             {beerData.map((beer, index) => (
               <BeerItem
@@ -641,6 +677,7 @@ const RateNReview = () => {
                 IBU={beer.ibu}
                 communityReviews={beer.communityReviews}
                 venueAvailability={beer.venueAvailability}
+                navigation={navigation} // Add this line
               />
             ))}
             {venueData.map((venue, index) => (
@@ -653,6 +690,7 @@ const RateNReview = () => {
                 venueRating={venue.venueRating}
                 venueImage={venue.venueImage}
                 venueOperatingHours={venue.venueOperatingHours}
+                navigation={navigation} // Add this line
               />
             ))}
           </ScrollView>

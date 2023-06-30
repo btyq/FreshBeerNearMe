@@ -15,6 +15,7 @@ import Forums from "./Forums"
 import RateNReview from "./RateNReview"
 import ReferAFriend from "./ReferAFriend"
 import Recommendation from "./Recommendation"
+import WriteAReview from "./WriteAReview"
 
 export {
   Welcome,
@@ -33,5 +34,6 @@ export {
   Forums,
   RateNReview,
   ReferAFriend,
-  Recommendation
+  Recommendation,
+  WriteAReview
 };

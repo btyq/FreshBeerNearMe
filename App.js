@@ -14,6 +14,7 @@ import {
 	ReferAFriend,
 	Signup,
 	Welcome,
+	WriteAReview
 } from "./frontend/screens";
 
 const Stack = createNativeStackNavigator();
@@ -83,6 +84,11 @@ export default function App() {
 					<Stack.Screen
 						name="Recommendation"
 						component={Recommendation}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="WriteAReview"
+						component={WriteAReview}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>
