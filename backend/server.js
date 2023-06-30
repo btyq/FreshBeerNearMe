@@ -1,7 +1,9 @@
+const Beer = require('./class/beer');
 const User = require('./class/user');
 const Venue = require('./class/venue');
 
 const venueArray = [];
+const beerArray = [];
 
 //===================================================================================================================
 //==============================================Connect to MongoDB===================================================
@@ -146,14 +148,8 @@ app.post('/editProfile', async (req, res) => {
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
 //Route to retrieve beer data
-app.get('/beerData', async (req, res) => {
-  try{
-    const beerData = await db.collection('Beer').find().toArray();
-    res.json({success: true, beerData});
-  } catch (error) {
-    console.error("Error retrieving beer data:", error);
-    res.status(500).json({ success: false, message: "An error occurred while retrieving beer data"});
-  }
+app.get('/getBeerData', async (req, res) => {
+  await Beer.getBeerData(client, beerArray, res);
 });
 //===================================================================================================================
 //=================================================All Venue Routes===================================================
