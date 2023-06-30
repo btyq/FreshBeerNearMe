@@ -472,7 +472,7 @@ const VenueItem = ({
                 color={COLORS.yellow}
                 filled
                 style={{
-                  backgroundColor: COLORS.orange,
+                  backgroundColor: COLORS.grey,
                   padding: 10,
                   borderRadius: 8,
                   alignItems: "center",
