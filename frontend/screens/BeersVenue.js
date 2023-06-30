@@ -23,66 +23,10 @@ import COLORS from "../constants/colors";
 import GlobalStyle from "../utils/GlobalStyle";
 
 const Button = (props) => {
-	let bgColor = COLORS.white; // Set default background color to white
-	let textColor = COLORS.black;
-
-	if (props.title === "Find a Venue") {
-		bgColor = COLORS.foam; // Set background color to foam for "Find a Venue" button
-		textColor = COLORS.black;
-	} else if (
-		props.title === "Sort by Distance" &&
-		props.activeSortBy === "Sort by Distance"
-	) {
-		bgColor = COLORS.foam;
-		textColor = COLORS.black;
-	} else if (
-		props.title === "Sort by Name" &&
-		props.activeSortBy === "Sort by Name"
-	) {
-		bgColor = COLORS.foam;
-		textColor = COLORS.black;
-	} else if (
-		props.title === "Sort by Rating" &&
-		props.activeSortBy === "Sort by Rating"
-	) {
-		bgColor = COLORS.foam;
-		textColor = COLORS.black;
-	} else if (
-		props.title === "Ascending" &&
-		props.activeSortOrder === "Ascending"
-	) {
-		bgColor = COLORS.foam;
-		textColor = COLORS.black;
-	} else if (
-		props.title === "Descending" &&
-		props.activeSortOrder === "Descending"
-	) {
-		bgColor = COLORS.foam;
-		textColor = COLORS.black;
-	} else if (props.title === "Search for Venue") {
-		bgColor = COLORS.foam;
-		textColor = COLORS.black;
-	} else if (props.title === "Close") {
-		bgColor = COLORS.foam;
-		textColor = COLORS.black;
-	} else if (props.title === "View Reviews") {
-		bgColor = COLORS.foam;
-		textColor = COLORS.black;
-	}
-
-	const handlePressIn = () => {
-		// Adjust the opacity and scale of the button when pressed
-		if (props.onPressIn) {
-			props.onPressIn();
-		}
-	};
-
-	const handlePressOut = () => {
-		// Reset the opacity and scale of the button when released
-		if (props.onPressOut) {
-			props.onPressOut();
-		}
-	};
+	const filledBgColor = props.color || COLORS.orange;
+	const outlinedColor = COLORS.white;
+	const bgColor = props.filled ? filledBgColor : outlinedColor;
+	const textColor = COLORS.black;
 
 	return (
 		<TouchableOpacity
@@ -92,15 +36,15 @@ const Button = (props) => {
 				...props.style,
 			}}
 			onPress={props.onPress}
-			onPressIn={handlePressIn}
-			onPressOut={handlePressOut}
-			activeOpacity={0.7} // Adjust the opacity when the button is pressed
 		>
-			<Text style={{ fontSize: 12, color: textColor }}>{props.title}</Text>
+			<Text style={{ fontSize: 12, ...{ color: textColor } }}>
+				{props.title}
+			</Text>
 		</TouchableOpacity>
 	);
 };
 
+// for popup
 const VenueItem = ({
 	venueID,
 	venueName,
@@ -255,8 +199,8 @@ const VenueItem = ({
 
 const BeersVenue = ({ navigation }) => {
 	const [sortedVenueData, setSortedVenueData] = useState([]);
-	const [activeSortBy, setActiveSortBy] = useState("Sort by Distance");
-	const [activeSortOrder, setActiveSortOrder] = useState("Ascending");
+	const [sortBy, setSortBy] = useState("dist");
+	const [sortOrder, setSortOrder] = useState("asc");
 	const [searchInput, setSearchInput] = useState("");
 	const [venueData, setVenueData] = useState([]);
 
@@ -267,17 +211,17 @@ const BeersVenue = ({ navigation }) => {
 				const { success, venueData } = response.data;
 				if (success) {
 					let sortedData = [...venueData];
-					switch (activeSortBy) {
-						case "Sort by Name":
+					switch (sortBy) {
+						case "name":
 							sortedData.sort((a, b) => a.venueName.localeCompare(b.venueName));
 							break;
-						case "Sort by Rating":
+						case "rating":
 							sortedData.sort((a, b) => a.venueRating - b.venueRating);
 							break;
 						default:
 							break;
 					}
-					if (activeSortOrder === "Descending") {
+					if (sortOrder === "desc") {
 						sortedData.reverse();
 					}
 					setSortedVenueData(sortedData);
@@ -290,46 +234,30 @@ const BeersVenue = ({ navigation }) => {
 			}
 		};
 		fetchVenueData();
-	}, [activeSortBy, activeSortOrder]);
+	}, [sortBy, sortOrder]);
 
+	// for sorting and search function
 	const handleSortBy = (by) => {
-		if (by === activeSortBy) return;
-		setActiveSortBy(by);
+		if (by === sortBy) return;
+		setSortBy(by);
 	};
 
-	const handleFindABeerClick = () => {
-		navigation.navigate("FindABeer");
-	};
-
-	const handleFindAVenueClick = () => {
-		navigation.navigate("BeersVenue");
-	};
-
-	const handleNearbyVenuesClick = () => {
-		navigation.navigate("NearbyVenues");
-	};
-
-	const handleTopRatedClick = () => {
-		navigation.navigate("TopRated");
-	};
-
-	const handleBreweriesClick = () => {
-		navigation.navigate("Breweries");
-	};
-
-	const handleSortByClick = (by) => {
-		if (by === activeSortBy) return;
-		setActiveSortBy(by);
-	};
-
-	const handleSortOrderClick = (order) => {
-		if (order === activeSortOrder) return;
-		setActiveSortOrder(order);
+	const handleSortOrder = (order) => {
+		if (order === sortOrder) return;
+		setSortOrder(order);
 		let sortedData = [...sortedVenueData];
-		if (order === "Descending") {
+		if (order === "desc") {
 			sortedData.reverse();
 		}
 		setSortedVenueData(sortedData);
+	};
+
+	const handleSearch = (text) => {
+		setSearchInput(text);
+		const filteredData = venueData.filter((venue) =>
+			venue.venueName.toLowerCase().includes(searchInput.toLowerCase())
+		);
+		setSortedVenueData(filteredData);
 	};
 
 	return (
@@ -399,99 +327,82 @@ const BeersVenue = ({ navigation }) => {
 							color={COLORS.foam}
 							filled
 							style={styles.longButton}
-							onPress={handleFindAVenueClick}
+							onPress={() => navigation.navigate("BeersVenue")}
 						/>
 						<Button
 							title="Find a Beer"
-							color={COLORS.foam}
+							color={COLORS.white}
 							filled
 							style={styles.longButton}
-							onPress={handleFindABeerClick}
+							onPress={() => navigation.navigate("FindABeer")}
 						/>
 						<Button
 							title="Nearby Venues"
-							color={COLORS.foam}
+							color={COLORS.white}
 							filled
 							style={styles.longButton}
-							onPress={handleNearbyVenuesClick}
+							onPress={() => navigation.navigate("NearbyVenues")}
 						/>
 						<Button
 							title="Top Rated"
-							color={COLORS.foam}
+							color={COLORS.white}
 							filled
 							style={styles.longButton}
-							onPress={handleTopRatedClick}
+							onPress={() => navigation.navigate("TopRated")}
 						/>
 						<Button
 							title="Breweries"
-							color={COLORS.foam}
+							color={COLORS.white}
 							filled
 							style={styles.longButton}
-							onPress={handleBreweriesClick}
+							onPress={() => navigation.navigate("Breweries")}
 						/>
 					</View>
 					<View style={styles.searchContainer}>
 						<TextInput
 							placeholder="Search..."
 							style={styles.searchInput}
-							onChangeText={setSearchInput}
-						/>
-						<Button
-							title="Search for Venue"
-							color={COLORS.foam}
-							filled
-							style={styles.searchButton}
-							onPress={() => {
-								const filteredData = venueData.filter((venue) =>
-									venue.venueName
-										.toLowerCase()
-										.includes(searchInput.toLowerCase())
-								);
-								setSortedVenueData(filteredData);
-							}}
+							onChangeText={handleSearch}
+							value={searchInput}
 						/>
 					</View>
 					<View style={styles.grid}>
 						<Button
 							title="Sort by Distance"
 							color={COLORS.foam}
+							filled={sortBy === "dist"}
 							style={styles.shortButton}
-							activeSortBy={activeSortBy}
-							onPress={() => handleSortBy("Sort by Distance")}
+							onPress={() => handleSortBy("dist")}
 						/>
 						<Button
 							title="Sort by Name"
 							color={COLORS.foam}
-							filled={activeSortBy === "Sort By Name"}
+							filled={sortBy === "name"}
 							style={styles.shortButton}
-							activeSortBy={activeSortBy}
-							onPress={() => handleSortByClick("Sort by Name")}
+							onPress={() => handleSortBy("name")}
 						/>
 						<Button
 							title="Sort by Rating"
 							color={COLORS.foam}
-							filled={activeSortBy === "Sort By Rating"}
+							filled={sortBy === "rating"}
 							style={styles.shortButton}
-							activeSortBy={activeSortBy}
-							onPress={() => handleSortByClick("Sort by Rating")}
+							onPress={() => handleSortBy("rating")}
 						/>
 					</View>
 					<View style={styles.grid}>
 						<Button
 							title="Ascending"
-							color={COLORS.white}
-							filled
+							color={COLORS.foam}
+							filled={sortOrder === "asc"}
 							style={styles.shortButton}
-							activeSortOrder={activeSortOrder}
-							onPress={() => handleSortOrderClick("Ascending")}
+							onPress={() => handleSortOrder("asc")}
 						/>
 						<Button
 							title="Descending"
-							color={COLORS.orange}
-							filled
+							color={COLORS.foam}
+							filled={sortOrder === "desc"}
 							style={styles.shortButton}
-							activeSortOrder={activeSortOrder}
-							onPress={() => handleSortOrderClick("Descending")}
+							onPress={() => handleSortOrder("desc")}
 						/>
 					</View>
 
@@ -560,18 +471,13 @@ const styles = StyleSheet.create({
 	},
 	searchInput: {
 		flex: 1,
-		height: 40,
+		height: 45,
 		borderWidth: 1,
-		borderColor: COLORS.grey,
-		borderRadius: 10,
+		borderColor: 0,
+		borderRadius: 20,
 		paddingHorizontal: 10,
 		marginRight: 10,
-	},
-	searchButton: {
-		width: "40%",
-		height: 40,
-		borderRadius: 10,
-		borderColor: 0,
+		backgroundColor: COLORS.grey,
 	},
 	container: {
 		flex: 1,
