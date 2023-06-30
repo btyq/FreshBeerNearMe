@@ -127,9 +127,9 @@ const Welcome = ({ navigation }) => {
 			});
 
 			if (response.data.success) {
-				const { userID, password } = response.data;
+				const { userID, username } = response.data;
 				const sessionToken = "testtoken123";
-				setCookies({ sessionToken, userID });
+				setCookies({ sessionToken, userID, username });
 				navigation.navigate("BottomTabNavigation", { screen: "Dashboard" });
 			} else {
 				const { message } = response.data;

@@ -34,7 +34,7 @@ class User {
         //Set object id in a separate cookie
         res.cookie('userID', result.userID, { httpOnly: true});
         
-        res.json({ success: true, userID: result.userID, password: result.password });
+        res.json({ success: true, userID: result.userID, username: result.username });
       } else {
         res.json({ success: false, message: 'Invalid username or password' });
       }
