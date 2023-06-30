@@ -1,6 +1,6 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	ImageBackground,
 	ScrollView,
@@ -42,13 +42,16 @@ const VenueOwnerHome = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [index, setIndex] = React.useState(0);
 	const [index1, setIndex1] = React.useState(0);
+	const [username, setUsername] = useState("");
 
 	useEffect(() => {
 		const sessionToken = cookies.sessionToken;
 		const venueOwnerID = cookies.venueOwnerID;
+		setUsername(cookies.username);
 		// Use the sessionToken and username as needed
 		console.log("Session Token:", sessionToken);
 		console.log("VenueOwnerID:", venueOwnerID);
+		console.log("Username: ", username);
 	}, []);
 
 	// ================================== Functions for different button ==================================
@@ -122,7 +125,7 @@ const VenueOwnerHome = ({ navigation }) => {
 							...GlobalStyle.headerFont,
 						}}
 					>
-						Joe, Welcome Back!
+						{username}, Welcome Back!
 					</Text>
 					<Text
 						style={{

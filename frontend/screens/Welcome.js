@@ -149,9 +149,9 @@ const Welcome = ({ navigation }) => {
 			});
 
 			if (response.data.success) {
-				const { venueOwnerID, password } = response.data;
+				const { venueOwnerID, username} = response.data;
 				const sessionToken = "testtoken123";
-				setCookies({ sessionToken, venueOwnerID });
+				setCookies({ sessionToken, venueOwnerID, username});
 				navigation.navigate("VenueOwnerHome");
 			} else {
 				const { message } = response.data;
