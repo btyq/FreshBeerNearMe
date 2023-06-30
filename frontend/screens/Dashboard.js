@@ -48,9 +48,6 @@ const Dashboard = ({ navigation }) => {
 		const sessionToken = cookies.sessionToken;
 		const userID = cookies.userID;
 		setUsername(cookies.username);
-		// Use the sessionToken and username as needed
-		console.log("Session Token:", sessionToken);
-		console.log("UserID:", userID);
 	}, []);
 
 	// ================================== Functions for different button ==================================

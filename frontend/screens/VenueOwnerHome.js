@@ -48,10 +48,6 @@ const VenueOwnerHome = ({ navigation }) => {
 		const sessionToken = cookies.sessionToken;
 		const venueOwnerID = cookies.venueOwnerID;
 		setUsername(cookies.username);
-		// Use the sessionToken and username as needed
-		console.log("Session Token:", sessionToken);
-		console.log("VenueOwnerID:", venueOwnerID);
-		console.log("Username: ", username);
 	}, []);
 
 	// ================================== Functions for different button ==================================
