@@ -46,89 +46,89 @@ const Journal = () => {
 	};
 
 	return (
-			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
-				<Header
-					placement="left"
-					backgroundColor={COLORS.primary}
-					containerStyle={{
-						height: 100,
-						borderBottomLeftRadius: 40,
-						borderBottomRightRadius: 40,
-					}}
-					leftComponent={
-						<View
-							style={{
-								flexDirection: "row",
-							}}
-						>
-							<TouchableOpacity onPress={() => navigation.goBack()}>
-								<MaterialIcons
-									name="keyboard-arrow-left"
-									size={24}
-									color={COLORS.black}
-								/>
-							</TouchableOpacity>
-						</View>
-					}
-					centerComponent={{
-						text: "FreshBeer",
-						style: {
-							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
+			<Header
+				placement="left"
+				backgroundColor={COLORS.primary}
+				containerStyle={{
+					height: 100,
+					borderBottomLeftRadius: 40,
+					borderBottomRightRadius: 40,
+				}}
+				leftComponent={
+					<View
+						style={{
 							flexDirection: "row",
-							justifyContent: "flex-start",
-						},
-					}}
-					rightComponent={
-						<View
-							style={{
-								flexDirection: "row",
-							}}
-						>
-							<TouchableOpacity>
-								<Octicons
-									name="bookmark"
-									size={24}
-									color={COLORS.black}
-									style={{ marginRight: 10 }}
-								/>
-							</TouchableOpacity>
-							<TouchableOpacity>
-								<Ionicons
-									name="notifications-outline"
-									size={24}
-									color={COLORS.black}
-								/>
-							</TouchableOpacity>
-						</View>
-					}
-				/>
-
-				<View
-					style={{
+						}}
+					>
+						<TouchableOpacity onPress={() => navigation.goBack()}>
+							<MaterialIcons
+								name="keyboard-arrow-left"
+								size={24}
+								color={COLORS.black}
+							/>
+						</TouchableOpacity>
+					</View>
+				}
+				centerComponent={{
+					text: "FreshBeer",
+					style: {
+						fontSize: 20,
+						color: COLORS.black,
+						fontWeight: "bold",
 						flexDirection: "row",
-						justifyContent: "space-between",
-						paddingHorizontal: 10,
-						paddingVertical: 10,
-						marginTop: 12,
-						marginBottom: 12,
-					}}
-				>
-					<Button
-						title="My Beer Journal"
-						selected={selectedButton === "My Beer Journal"}
-						onSelect={setSelectedButton}
-					/>
-					<Button
-						title="My Statistics"
-						selected={selectedButton === "My Statistics"}
-						onSelect={setSelectedButton}
-					/>
-				</View>
+						justifyContent: "flex-start",
+					},
+				}}
+				rightComponent={
+					<View
+						style={{
+							flexDirection: "row",
+						}}
+					>
+						<TouchableOpacity>
+							<Octicons
+								name="bookmark"
+								size={24}
+								color={COLORS.black}
+								style={{ marginRight: 10 }}
+							/>
+						</TouchableOpacity>
+						<TouchableOpacity>
+							<Ionicons
+								name="notifications-outline"
+								size={24}
+								color={COLORS.black}
+							/>
+						</TouchableOpacity>
+					</View>
+				}
+			/>
 
-				{selectedButton === "My Beer Journal" ? (
-					<View style={{ flex: 1 }}>
+			<View
+				style={{
+					flexDirection: "row",
+					justifyContent: "space-between",
+					paddingHorizontal: 10,
+					paddingVertical: 10,
+					marginTop: 12,
+					marginBottom: 12,
+				}}
+			>
+				<Button
+					title="My Beer Journal"
+					selected={selectedButton === "My Beer Journal"}
+					onSelect={setSelectedButton}
+				/>
+				<Button
+					title="My Statistics"
+					selected={selectedButton === "My Statistics"}
+					onSelect={setSelectedButton}
+				/>
+			</View>
+
+			{selectedButton === "My Beer Journal" ? (
+				<View style={{ flex: 1 }}>
 					<ScrollView>
 						<TouchableOpacity
 							style={{
@@ -170,7 +170,7 @@ const Journal = () => {
 										borderRadius: 12,
 										borderColor: 0,
 									}}
-									onPress={() => {}}
+									onPress={() => { }}
 								>
 									<Text>Edit</Text>
 								</TouchableOpacity>
@@ -310,88 +310,92 @@ const Journal = () => {
 								<Text>Save</Text>
 							</TouchableOpacity>
 						</View>
-						</ScrollView>
+					</ScrollView>
+				</View>
+			) : (
+				<View style={{ flex: 1, marginHorizontal: 10 }}>
+					<View style={{ height: 120, backgroundColor: COLORS.white }}>
+						<View style={styles.emptyContainer}>
+							<Text style={{ lineHeight: 30 }}>
+								Number of unique places checked in: 5
+							</Text>
+							<Text style={{ lineHeight: 30 }}>
+								Types of beer tried: 10
+							</Text>
+							<Text style={{ lineHeight: 30 }}>
+								Your favorite tasting notes are: fruity
+							</Text>
+							<Text style={{ lineHeight: 30 }}>
+								Your favorite bar is: Brewerkz Orchard (Visited 20 times!)
+							</Text>
+						</View>
 					</View>
-				) : (
-					<View style={{ flex: 1, marginHorizontal: 15 }}>
-					<ScrollView>
-						<View style={styles.statisticsContainer}>
-							<View style={{ height: 750, backgroundColor: COLORS.white }}>
-								<View style={styles.emptyContainer}>
-									<Text style={{ lineHeight: 30 }}>
-										Number of unique places checked in: 5
-									</Text>
-									<Text style={{ lineHeight: 30 }}>
-										Types of beer tried: 10
-									</Text>
-									<Text style={{ lineHeight: 30 }}>
-										Your favorite tasting notes are: fruity
-									</Text>
-									<Text style={{ lineHeight: 30 }}>
-										Your favorite bar is: Brewerkz Orchard (Visited 20 times!)
-									</Text>
-								</View>
-								<View style={{ flex: 1 }}></View>
-								<View style={styles.container1}>
-									<Text style={styles.label}>Most Recently Visited</Text>
-									<Image
-										source={require("../assets/event1.png")}
-										style={styles.placeImage}
+
+					{/* Additional Container */}
+					<ScrollView style={{ flex: 1 }}>
+						<View style={{ backgroundColor: COLORS.secondary }}>
+							{/* Add your content here */}
+							<View style={styles.container1}>
+								<Text style={styles.label}>Most Recently Visited</Text>
+								<Image
+									source={require("../assets/event1.png")}
+									style={styles.placeImage}
+								/>
+								<View style={styles.detailsContainer}>
+									<Text style={styles.placeLabel}>Brewerkz Orchard</Text>
+									<AirbnbRating
+										count={5}
+										defaultRating={4}
+										size={15}
+										selectedColor={COLORS.foam}
+										unSelectedColor={COLORS.gray}
+										reviews={[]}
+										isDisabled={true}
+										showRating={false}
 									/>
-									<View style={styles.detailsContainer}>
-										<Text style={styles.placeLabel}>Brewerkz Orchard</Text>
-										<AirbnbRating
-											count={5}
-											defaultRating={4}
-											size={15}
-											selectedColor={COLORS.foam}
-											unSelectedColor={COLORS.gray}
-											reviews={[]}
-											isDisabled={true}
-											showRating={false}
-										/>
-									</View>
 								</View>
-								<View style={styles.container1}>
-									<Text style={styles.label}>Most Recently Tried</Text>
-									<Image
-										source={require("../assets/specialtybeer.png")}
-										style={styles.placeImage}
+							</View>
+
+							<View style={styles.container1}>
+								<Text style={styles.label}>Most Recently Tried</Text>
+								<Image
+									source={require("../assets/specialtybeer.png")}
+									style={styles.placeImage}
+								/>
+								<View style={styles.detailsContainer}>
+									<Text style={styles.placeLabel}>Tiger Beer</Text>
+									<AirbnbRating
+										count={5}
+										defaultRating={4}
+										size={15}
+										selectedColor={COLORS.foam}
+										unSelectedColor={COLORS.gray}
+										reviews={[]}
+										isDisabled={true}
+										showRating={false}
 									/>
-									<View style={styles.detailsContainer}>
-										<Text style={styles.placeLabel}>Tiger Beer</Text>
-										<AirbnbRating
-											count={5}
-											defaultRating={4}
-											size={15}
-											selectedColor={COLORS.foam}
-											unSelectedColor={COLORS.gray}
-											reviews={[]}
-											isDisabled={true}
-											showRating={false}
-										/>
-									</View>
 								</View>
 							</View>
 						</View>
-						</ScrollView>
+					</ScrollView>
+				</View>
+
+
+			)}
+			<Modal visible={showPopup} animationType="slide" transparent>
+				<View style={styles.modalContainer}>
+					<View style={styles.popupContainer}>
+						<Text style={styles.popupText}>Container Clicked!</Text>
+						<TouchableOpacity
+							style={styles.closeButton}
+							onPress={() => setShowPopup(false)}
+						>
+							<Text style={styles.closeButtonText}>Close</Text>
+						</TouchableOpacity>
 					</View>
-					
-				)}
-				<Modal visible={showPopup} animationType="slide" transparent>
-					<View style={styles.modalContainer}>
-						<View style={styles.popupContainer}>
-							<Text style={styles.popupText}>Container Clicked!</Text>
-							<TouchableOpacity
-								style={styles.closeButton}
-								onPress={() => setShowPopup(false)}
-							>
-								<Text style={styles.closeButtonText}>Close</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</Modal>
-			</SafeAreaView>
+				</View>
+			</Modal>
+		</SafeAreaView>
 	);
 };
 
