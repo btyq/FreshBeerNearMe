@@ -13,7 +13,7 @@ import {
 	ReferAFriend,
 	Signup,
 	Welcome,
-	WriteAReview
+	WriteAReview,
 } from "./frontend/screens";
 
 const Stack = createNativeStackNavigator();
