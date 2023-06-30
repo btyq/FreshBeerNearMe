@@ -255,7 +255,7 @@ const BeersVenue = ({ navigation }) => {
 	const handleSearch = (text) => {
 		setSearchInput(text);
 		const filteredData = venueData.filter((venue) =>
-			venue.venueName.toLowerCase().includes(searchInput.toLowerCase())
+			venue.venueName.toLowerCase().includes(text.toLowerCase())
 		);
 		setSortedVenueData(filteredData);
 	};
