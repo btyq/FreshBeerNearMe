@@ -18,6 +18,7 @@ import {
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
+import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -55,6 +56,7 @@ const VenueItem = ({
 	venueOperatingHours,
 }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
+	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
 	const [venueMenu, setVenueMenu] = useState([]);
 
 	const handlePopupOpen = () => {
@@ -63,6 +65,10 @@ const VenueItem = ({
 
 	const handlePopupClose = () => {
 		setPopupVisible(false);
+	};
+
+	const handlePopUp2 = () => {
+		setPopupVisible2(!popupVisible2); // created 2nd modal
 	};
 
 	useEffect(() => {
@@ -160,7 +166,136 @@ const VenueItem = ({
 										borderRadius: 10,
 										marginBottom: 15,
 									}}
+									onPress={handlePopUp2}
 								/>
+								<Modal
+									visible={popupVisible2}
+									transparent
+									animationType="slide"
+								>
+									<View style={styles.modalContainer}>
+										<View style={styles.popup}>
+											<View
+												style={{
+													flexDirection: "row",
+													justifyContent: "space-between",
+													flexWrap: "wrap",
+												}}
+											>
+												<TouchableOpacity onPress={handlePopupClose}>
+													<Ionicons name="arrow-back" size={24} color="black" />
+												</TouchableOpacity>
+											</View>
+											<View
+												style={{
+													width: "100%",
+													borderWidth: 1,
+													borderColor: COLORS.grey,
+													paddingHorizontal: 20,
+													paddingVertical: 10,
+													borderRadius: 30,
+													marginBottom: 25,
+												}}
+											>
+												<View
+													style={{
+														flexDirection: "row",
+														alignItems: "center",
+													}}
+												>
+													<Text
+														style={{
+															flex: 1,
+															fontSize: 16,
+															fontWeight: "bold",
+															color: COLORS.black,
+														}}
+													>
+														Venue Name:
+													</Text>
+													<View
+														style={{
+															flex: 1,
+															alignItems: "flex-end",
+														}}
+													>
+														<AirbnbRating
+															count={5}
+															defaultRating={4}
+															size={20}
+															showRating={false}
+															isDisabled={true}
+														/>
+													</View>
+												</View>
+											</View>
+											<View
+												style={{
+													marginBottom: 25,
+													flexDirection: "row",
+													alignItems: "center",
+													justifyContent: "space-between",
+												}}
+											>
+												<Text
+													style={{
+														fontSize: 14,
+														color: COLORS.black,
+														marginLeft: 20,
+													}}
+												>
+													Review
+												</Text>
+												<View
+													style={{
+														width: "60%",
+														height: 95,
+														borderColor: COLORS.black,
+														borderWidth: 1,
+														borderRadius: 8,
+														alignItems: "center",
+														justifyContent: "center",
+														paddingLeft: 22,
+														marginTop: 10,
+														backgroundColor: COLORS.secondary,
+													}}
+												></View>
+											</View>
+											<View
+												style={{
+													marginBottom: 25,
+													flexDirection: "row",
+													alignItems: "center",
+													justifyContent: "space-between",
+												}}
+											>
+												<Text
+													style={{
+														fontSize: 14,
+														color: COLORS.black,
+														marginLeft: 20,
+													}}
+												>
+													Rating
+												</Text>
+												<View
+													style={{
+														flex: 1,
+														alignItems: "flex-end",
+													}}
+												>
+													<AirbnbRating
+														count={5}
+														defaultRating={4}
+														size={20}
+														showRating={false}
+													/>
+												</View>
+											</View>
+											<Button title="Submit" onPress={handlePopUp2} />
+										</View>
+									</View>
+								</Modal>
 							</View>
 							<View
 								style={{
