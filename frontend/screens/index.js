@@ -16,7 +16,6 @@ import RateNReview from "./RateNReview"
 import ReferAFriend from "./ReferAFriend"
 import Recommendation from "./Recommendation"
 import WriteAReview from "./WriteAReview"
-import VenueOwnerHome from "./VenueOwnerHome";
 
 export {
   Welcome,
