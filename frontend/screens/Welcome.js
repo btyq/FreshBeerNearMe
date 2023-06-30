@@ -119,9 +119,9 @@ const Welcome = ({ navigation }) => {
 	];
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
 
-	const handleLogin = async () => {
+	const handleUserLogin = async () => {
 		try {
-			const response = await axios.post("http://10.0.2.2:3000", {
+			const response = await axios.post("http://10.0.2.2:3000/userLogin", {
 				username: username,
 				password: password,
 			});
@@ -130,7 +130,6 @@ const Welcome = ({ navigation }) => {
 				const { userID, password } = response.data;
 				const sessionToken = "testtoken123";
 				setCookies({ sessionToken, userID });
-				console.log("Wow it works");
 				navigation.navigate("BottomTabNavigation", { screen: "Dashboard" });
 			} else {
 				const { message } = response.data;
@@ -141,6 +140,60 @@ const Welcome = ({ navigation }) => {
 			console.log("An error occurred:", error.message);
 		}
 	};
+
+	const handleVenueOwnerLogin = async () => {
+		try {
+			const response = await axios.post("http://10.0.2.2:3000/venueOwnerLogin", {
+				username: username,
+				password: password,
+			});
+
+			if (response.data.success) {
+				const { venueOwnerID, password } = response.data;
+				const sessionToken = "testtoken123";
+				setCookies({ sessionToken, venueOwnerID });
+				navigation.navigate("BottomTabNavigation", { screen: "Dashboard" });
+			} else {
+				const { message } = response.data;
+				console.log("Login failed:", message);
+				setIsDialogVisible(true);
+			}
+		} catch (error) {
+			console.log("An error occurred:", error.message);
+		}
+	};
+
+	const handleAdminLogin = async () => {
+		try {
+			const response = await axios.post("http://10.0.2.2:3000/adminLogin", {
+				username: username,
+				password: password,
+			});
+
+			if (response.data.success) {
+				const { userID, password } = response.data;
+				const sessionToken = "testtoken123";
+				setCookies({ sessionToken, userID });
+				navigation.navigate("BottomTabNavigation", { screen: "Dashboard" });
+			} else {
+				const { message } = response.data;
+				console.log("Login failed:", message);
+				setIsDialogVisible(true);
+			}
+		} catch (error) {
+			console.log("An error occurred:", error.message);
+		}
+	};
+
+	const handleLogin = () => {
+		if (selected === "1") {
+			handleUserLogin();
+		} else if (selected === "2") {
+			handleVenueOwnerLogin();
+		} else if (selected === "3") {
+			handleAdminLogin();
+		}
+	}
 
 	const handleCloseDialog = () => {
 		setIsDialogVisible(false);

@@ -13,7 +13,7 @@ class User {
     try {
       const db = this.client.db('FreshBearNearMe');
       const collection = db.collection('User');
-      //Find a document that matches the username and password
+      //Find a data that matches the username and password
       const result = await collection.findOne({ username, password });
 
       if (result) {

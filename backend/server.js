@@ -1,6 +1,7 @@
 const Beer = require('./class/beer');
 const User = require('./class/user');
 const Venue = require('./class/venue');
+const VenueOwner = require('./class/venueowner');
 
 const venueArray = [];
 const beerArray = [];
@@ -39,14 +40,6 @@ app.listen(port, () => {
 });
 //===================================================================================================================
 //==============================================All Route Functions==================================================
-// Custom middleware to store 'user' object in a global variable
-let globalUser = null;
-app.use((req, res, next) => {
-  if (req.url === '/') {
-    globalUser = new User(client, "", "", "", "", "", false);
-  } 
-  next();
-});
 
 //Route to verify username and password
 app.post('/signup', async (req, res) => {
@@ -92,8 +85,16 @@ app.post('/signup', async (req, res) => {
   }
 });
 //=======================================All User Routes=============================================
+// Custom middleware to store 'user' object in a global variable
+let globalUser = null;
+app.use((req, res, next) => {
+  if (req.url === '/userLogin') {
+    globalUser = new User(client, "", "", "", "", "", false);
+  } 
+  next();
+});
 //Route to verify username and password
-app.post('/', async (req, res) => {
+app.post('/userLogin', async (req, res) => {
   const { username, password } = req.body;
 
   if (!globalUser) {
@@ -145,6 +146,28 @@ app.post('/editProfile', async (req, res) => {
     res.status(500).json({ success: false, message: 'An error occurred while updating the profile' });
   }
 });
+//===================================================================================================================
+//=================================================All VenueOwner Routes=============================================
+let globalVenueOwner = null;
+app.use((req, res, next) => {
+  if (req.url === '/venueOwnerLogin') {
+    globalVenueOwner = new VenueOwner(client, "", "", "", "", "", "",);
+  } 
+  next();
+});
+
+app.post('/venueOwnerLogin', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (!globalVenueOwner) {
+    globalVenueOwner = new VenueOwner(client, "", username, password, "", "", "");
+  } else {
+    globalVenueOwner.username = username;
+    globalVenueOwner.password = password;
+  }
+  await globalVenueOwner.login(res, username, password);
+});
+
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
 //Route to retrieve beer data
