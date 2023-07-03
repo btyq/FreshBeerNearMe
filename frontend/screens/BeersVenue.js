@@ -59,6 +59,7 @@ const VenueItem = ({
 	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
 	const [popupVisible3, setPopupVisible3] = useState(false); // created 3rd modal
 	const [venueMenu, setVenueMenu] = useState([]);
+	const [venueReview, setVenueReview] = useState([]);
 
 	// // review summary
 	const data = [
@@ -128,9 +129,26 @@ const VenueItem = ({
 			}
 		};
 
+		const fetchVenueReview = async () => {
+			try {
+				const response = await axios.get("http://10.0.2.2:3000/getVenueReview", {
+					params: { venueID },
+				});
+				const {success, review} = response.data;
+
+				if (success) {
+					setVenueReview(review);
+				}
+			} catch (error) {
+				console.error("Error fetching venue reviews:", error);
+			}
+		};
+
 		if (popupVisible) {
 			fetchVenueMenu();
+			fetchVenueReview();
 		}
+		
 	}, [popupVisible, venueID]);
 
 	return (
@@ -228,16 +246,7 @@ const VenueItem = ({
 													marginBottom: 12,
 												}}
 											>
-												<Image
-													source={require("../assets/brewlander.jpg")}
-													style={{
-														height: 150,
-														width: 250,
-														borderRadius: 15,
-														borderWidth: 5,
-														borderColor: 0,
-													}}
-												/>
+												<Image source={{ uri: venueImage }} style={styles.venueImage} />
 											</View>
 											<View
 												style={{ flexDirection: "row", alignItems: "center" }}
@@ -249,8 +258,8 @@ const VenueItem = ({
 														marginBottom: 12,
 													}}
 												>
-													<Text>Venue name</Text>
-													<Text>Address</Text>
+													<Text>{venueName}</Text>
+													<Text>{venueAddress}</Text>
 												</View>
 												<Button
 													title="Write Reviews"
@@ -401,47 +410,16 @@ const VenueItem = ({
 											>
 												<Text>Review Summary</Text>
 												<HorizontalBarChart />
-												<Text>Posted by User</Text>
 											</View>
-											<View
-												style={{
-													flexDirection: "row",
-													height: 100,
-													elevation: 2,
-													backgroundColor: COLORS.grey,
-													marginTop: 10,
-													borderRadius: 15,
-													borderColor: COLORS.black,
-													marginBottom: 10,
-													marginHorizontal: 12,
-													alignItems: "center",
-												}}
-											>
-												<View
-													style={{
-														flexDirection: "row",
-														paddingHorizontal: 10,
-													}}
-												>
-													<Text>Beer is nice</Text>
-												</View>
-												<View
-													style={{
-														flexDirection: "row",
-														paddingHorizontal: 10,
-													}}
-												>
-													<Image
-														source={require("../assets/beer.png")}
-														style={{
-															height: 100,
-															width: 100,
-															borderRadius: 15,
-															borderWidth: 5,
-															marginHorizontal: 55,
-														}}
-													/>
-												</View>
+											<View>
+												{venueReview.map((reviews) => (
+													<View key={reviews.reviewID} style={styles.container}>
+														<Text>Posted By: {reviews.reviewUser}</Text>
+														<Text>Date: {reviews.reviewDate}</Text>
+														<Text>Review: {reviews.reviewDescription}</Text>
+														<Text>Ratings: {reviews.reviewRating}</Text>
+													</View>
+												))}
 											</View>
 											{/* <Button title="Submit" onPress={handlePopUp2} /> */}
 										</ScrollView>
