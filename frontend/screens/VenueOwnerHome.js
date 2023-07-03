@@ -1,6 +1,7 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import {
 	ImageBackground,
 	ScrollView,
@@ -55,6 +56,10 @@ const VenueOwnerHome = ({ navigation }) => {
 
 	const maxDataValue = Math.max(...data);
 	const scaleY = 150 / maxDataValue;
+
+	const navigateToInquiriesNFeedback = () => {
+        navigation.navigate('InquiriesNFeedback');
+      };
 
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
@@ -158,7 +163,7 @@ const VenueOwnerHome = ({ navigation }) => {
 									New inquiries & Feedback
 								</Text>
 								<TouchableOpacity
-									onPress={() => { }}
+									 onPress={navigateToInquiriesNFeedback}
 									style={{
 										marginRight: 40,
 										marginBottom: 10,

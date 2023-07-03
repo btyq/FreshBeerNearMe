@@ -6,6 +6,7 @@ import React, { useEffect } from "react";
 import { CookieProvider } from "./frontend/CookieContext";
 import { AdminDashboard, ManageUsers } from "./frontend/components";
 import BottomTabNavigation from "./frontend/navigation/BottomTabNavigation";
+import {VenueOwnerHome,InquiriesNFeedback} from "./frontend/screens";
 import {
 	Forums,
 	RateNReview,
@@ -14,7 +15,6 @@ import {
 	Signup,
 	Welcome,
 	WriteAReview,
-	VenueOwnerHome,
 } from "./frontend/screens";
 
 const Stack = createNativeStackNavigator();
@@ -94,6 +94,11 @@ export default function App() {
 					<Stack.Screen
 						name="VenueOwnerHome"
 						component={VenueOwnerHome}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="InquiriesNFeedback"
+						component={InquiriesNFeedback}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>

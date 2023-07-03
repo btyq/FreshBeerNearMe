@@ -17,6 +17,7 @@ import ReferAFriend from "./ReferAFriend"
 import Recommendation from "./Recommendation"
 import WriteAReview from "./WriteAReview"
 import VenueOwnerHome from "./VenueOwnerHome";
+import InquiriesNFeedback from "./InquiriesNFeedback";
 
 export {
   Welcome,
@@ -38,4 +39,5 @@ export {
   Recommendation,
   WriteAReview,
   VenueOwnerHome,
+  InquiriesNFeedback,
 };
