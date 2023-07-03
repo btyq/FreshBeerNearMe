@@ -57,7 +57,44 @@ const VenueItem = ({
 }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
+	const [popupVisible3, setPopupVisible3] = useState(false); // created 3rd modal
 	const [venueMenu, setVenueMenu] = useState([]);
+
+	// // review summary
+	const data = [
+		{ label: "5*", value: 100 },
+		{ label: "4*", value: 70 },
+		{ label: "3*", value: 50 },
+		{ label: "2*", value: 20 },
+		{ label: "1*", value: 5 },
+	];
+
+	const HorizontalBarChart = () => {
+		// Find the maximum value in the data array
+		const maxValue = Math.max(...data.map((item) => item.value));
+
+		return (
+			<View>
+				{data.map((item, index) => (
+					<View key={index} style={styles.barContainer}>
+						<Text
+							style={{
+								marginRight: 8,
+							}}
+						>
+							{item.label}
+						</Text>
+						<View
+							style={[
+								styles.bar,
+								{ width: (item.value / maxValue) * 100 + "%" },
+							]}
+						/>
+					</View>
+				))}
+			</View>
+		);
+	};
 
 	const handlePopupOpen = () => {
 		setPopupVisible(true);
@@ -69,6 +106,10 @@ const VenueItem = ({
 
 	const handlePopUp2 = () => {
 		setPopupVisible2(!popupVisible2); // created 2nd modal
+	};
+
+	const handlePopUp3 = () => {
+		setPopupVisible3(!popupVisible3); // created 2nd modal
 	};
 
 	useEffect(() => {
@@ -174,126 +215,236 @@ const VenueItem = ({
 									animationType="slide"
 								>
 									<View style={styles.modalContainer}>
-										<View style={styles.popup}>
+										<ScrollView style={styles.popup}>
+											<TouchableOpacity onPress={handlePopUp2}>
+												<Ionicons name="arrow-back" size={24} color="black" />
+											</TouchableOpacity>
 											<View
 												style={{
-													flexDirection: "row",
-													justifyContent: "space-between",
-													flexWrap: "wrap",
+													justifyContent: "center",
+													alignItems: "center",
+													marginHorizontal: 32,
+													marginTop: 5,
+													marginBottom: 12,
 												}}
 											>
-												<TouchableOpacity onPress={handlePopupClose}>
-													<Ionicons name="arrow-back" size={24} color="black" />
-												</TouchableOpacity>
+												<Image
+													source={require("../assets/brewlander.jpg")}
+													style={{
+														height: 150,
+														width: 250,
+														borderRadius: 15,
+														borderWidth: 5,
+														borderColor: 0,
+													}}
+												/>
+											</View>
+											<View
+												style={{ flexDirection: "row", alignItems: "center" }}
+											>
+												<View
+													style={{
+														flex: 1,
+														marginHorizontal: 12,
+														marginBottom: 12,
+													}}
+												>
+													<Text>Venue name</Text>
+													<Text>Address</Text>
+												</View>
+												<Button
+													title="Write Reviews"
+													style={{
+														...styles.shortButton,
+														width: "40%",
+														borderRadius: 10,
+														marginBottom: 15,
+													}}
+													onPress={handlePopUp3}
+												/>
+												<Modal
+													visible={popupVisible3}
+													transparent
+													animationType="slide"
+												>
+													<View style={styles.modalContainer}>
+														<View style={styles.popup}>
+															<View
+																style={{
+																	flexDirection: "row",
+																	justifyContent: "space-between",
+																	flexWrap: "wrap",
+																}}
+															></View>
+															<View
+																style={{
+																	width: "100%",
+																	borderWidth: 1,
+																	borderColor: COLORS.grey,
+																	paddingHorizontal: 20,
+																	paddingVertical: 10,
+																	borderRadius: 30,
+																	marginBottom: 25,
+																}}
+															>
+																<View
+																	style={{
+																		flexDirection: "row",
+																		alignItems: "center",
+																	}}
+																>
+																	<Text
+																		style={{
+																			flex: 1,
+																			fontSize: 16,
+																			fontWeight: "bold",
+																			color: COLORS.black,
+																		}}
+																	>
+																		Venue Name:
+																	</Text>
+																	<View
+																		style={{
+																			flex: 1,
+																			alignItems: "flex-end",
+																		}}
+																	>
+																		<AirbnbRating
+																			count={5}
+																			defaultRating={4}
+																			size={20}
+																			showRating={false}
+																			isDisabled={true}
+																		/>
+																	</View>
+																</View>
+															</View>
+															<View
+																style={{
+																	marginBottom: 25,
+																	flexDirection: "row",
+																	alignItems: "center",
+																	justifyContent: "space-between",
+																}}
+															>
+																<Text
+																	style={{
+																		fontSize: 14,
+																		color: COLORS.black,
+																		marginLeft: 20,
+																	}}
+																>
+																	Review
+																</Text>
+																<TextInput
+																	style={{
+																		width: "60%",
+																		height: 95,
+																		borderColor: COLORS.black,
+																		borderWidth: 1,
+																		borderRadius: 8,
+																		paddingLeft: 22,
+																		marginTop: 10,
+																		backgroundColor: COLORS.secondary,
+																	}}
+																></TextInput>
+															</View>
+															<View
+																style={{
+																	marginBottom: 25,
+																	flexDirection: "row",
+																	alignItems: "center",
+																	justifyContent: "space-between",
+																}}
+															>
+																<Text
+																	style={{
+																		fontSize: 14,
+																		color: COLORS.black,
+																		marginLeft: 20,
+																	}}
+																>
+																	Rating
+																</Text>
+																<View
+																	style={{
+																		flex: 1,
+																		alignItems: "flex-end",
+																	}}
+																>
+																	<AirbnbRating
+																		count={5}
+																		defaultRating={4}
+																		size={20}
+																		showRating={false}
+																	/>
+																</View>
+															</View>
+															<Button title="Submit" onPress={handlePopUp3} />
+														</View>
+													</View>
+												</Modal>
 											</View>
 											<View
 												style={{
-													width: "100%",
-													borderWidth: 1,
-													borderColor: COLORS.grey,
-													paddingHorizontal: 20,
-													paddingVertical: 10,
-													borderRadius: 30,
-													marginBottom: 25,
+													borderTopColor: "black",
+													borderTopWidth: 1,
+													marginBottom: 12,
+												}}
+											></View>
+											<View
+												style={{
+													flex: 1,
+													marginHorizontal: 12,
+													marginBottom: 12,
+												}}
+											>
+												<Text>Review Summary</Text>
+												<HorizontalBarChart />
+												<Text>Posted by User</Text>
+											</View>
+											<View
+												style={{
+													flexDirection: "row",
+													height: 100,
+													elevation: 2,
+													backgroundColor: COLORS.grey,
+													marginTop: 10,
+													borderRadius: 15,
+													borderColor: COLORS.black,
+													marginBottom: 10,
+													marginHorizontal: 12,
+													alignItems: "center",
 												}}
 											>
 												<View
 													style={{
 														flexDirection: "row",
-														alignItems: "center",
+														paddingHorizontal: 10,
 													}}
 												>
-													<Text
-														style={{
-															flex: 1,
-															fontSize: 16,
-															fontWeight: "bold",
-															color: COLORS.black,
-														}}
-													>
-														Venue Name:
-													</Text>
-													<View
-														style={{
-															flex: 1,
-															alignItems: "flex-end",
-														}}
-													>
-														<AirbnbRating
-															count={5}
-															defaultRating={4}
-															size={20}
-															showRating={false}
-															isDisabled={true}
-														/>
-													</View>
+													<Text>Beer is nice</Text>
 												</View>
-											</View>
-											<View
-												style={{
-													marginBottom: 25,
-													flexDirection: "row",
-													alignItems: "center",
-													justifyContent: "space-between",
-												}}
-											>
-												<Text
-													style={{
-														fontSize: 14,
-														color: COLORS.black,
-														marginLeft: 20,
-													}}
-												>
-													Review
-												</Text>
 												<View
 													style={{
-														width: "60%",
-														height: 95,
-														borderColor: COLORS.black,
-														borderWidth: 1,
-														borderRadius: 8,
-														alignItems: "center",
-														justifyContent: "center",
-														paddingLeft: 22,
-														marginTop: 10,
-														backgroundColor: COLORS.secondary,
-													}}
-												></View>
-											</View>
-											<View
-												style={{
-													marginBottom: 25,
-													flexDirection: "row",
-													alignItems: "center",
-													justifyContent: "space-between",
-												}}
-											>
-												<Text
-													style={{
-														fontSize: 14,
-														color: COLORS.black,
-														marginLeft: 20,
+														flexDirection: "row",
+														paddingHorizontal: 10,
 													}}
 												>
-													Rating
-												</Text>
-												<View
-													style={{
-														flex: 1,
-														alignItems: "flex-end",
-													}}
-												>
-													<AirbnbRating
-														count={5}
-														defaultRating={4}
-														size={20}
-														showRating={false}
+													<Image
+														source={require("../assets/beer.png")}
+														style={{
+															height: 100,
+															width: 100,
+															borderRadius: 15,
+															borderWidth: 5,
+															marginHorizontal: 55,
+														}}
 													/>
 												</View>
 											</View>
-											<Button title="Submit" onPress={handlePopUp2} />
-										</View>
+											{/* <Button title="Submit" onPress={handlePopUp2} /> */}
+										</ScrollView>
 									</View>
 								</Modal>
 							</View>
@@ -707,6 +858,15 @@ const styles = StyleSheet.create({
 		height: 200,
 		resizeMode: "contain",
 		marginBottom: 10,
+	},
+	barContainer: {
+		marginHorizontal: 2,
+		flexDirection: "row",
+		marginBottom: 8,
+	},
+	bar: {
+		height: 20,
+		backgroundColor: COLORS.foam, // Set the desired color for the bars
 	},
 });
 
