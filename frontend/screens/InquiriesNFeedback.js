@@ -56,8 +56,8 @@ const InquiriesNFeedback = ({ navigation }) => {
 	const maxDataValue = Math.max(...data);
 	const scaleY = 150 / maxDataValue;
 
-	const navigateToInquiriesNFeedback = () => {
-		navigation.navigate('InquiriesNFeedback');
+	const navigateToRespond = () => {
+		navigation.navigate('Respond');
 	};
 
 	// ================================== Functions for different button ==================================
@@ -160,7 +160,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -189,7 +189,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -218,7 +218,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -247,7 +247,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -276,7 +276,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -338,7 +338,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -367,7 +367,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -396,7 +396,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -425,7 +425,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
@@ -454,7 +454,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							<Text style={{ flex: 1 }}>Description</Text>
 							<TouchableOpacity
-								onPress={() => { }}
+								onPress={navigateToRespond}
 								style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,

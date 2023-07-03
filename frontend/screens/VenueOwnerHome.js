@@ -61,6 +61,10 @@ const VenueOwnerHome = ({ navigation }) => {
         navigation.navigate('InquiriesNFeedback');
       };
 
+	  const navigateToRespond = () => {
+        navigation.navigate('Respond');
+      };
+
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -177,7 +181,7 @@ const VenueOwnerHome = ({ navigation }) => {
 								</TouchableOpacity>
 							</View>
 							<View style={{ marginTop: 10 }}>
-								<TouchableOpacity>
+								<TouchableOpacity onPress={navigateToRespond}>
 									<View style={{
 										borderWidth: 1,
 										borderColor: COLORS.grey,
@@ -197,7 +201,7 @@ const VenueOwnerHome = ({ navigation }) => {
 								</TouchableOpacity>
 							</View>
 							<View style={{ marginTop: 10 }}>
-								<TouchableOpacity>
+								<TouchableOpacity onPress={navigateToRespond}>
 									<View style={{
 										borderWidth: 1,
 										borderColor: COLORS.grey,

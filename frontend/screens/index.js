@@ -18,6 +18,7 @@ import Recommendation from "./Recommendation"
 import WriteAReview from "./WriteAReview"
 import VenueOwnerHome from "./VenueOwnerHome";
 import InquiriesNFeedback from "./InquiriesNFeedback";
+import Respond from "./Respond";
 
 export {
   Welcome,
@@ -40,4 +41,5 @@ export {
   WriteAReview,
   VenueOwnerHome,
   InquiriesNFeedback,
+  Respond,
 };
