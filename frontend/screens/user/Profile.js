@@ -20,9 +20,9 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCookies } from "../CookieContext";
-import COLORS from "../constants/colors";
-import GlobalStyle from "../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -282,7 +282,7 @@ const Profile = ({ navigation }) => {
 					}}
 				>
 					<Image
-						source={require("../assets/beer.png")}
+						source={require("../../assets/beer.png")}
 						style={{
 							height: 140,
 							width: 140,

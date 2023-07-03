@@ -1,6 +1,6 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
 	ImageBackground,
 	ScrollView,
@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCookies } from "../CookieContext";
-import COLORS from "../constants/colors";
-import GlobalStyle from "../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -42,7 +42,7 @@ const Dashboard = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [index, setIndex] = React.useState(0);
 	const [index1, setIndex1] = React.useState(0);
-	const [username, setUsername] = useState('');
+	const [username, setUsername] = useState("");
 
 	useEffect(() => {
 		const sessionToken = cookies.sessionToken;
@@ -427,7 +427,7 @@ const Dashboard = ({ navigation }) => {
 							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
 								<Card containerStyle={styles.cardContainer}>
 									<ImageBackground
-										source={require("../assets/event1.png")}
+										source={require("../../assets/event1.png")}
 										style={styles.cardImage}
 									/>
 								</Card>
@@ -435,7 +435,7 @@ const Dashboard = ({ navigation }) => {
 							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
 								<Card containerStyle={styles.cardContainer}>
 									<ImageBackground
-										source={require("../assets/event2.png")}
+										source={require("../../assets/event2.png")}
 										style={styles.cardImage}
 									/>
 								</Card>
@@ -443,7 +443,7 @@ const Dashboard = ({ navigation }) => {
 							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
 								<Card containerStyle={styles.cardContainer}>
 									<ImageBackground
-										source={require("../assets/event3.png")}
+										source={require("../../assets/event3.png")}
 										style={styles.cardImage}
 									/>
 								</Card>
@@ -475,7 +475,7 @@ const Dashboard = ({ navigation }) => {
 							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
 								<Card containerStyle={styles.cardContainer}>
 									<ImageBackground
-										source={require("../assets/beer1.png")}
+										source={require("../../assets/beer1.png")}
 										style={styles.cardImage}
 									/>
 								</Card>
@@ -483,7 +483,7 @@ const Dashboard = ({ navigation }) => {
 							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
 								<Card containerStyle={styles.cardContainer}>
 									<ImageBackground
-										source={require("../assets/beer2.png")}
+										source={require("../../assets/beer2.png")}
 										style={styles.cardImage}
 									/>
 								</Card>
@@ -491,7 +491,7 @@ const Dashboard = ({ navigation }) => {
 							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
 								<Card containerStyle={styles.cardContainer}>
 									<ImageBackground
-										source={require("../assets/beer3.png")}
+										source={require("../../assets/beer3.png")}
 										style={styles.cardImage}
 									/>
 								</Card>
