@@ -14,7 +14,7 @@ import {
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../constants/colors";
+import COLORS from "../../constants/colors";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -37,7 +37,6 @@ const Button = (props) => {
 		</TouchableOpacity>
 	);
 };
-
 
 const Social = () => {
 	const navigation = useNavigation();
@@ -161,21 +160,26 @@ const Social = () => {
 					/>
 				</View>
 
-				<View style={{
-					flexDirection: "row",
-					justifyContent: "space-between",
-					padding: 10,
-					alignItems: "center",
-				}}>
-					<TextInput placeholder="Search..." style={{
-						height: 40,
-						borderColor: COLORS.grey,
-						borderWidth: 1,
-						borderRadius: 10,
-						paddingLeft: 10,
-						flex: 1,
-						marginRight: 10,
-					}} />
+				<View
+					style={{
+						flexDirection: "row",
+						justifyContent: "space-between",
+						padding: 10,
+						alignItems: "center",
+					}}
+				>
+					<TextInput
+						placeholder="Search..."
+						style={{
+							height: 40,
+							borderColor: COLORS.grey,
+							borderWidth: 1,
+							borderRadius: 10,
+							paddingLeft: 10,
+							flex: 1,
+							marginRight: 10,
+						}}
+					/>
 					<Button
 						title="Search for user"
 						color={COLORS.grey}
@@ -187,22 +191,24 @@ const Social = () => {
 						}}
 					/>
 				</View>
-				<View style={{
-					height: 'auto',
-					width: '98%',
-					backgroundColor: COLORS.white,
-					marginTop: 15,
-					borderRadius: 10,
-					shadowColor: COLORS.black,
-					shadowOffset: { width: 0, height: 2 },
-					shadowOpacity: 0.3,
-					shadowRadius: 3,
-					elevation: 5,
-					alignSelf: 'center', // Center horizontally
-					justifyContent: 'center', // Center vertically
-				}}>
+				<View
+					style={{
+						height: "auto",
+						width: "98%",
+						backgroundColor: COLORS.white,
+						marginTop: 15,
+						borderRadius: 10,
+						shadowColor: COLORS.black,
+						shadowOffset: { width: 0, height: 2 },
+						shadowOpacity: 0.3,
+						shadowRadius: 3,
+						elevation: 5,
+						alignSelf: "center", // Center horizontally
+						justifyContent: "center", // Center vertically
+					}}
+				>
 					<ScrollView contentContainerStyle={{ paddingBottom: 180 }}>
-						<TouchableOpacity style={styles.userContainer} >
+						<TouchableOpacity style={styles.userContainer}>
 							<View style={styles.nameContainer}>
 								<Text style={styles.userName}>Fred</Text>
 								<Button
@@ -216,7 +222,7 @@ const Social = () => {
 								<Text style={styles.locationText}>Location 1 Rating</Text>
 							</View>
 							<Image
-								source={require("../assets/specialtybeer.png")} // Replace this with the actual path of your image
+								source={require("../../assets/specialtybeer.png")}
 								style={styles.userImage}
 							/>
 							<Text style={styles.commentText}>{comment}</Text>
@@ -250,7 +256,7 @@ const Social = () => {
 								<Text style={styles.locationText}>Location 2 Rating</Text>
 							</View>
 							<Image
-								source={require("../assets/brewlander.jpg")} // Replace this with the actual path of your image
+								source={require("../../assets/brewlander.jpg")} // Replace this with the actual path of your image
 								style={styles.userImage}
 							/>
 							<Text style={styles.commentText}>Drink is nice!!!</Text>

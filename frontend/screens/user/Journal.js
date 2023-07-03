@@ -14,7 +14,7 @@ import {
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../constants/colors";
+import COLORS from "../../constants/colors";
 
 const Button = ({ title, selected, onSelect }) => {
 	return (
@@ -151,7 +151,7 @@ const Journal = () => {
 								}}
 							>
 								<Image
-									source={require("../assets/specialtybeer.png")}
+									source={require("../../assets/specialtybeer.png")}
 									style={{
 										width: "100%",
 										height: 200,
@@ -170,7 +170,7 @@ const Journal = () => {
 										borderRadius: 12,
 										borderColor: 0,
 									}}
-									onPress={() => { }}
+									onPress={() => {}}
 								>
 									<Text>Edit</Text>
 								</TouchableOpacity>
@@ -319,9 +319,7 @@ const Journal = () => {
 							<Text style={{ lineHeight: 30 }}>
 								Number of unique places checked in: 5
 							</Text>
-							<Text style={{ lineHeight: 30 }}>
-								Types of beer tried: 10
-							</Text>
+							<Text style={{ lineHeight: 30 }}>Types of beer tried: 10</Text>
 							<Text style={{ lineHeight: 30 }}>
 								Your favorite tasting notes are: fruity
 							</Text>
@@ -338,7 +336,7 @@ const Journal = () => {
 							<View style={styles.container1}>
 								<Text style={styles.label}>Most Recently Visited</Text>
 								<Image
-									source={require("../assets/event1.png")}
+									source={require("../../assets/event1.png")}
 									style={styles.placeImage}
 								/>
 								<View style={styles.detailsContainer}>
@@ -359,7 +357,7 @@ const Journal = () => {
 							<View style={styles.container1}>
 								<Text style={styles.label}>Most Recently Tried</Text>
 								<Image
-									source={require("../assets/specialtybeer.png")}
+									source={require("../../assets/specialtybeer.png")}
 									style={styles.placeImage}
 								/>
 								<View style={styles.detailsContainer}>
@@ -379,8 +377,6 @@ const Journal = () => {
 						</View>
 					</ScrollView>
 				</View>
-
-
 			)}
 			<Modal visible={showPopup} animationType="slide" transparent>
 				<View style={styles.modalContainer}>
