@@ -65,6 +65,10 @@ const VenueOwnerHome = ({ navigation }) => {
         navigation.navigate('Respond');
       };
 
+	  const navigateToVenueProfile = () => {
+        navigation.navigate('VenueProfile');
+      };
+
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -246,7 +250,7 @@ const VenueOwnerHome = ({ navigation }) => {
 					</View>
 					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
 						<TouchableOpacity
-							onPress={() => { }}
+							onPress={navigateToVenueProfile}
 							style={{
 								marginLeft: 40,
 								marginBottom: 10,

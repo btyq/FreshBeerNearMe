@@ -61,6 +61,10 @@ const InquiriesNFeedback = ({ navigation }) => {
         navigation.navigate('InquiriesNFeedback');
     };
 
+    const navigateToVenueProfile = () => {
+        navigation.navigate('VenueProfile');
+    };
+
     // ================================== Functions for different button ==================================
     const handleUpcomingEventsClick = () => {
         // Handle click for "Upcoming Events" here

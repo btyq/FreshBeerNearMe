@@ -19,6 +19,7 @@ import FindABeer from "./user/FindABeer";
 import NearbyVenues from "./user/NearbyVenues";
 import TopRated from "./user/TopRated";
 import Wishlist from "./user/Wishlist";
+import VenueProfile from "./VenueProfile";
 
 export {
 	BeersVenue,
@@ -42,4 +43,5 @@ export {
 	Welcome,
 	Wishlist,
 	WriteAReview,
+	VenueProfile,
 };
