@@ -13,8 +13,8 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../constants/colors";
-import GlobalStyle from "../utils/GlobalStyle";
+import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -39,7 +39,17 @@ const Button = (props) => {
 };
 
 // for popup
-const BreweryItem = ({ breweryName, rating }) => {
+const BeerItem = ({
+	beerName,
+	price,
+	rating,
+	beerDescription,
+	beerImage,
+	ABV,
+	IBU,
+	communityReviews,
+	venueAvailability,
+}) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 
 	const handlePopupOpen = () => {
@@ -54,7 +64,8 @@ const BreweryItem = ({ breweryName, rating }) => {
 		<View style={styles.subContainer}>
 			<TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
 				<View style={styles.leftContainer}>
-					<Text style={styles.breweryName}>{breweryName}</Text>
+					<Text style={styles.beerName}>{beerName}</Text>
+					<Text style={styles.beerName}>Price: ${price}</Text>
 				</View>
 				<View style={styles.rightContainer}>
 					<View style={styles.starRatingContainer}>
@@ -73,14 +84,66 @@ const BreweryItem = ({ breweryName, rating }) => {
 			<Modal visible={popupVisible} transparent animationType="fade">
 				<View style={styles.modalContainer}>
 					<View style={styles.popup}>
-						<Text style={styles.popupTitle}>{breweryName}</Text>
-						<Text style={styles.popupContent}>Popup Content</Text>
-						<TouchableOpacity
-							style={styles.closeButton}
-							onPress={handlePopupClose}
-						>
-							<Text style={styles.closeButtonText}>Close</Text>
-						</TouchableOpacity>
+						<ScrollView>
+							<Text style={styles.popupTitle}>{beerName}</Text>
+							<Image source={{ uri: beerImage }} style={styles.beerImage} />
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
+							>
+								<Text style={styles.popupTitle}>Price: ${price}</Text>
+								<View
+									style={{ ...styles.starRatingContainer, marginBottom: 5 }}
+								>
+									<Text style={styles.popupTitle}>Ratings: </Text>
+									{[1, 2, 3, 4, 5].map((star) => (
+										<Ionicons
+											key={star}
+											name="star"
+											size={16}
+											color={star <= rating ? COLORS.foam : COLORS.grey}
+											style={{ marginBottom: 4 }}
+										/>
+									))}
+								</View>
+							</View>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
+							>
+								<Text style={styles.popupTitle}>Alcohol%: {ABV}</Text>
+								<Text style={styles.popupTitle}>Bitter Units: {IBU}</Text>
+							</View>
+							<Text style={styles.popupTitle}>Beer Description</Text>
+							<Text>{beerDescription}</Text>
+							<Text style={{ ...styles.popupTitle, marginTop: 10 }}>
+								Locations
+							</Text>
+							{venueAvailability &&
+								venueAvailability.map((location, index) => (
+									<Text key={index}>{location}</Text>
+								))}
+							<Text style={{ ...styles.popupTitle, marginTop: 10 }}>
+								Community Reviews
+							</Text>
+							{communityReviews &&
+								communityReviews.map((review, index) => (
+									<Text key={index}>{review}</Text>
+								))}
+							<Button
+								title="Close"
+								onPress={handlePopupClose}
+								color={COLORS.foam}
+								filled
+								style={styles.closeButton}
+							/>
+						</ScrollView>
 					</View>
 				</View>
 			</Modal>
@@ -88,13 +151,49 @@ const BreweryItem = ({ breweryName, rating }) => {
 	);
 };
 
-const Breweries = ({ navigation }) => {
-	const [sortBy, setSortBy] = useState("dist");
+const FindABeer = ({ navigation }) => {
+	const [sortedBeerData, setSortedBeerData] = useState([]);
+	const [sortBy, setSortBy] = useState("name");
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [searchInput, setSearchInput] = useState("");
-	const [venueData, setVenueData] = useState([]);
+	const [beerData, setBeerData] = useState([]);
 
-	// for sorting and search function
+	useEffect(() => {
+		const fetchBeerData = async () => {
+			try {
+				const response = await axios.get("http://10.0.2.2:3000/getBeerData");
+				const { success, beerData } = response.data;
+				if (success) {
+					let sortedData = [...beerData];
+					switch (sortBy) {
+						case "name":
+							sortedData.sort((a, b) => a.beerName.localeCompare(b.beerName));
+							break;
+						case "price":
+							sortedData.sort((a, b) => a.price - b.price);
+							break;
+						case "rating":
+							sortedData.sort((a, b) => a.rating - b.rating);
+							break;
+						default:
+							break;
+					}
+					if (sortOrder === "desc") {
+						sortedData.reverse();
+					}
+					setSortedBeerData(sortedData);
+					setBeerData(beerData);
+				} else {
+					console.error("Error retrieving beer data:", response.data.message);
+				}
+			} catch (error) {
+				console.error("Error retrieving beer data:", error);
+			}
+		};
+
+		fetchBeerData();
+	}, [sortBy, sortOrder]);
+
 	const handleSortBy = (by) => {
 		if (by === sortBy) return;
 		setSortBy(by);
@@ -103,19 +202,19 @@ const Breweries = ({ navigation }) => {
 	const handleSortOrder = (order) => {
 		if (order === sortOrder) return;
 		setSortOrder(order);
-		let sortedData = [...sortedVenueData];
+		let sortedData = [...sortedBeerData];
 		if (order === "desc") {
 			sortedData.reverse();
 		}
-		setSortedVenueData(sortedData);
+		setSortedBeerData(sortedData);
 	};
 
 	const handleSearch = (text) => {
 		setSearchInput(text);
-		const filteredData = venueData.filter((venue) =>
-			venue.venueName.toLowerCase().includes(searchInput.toLowerCase())
+		const filteredData = beerData.filter((beer) =>
+			beer.beerName.toLowerCase().includes(text.toLowerCase())
 		);
-		setSortedVenueData(filteredData);
+		setSortedBeerData(filteredData);
 	};
 
 	return (
@@ -189,7 +288,7 @@ const Breweries = ({ navigation }) => {
 						/>
 						<Button
 							title="Find a Beer"
-							color={COLORS.white}
+							color={COLORS.foam}
 							filled
 							style={styles.longButton}
 							onPress={() => navigation.navigate("FindABeer")}
@@ -210,7 +309,7 @@ const Breweries = ({ navigation }) => {
 						/>
 						<Button
 							title="Breweries"
-							color={COLORS.foam}
+							color={COLORS.white}
 							filled
 							style={styles.longButton}
 							onPress={() => navigation.navigate("Breweries")}
@@ -226,11 +325,11 @@ const Breweries = ({ navigation }) => {
 					</View>
 					<View style={styles.grid}>
 						<Button
-							title="Sort by Distance"
+							title="Sort by Name"
 							color={COLORS.foam}
-							filled={sortBy === "dist"}
+							filled={sortBy === "name"}
 							style={styles.shortButton}
-							onPress={() => handleSortBy("dist")}
+							onPress={() => handleSortBy("name")}
 						/>
 						<Button
 							title="Sort by Price"
@@ -265,12 +364,19 @@ const Breweries = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-							{Array.from({ length: 10 }).map((_, index) => (
-								<BreweryItem
-									key={index}
-									breweryName={`Brewery Name ${index + 1}`}
-									rating={Math.floor(Math.random() * 3) + 3}
+						<ScrollView contentContainerStyle={{ flexGrow: 1, height: 600 }}>
+							{sortedBeerData.map((beer) => (
+								<BeerItem
+									key={beer._id}
+									beerName={beer.beerName}
+									price={beer.price}
+									rating={beer.rating}
+									beerDescription={beer.beerDescription}
+									beerImage={beer.beerImage}
+									ABV={beer.abv}
+									IBU={beer.ibu}
+									communityReviews={beer.communityReviews}
+									venueAvailability={beer.venueAvailability}
 								/>
 							))}
 						</ScrollView>
@@ -293,8 +399,8 @@ const styles = StyleSheet.create({
 		height: 55,
 		marginVertical: 0,
 		borderRadius: 20,
-		marginRight: 0,
 		borderColor: 0,
+		marginRight: 0,
 		elevation: 2,
 	},
 	shortButton: {
@@ -302,9 +408,9 @@ const styles = StyleSheet.create({
 		height: 40,
 		marginVertical: 5,
 		borderRadius: 30,
-		borderColor: 0,
 		marginHorizontal: "1%",
 		marginTop: 10, // Adjust the top spacing here
+		borderColor: 0,
 		elevation: 2,
 	},
 	button: {
@@ -353,18 +459,21 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		backgroundColor: COLORS.white,
 		padding: 10,
-		borderRadius: 10,
+		borderRadius: 12,
+		borderWidth: 1,
 		shadowColor: COLORS.black, // Add shadow color
 		shadowOffset: { width: 0, height: 2 }, // Add shadow offset
 		shadowOpacity: 0.3, // Add shadow opacity
 		shadowRadius: 3, // Add shadow radius
 		elevation: 5, // Add elevation for Android
+		borderColor: 0,
 	},
 	itemContainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginBottom: 10,
+		borderColor: 0,
 	},
 	leftContainer: {
 		flex: 1,
@@ -375,7 +484,7 @@ const styles = StyleSheet.create({
 		flexDirection: "row-reverse",
 		alignItems: "center",
 	},
-	breweryName: {
+	beerName: {
 		fontSize: 16,
 		fontWeight: "bold",
 		color: COLORS.black,
@@ -404,28 +513,19 @@ const styles = StyleSheet.create({
 		fontWeight: "bold",
 		marginBottom: 10,
 	},
-	popupContent: {
-		fontSize: 16,
-		marginBottom: 20,
-	},
-	closeButton: {
-		backgroundColor: COLORS.orange,
-		padding: 10,
-		borderRadius: 8,
-		alignItems: "center",
-		marginTop: "50%", // Adjust the marginTop to shift the close button down
-	},
-	closeButtonText: {
-		color: COLORS.white,
-		fontWeight: "bold",
-		fontSize: 16,
-	},
-	venueImage: {
+	beerImage: {
 		width: "100%",
 		height: 200,
 		resizeMode: "contain",
 		marginBottom: 10,
 	},
+	closeButton: {
+		backgroundColor: COLORS.foam,
+		padding: 10,
+		borderRadius: 8,
+		alignItems: "center",
+		marginTop: "50%", // Adjust the marginTop to shift the close button down
+	},
 });
 
-export default Breweries;
+export default FindABeer;

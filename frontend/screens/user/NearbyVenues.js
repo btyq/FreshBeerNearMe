@@ -13,8 +13,8 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../constants/colors";
-import GlobalStyle from "../utils/GlobalStyle";
+import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -119,8 +119,8 @@ const VenueItem = ({ venueName, rating }) => {
 	);
 };
 
-const TopRated = ({ navigation }) => {
-	const [sortBy, setSortBy] = useState("rating");
+const NearbyVenues = ({ navigation }) => {
+	const [sortBy, setSortBy] = useState("dist");
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [searchInput, setSearchInput] = useState("");
 	const [venueData, setVenueData] = useState([]);
@@ -227,14 +227,14 @@ const TopRated = ({ navigation }) => {
 						/>
 						<Button
 							title="Nearby Venues"
-							color={COLORS.white}
+							color={COLORS.foam}
 							filled
 							style={styles.longButton}
 							onPress={() => navigation.navigate("NearbyVenues")}
 						/>
 						<Button
 							title="Top Rated"
-							color={COLORS.foam}
+							color={COLORS.white}
 							filled
 							style={styles.longButton}
 							onPress={() => navigation.navigate("TopRated")}
@@ -257,25 +257,25 @@ const TopRated = ({ navigation }) => {
 					</View>
 					<View style={styles.grid}>
 						<Button
-							title="Sort by Rating"
-							color={COLORS.foam}
-							filled={sortBy === "rating"}
-							style={styles.shortButton}
-							onPress={() => handleSortBy("rating")}
-						/>
-						<Button
-							title="Sort by Price"
-							color={COLORS.foam}
-							filled={sortBy === "price"}
-							style={styles.shortButton}
-							onPress={() => handleSortBy("price")}
-						/>
-						<Button
 							title="Sort by Distance"
 							color={COLORS.foam}
 							filled={sortBy === "dist"}
 							style={styles.shortButton}
 							onPress={() => handleSortBy("dist")}
+						/>
+						<Button
+							title="Sort by Name"
+							color={COLORS.foam}
+							filled={sortBy === "name"}
+							style={styles.shortButton}
+							onPress={() => handleSortBy("name")}
+						/>
+						<Button
+							title="Sort by Rating"
+							color={COLORS.foam}
+							filled={sortBy === "rating"}
+							style={styles.shortButton}
+							onPress={() => handleSortBy("rating")}
 						/>
 					</View>
 					<View style={styles.grid}>
@@ -296,7 +296,7 @@ const TopRated = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView>
+						<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
 							{Array.from({ length: 10 }).map((_, index) => (
 								<VenueItem
 									key={index}
@@ -459,4 +459,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default TopRated;
+export default NearbyVenues;

@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import COLORS from "../constants/colors";
+import COLORS from "../../constants/colors";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.orange;

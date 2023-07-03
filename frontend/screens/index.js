@@ -1,45 +1,45 @@
-import Welcome from "./Welcome";
-import Signup from "./Signup";
-import Dashboard from "./Dashboard";
-import Profile from "./Profile";
 import BeersVenue from "./BeersVenue";
-import Social from "./Social";
-import Feedback from "./Feedback";
-import Journal from "./Journal";
-import Wishlist from "./Wishlist";
-import FindABeer from "./FindABeer";
-import NearbyVenues from "./NearbyVenues";
-import TopRated from "./TopRated";
-import Breweries from "./Breweries";
-import Forums from "./Forums"
-import RateNReview from "./RateNReview"
-import ReferAFriend from "./ReferAFriend"
-import Recommendation from "./Recommendation"
-import WriteAReview from "./WriteAReview"
-import VenueOwnerHome from "./VenueOwnerHome";
+import Dashboard from "./Dashboard";
+import Forums from "./Forums";
 import InquiriesNFeedback from "./InquiriesNFeedback";
+import Journal from "./Journal";
+import Profile from "./Profile";
+import RateNReview from "./RateNReview";
+import Recommendation from "./Recommendation";
+import ReferAFriend from "./ReferAFriend";
 import Respond from "./Respond";
+import Signup from "./Signup";
+import Social from "./Social";
+import VenueOwnerHome from "./VenueOwnerHome";
+import Welcome from "./Welcome";
+import WriteAReview from "./WriteAReview";
+import Breweries from "./user/Breweries";
+import Feedback from "./user/Feedback";
+import FindABeer from "./user/FindABeer";
+import NearbyVenues from "./user/NearbyVenues";
+import TopRated from "./user/TopRated";
+import Wishlist from "./user/Wishlist";
 
 export {
-  Welcome,
-  Signup,
-  Dashboard,
-  Profile,
-  BeersVenue,
-  Social,
-  Feedback,
-  Journal,
-  Wishlist,
-  FindABeer,
-  NearbyVenues,
-  TopRated,
-  Breweries,
-  Forums,
-  RateNReview,
-  ReferAFriend,
-  Recommendation,
-  WriteAReview,
-  VenueOwnerHome,
-  InquiriesNFeedback,
-  Respond,
+	BeersVenue,
+	Breweries,
+	Dashboard,
+	Feedback,
+	FindABeer,
+	Forums,
+	InquiriesNFeedback,
+	Journal,
+	NearbyVenues,
+	Profile,
+	RateNReview,
+	Recommendation,
+	ReferAFriend,
+	Respond,
+	Signup,
+	Social,
+	TopRated,
+	VenueOwnerHome,
+	Welcome,
+	Wishlist,
+	WriteAReview,
 };
