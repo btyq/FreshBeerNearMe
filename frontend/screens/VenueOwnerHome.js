@@ -58,24 +58,24 @@ const VenueOwnerHome = ({ navigation }) => {
 	const scaleY = 150 / maxDataValue;
 
 	const navigateToInquiriesNFeedback = () => {
-        navigation.navigate('InquiriesNFeedback');
-      };
+		navigation.navigate('InquiriesNFeedback');
+	};
 
-	  const navigateToRespond = () => {
-        navigation.navigate('Respond');
-      };
+	const navigateToRespond = () => {
+		navigation.navigate('Respond');
+	};
 
-	  const navigateToVenueProfile = () => {
-        navigation.navigate('VenueProfile');
-      };
+	const navigateToVenueProfile = () => {
+		navigation.navigate('VenueProfile');
+	};
 
-	  const navigateToManageInventory = () => {
-        navigation.navigate('ManageInventory');
-      };
+	const navigateToManageInventory = () => {
+		navigation.navigate('ManageInventory');
+	};
 
-	  const navigateToManageSocialInformation = () => {
-        navigation.navigate('ManageSocialInformation');
-      };
+	const navigateToManageSocialInformation = () => {
+		navigation.navigate('ManageSocialInformation');
+	};
 
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
@@ -164,7 +164,7 @@ const VenueOwnerHome = ({ navigation }) => {
 						</Text>
 					</View>
 					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-						<View style={{ marginTop: 20, width: '98%', borderWidth: 1, borderColor: COLORS.grey, borderRadius: 20 }}>
+						<View style={{ marginTop: 20, width: '98%', borderWidth: 1, borderColor: COLORS.black, borderRadius: 20 }}>
 							<View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10 }}>
 								<Text
 									style={{
@@ -179,7 +179,7 @@ const VenueOwnerHome = ({ navigation }) => {
 									New inquiries & Feedback
 								</Text>
 								<TouchableOpacity
-									 onPress={navigateToInquiriesNFeedback}
+									onPress={navigateToInquiriesNFeedback}
 									style={{
 										marginRight: 40,
 										marginBottom: 10,
@@ -192,18 +192,15 @@ const VenueOwnerHome = ({ navigation }) => {
 									<Text style={{ color: 'black', fontSize: 15 }}>See All</Text>
 								</TouchableOpacity>
 							</View>
-							<View style={{ marginTop: 10 }}>
+							<View style={{ marginTop: 10, alignItems: 'center' }}>
 								<TouchableOpacity onPress={navigateToRespond}>
 									<View style={{
 										borderWidth: 1,
-										borderColor: COLORS.grey,
+										borderColor: COLORS.black,
 										borderRadius: 10,
 										paddingHorizontal: 10,
 										paddingVertical: 10,
-										marginHorizontal: 40,
-										height: 60, // Set a fixed height for both containers,
 										width: 300,
-
 									}}>
 										<Text style={styles.label}>User Ask:</Text>
 										<Text style={{
@@ -212,19 +209,16 @@ const VenueOwnerHome = ({ navigation }) => {
 									</View>
 								</TouchableOpacity>
 							</View>
-							<View style={{ marginTop: 10 }}>
+							<View style={{ marginTop: 10, alignItems: 'center' }}>
 								<TouchableOpacity onPress={navigateToRespond}>
 									<View style={{
 										borderWidth: 1,
-										borderColor: COLORS.grey,
+										borderColor: COLORS.black,
 										borderRadius: 10,
 										paddingHorizontal: 10,
 										paddingVertical: 10,
-										marginHorizontal: 40,
-										height: 60, // Set a fixed height for both containers,
 										width: 300,
 										marginBottom: 30,
-
 									}}>
 										<Text style={styles.label}>User Feedback:</Text>
 										<Text style={{
@@ -239,9 +233,9 @@ const VenueOwnerHome = ({ navigation }) => {
 					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30 }}>
 						<Text
 							style={{
-								marginLeft: 40,
+								marginLeft: 20,
 								marginBottom: 10,
-								fontSize: 15,
+								fontSize: 18,
 								// Add any additional styles from GlobalStyle.headerFont
 								marginBottom: 5,
 								flex: 1, // Take up remaining space
@@ -251,9 +245,9 @@ const VenueOwnerHome = ({ navigation }) => {
 						</Text>
 						<View style={{
 							flex: 1,
-							borderBottomWidth: 2, // Adjust the thickness as desired
-							borderBottomColor: COLORS.grey,
-							marginLeft: -260, // Adjust the value to prevent overlapping
+							borderBottomWidth: 1, // Adjust the thickness as desired
+							borderBottomColor: COLORS.black,
+							marginLeft: -240, // Adjust the value to prevent overlapping
 						}} />
 					</View>
 					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
@@ -287,9 +281,9 @@ const VenueOwnerHome = ({ navigation }) => {
 					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
 						<Text
 							style={{
-								marginLeft: 40,
+								marginLeft: 20,
 								marginBottom: 10,
-								fontSize: 15,
+								fontSize: 18,
 								// Add any additional styles from GlobalStyle.headerFont
 								marginBottom: 5,
 								flex: 1, // Take up remaining space
@@ -299,9 +293,9 @@ const VenueOwnerHome = ({ navigation }) => {
 						</Text>
 						<View style={{
 							flex: 1,
-							borderBottomWidth: 2, // Adjust the thickness as desired
-							borderBottomColor: COLORS.grey,
-							marginLeft: -260, // Adjust the value to prevent overlapping
+							borderBottomWidth: 1, // Adjust the thickness as desired
+							borderBottomColor: COLORS.black,
+							marginLeft: -240, // Adjust the value to prevent overlapping
 						}} />
 					</View>
 					<View style={{ flex: 1, padding: 16 }}></View>
@@ -317,7 +311,7 @@ const VenueOwnerHome = ({ navigation }) => {
 								borderRadius: 20,
 							}}
 						>
-							<Text style={{ color: 'black', fontSize: 13, fontWeight: 'bold' }}>Manage Social</Text>
+							<Text style={{ color: COLORS.black, fontSize: 13, fontWeight: 'bold' }}>Manage Social</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={navigateToManageSocialInformation}
@@ -338,14 +332,14 @@ const VenueOwnerHome = ({ navigation }) => {
 					</View>
 					<View style={{
 						flex: 1,
-						borderBottomWidth: 2,
-						borderBottomColor: COLORS.grey,
+						borderBottomWidth: 1,
+						borderBottomColor: COLORS.black,
 						marginTop: 30,
 					}} />
 
 					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 						<View style={{ flex: 1, alignItems: 'center', width: '98%' }}>
-							<View style={{ flex: 1, padding: 20, borderWidth: 1, borderColor: COLORS.grey, marginTop: 50, borderRadius: 20, width: '98%' }}>
+							<View style={{ flex: 1, padding: 20, borderWidth: 1, borderColor: COLORS.black, marginTop: 50, borderRadius: 20, width: '98%' }}>
 								<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 									<Text
 										style={{
@@ -407,7 +401,7 @@ const VenueOwnerHome = ({ navigation }) => {
 
 					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
 						<View style={{ flex: 1, alignItems: 'center', width: '98%' }}>
-							<View style={{ flex: 1, padding: 16, borderWidth: 1, borderColor: COLORS.grey, marginTop: 20, borderRadius: 20, width: '98%' }}>
+							<View style={{ flex: 1, padding: 16, borderWidth: 1, borderColor: COLORS.black, marginTop: 20, borderRadius: 20, width: '98%' }}>
 								<View style={{ flexDirection: 'row', alignItems: 'center' }}>
 									<Text
 										style={{
