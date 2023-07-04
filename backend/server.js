@@ -2,6 +2,7 @@ const Beer = require('./class/beer');
 const User = require('./class/user');
 const Venue = require('./class/venue');
 const VenueOwner = require('./class/venueowner');
+const Review = require('./class/review');
 
 const venueArray = [];
 const beerArray = [];
@@ -191,5 +192,16 @@ app.get('/getVenueMenu', async (req, res) => {
 app.get('/getVenueReview', async (req, res) => {
   const venueID = parseInt(req.query.venueID);
   Venue.getVenueReview(client, venueID, venueArray, res);
+})
+//===================================================================================================================
+//=================================================All Review Routes=================================================
+app.post('/addReview', async (req, res) => {
+  const reviewDescription = req.body.reviewText;
+  const rating = req.body.rating;
+  const userID = req.body.userID;
+  const reviewDate = req.body.reviewDate;
+  const venueID = req.body.venueID;
+
+  Review.addReview(client, reviewDescription, rating, userID, reviewDate, venueID, res)
 })
 //===================================================================================================================

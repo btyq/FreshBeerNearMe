@@ -22,6 +22,7 @@ import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
 import GlobalStyle from "../utils/GlobalStyle";
+import { useCookies } from "../CookieContext";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.orange;
@@ -61,6 +62,10 @@ const VenueItem = ({
 	const [venueMenu, setVenueMenu] = useState([]);
 	const [venueReview, setVenueReview] = useState([]);
 	const [ratingCounter, setRatingCounter] = useState({});
+	const [reviewText, setReviewText] = useState("");
+	const [rating, setRating] = useState(0);
+	const { cookies } = useCookies();
+	const [userID, setUserID] = useState("");
 
 	// // review summary
 	const data = Object.entries(ratingCounter).map(([key, value]) => {
@@ -110,7 +115,49 @@ const VenueItem = ({
 		setPopupVisible3(!popupVisible3); // created 2nd modal
 	};
 
+	const handleReviewTextChange = (text) => {
+		setReviewText(text);
+	  };
+	
+	const handleRatingChange = (ratingValue) => {
+	setRating(ratingValue);
+	};
+
+	const handleSubmit = () => {
+	const currentDate = new Date();
+	
+	const day = currentDate.getDate();
+	const month = currentDate.getMonth() + 1;
+	const year = currentDate.getFullYear();
+
+	const formattedDate = `${day}/${month}/${year}`;
+	
+	const data = {
+		reviewText: reviewText,
+		rating: rating,
+		userID: userID,
+		reviewDate: formattedDate,
+		venueID: venueID,
+	}
+
+	axios.post("http://10.0.2.2:3000/addReview", data)
+		 .then((response) => {
+			if (response.data.success) {
+				console.log("review");
+			}
+		 })
+		 .catch((error) => {
+			console.error(error);
+		});
+
+	setReviewText("");
+	setRating(0);
+	handlePopUp3();
+	};
+	
 	useEffect(() => {
+		setUserID(cookies.userID);
+
 		const fetchVenueMenu = async () => {
 			try {
 				const response = await axios.get("http://10.0.2.2:3000/getVenueMenu", {
@@ -318,7 +365,7 @@ const VenueItem = ({
 																			color: COLORS.black,
 																		}}
 																	>
-																		Venue Name:
+																		Venue Name: {venueName}
 																	</Text>
 																	<View
 																		style={{
@@ -326,13 +373,17 @@ const VenueItem = ({
 																			alignItems: "flex-end",
 																		}}
 																	>
-																		<AirbnbRating
-																			count={5}
-																			defaultRating={4}
-																			size={20}
-																			showRating={false}
-																			isDisabled={true}
-																		/>
+																		<View style={{ ...styles.starRatingContainer }}>
+																			{[1, 2, 3, 4, 5].map((star) => (
+																				<Ionicons
+																					key={star}
+																					name="star"
+																					size={16}
+																					color={star <= venueRating ? COLORS.foam : COLORS.grey}
+																					style={{ marginBottom: 9 }}
+																				/>
+																			))}
+																		</View>
 																	</View>
 																</View>
 															</View>
@@ -364,6 +415,8 @@ const VenueItem = ({
 																		marginTop: 10,
 																		backgroundColor: COLORS.secondary,
 																	}}
+																	value={reviewText}
+																	onChangeText={handleReviewTextChange}
 																></TextInput>
 															</View>
 															<View
@@ -391,13 +444,14 @@ const VenueItem = ({
 																>
 																	<AirbnbRating
 																		count={5}
-																		defaultRating={4}
+																		defaultRating={rating}
 																		size={20}
 																		showRating={false}
+																		onFinishRating={handleRatingChange}
 																	/>
 																</View>
 															</View>
-															<Button title="Submit" onPress={handlePopUp3} />
+															<Button title="Submit" onPress={handleSubmit} />
 														</View>
 													</View>
 												</Modal>
