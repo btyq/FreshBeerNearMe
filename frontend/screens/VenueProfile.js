@@ -110,9 +110,8 @@ const InquiriesNFeedback = ({ navigation }) => {
                             style={{
                                 marginLeft: 10,
                                 borderWidth: 1,
-                                borderRadius: 20,
-                                borderColor: COLORS.grey,
-                                backgroundColor: COLORS.grey,
+                                borderRadius: 10,
+                                borderColor: COLORS.black,
                                 padding: 5,
                                 width: 310,
                             }}
@@ -126,9 +125,8 @@ const InquiriesNFeedback = ({ navigation }) => {
                             style={{
                                 marginLeft: 10,
                                 borderWidth: 1,
-                                borderRadius: 20,
-                                borderColor: COLORS.grey,
-                                backgroundColor: COLORS.grey,
+                                borderRadius: 10,
+                                borderColor: COLORS.black,
                                 padding: 5,
                                 width: 310,
                             }}
@@ -142,9 +140,8 @@ const InquiriesNFeedback = ({ navigation }) => {
                             style={{
                                 marginLeft: 10,
                                 borderWidth: 1,
-                                borderRadius: 20,
-                                borderColor: COLORS.grey,
-                                backgroundColor: COLORS.grey,
+                                borderRadius: 10,
+                                borderColor: COLORS.black,
                                 padding: 5,
                                 width: 310,
                             }}
@@ -162,9 +159,9 @@ const InquiriesNFeedback = ({ navigation }) => {
                             marginTop: 20,
                             marginLeft: 10,
                             borderWidth: 1,
-                            borderRadius: 20,
-                            borderColor: COLORS.grey,
-                            backgroundColor: COLORS.grey,
+                            borderRadius: 10,
+                            borderColor: COLORS.black,
+                            textAlignVertical: 'top',
                             padding: 5,
                             width: "96%",
                             height: 200,
@@ -182,7 +179,7 @@ const InquiriesNFeedback = ({ navigation }) => {
                             paddingHorizontal: 10,
                             paddingVertical: 5,
                             borderWidth: 1,
-                            borderColor: COLORS.grey,
+                            borderColor: COLORS.black,
                         }}
                     >
                         <Text style={{ color: 'black', fontSize: 18, fontWeight: 'bold' }}>Save Changes</Text>

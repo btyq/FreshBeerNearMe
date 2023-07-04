@@ -102,8 +102,9 @@ const ManageInventory = ({ navigation }) => {
                 <View style={{ alignItems: "center", marginTop: 20, marginBottom: 20 }}>
                     <TouchableOpacity onPress={() => { }} style={{
                         borderWidth: 1,
-                        borderColor: COLORS.grey,
-                        borderRadius: 5,
+                        borderColor: COLORS.black,
+                        backgroundColor:COLORS.grey,
+                        borderRadius: 20,
                         padding: 5,
                         alignItems: 'center',
                     }}>
@@ -125,8 +126,8 @@ const ManageInventory = ({ navigation }) => {
                     </Text>
                     <View style={{
                         flex: 1,
-                        borderBottomWidth: 2, // Adjust the thickness as desired
-                        borderBottomColor: COLORS.grey,
+                        borderBottomWidth: 1, // Adjust the thickness as desired
+                        borderBottomColor: COLORS.black,
                         marginLeft: -80, // Adjust the value to prevent overlapping
                     }} />
                 </View>
@@ -141,7 +142,7 @@ const ManageInventory = ({ navigation }) => {
 
                         <View style={{
                             marginLeft: 10, borderWidth: 1,
-                            borderColor: COLORS.grey,
+                            borderColor: COLORS.black,
                             borderRadius: 10,
                             padding: 10,
                             width: 240,
@@ -154,8 +155,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Name:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -172,8 +173,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Current Stock:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -190,8 +191,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Sold:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -207,7 +208,7 @@ const ManageInventory = ({ navigation }) => {
                                 borderRadius: 10,
                                 marginTop: 10,
                                 borderWidth: 1,
-                                borderColor: COLORS.grey,
+                                borderColor: COLORS.black,
                             }}>
                                 <Text style={{
                                     color: COLORS.black,
@@ -229,7 +230,7 @@ const ManageInventory = ({ navigation }) => {
 
                         <View style={{
                             marginLeft: 10, borderWidth: 1,
-                            borderColor: COLORS.grey,
+                            borderColor: COLORS.black,
                             borderRadius: 10,
                             padding: 10,
                             width: 240,
@@ -242,8 +243,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Name:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -260,8 +261,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Current Stock:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -278,8 +279,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Sold:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -295,7 +296,7 @@ const ManageInventory = ({ navigation }) => {
                                 borderRadius: 10,
                                 marginTop: 10,
                                 borderWidth: 1,
-                                borderColor: COLORS.grey,
+                                borderColor: COLORS.black,
                             }}>
                                 <Text style={{
                                     color: COLORS.black,
@@ -317,7 +318,7 @@ const ManageInventory = ({ navigation }) => {
 
                         <View style={{
                             marginLeft: 10, borderWidth: 1,
-                            borderColor: COLORS.grey,
+                            borderColor: COLORS.black,
                             borderRadius: 10,
                             padding: 10,
                             width: 240,
@@ -330,8 +331,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Name:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -348,8 +349,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Current Stock:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -366,8 +367,8 @@ const ManageInventory = ({ navigation }) => {
                                 }}>Sold:</Text>
                                 <Text style={{
                                     borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
+                                    borderColor: COLORS.black,
+                                    borderRadius: 10,
                                     padding: 5,
                                     marginBottom: 10,
                                     marginTop: 5,
@@ -383,95 +384,7 @@ const ManageInventory = ({ navigation }) => {
                                 borderRadius: 10,
                                 marginTop: 10,
                                 borderWidth: 1,
-                                borderColor: COLORS.grey,
-                            }}>
-                                <Text style={{
-                                    color: COLORS.black,
-                                    fontWeight: 'bold',
-                                    fontSize: 16,
-                                }}>Edit Inventory</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                </View>
-                <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5, marginBottom: 10}}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
-                        <Image source={require('../assets/beer1.png')} style={{
-                            width: 140,
-                            height: 140,
-                            marginLeft: 20,
-                            borderRadius: 10,
-                        }} />
-
-                        <View style={{
-                            marginLeft: 10, borderWidth: 1,
-                            borderColor: COLORS.grey,
-                            borderRadius: 10,
-                            padding: 10,
-                            width: 240,
-                        }}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    marginBottom: 5,
-                                }}>Name:</Text>
-                                <Text style={{
-                                    borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
-                                    padding: 5,
-                                    marginBottom: 10,
-                                    marginTop: 5,
-                                    marginLeft: 5,
-                                    width:'76%',
-                                }}>Beer Name</Text>
-                            </View>
-
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    marginBottom: 5,
-                                }}>Current Stock:</Text>
-                                <Text style={{
-                                    borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
-                                    padding: 5,
-                                    marginBottom: 10,
-                                    marginTop: 5,
-                                    marginLeft: 5,
-                                    width:'50%',
-                                }}>10</Text>
-                            </View>
-
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <Text style={{
-                                    fontSize: 16,
-                                    fontWeight: 'bold',
-                                    marginBottom: 5,
-                                }}>Sold:</Text>
-                                <Text style={{
-                                    borderWidth: 1,
-                                    borderColor: COLORS.grey,
-                                    borderRadius: 5,
-                                    padding: 5,
-                                    marginBottom: 10,
-                                    marginTop: 5,
-                                    marginLeft: 5,
-                                    width:'80%',
-                                }}>20</Text>
-                            </View>
-                            <TouchableOpacity style={{
-                                alignItems: 'center',
-                                backgroundColor: COLORS.grey,
-                                paddingHorizontal: 5,
-                                paddingVertical: 3,
-                                borderRadius: 10,
-                                marginTop: 10,
-                                borderWidth: 1,
-                                borderColor: COLORS.grey,
+                                borderColor: COLORS.black,
                             }}>
                                 <Text style={{
                                     color: COLORS.black,

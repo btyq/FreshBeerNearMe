@@ -129,8 +129,8 @@ const InquiriesNFeedback = ({ navigation }) => {
 						</Text>
 						<View style={{
 							flex: 1,
-							borderBottomWidth: 2, // Adjust the thickness as desired
-							borderBottomColor: COLORS.grey,
+							borderBottomWidth: 1, // Adjust the thickness as desired
+							borderBottomColor: COLORS.black,
 							marginLeft: -290, // Adjust the value to prevent overlapping
 						}} />
 					</View>
@@ -139,7 +139,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						style={{
 							marginTop: 10,
 							borderWidth: 1,
-							borderColor: COLORS.grey,
+							borderColor: COLORS.black,
 							borderRadius: 5,
 							padding: 10,
 							margin: 20,
@@ -152,7 +152,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -166,7 +166,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -181,7 +181,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -195,7 +195,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -210,7 +210,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -224,7 +224,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -239,7 +239,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -253,7 +253,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -268,7 +268,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -282,7 +282,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -307,8 +307,8 @@ const InquiriesNFeedback = ({ navigation }) => {
 						</Text>
 						<View style={{
 							flex: 1,
-							borderBottomWidth: 2, // Adjust the thickness as desired
-							borderBottomColor: COLORS.grey,
+							borderBottomWidth: 1, // Adjust the thickness as desired
+							borderBottomColor: COLORS.black,
 							marginLeft: -240, // Adjust the value to prevent overlapping
 						}} />
 					</View>
@@ -317,7 +317,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						style={{
 							marginTop: 10,
 							borderWidth: 1,
-							borderColor: COLORS.grey,
+							borderColor: COLORS.black,
 							borderRadius: 5,
 							padding: 10,
 							margin: 20,
@@ -330,7 +330,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -344,7 +344,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -359,7 +359,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -373,7 +373,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -388,7 +388,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -402,7 +402,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -417,7 +417,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -431,7 +431,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}
@@ -446,7 +446,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 								flexDirection: 'row',
 								alignItems: 'center',
 								borderWidth: 1,
-								borderColor: COLORS.grey,
+								borderColor: COLORS.black,
 								padding: 10,
 								marginBottom: 10,
 								borderRadius: 10,
@@ -460,7 +460,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 									padding: 10,
 									borderRadius: 50,
 									borderWidth: 1,
-									borderColor: COLORS.grey,
+									borderColor: COLORS.black,
 									alignItems: 'center',
 									justifyContent: 'center',
 								}}

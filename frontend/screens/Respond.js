@@ -125,10 +125,10 @@ const Respond = ({ navigation }) => {
                             style={{
                                 backgroundColor: COLORS.grey,
                                 borderRadius: 10,
-                                paddingHorizontal: 10,
+                                paddingHorizontal: 8,
                                 paddingVertical: 5,
                                 borderWidth: 1,
-                                borderColor: COLORS.grey,
+                                borderColor: COLORS.black,
                                 alignSelf: 'flex-start',
                             }}
                         >
@@ -142,7 +142,7 @@ const Respond = ({ navigation }) => {
                     <View style={{
                         marginTop: 5,
                         borderWidth: 1,
-                        borderColor: COLORS.grey,
+                        borderColor: COLORS.black,
                         borderRadius: 10,
                         padding: 10,
                         width: '95%',
@@ -155,7 +155,7 @@ const Respond = ({ navigation }) => {
                     <View style={{
                         marginTop: 30,
                         borderWidth: 1,
-                        borderColor: COLORS.grey,
+                        borderColor: COLORS.black,
                         borderRadius: 10,
                         padding: 10,
                         width: '95%',
@@ -179,7 +179,7 @@ const Respond = ({ navigation }) => {
                                 paddingVertical: 5,
                                 padding: 30,
                                 borderWidth: 1,
-                                borderColor: COLORS.grey,
+                                borderColor: COLORS.black,
                                 alignSelf: 'flex-start',
                             }}
                         >

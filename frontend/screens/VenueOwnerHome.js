@@ -171,7 +171,7 @@ const VenueOwnerHome = ({ navigation }) => {
 										flex: 1, // Take up remaining space
 										marginLeft: 40,
 										marginBottom: 10,
-										fontSize: 15,
+										fontSize: 17,
 										// Add any additional styles from GlobalStyle.headerFont
 										marginBottom: 5,
 									}}
