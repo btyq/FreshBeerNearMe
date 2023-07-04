@@ -133,7 +133,6 @@ const VenueItem = ({
 			  });
 			  const { success, review } = response.data;
 		  
-			  console.log(review);
 			  if (success) {
 				setVenueReview(review);
 		  
@@ -146,10 +145,7 @@ const VenueItem = ({
 					counter[reviewRating] = 1;
 				  }
 				});
-				
-				console.log(counter);
 				setRatingCounter(counter);
-				console.log(ratingCounter);
 			  }
 			} catch (error) {
 			  console.error("Error fetching venue reviews:", error);
