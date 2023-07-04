@@ -6,7 +6,7 @@ import React, { useEffect } from "react";
 import { CookieProvider } from "./frontend/CookieContext";
 import { AdminDashboard, ManageUsers } from "./frontend/components";
 import BottomTabNavigation from "./frontend/navigation/BottomTabNavigation";
-import {VenueOwnerHome,InquiriesNFeedback, Respond, VenueProfile, ManageInventory} from "./frontend/screens";
+import {VenueOwnerHome,InquiriesNFeedback, Respond, VenueProfile, ManageInventory,ManageSocialInformation} from "./frontend/screens";
 import {
 	Forums,
 	RateNReview,
@@ -114,6 +114,11 @@ export default function App() {
 					<Stack.Screen
 						name="ManageInventory"
 						component={ManageInventory}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="ManageSocialInformation"
+						component={ManageSocialInformation}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>

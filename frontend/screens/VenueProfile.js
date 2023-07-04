@@ -55,7 +55,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 
     //=====================================================================================================
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ flex: 1, backgroundColor: COLORS.white }}>
             <Header
                 placement="left"
                 backgroundColor={COLORS.primary}
@@ -111,7 +111,7 @@ const InquiriesNFeedback = ({ navigation }) => {
                                 marginLeft: 10,
                                 borderWidth: 1,
                                 borderRadius: 20,
-                                borderColor: COLORS.black,
+                                borderColor: COLORS.grey,
                                 backgroundColor: COLORS.grey,
                                 padding: 5,
                                 width: 310,
@@ -127,7 +127,7 @@ const InquiriesNFeedback = ({ navigation }) => {
                                 marginLeft: 10,
                                 borderWidth: 1,
                                 borderRadius: 20,
-                                borderColor: COLORS.black,
+                                borderColor: COLORS.grey,
                                 backgroundColor: COLORS.grey,
                                 padding: 5,
                                 width: 310,
@@ -143,7 +143,7 @@ const InquiriesNFeedback = ({ navigation }) => {
                                 marginLeft: 10,
                                 borderWidth: 1,
                                 borderRadius: 20,
-                                borderColor: COLORS.black,
+                                borderColor: COLORS.grey,
                                 backgroundColor: COLORS.grey,
                                 padding: 5,
                                 width: 310,
@@ -163,7 +163,7 @@ const InquiriesNFeedback = ({ navigation }) => {
                             marginLeft: 10,
                             borderWidth: 1,
                             borderRadius: 20,
-                            borderColor: COLORS.black,
+                            borderColor: COLORS.grey,
                             backgroundColor: COLORS.grey,
                             padding: 5,
                             width: "96%",

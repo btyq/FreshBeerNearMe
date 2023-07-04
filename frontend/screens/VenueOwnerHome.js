@@ -73,6 +73,10 @@ const VenueOwnerHome = ({ navigation }) => {
         navigation.navigate('ManageInventory');
       };
 
+	  const navigateToManageSocialInformation = () => {
+        navigation.navigate('ManageSocialInformation');
+      };
+
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -160,7 +164,7 @@ const VenueOwnerHome = ({ navigation }) => {
 						</Text>
 					</View>
 					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-						<View style={{ marginTop: 20, width: '95%', borderWidth: 1, borderColor: COLORS.grey, borderRadius: 20 }}>
+						<View style={{ marginTop: 20, width: '98%', borderWidth: 1, borderColor: COLORS.grey, borderRadius: 20 }}>
 							<View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10 }}>
 								<Text
 									style={{
@@ -303,7 +307,7 @@ const VenueOwnerHome = ({ navigation }) => {
 					<View style={{ flex: 1, padding: 16 }}></View>
 					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
 						<TouchableOpacity
-							onPress={() => { }}
+							onPress={navigateToManageSocialInformation}
 							style={{
 								marginLeft: 40,
 								marginBottom: 10,
@@ -316,7 +320,7 @@ const VenueOwnerHome = ({ navigation }) => {
 							<Text style={{ color: 'black', fontSize: 13, fontWeight: 'bold' }}>Manage Social</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
-							onPress={() => { }}
+							onPress={navigateToManageSocialInformation}
 							style={{
 								marginLeft: 90,
 								marginBottom: 10,

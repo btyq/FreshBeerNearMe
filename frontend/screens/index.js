@@ -21,6 +21,7 @@ import TopRated from "./user/TopRated";
 import Wishlist from "./user/Wishlist";
 import VenueProfile from "./VenueProfile";
 import ManageInventory from "./ManageInventory";
+import ManageSocialInformation from "./ManageSocialInformation";
 
 export {
 	BeersVenue,
@@ -46,4 +47,5 @@ export {
 	WriteAReview,
 	VenueProfile,
 	ManageInventory,
+	ManageSocialInformation
 };
