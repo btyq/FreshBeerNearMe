@@ -60,42 +60,39 @@ const VenueItem = ({
 	const [popupVisible3, setPopupVisible3] = useState(false); // created 3rd modal
 	const [venueMenu, setVenueMenu] = useState([]);
 	const [venueReview, setVenueReview] = useState([]);
+	const [ratingCounter, setRatingCounter] = useState({});
 
 	// // review summary
-	const data = [
-		{ label: "5*", value: 100 },
-		{ label: "4*", value: 70 },
-		{ label: "3*", value: 50 },
-		{ label: "2*", value: 20 },
-		{ label: "1*", value: 5 },
-	];
+	const data = Object.entries(ratingCounter).map(([key, value]) => {
+		return { label: key + "*", value: parseInt(value) };
+	  });
 
-	const HorizontalBarChart = () => {
+	const HorizontalBarChart = ({ data }) => {
 		// Find the maximum value in the data array
 		const maxValue = Math.max(...data.map((item) => item.value));
-
+	  
 		return (
-			<View>
-				{data.map((item, index) => (
-					<View key={index} style={styles.barContainer}>
-						<Text
-							style={{
-								marginRight: 8,
-							}}
-						>
-							{item.label}
-						</Text>
-						<View
-							style={[
-								styles.bar,
-								{ width: (item.value / maxValue) * 100 + "%" },
-							]}
-						/>
-					</View>
-				))}
-			</View>
+		  <View>
+			{data.map((item, index) => (
+			  <View key={index} style={styles.barContainer}>
+				<Text
+				  style={{
+					marginRight: 8,
+				  }}
+				>
+				  {item.label}
+				</Text>
+				<View
+				  style={[
+					styles.bar,
+					{ width: (item.value / maxValue) * 100 + "%" },
+				  ]}
+				/>
+			  </View>
+			))}
+		  </View>
 		);
-	};
+	  };
 
 	const handlePopupOpen = () => {
 		setPopupVisible(true);
@@ -131,18 +128,29 @@ const VenueItem = ({
 
 		const fetchVenueReview = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getVenueReview", {
-					params: { venueID },
+			  const response = await axios.get("http://10.0.2.2:3000/getVenueReview", {
+				params: { venueID },
+			  });
+			  const { success, review } = response.data;
+		  
+			  if (success) {
+				setVenueReview(review);
+		  
+				const counter = {};
+				review.forEach((item) => {
+				  const { reviewRating } = item;
+				  if (counter.hasOwnProperty(reviewRating)) {
+					counter[reviewRating] += 1;
+				  } else {
+					counter[reviewRating] = 1;
+				  }
 				});
-				const {success, review} = response.data;
-
-				if (success) {
-					setVenueReview(review);
-				}
+				setRatingCounter(counter);
+			  }
 			} catch (error) {
-				console.error("Error fetching venue reviews:", error);
+			  console.error("Error fetching venue reviews:", error);
 			}
-		};
+		  };
 
 		if (popupVisible) {
 			fetchVenueMenu();
@@ -409,7 +417,9 @@ const VenueItem = ({
 												}}
 											>
 												<Text>Review Summary</Text>
-												<HorizontalBarChart />
+												{Object.keys(ratingCounter).length > 0 && (
+													<HorizontalBarChart data={data} />
+												)}
 											</View>
 											<View>
 												{venueReview.map((reviews) => (
