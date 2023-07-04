@@ -164,7 +164,7 @@ const VenueOwnerHome = ({ navigation }) => {
 						</Text>
 					</View>
 					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-						<View style={{ marginTop: 20, width: '98%', borderWidth: 1, borderColor: COLORS.black, borderRadius: 20 }}>
+						<View style={{ marginTop: 20, width: '100%',  borderRadius: 20 }}>
 							<View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10 }}>
 								<Text
 									style={{
@@ -229,7 +229,7 @@ const VenueOwnerHome = ({ navigation }) => {
 							</View>
 						</View>
 					</View>
-
+					
 					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30 }}>
 						<Text
 							style={{
