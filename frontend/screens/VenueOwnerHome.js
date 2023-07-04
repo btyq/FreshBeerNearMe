@@ -69,6 +69,10 @@ const VenueOwnerHome = ({ navigation }) => {
         navigation.navigate('VenueProfile');
       };
 
+	  const navigateToManageInventory = () => {
+        navigation.navigate('ManageInventory');
+      };
+
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -263,7 +267,7 @@ const VenueOwnerHome = ({ navigation }) => {
 							<Text style={{ color: 'black', fontSize: 13, fontWeight: 'bold' }}>Venue Profile</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
-							onPress={() => { }}
+							onPress={navigateToManageInventory}
 							style={{
 								marginLeft: 70,
 								marginBottom: 10,

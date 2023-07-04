@@ -502,7 +502,7 @@ const BeersVenue = ({ navigation }) => {
 
 	// for sorting and search function
 	const handleSortBy = (by) => {
-		if (by === sortBy) return;
+		if (by === sortBy) return;a
 		setSortBy(by);
 	};
 

@@ -39,7 +39,7 @@ const Button = (props) => {
     );
 };
 
-const InquiriesNFeedback = ({ navigation }) => {
+const Respond = ({ navigation }) => {
     const { cookies } = useCookies();
     const [index, setIndex] = React.useState(0);
     const [index1, setIndex1] = React.useState(0);
@@ -209,4 +209,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default InquiriesNFeedback;
+export default Respond;
