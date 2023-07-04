@@ -138,8 +138,9 @@ const Dashboard = ({ navigation }) => {
 							flexDirection: "row",
 							flexWrap: "wrap",
 							marginBottom: 10,
-							justifyContent: "space-between",
-							marginHorizontal: 15,
+							alignContent: "center",
+							justifyContent: "center",
+							marginHorizontal: 22,
 						}}
 					>
 						<TouchableOpacity

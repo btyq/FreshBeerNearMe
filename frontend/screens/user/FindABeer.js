@@ -79,7 +79,6 @@ const BeerItem = ({
 	];
 
 	const HorizontalBarChart = () => {
-		// Find the maximum value in the data array
 		const maxValue = Math.max(...data.map((item) => item.value));
 
 		return (
@@ -105,12 +104,8 @@ const BeerItem = ({
 		);
 	};
 
-	const handlePopupOpen = () => {
-		setPopupVisible(true);
-	};
-
-	const handlePopupClose = () => {
-		setPopupVisible(false);
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible); // created 1st modal
 	};
 
 	const handlePopUp2 = () => {
@@ -123,7 +118,7 @@ const BeerItem = ({
 
 	return (
 		<View style={styles.subContainer}>
-			<TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
+			<TouchableOpacity style={styles.itemContainer} onPress={handlePopup}>
 				<View style={{ flex: 1, paddingHorizontal: 6, paddingTop: 6 }}>
 					<CustomText>{beerName}</CustomText>
 					<CustomText>Price: ${price}</CustomText>
@@ -148,7 +143,8 @@ const BeerItem = ({
 				</View>
 			</TouchableOpacity>
 
-			<Modal visible={popupVisible} transparent animationType="slide">
+			{/* 1st popup */}
+			<Modal visible={popupVisible} transparent animationType="fade">
 				<View style={styles.modalContainer}>
 					<View
 						style={{
@@ -209,7 +205,9 @@ const BeerItem = ({
 								<CustomText style={{ marginBottom: 12 }}>
 									Alcohol%: {ABV}
 								</CustomText>
-								<CustomText>Bitter Units: {IBU}</CustomText>
+								<CustomText style={{ marginBottom: 12 }}>
+									Bitter Units: {IBU}
+								</CustomText>
 							</View>
 							<CustomText style={{ fontSize: 17 }}>Description</CustomText>
 							<CustomText>{beerDescription}</CustomText>
@@ -262,7 +260,7 @@ const BeerItem = ({
 
 							<Button
 								title="Close"
-								onPress={handlePopupClose}
+								onPress={handlePopup}
 								filled
 								style={{
 									marginTop: 12,
@@ -287,7 +285,7 @@ const BeerItem = ({
 											elevation: 5,
 										}}
 									>
-										<ScrollView style={{ marginTop: 12 }}>
+										<View style={{ marginTop: 32, marginHorizontal: 12 }}>
 											<TouchableOpacity onPress={handlePopUp2}>
 												<Ionicons name="arrow-back" size={24} color="black" />
 											</TouchableOpacity>
@@ -295,7 +293,6 @@ const BeerItem = ({
 												<View
 													style={{
 														flexDirection: "row",
-														marginLeft: 22,
 														marginTop: 5,
 														marginBottom: 12,
 													}}
@@ -304,10 +301,15 @@ const BeerItem = ({
 														source={require("../../assets/brewlander.jpg")}
 														style={{
 															height: 150,
-															width: 250,
+															width: "100%",
 															borderRadius: 15,
 															borderWidth: 5,
-															borderColor: 0,
+															marginTop: 20,
+															marginLeft: "auto",
+															marginRight: "auto",
+															justifyContent: "center",
+															alignContent: "center",
+															marginBottom: 10,
 														}}
 													/>
 												</View>
@@ -333,12 +335,12 @@ const BeerItem = ({
 															width: "40%",
 															borderRadius: 10,
 															marginBottom: 15,
-															marginRight: 32,
 															borderColor: 0,
 															elevation: 2,
 														}}
 														onPress={handlePopUp3}
 													/>
+
 													{/* 3rd popup */}
 													<Modal
 														visible={popupVisible3}
@@ -349,10 +351,10 @@ const BeerItem = ({
 															<View
 																style={{
 																	width: "100%",
-																	height: 700,
+																	height: 750,
 																	backgroundColor: COLORS.secondary,
 																	borderRadius: 10,
-																	padding: 20,
+																	paddingHorizontal: 20,
 																	elevation: 5,
 																}}
 															>
@@ -385,6 +387,7 @@ const BeerItem = ({
 																		<Text
 																			style={{
 																				flex: 1,
+																				fontSize: 15,
 																				...GlobalStyle.headerFont,
 																			}}
 																		>
@@ -410,12 +413,12 @@ const BeerItem = ({
 																	style={{
 																		flexDirection: "column",
 																		height: 300,
-																		width: 320,
+																		width: "100%",
 																		elevation: 2,
 																		backgroundColor: COLORS.grey,
 																		marginTop: 10,
 																		borderRadius: 15,
-																		borderColor: COLORS.black,
+																		borderColor: 0,
 																		marginBottom: 10,
 																		paddingHorizontal: 12,
 																	}}
@@ -510,8 +513,6 @@ const BeerItem = ({
 													</CustomText>
 													<HorizontalBarChart />
 													<CustomText>Posted by User</CustomText>
-												</View>
-												<View style={{ marginRight: 12, marginHorizontal: 12 }}>
 													<View
 														style={{
 															flexDirection: "row",
@@ -522,14 +523,11 @@ const BeerItem = ({
 															borderRadius: 15,
 															borderColor: COLORS.black,
 															marginBottom: 10,
-															marginHorizontal: 12,
 															alignItems: "center",
-															//			marginLeft: 12,
 														}}
 													>
 														<View
 															style={{
-																marginHorizontal: 12,
 																flexDirection: "row",
 																paddingHorizontal: 10,
 															}}
@@ -539,7 +537,7 @@ const BeerItem = ({
 													</View>
 												</View>
 											</View>
-										</ScrollView>
+										</View>
 									</View>
 								</View>
 							</Modal>
@@ -808,8 +806,6 @@ const styles = StyleSheet.create({
 		height: 40,
 		marginVertical: 5,
 		borderRadius: 30,
-		// marginHorizontal: "1%",
-		// marginTop: 10, // Adjust the top spacing here
 		borderColor: 0,
 		elevation: 2,
 	},
@@ -875,25 +871,6 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		borderColor: 0,
 	},
-	leftContainer: {
-		flex: 1,
-	},
-	rightContainer: {
-		flex: 0.3,
-		marginRight: 12,
-		flexDirection: "row-reverse",
-		alignItems: "center",
-	},
-	beerName: {
-		fontSize: 16,
-		fontWeight: "bold",
-		color: COLORS.black,
-	},
-	starRatingContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginTop: 4,
-	},
 	modalContainer: {
 		flex: 1,
 		backgroundColor: COLORS.overlay,
@@ -908,11 +885,6 @@ const styles = StyleSheet.create({
 		padding: 20,
 		elevation: 5,
 	},
-	popupTitle: {
-		fontSize: 18,
-		fontWeight: "bold",
-		marginBottom: 10,
-	},
 	beerImage: {
 		height: 230,
 		width: 250,
@@ -920,17 +892,12 @@ const styles = StyleSheet.create({
 		borderWidth: 5,
 		borderColor: 0,
 		marginTop: 20,
-		marginLeft: 25,
+		marginLeft: "auto",
+		marginRight: "auto",
 		justifyContent: "center",
-		alignItems: "center",
+		alignContent: "center",
 		marginBottom: 10,
-	},
-	closeButton: {
-		backgroundColor: COLORS.foam,
-		padding: 10,
-		borderRadius: 8,
-		alignItems: "center",
-		marginTop: "50%", // Adjust the marginTop to shift the close button down
+		alignSelf: "center",
 	},
 	barContainer: {
 		marginHorizontal: 2,
