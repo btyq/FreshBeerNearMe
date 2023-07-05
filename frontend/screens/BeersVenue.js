@@ -66,6 +66,7 @@ const VenueItem = ({
 	const [rating, setRating] = useState(0);
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
+	const [reviewAdded, setReviewAdded] = useState(false);
 
 	// // review summary
 	const data = Object.entries(ratingCounter).map(([key, value]) => {
@@ -143,9 +144,22 @@ const VenueItem = ({
 	axios.post("http://10.0.2.2:3000/addReview", data)
 		 .then((response) => {
 			if (response.data.success) {
-				console.log("review");
-			}
-		 })
+				console.log("Review Added");
+				
+				const highestReviewID = Math.max(...venueReview.map((review) => review.reviewID));
+
+				const newReview = {
+					reviewID: highestReviewID + 1, 
+					reviewUser: cookies.username,
+					reviewDate: formattedDate,
+					reviewDescription: reviewText,
+					reviewRating: rating,
+				  };
+				
+				  setVenueReview((prevReviews) => [...prevReviews, newReview]);
+				  setReviewAdded(true);
+				}
+			  })
 		 .catch((error) => {
 			console.error(error);
 		});
@@ -180,7 +194,7 @@ const VenueItem = ({
 			  });
 			  const { success, review } = response.data;
 		  
-			  if (success) {
+			  if (success && !reviewAdded) {
 				setVenueReview(review);
 		  
 				const counter = {};
@@ -203,8 +217,8 @@ const VenueItem = ({
 			fetchVenueMenu();
 			fetchVenueReview();
 		}
-		
-	}, [popupVisible, venueID]);
+
+	}, [popupVisible, reviewAdded]);
 
 	return (
 		<View style={styles.subContainer}>
