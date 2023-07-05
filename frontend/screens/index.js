@@ -1,11 +1,14 @@
-import BeersVenue from "./BeersVenue";
 import InquiriesNFeedback from "./InquiriesNFeedback";
+import ManageInventory from "./ManageInventory";
+import ManageSocialInformation from "./ManageSocialInformation";
 import RateNReview from "./RateNReview";
 import Respond from "./Respond";
 import Signup from "./Signup";
 import VenueOwnerHome from "./VenueOwnerHome";
+import VenueProfile from "./VenueProfile";
 import Welcome from "./Welcome";
 import WriteAReview from "./WriteAReview";
+import BeersVenue from "./user/BeersVenue";
 import Breweries from "./user/Breweries";
 import Dashboard from "./user/Dashboard";
 import Feedback from "./user/Feedback";
@@ -19,9 +22,6 @@ import ReferAFriend from "./user/ReferAFriend";
 import Social from "./user/Social";
 import TopRated from "./user/TopRated";
 import Wishlist from "./user/Wishlist";
-import VenueProfile from "./VenueProfile";
-import ManageInventory from "./ManageInventory";
-import ManageSocialInformation from "./ManageSocialInformation";
 
 export {
 	BeersVenue,
@@ -32,6 +32,8 @@ export {
 	Forums,
 	InquiriesNFeedback,
 	Journal,
+	ManageInventory,
+	ManageSocialInformation,
 	NearbyVenues,
 	Profile,
 	RateNReview,
@@ -42,10 +44,8 @@ export {
 	Social,
 	TopRated,
 	VenueOwnerHome,
+	VenueProfile,
 	Welcome,
 	Wishlist,
 	WriteAReview,
-	VenueProfile,
-	ManageInventory,
-	ManageSocialInformation
 };

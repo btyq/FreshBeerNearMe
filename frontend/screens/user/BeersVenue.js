@@ -20,9 +20,9 @@ import {
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCookies } from "../CookieContext";
-import COLORS from "../constants/colors";
-import GlobalStyle from "../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
