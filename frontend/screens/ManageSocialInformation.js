@@ -1,7 +1,8 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
-import ImagePicker from 'react-native-image-picker'
+import * as ImagePicker from 'expo-image-picker'
+import { Alert } from "react-native";
 import {
     ImageBackground,
     ScrollView,
@@ -49,11 +50,33 @@ const ManageSocialInformation = ({ navigation }) => {
     const [selectedImage, setSelectedImage] = useState(null);
 
     useEffect(() => {
-        const sessionToken = cookies.sessionToken;
-        const venueOwnerID = cookies.venueOwnerID;
+        (async() =>{
+            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasGalleryPermission(galleryStatus.status == 'granted');
+        } )();
         setUsername(cookies.username);
     }, []);
 
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.image,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+        });
+      
+        if (!result.cancelled) {
+          setSelectedImage(result.assets[0]);
+        } else {
+          Alert.alert(
+            "Selection Cancelled",
+            "Please choose an image to proceed.",
+            [{ text: "OK", onPress: () => console.log("OK pressed") }],
+            { cancelable: false }
+          );
+        }
+      };
+      
     const [isFacebookPressed, setIsFacebookPressed] = useState(false);
     const [isGooglePressed, setIsGooglePressed] = useState(false);
     const [isInstagramPressed, setIsInstagramPressed] = useState(false);
@@ -70,17 +93,8 @@ const ManageSocialInformation = ({ navigation }) => {
         setIsInstagramPressed(!isInstagramPressed);
     };
 
-    const selectImage = async () => {
-        try {
-            const result = await ImagePicker.launchImageLibraryAsync();
-            if (!result.cancelled) {
-                setSelectedImage(result);
-            }
-        } catch (error) {
-            console.log('Error selecting image:', error);
-        }
-    };
-
+   const [hasGalleryPermission, setHasGalleryPermission] = useState(null);
+   const [image, setImage] = useState(null);
     //=====================================================================================================
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -275,7 +289,7 @@ const ManageSocialInformation = ({ navigation }) => {
                                 justifyContent: 'center',
                                 backgroundColor: COLORS.grey
                             }}
-                            onPress={selectImage}
+                            onPress={() => pickImage()}
                         >
                             {selectedImage ? (
                                 <>
@@ -284,11 +298,10 @@ const ManageSocialInformation = ({ navigation }) => {
                                         style={{ width: 100, height: 100, borderRadius: 10 }}
                                         resizeMode="cover"
                                     />
-                                    <Text>{selectedImage.name}</Text>
-                                    <Text>{selectedImage.type}</Text>
+                                    <Text style={{ fontSize: 16, marginTop: 10 }}>Change Image</Text>
                                 </>
                             ) : (
-                                <Text>Select an Image</Text>
+                                <Text style={{ fontSize: 16 }}>Select Image</Text>
                             )}
                         </TouchableOpacity>
                     </View>
