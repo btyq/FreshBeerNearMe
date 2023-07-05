@@ -175,6 +175,11 @@ app.post('/venueOwnerLogin', async (req, res) => {
 app.get('/getBeerData', async (req, res) => {
   await Beer.getBeerData(client, beerArray, res);
 });
+
+app.get('/getBeerLocation', async (req, res) => {
+  const beerID = parseInt(req.query.beerID);
+  await Beer.getBeerLocation(client, beerID, beerArray, res);
+})
 //===================================================================================================================
 //=================================================All Venue Routes===================================================
 //Route to retrieve venue data

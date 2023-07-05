@@ -16,6 +16,7 @@ import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -55,6 +56,7 @@ const CustomText = (props) => {
 
 // for popup
 const BeerItem = ({
+	beerID,
 	beerName,
 	price,
 	rating,
@@ -68,6 +70,11 @@ const BeerItem = ({
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
 	const [popupVisible3, setPopupVisible3] = useState(false); // created 3rd modal
+	const [beerLocation, setBeerLocation] = useState([]);
+	const [beerReview, setBeerReview] = useState([]);
+	const { cookies } = useCookies();
+	const [userID, setUserID] = useState("");
+
 
 	// review summary
 	const data = [
@@ -115,6 +122,45 @@ const BeerItem = ({
 	const handlePopUp3 = () => {
 		setPopupVisible3(!popupVisible3); // created 3rd modal
 	};
+
+	useEffect(() => {
+		setUserID(cookies.userID);
+
+		const fetchBeerLocations = async () => {
+			try {
+				const response = await axios.get("http://10.0.2.2:3000/getBeerLocation", {
+					params: { beerID },
+				});
+				const { success, venues } = response.data;
+
+				if (success) {
+					setBeerLocation(venues);
+				}
+			} catch (error) {
+				console.error("Error fetching beer location:", error);
+			}
+		};
+
+		const fetchBeerreview = async() => {
+			try {
+				const response = await axios.get("http://10.0.2.2:3000/getBeerReview", {
+					params: { beerID },
+				});
+				const { success, review } = response.data;
+
+				if (success) {
+
+				}
+			} catch (error) {
+				console.error("error fetching beer review:", error);
+			}
+		};
+
+		if (popupVisible) {
+			fetchBeerLocations();
+		}
+
+	}, [popupVisible]);
 
 	return (
 		<View style={styles.subContainer}>
@@ -220,10 +266,11 @@ const BeerItem = ({
 							>
 								Locations
 							</CustomText>
-							{venueAvailability &&
-								venueAvailability.map((location, index) => (
-									<CustomText key={index}>{location}</CustomText>
-								))}
+							{beerLocation.map((location) => (
+								<View key={location.venueID}>
+									<Text>{location.venueName}</Text>
+								</View>
+							))}
 							<View
 								style={{
 									flexDirection: "row",
@@ -253,11 +300,6 @@ const BeerItem = ({
 									onPress={handlePopUp2}
 								/>
 							</View>
-							{communityReviews &&
-								communityReviews.map((review, index) => (
-									<Text key={index}>{review}</Text>
-								))}
-
 							<Button
 								title="Close"
 								onPress={handlePopup}
@@ -766,6 +808,7 @@ const FindABeer = ({ navigation }) => {
 							{sortedBeerData.map((beer) => (
 								<BeerItem
 									key={beer._id}
+									beerID={beer.beerID}
 									beerName={beer.beerName}
 									price={beer.price}
 									rating={beer.rating}
