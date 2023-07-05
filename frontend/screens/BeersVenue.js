@@ -273,7 +273,10 @@ const VenueItem = ({
 							elevation: 5,
 						}}
 					>
-						<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1350 }}>
+						<ScrollView
+							contentContainerStyle={{ flexGrow: 1, height: 1350 }}
+							showsVerticalScrollIndicator={false}
+						>
 							<Image source={{ uri: venueImage }} style={styles.venueImage} />
 							<CustomText
 								style={{
@@ -294,8 +297,12 @@ const VenueItem = ({
 									}}
 								>
 									<View style={{ flexDirection: "row", alignItems: "center" }}>
-										<Entypo name="location-pin" size={24} color="black" />
-										<Text
+										<Entypo
+											name="location-pin"
+											size={24}
+											color={COLORS.black}
+										/>
+										<CustomText
 											style={{
 												flexWrap: "wrap",
 												marginLeft: 4,
@@ -303,7 +310,7 @@ const VenueItem = ({
 											}}
 										>
 											{venueAddress}
-										</Text>
+										</CustomText>
 									</View>
 									<View
 										style={{
@@ -314,10 +321,10 @@ const VenueItem = ({
 										<FontAwesome
 											name="phone"
 											size={24}
-											color="black"
+											color={COLORS.black}
 											style={{ marginRight: 4 }}
 										/>
-										<Text>{venueContact}</Text>
+										<CustomText>{venueContact}</CustomText>
 									</View>
 								</View>
 
@@ -417,89 +424,204 @@ const VenueItem = ({
 										animationType="slide"
 									>
 										<View style={styles.modalContainer}>
-											<ScrollView style={styles.popup}>
-												<TouchableOpacity onPress={handlePopUp2}>
-													<Ionicons name="arrow-back" size={24} color="black" />
-												</TouchableOpacity>
-												<View
-													style={{
-														justifyContent: "center",
-														alignItems: "center",
-														marginHorizontal: 32,
-														marginTop: 5,
-														marginBottom: 12,
-													}}
+											<View
+												style={{
+													width: "100%",
+													height: "100%",
+													backgroundColor: COLORS.secondary,
+													borderRadius: 10,
+													paddingHorizontal: 20,
+													elevation: 5,
+												}}
+											>
+												<ScrollView
+													style={{ marginTop: 12 }}
+													showsVerticalScrollIndicator={false}
 												>
-													<Image
-														source={{ uri: venueImage }}
-														style={styles.venueImage}
-													/>
-												</View>
-												<View
-													style={{ flexDirection: "row", alignItems: "center" }}
-												>
+													<TouchableOpacity onPress={handlePopUp2}>
+														<Ionicons
+															name="arrow-back"
+															size={24}
+															color={COLORS.black}
+														/>
+													</TouchableOpacity>
 													<View
 														style={{
-															flex: 1,
-															marginHorizontal: 12,
+															justifyContent: "center",
+															alignItems: "center",
+															marginHorizontal: 32,
+															marginTop: 5,
 															marginBottom: 12,
 														}}
 													>
-														<Text>{venueName}</Text>
-														<Text>{venueAddress}</Text>
+														<Image
+															source={{ uri: venueImage }}
+															style={styles.venueImage}
+														/>
 													</View>
-													<Button
-														title="Write Reviews"
+													<View
 														style={{
-															...styles.shortButton,
-															width: "40%",
-															borderRadius: 10,
-															marginBottom: 15,
+															flexDirection: "row",
+															alignItems: "center",
 														}}
-														onPress={handlePopUp3}
-													/>
-
-													{/* 3rd popup */}
-													<Modal
-														visible={popupVisible3}
-														transparent
-														animationType="slide"
 													>
-														<View style={styles.modalContainer}>
-															<View style={styles.popup}>
-																<View
-																	style={{
-																		flexDirection: "row",
-																		justifyContent: "space-between",
-																		flexWrap: "wrap",
-																	}}
-																></View>
+														<View
+															style={{
+																flex: 1,
+																marginHorizontal: 12,
+																marginBottom: 12,
+															}}
+														>
+															<Text
+																style={{
+																	fontSize: 15,
+																	...GlobalStyle.headerFont,
+																}}
+															>
+																{venueName}
+															</Text>
+															<CustomText>{venueAddress}</CustomText>
+														</View>
+														<Button
+															title="Write Reviews"
+															filled
+															style={{
+																width: "40%",
+																borderRadius: 10,
+																marginBottom: 15,
+																borderColor: 0,
+																elevation: 2,
+															}}
+															onPress={handlePopUp3}
+														/>
+
+														{/* 3rd popup */}
+														<Modal
+															visible={popupVisible3}
+															transparent
+															animationType="slide"
+														>
+															<View style={styles.modalContainer}>
 																<View
 																	style={{
 																		width: "100%",
-																		borderWidth: 1,
-																		borderColor: COLORS.grey,
+																		height: "100%",
+																		backgroundColor: COLORS.secondary,
+																		borderRadius: 10,
 																		paddingHorizontal: 20,
-																		paddingVertical: 10,
-																		borderRadius: 30,
-																		marginBottom: 25,
+																		elevation: 5,
 																	}}
 																>
 																	<View
 																		style={{
+																			marginHorizontal: 22,
 																			flexDirection: "row",
-																			alignItems: "center",
+																			justifyContent: "space-between",
+																			marginTop: 32,
+																		}}
+																	></View>
+																	<View
+																		style={{
+																			width: "100%",
+																			borderColor: 0,
+																			paddingHorizontal: 20,
+																			paddingVertical: 10,
+																			borderRadius: 30,
+																			marginBottom: 25,
+																			backgroundColor: COLORS.grey,
+																			elevation: 2,
+																		}}
+																	>
+																		<View
+																			style={{
+																				flexDirection: "row",
+																				alignItems: "center",
+																			}}
+																		>
+																			<Text
+																				style={{
+																					flex: 1,
+																					fontSize: 15,
+																					...GlobalStyle.headerFont,
+																				}}
+																			>
+																				{venueName}
+																			</Text>
+																			<View
+																				style={{
+																					flex: 1,
+																					alignItems: "flex-end",
+																				}}
+																			>
+																				<AirbnbRating
+																					count={5}
+																					defaultRating={4}
+																					size={18}
+																					showRating={false}
+																					isDisabled={true}
+																				/>
+																			</View>
+																		</View>
+																	</View>
+																	<View
+																		style={{
+																			flexDirection: "column",
+																			height: 300,
+																			width: "100%",
+																			elevation: 2,
+																			backgroundColor: COLORS.grey,
+																			marginTop: 10,
+																			borderRadius: 15,
+																			borderColor: 0,
+																			marginBottom: 10,
+																			paddingHorizontal: 12,
 																		}}
 																	>
 																		<Text
 																			style={{
-																				flex: 1,
-																				fontSize: 16,
-																				fontWeight: "bold",
-																				color: COLORS.black,
+																				fontSize: 15,
+																				...GlobalStyle.headerFont,
+																				marginTop: 20,
+																				marginLeft: 12,
 																			}}
 																		>
-																			Venue Name: {venueName}
+																			Review:
+																		</Text>
+																		<View
+																			style={{
+																				flex: 1,
+																				borderColor: 0,
+																				borderWidth: 1,
+																				borderRadius: 12,
+																				resizeMode: "contain",
+																				paddingLeft: 12,
+																				marginTop: 10,
+																				backgroundColor: COLORS.grey,
+																			}}
+																		>
+																			<TextInput
+																				placeholder="Write your reviews here"
+																				style={{ ...GlobalStyle.bodyFont }}
+																				value={reviewText}
+																				onChangeText={handleReviewTextChange}
+																			></TextInput>
+																		</View>
+																	</View>
+																	<View
+																		style={{
+																			marginBottom: 25,
+																			flexDirection: "row",
+																			alignItems: "center",
+																			justifyContent: "space-between",
+																		}}
+																	>
+																		<Text
+																			style={{
+																				...GlobalStyle.headerFont,
+																				marginLeft: 10,
+																			}}
+																		>
+																			Your rating:
 																		</Text>
 																		<View
 																			style={{
@@ -507,131 +629,72 @@ const VenueItem = ({
 																				alignItems: "flex-end",
 																			}}
 																		>
-																			<View
-																				style={{
-																					...styles.starRatingContainer,
-																				}}
-																			>
-																				{[1, 2, 3, 4, 5].map((star) => (
-																					<Ionicons
-																						key={star}
-																						name="star"
-																						size={16}
-																						color={
-																							star <= venueRating
-																								? COLORS.foam
-																								: COLORS.grey
-																						}
-																						style={{ marginBottom: 9 }}
-																					/>
-																				))}
-																			</View>
+																			<AirbnbRating
+																				count={5}
+																				defaultRating={rating}
+																				size={20}
+																				showRating={false}
+																				onFinishRating={handleRatingChange}
+																			/>
 																		</View>
 																	</View>
+																	<Button
+																		title="Submit"
+																		onPress={handleSubmit}
+																		filled
+																		style={{
+																			elevation: 2,
+																			borderColor: 0,
+																		}}
+																	/>
 																</View>
-																<View
-																	style={{
-																		marginBottom: 25,
-																		flexDirection: "row",
-																		alignItems: "center",
-																		justifyContent: "space-between",
-																	}}
-																>
-																	<Text
-																		style={{
-																			fontSize: 14,
-																			color: COLORS.black,
-																			marginLeft: 20,
-																		}}
-																	>
-																		Review
-																	</Text>
-																	<TextInput
-																		style={{
-																			width: "60%",
-																			height: 95,
-																			borderColor: COLORS.black,
-																			borderWidth: 1,
-																			borderRadius: 8,
-																			paddingLeft: 22,
-																			marginTop: 10,
-																			backgroundColor: COLORS.secondary,
-																		}}
-																		value={reviewText}
-																		onChangeText={handleReviewTextChange}
-																	></TextInput>
-																</View>
-																<View
-																	style={{
-																		marginBottom: 25,
-																		flexDirection: "row",
-																		alignItems: "center",
-																		justifyContent: "space-between",
-																	}}
-																>
-																	<Text
-																		style={{
-																			fontSize: 14,
-																			color: COLORS.black,
-																			marginLeft: 20,
-																		}}
-																	>
-																		Rating
-																	</Text>
-																	<View
-																		style={{
-																			flex: 1,
-																			alignItems: "flex-end",
-																		}}
-																	>
-																		<AirbnbRating
-																			count={5}
-																			defaultRating={rating}
-																			size={20}
-																			showRating={false}
-																			onFinishRating={handleRatingChange}
-																		/>
-																	</View>
-																</View>
-																<Button title="Submit" onPress={handleSubmit} />
 															</View>
-														</View>
-													</Modal>
-												</View>
-												<View
-													style={{
-														borderTopColor: "black",
-														borderTopWidth: 1,
-														marginBottom: 12,
-													}}
-												></View>
-												<View
-													style={{
-														flex: 1,
-														marginHorizontal: 12,
-														marginBottom: 12,
-													}}
-												>
-													<Text>Review Summary</Text>
-													{Object.keys(ratingCounter).length > 0 && (
-														<HorizontalBarChart data={data} />
-													)}
-												</View>
-												<View>
-													{venueReview.map((reviews) => (
-														<View
-															key={reviews.reviewID}
-															style={styles.container}
-														>
-															<Text>Posted By: {reviews.reviewUser}</Text>
-															<Text>Date: {reviews.reviewDate}</Text>
-															<Text>Review: {reviews.reviewDescription}</Text>
-															<Text>Ratings: {reviews.reviewRating}</Text>
-														</View>
-													))}
-												</View>
-												{/* <Button title="Submit" onPress={handlePopUp2} /> */}
-											</ScrollView>
+														</Modal>
+													</View>
+													<View
+														style={{
+															borderTopColor: "black",
+															borderTopWidth: 1,
+															marginBottom: 12,
+														}}
+													></View>
+													<View
+														style={{
+															flex: 1,
+															marginHorizontal: 12,
+															marginBottom: 12,
+														}}
+													>
+														<CustomText style={{ marginBottom: 12 }}>
+															Review Summary
+														</CustomText>
+														{Object.keys(ratingCounter).length > 0 && (
+															<HorizontalBarChart data={data} />
+														)}
+													</View>
+													<View>
+														{venueReview.map((reviews) => (
+															<View
+																key={reviews.reviewID}
+																style={styles.container}
+															>
+																<CustomText>
+																	Posted By: {reviews.reviewUser}
+																</CustomText>
+																<CustomText>
+																	Date: {reviews.reviewDate}
+																</CustomText>
+																<CustomText>
+																	Review: {reviews.reviewDescription}
+																</CustomText>
+																<CustomText>
+																	Ratings: {reviews.reviewRating}
+																</CustomText>
+															</View>
+														))}
+													</View>
+												</ScrollView>
+											</View>
 										</View>
 									</Modal>
 								</View>
@@ -639,7 +702,6 @@ const VenueItem = ({
 									style={{
 										borderTopColor: "black",
 										borderTopWidth: 1,
-										//	marginBottom: 12,
 									}}
 								></View>
 								<CustomText
@@ -714,7 +776,6 @@ const VenueItem = ({
 										</View>
 									))}
 								</View>
-
 								<Button
 									title="Close"
 									onPress={handlePopup}
@@ -1050,59 +1111,11 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		borderColor: 0,
 	},
-	leftContainer: {
-		flex: 1,
-	},
-	rightContainer: {
-		flex: 0.3,
-		marginRight: 12,
-		flexDirection: "row-reverse",
-		alignItems: "center",
-	},
-	venueName: {
-		fontSize: 16,
-		fontWeight: "bold",
-		color: COLORS.black,
-	},
-	starRatingContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginTop: 4,
-	},
 	modalContainer: {
 		flex: 1,
 		backgroundColor: COLORS.overlay,
 		justifyContent: "center",
 		alignItems: "center",
-	},
-	popup: {
-		width: "90%", // Adjust the width of the popup
-		height: 500, // Adjust the height of the popup
-		backgroundColor: COLORS.white,
-		borderRadius: 10,
-		padding: 20,
-		elevation: 5,
-	},
-	popupTitle: {
-		fontSize: 18,
-		fontWeight: "bold",
-		marginBottom: 10,
-	},
-	popupContent: {
-		fontSize: 16,
-		marginBottom: 20,
-	},
-	closeButton: {
-		backgroundColor: COLORS.orange,
-		padding: 10,
-		borderRadius: 8,
-		alignItems: "center",
-		//	marginTop: "50%", // Adjust the marginTop to shift the close button down
-	},
-	closeButtonText: {
-		color: COLORS.white,
-		fontWeight: "bold",
-		fontSize: 16,
 	},
 	venueImage: {
 		height: 200,
@@ -1110,7 +1123,7 @@ const styles = StyleSheet.create({
 		borderRadius: 15,
 		borderWidth: 5,
 		borderColor: 0,
-		marginTop: 30,
+		marginTop: 20,
 		marginLeft: "auto",
 		marginRight: "auto",
 		justifyContent: "center",
