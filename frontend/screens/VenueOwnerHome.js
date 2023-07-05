@@ -77,6 +77,10 @@ const VenueOwnerHome = ({ navigation }) => {
 		navigation.navigate('ManageSocialInformation');
 	};
 
+	const navigateToManagePromotion = () => {
+		navigation.navigate('ManagePromotion');
+	};
+
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -314,7 +318,7 @@ const VenueOwnerHome = ({ navigation }) => {
 							<Text style={{ color: COLORS.black, fontSize: 13, fontWeight: 'bold' }}>Manage Social</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
-							onPress={navigateToManageSocialInformation}
+							onPress={navigateToManagePromotion}
 							style={{
 								marginLeft: 90,
 								marginBottom: 10,
