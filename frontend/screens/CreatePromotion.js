@@ -1,7 +1,8 @@
 import { Ionicons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
-import ImagePicker from 'react-native-image-picker'
+import * as ImagePicker from 'expo-image-picker'
+import { Alert } from "react-native";
 import {
     ImageBackground,
     ScrollView,
@@ -30,12 +31,16 @@ const CreatePromotion = ({ navigation }) => {
     const [description, setDescription] = useState("");
     const [showDatePicker, setShowDatePicker] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
-
+    const [hasGalleryPermission, setHasGalleryPermission] = useState(false); // Add this line
+    
     useEffect(() => {
-        const sessionToken = cookies.sessionToken;
-        const venueOwnerID = cookies.venueOwnerID;
+        (async () => {
+            const galleryStatus = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            setHasGalleryPermission(galleryStatus.status == 'granted');
+        })();
         setUsername(cookies.username);
     }, []);
+
 
     const [isFacebookPressed, setIsFacebookPressed] = useState(false);
     const [isGooglePressed, setIsGooglePressed] = useState(false);
@@ -98,6 +103,26 @@ const CreatePromotion = ({ navigation }) => {
         const year = date.getFullYear();
 
         return `${day}/${month}/${year}`;
+    };
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.image,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            setSelectedImage(result.assets[0]);
+        } else {
+            Alert.alert(
+                "Selection Cancelled",
+                "Please choose an image to proceed.",
+                [{ text: "OK", onPress: () => console.log("OK pressed") }],
+                { cancelable: false }
+            );
+        }
     };
 
     return (
@@ -265,34 +290,33 @@ const CreatePromotion = ({ navigation }) => {
                     />
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
-                    <TouchableOpacity
-                        style={{
-                            borderWidth: 1,
-                            borderColor: COLORS.black,
-                            borderRadius: 10,
-                            paddingHorizontal: 140,
-                            paddingVertical: 7,
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: COLORS.grey,
-                        }}
-                        onPress={selectImage}
-                    >
-                        {selectedImage ? (
-                            <>
-                                <Image
-                                    source={{ uri: selectedImage.uri }}
-                                    style={{ width: 100, height: 100, borderRadius: 10 }}
-                                    resizeMode="cover"
-                                />
-                                <Text>{selectedImage.name}</Text>
-                                <Text>{selectedImage.type}</Text>
-                            </>
-                        ) : (
-                            <Text>Select an Image</Text>
-                        )}
-                    </TouchableOpacity>
-                </View>
+                        <TouchableOpacity
+                            style={{
+                                borderWidth: 1,
+                                borderColor: COLORS.grey,
+                                borderRadius: 10,
+                                paddingHorizontal: 149,
+                                paddingVertical: 5,
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                backgroundColor: COLORS.grey
+                            }}
+                            onPress={() => pickImage()}
+                        >
+                            {selectedImage ? (
+                                <>
+                                    <Image
+                                        source={{ uri: selectedImage.uri }}
+                                        style={{ width: 100, height: 100, borderRadius: 10 }}
+                                        resizeMode="cover"
+                                    />
+                                    <Text style={{ fontSize: 16, marginTop: 10 }}>Change Image</Text>
+                                </>
+                            ) : (
+                                <Text style={{ fontSize: 16 }}>Select Image</Text>
+                            )}
+                        </TouchableOpacity>
+                    </View>
                 <View
                     style={{
                         flexDirection: 'row',
