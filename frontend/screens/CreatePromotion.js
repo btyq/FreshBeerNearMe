@@ -1,4 +1,4 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
+import { Ionicons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import ImagePicker from 'react-native-image-picker'
@@ -15,31 +15,9 @@ import {
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../CookieContext";
+import DatePicker from '@react-native-community/datetimepicker';
 import COLORS from "../constants/colors";
 import GlobalStyle from "../utils/GlobalStyle";
-
-// CODES TO STYLE BUTTON
-const Button = (props) => {
-    const filledBgColor = props.color || COLORS.primary;
-    const outlinedColor = COLORS.white;
-    const bgColor = props.filled ? filledBgColor : outlinedColor;
-    const textColor = props.filled ? COLORS.black : COLORS.primary;
-
-    return (
-        <TouchableOpacity
-            style={{
-                ...styles.button,
-                ...{ backgroundColor: bgColor },
-                ...props.style,
-            }}
-            onPress={props.onPress}
-        >
-            <Text style={{ fontSize: 14, ...{ color: textColor } }}>
-                {props.title}
-            </Text>
-        </TouchableOpacity>
-    );
-};
 
 const CreatePromotion = ({ navigation }) => {
     const { cookies } = useCookies();
@@ -47,10 +25,11 @@ const CreatePromotion = ({ navigation }) => {
     const [index1, setIndex1] = React.useState(0);
     const [username, setUsername] = useState("");
     const [selectedImage, setSelectedImage] = useState(null);
-    const [title, setTitle] = useState('');
-    const [date, setDate] = useState('');
-    const [description, setDescription] = useState('');
-
+    const [title, setTitle] = useState("");
+    const [date, setDate] = useState(new Date());
+    const [description, setDescription] = useState("");
+    const [showDatePicker, setShowDatePicker] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         const sessionToken = cookies.sessionToken;
@@ -73,7 +52,6 @@ const CreatePromotion = ({ navigation }) => {
     const handleInstagramPress = () => {
         setIsInstagramPressed(!isInstagramPressed);
     };
-    
 
     const selectImage = async () => {
         try {
@@ -88,12 +66,40 @@ const CreatePromotion = ({ navigation }) => {
 
     const handleClearButton = () => {
         setTitle('');
-        setDate('');
+        setDate(new Date());
         setDescription('');
     };
 
+    const handleDateChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShowDatePicker(false);
 
-    //=====================================================================================================
+        const today = new Date().setHours(0, 0, 0, 0);
+
+        if (currentDate < today) {
+            setDate(new Date());
+            setErrorMessage("Date cannot be set earlier than today");
+        } else if (currentDate > today) {
+            setDate(new Date());
+            setErrorMessage("Date cannot be set beyond today");
+        } else {
+            setDate(currentDate);
+            setErrorMessage("");
+        }
+    };
+
+    const showDatePickerModal = () => {
+        setShowDatePicker(true);
+    };
+
+    const formatDate = (date) => {
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'short' });
+        const year = date.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    };
+
     return (
         <View style={{ flex: 1, backgroundColor: COLORS.white }}>
             <Header
@@ -134,11 +140,10 @@ const CreatePromotion = ({ navigation }) => {
                 }
             />
             <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-                {/* Back button */}
-                <View style={{ marginTop: 20, marginLeft: 10, }}>
+                <View style={{ marginTop: 20, marginLeft: 10 }}>
                     <TouchableOpacity
                         onPress={() => {
-                            navigation.goBack(); // Go back to the previous screen
+                            navigation.goBack();
                         }}
                         style={{
                             backgroundColor: COLORS.grey,
@@ -159,18 +164,17 @@ const CreatePromotion = ({ navigation }) => {
                             marginLeft: 20,
                             marginBottom: 10,
                             fontSize: 17,
-                            // Add any additional styles from GlobalStyle.headerFont
                             marginBottom: 5,
-                            flex: 1, // Take up remaining space
+                            flex: 1,
                         }}
                     >
                         Create Post
                     </Text>
                     <View style={{
                         flex: 1,
-                        borderBottomWidth: 1, // Adjust the thickness as desired
+                        borderBottomWidth: 1,
                         borderBottomColor: COLORS.black,
-                        marginLeft: -150, // Adjust the value to prevent overlapping
+                        marginLeft: -150,
                     }} />
                 </View>
                 <View
@@ -183,14 +187,13 @@ const CreatePromotion = ({ navigation }) => {
                         padding: 10,
                     }}
                 >
-                    {/* Title Input */}
                     <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Title</Text>
                     <TextInput
                         style={{
-                            height: 40, 
-                            backgroundColor: 'white', 
-                            borderRadius: 5, 
-                            paddingHorizontal: 5, 
+                            height: 40,
+                            backgroundColor: 'white',
+                            borderRadius: 5,
+                            paddingHorizontal: 5,
                             borderWidth: 1,
                             borderRadius: 10,
                         }}
@@ -198,29 +201,59 @@ const CreatePromotion = ({ navigation }) => {
                         value={title}
                     />
 
-                    {/* Date Input */}
-                    <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10 }}>Date</Text>
-                    <TextInput
-                        style={{
-                            height: 40, 
-                            backgroundColor: 'white', 
-                            borderRadius: 5, 
-                            paddingHorizontal: 5, 
-                            borderWidth: 1,
-                            borderRadius: 10,
-                        }}
-                        onChangeText={(text) => setDate(text)}
-                        value={date}
-                    />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+                        <Text style={{ fontSize: 16, fontWeight: 'bold', marginRight: 10 }}>Date</Text>
+                        {/* Error message */}
+                        {errorMessage ? (
+                            <Text style={styles.errorMessage}>{errorMessage}</Text>
+                        ) : null}
+                    </View>
 
-                    {/* Description Input */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <TextInput
+                            style={{
+                                flex: 1,
+                                height: 40,
+                                backgroundColor: 'white',
+                                borderRadius: 5,
+                                paddingHorizontal: 5,
+                                borderWidth: 1,
+                                borderRadius: 10,
+                            }}
+                            value={formatDate(date)}
+                            placeholder="DD/MM/YYYY"
+                            onChangeText={(text) => {
+                                // Validate and set the date
+                                const [day, month, year] = text.split('/');
+                                const parsedDate = new Date(`${year}-${month}-${day}`);
+                                if (!isNaN(parsedDate.getTime())) {
+                                    setDate(parsedDate);
+                                    setErrorMessage("");
+                                } else {
+                                    setErrorMessage("Invalid date format");
+                                }
+                            }}
+                        />
+                        <TouchableOpacity onPress={showDatePickerModal} style={{ marginLeft: 5 }}>
+                            <Ionicons name="calendar" size={24} color={COLORS.black} />
+                        </TouchableOpacity>
+                    </View>
+                    {showDatePicker && (
+                        <DatePicker
+                            value={date}
+                            mode="date"
+                            display="default"
+                            onChange={handleDateChange}
+                        />
+                    )}
+
                     <Text style={{ fontSize: 16, fontWeight: 'bold', marginTop: 10 }}>Description</Text>
                     <TextInput
                         style={{
-                            height: 150, 
-                            backgroundColor: 'white', 
-                            borderRadius: 5, 
-                            paddingHorizontal: 5, 
+                            height: 150,
+                            backgroundColor: 'white',
+                            borderRadius: 5,
+                            paddingHorizontal: 5,
                             borderWidth: 1,
                             borderRadius: 5,
                             textAlignVertical: 'top',
@@ -232,35 +265,34 @@ const CreatePromotion = ({ navigation }) => {
                     />
                 </View>
                 <View style={{ flexDirection: 'row', justifyContent: 'center', marginTop: 20 }}>
-                        <TouchableOpacity
-                            style={{
-                                borderWidth: 1,
-                                borderColor: COLORS.black,
-                                borderRadius: 10,
-                                paddingHorizontal: 140,
-                                paddingVertical: 7,
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                backgroundColor: COLORS.grey,
-                                
-                            }}
-                            onPress={selectImage}
-                        >
-                            {selectedImage ? (
-                                <>
-                                    <Image
-                                        source={{ uri: selectedImage.uri }}
-                                        style={{ width: 100, height: 100, borderRadius: 10 }}
-                                        resizeMode="cover"
-                                    />
-                                    <Text>{selectedImage.name}</Text>
-                                    <Text>{selectedImage.type}</Text>
-                                </>
-                            ) : (
-                                <Text>Select an Image</Text>
-                            )}
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity
+                        style={{
+                            borderWidth: 1,
+                            borderColor: COLORS.black,
+                            borderRadius: 10,
+                            paddingHorizontal: 140,
+                            paddingVertical: 7,
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            backgroundColor: COLORS.grey,
+                        }}
+                        onPress={selectImage}
+                    >
+                        {selectedImage ? (
+                            <>
+                                <Image
+                                    source={{ uri: selectedImage.uri }}
+                                    style={{ width: 100, height: 100, borderRadius: 10 }}
+                                    resizeMode="cover"
+                                />
+                                <Text>{selectedImage.name}</Text>
+                                <Text>{selectedImage.type}</Text>
+                            </>
+                        ) : (
+                            <Text>Select an Image</Text>
+                        )}
+                    </TouchableOpacity>
+                </View>
                 <View
                     style={{
                         flexDirection: 'row',
@@ -303,7 +335,6 @@ const CreatePromotion = ({ navigation }) => {
                         <Text style={{ color: COLORS.black, fontSize: 16 }}>Submit</Text>
                     </TouchableOpacity>
                 </View>
-
             </ScrollView>
         </View>
     );
@@ -321,6 +352,12 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         padding: 5,
         marginBottom: 10,
+    },
+    errorMessage: {
+        color: COLORS.red,
+        marginTop: 5,
+        marginLeft: 10,
+        fontStyle: 'italic',
     },
 });
 
