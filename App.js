@@ -6,7 +6,15 @@ import React, { useEffect } from "react";
 import { CookieProvider } from "./frontend/CookieContext";
 import { AdminDashboard, ManageUsers } from "./frontend/components";
 import BottomTabNavigation from "./frontend/navigation/BottomTabNavigation";
-import {VenueOwnerHome,InquiriesNFeedback, Respond, VenueProfile, ManageInventory,ManageSocialInformation, ManagePromotion} from "./frontend/screens";
+import {
+	VenueOwnerHome,
+	InquiriesNFeedback, 
+	Respond, 
+	VenueProfile, 
+	ManageInventory, 
+	ManageSocialInformation, 
+	ManagePromotion,	
+	CreatePromotion} from "./frontend/screens";
 import {
 	Forums,
 	RateNReview,
@@ -124,6 +132,11 @@ export default function App() {
 					<Stack.Screen
 						name="ManagePromotion"
 						component={ManagePromotion}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="CreatePromotion"
+						component={CreatePromotion}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>

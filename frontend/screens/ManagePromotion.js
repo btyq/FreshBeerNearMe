@@ -70,6 +70,10 @@ const ManagePromotion = ({ navigation }) => {
         setIsInstagramPressed(!isInstagramPressed);
     };
 
+    const navigateToCreatePromotion = () => {
+		navigation.navigate('CreatePromotion');
+	};
+
     const selectImage = async () => {
         try {
             const result = await ImagePicker.launchImageLibraryAsync();
@@ -365,10 +369,10 @@ const ManagePromotion = ({ navigation }) => {
                             paddingVertical: 10,
                             borderRadius: 20,
                             marginLeft: 50,
+                            borderWidth: 1,
+                            borderRadius: 20,
                         }}
-                        onPress={() => {
-                            // Handle create button press
-                        }}
+                        onPress={navigateToCreatePromotion}
                     >
                         <Text style={{ color: COLORS.black, fontSize: 16 }}>Create</Text>
                     </TouchableOpacity>
@@ -380,6 +384,8 @@ const ManagePromotion = ({ navigation }) => {
                             paddingVertical: 10,
                             borderRadius: 20,
                             marginRight: 50,
+                            borderWidth: 1,
+                            borderRadius: 20,
                         }}
                         onPress={() => {
                             // Handle remove button press
