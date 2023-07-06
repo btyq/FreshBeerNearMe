@@ -81,13 +81,12 @@ const VenueItem = ({
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
 	const [reviewAdded, setReviewAdded] = useState(false);
+	
+	const HorizontalBarChart = ({ ratingCounter }) => {
 
-	// review summary
-	const data = Object.entries(ratingCounter).map(([key, value]) => {
-		return { label: key + "*", value: parseInt(value) };
-	});
-
-	const HorizontalBarChart = ({ data }) => {
+		const data = Object.entries(ratingCounter).map(([key, value]) => {
+			return { label: key + "*", value: parseInt(value) };
+		});
 		const maxValue = Math.max(...data.map((item) => item.value));
 
 		return (
@@ -151,7 +150,7 @@ const VenueItem = ({
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/addReview", data)
+			.post("http://10.0.2.2:3000/addVenueReview", data)
 			.then((response) => {
 				if (response.data.success) {
 					console.log("Review Added");
@@ -169,6 +168,16 @@ const VenueItem = ({
 					};
 
 					setVenueReview((prevReviews) => [...prevReviews, newReview]);
+
+					setRatingCounter((prevCounter) => {
+						const newCounter = { ...prevCounter };
+						if (newCounter.hasOwnProperty(rating)) {
+							newCounter[rating] += 1;
+						} else {
+							newCounter[rating] = 1;
+						}
+						return newCounter;
+					});
 					setReviewAdded(true);
 				}
 			})
@@ -669,7 +678,7 @@ const VenueItem = ({
 															Review Summary
 														</CustomText>
 														{Object.keys(ratingCounter).length > 0 && (
-															<HorizontalBarChart data={data} />
+															<HorizontalBarChart ratingCounter={ratingCounter} />
 														)}
 													</View>
 													<View>

@@ -64,28 +64,24 @@ const BeerItem = ({
 	beerImage,
 	ABV,
 	IBU,
-	communityReviews,
-	venueAvailability,
 }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
 	const [popupVisible3, setPopupVisible3] = useState(false); // created 3rd modal
 	const [beerLocation, setBeerLocation] = useState([]);
 	const [beerReview, setBeerReview] = useState([]);
+	const [reviewText, setReviewText] = useState("");
+	const [reviewRating, setReviewRating] = useState(0);
+	const [ratingCounter, setRatingCounter] = useState({});
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
+	const [reviewAdded, setReviewAdded] = useState(false);
 
+	const HorizontalBarChart = ({ratingCounter}) => {
 
-	// review summary
-	const data = [
-		{ label: "5*", value: 100 },
-		{ label: "4*", value: 70 },
-		{ label: "3*", value: 50 },
-		{ label: "2*", value: 20 },
-		{ label: "1*", value: 5 },
-	];
-
-	const HorizontalBarChart = () => {
+		const data = Object.entries(ratingCounter).map(([key, value]) => {
+			return { label: key + "*", value: parseInt(value) };
+		});
 		const maxValue = Math.max(...data.map((item) => item.value));
 
 		return (
@@ -123,6 +119,72 @@ const BeerItem = ({
 		setPopupVisible3(!popupVisible3); // created 3rd modal
 	};
 
+	const handleReviewTextChange = (text) => {
+		setReviewText(text);
+	}
+
+	const handleRatingChange = (ratingValue) => {
+		setReviewRating(ratingValue);
+	}
+
+	const handleSubmit = () => {
+		const currentDate = new Date();
+
+		const day = currentDate.getDate();
+		const month = currentDate.getMonth() + 1;
+		const year = currentDate.getFullYear();
+
+		const formattedDate = `${day}/${month}/${year}`;
+
+		const data = {
+			reviewText: reviewText,
+			rating: reviewRating,
+			userID: userID,
+			reviewDate: formattedDate,
+			beerID: beerID,
+		};
+
+		axios
+			.post("http://10.0.2.2:3000/addBeerReview", data)
+			.then((response) => {
+				if (response.data.success) {
+					console.log("Review Added");
+
+					const highestReviewID = Math.max(
+						...beerReview.map((review) => review.reviewID)
+					);
+
+					const newReview = {
+						reviewID: highestReviewID + 1,
+						reviewUser: cookies.username,
+						reviewDate: formattedDate,
+						reviewDescription: reviewText,
+						reviewRating: reviewRating,
+					};
+
+					setBeerReview((prevReviews) => [...prevReviews, newReview]);
+
+					setRatingCounter((prevCounter) => {
+						const newCounter = { ...prevCounter };
+						if (newCounter.hasOwnProperty(reviewRating)) {
+						  newCounter[reviewRating] += 1;
+						} else {
+						  newCounter[reviewRating] = 1;
+						}
+						return newCounter;
+					});
+					setReviewAdded(true);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+
+		setReviewText("");
+		setReviewRating(0);
+		handlePopUp3();
+	}; 
+
 	useEffect(() => {
 		setUserID(cookies.userID);
 
@@ -141,26 +203,37 @@ const BeerItem = ({
 			}
 		};
 
-		const fetchBeerreview = async() => {
+		const fetchBeerReview = async() => {
 			try {
 				const response = await axios.get("http://10.0.2.2:3000/getBeerReview", {
 					params: { beerID },
 				});
 				const { success, review } = response.data;
-
-				if (success) {
+				if (success && !reviewAdded) {
+					setBeerReview(review);
+					const counter = {};
+					review.forEach((item) => {
+						const { reviewRating } = item;
+						if (counter.hasOwnProperty(reviewRating)) {
+							counter[reviewRating] += 1;
+						} else {
+							counter[reviewRating] = 1;
+						}
+					});
+					setRatingCounter(counter);
 
 				}
 			} catch (error) {
-				console.error("error fetching beer review:", error);
+				console.error("Error fetching beer review:", error);
 			}
 		};
 
 		if (popupVisible) {
 			fetchBeerLocations();
+			fetchBeerReview();
 		}
 
-	}, [popupVisible]);
+	}, [popupVisible, reviewAdded]);
 
 	return (
 		<View style={styles.subContainer}>
@@ -340,7 +413,7 @@ const BeerItem = ({
 													}}
 												>
 													<Image
-														source={require("../../assets/brewlander.jpg")}
+														source={{ uri: beerImage}}
 														style={{
 															height: 150,
 															width: "100%",
@@ -364,10 +437,7 @@ const BeerItem = ({
 														}}
 													>
 														<Text style={{ ...GlobalStyle.bodyFont }}>
-															Beer name
-														</Text>
-														<Text style={{ ...GlobalStyle.bodyFont }}>
-															Address
+															{beerName}
 														</Text>
 													</View>
 													<Button
@@ -433,7 +503,7 @@ const BeerItem = ({
 																				...GlobalStyle.headerFont,
 																			}}
 																		>
-																			Beer Name:
+																			{beerName}
 																		</Text>
 																		<View
 																			style={{
@@ -441,13 +511,22 @@ const BeerItem = ({
 																				alignItems: "flex-end",
 																			}}
 																		>
-																			<AirbnbRating
-																				count={5}
-																				defaultRating={4}
-																				size={18}
-																				showRating={false}
-																				isDisabled={true}
-																			/>
+																			<View
+																				style={{
+																					flexDirection: "row",
+																					alignItems: "center",
+																					paddingTop: 6,
+																				}}
+																			>
+																				{[1, 2, 3, 4, 5].map((star) => (
+																					<Ionicons
+																						key={star}
+																						name="star"
+																						size={16}
+																						color={star <= rating ? COLORS.foam : COLORS.grey}
+																					/>
+																				))}
+																			</View>
 																		</View>
 																	</View>
 																</View>
@@ -490,6 +569,8 @@ const BeerItem = ({
 																		<TextInput
 																			placeholder="Write your reviews here"
 																			style={{ ...GlobalStyle.bodyFont }}
+																			value={reviewText}
+																			onChangeText={handleReviewTextChange}
 																		></TextInput>
 																	</View>
 																</View>
@@ -517,15 +598,16 @@ const BeerItem = ({
 																	>
 																		<AirbnbRating
 																			count={5}
-																			defaultRating={4}
+																			defaultRating={reviewRating}
 																			size={18}
 																			showRating={false}
+																			onFinishRating={handleRatingChange}
 																		/>
 																	</View>
 																</View>
 																<Button
 																	title="Submit"
-																	onPress={handlePopUp3}
+																	onPress={handleSubmit}
 																	filled
 																	style={{
 																		elevation: 2,
@@ -553,29 +635,27 @@ const BeerItem = ({
 													<CustomText style={{ marginBottom: 12 }}>
 														Review Summary
 													</CustomText>
-													<HorizontalBarChart />
-													<CustomText>Posted by User</CustomText>
-													<View
-														style={{
-															flexDirection: "row",
-															height: 100,
-															elevation: 2,
-															backgroundColor: COLORS.grey,
-															marginTop: 10,
-															borderRadius: 15,
-															borderColor: COLORS.black,
-															marginBottom: 10,
-															alignItems: "center",
-														}}
-													>
-														<View
-															style={{
-																flexDirection: "row",
-																paddingHorizontal: 10,
-															}}
-														>
-															<CustomText>Beer is nice</CustomText>
-														</View>
+													<HorizontalBarChart ratingCounter={ratingCounter}/>
+													<View>
+														{beerReview.map((reviews) => (
+															<View
+																key={reviews.reviewID}
+																style={styles.container}
+															>
+																<CustomText>
+																	Posted By: {reviews.reviewUser}
+																</CustomText>
+																<CustomText>
+																	Date: {reviews.reviewDate}
+																</CustomText>
+																<CustomText>
+																	Review: {reviews.reviewDescription}
+																</CustomText>
+																<CustomText>
+																	Ratings: {reviews.reviewRating}
+																</CustomText>
+															</View>
+														))}
 													</View>
 												</View>
 											</View>

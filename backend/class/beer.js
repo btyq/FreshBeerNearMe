@@ -51,7 +51,6 @@ class Beer {
             const matchingBeer = beerArray.find(beer => beer.beerID === beerID);
             if (matchingBeer) {
                 const venueID = matchingBeer.beerLocation;
-                console.log(venueID);
                 const collection = client.db('FreshBearNearMe').collection('Venue');
                 const venues = await collection.find({ venueID: {$in: venueID } }).toArray();
                 res.json({ success: true, venues });
@@ -64,6 +63,36 @@ class Beer {
         }
     }
 
+    static async getBeerReview(client, beerID, beerArray, res) {
+        try {
+          const matchingVenue = beerArray.find(beer => beer.beerID === beerID);
+          if (matchingVenue) {
+            const reviewID = matchingVenue.communityReviews;
+            const collection = client.db('FreshBearNearMe').collection('Reviews');
+            const review = await collection.find({ reviewID: { $in: reviewID } }).toArray();
+            const userCollection = client.db('FreshBearNearMe').collection('User');
+            const userID = review.map(review => review.reviewUser);
+            const users = await userCollection.find({ userID: { $in: userID} }).toArray();
+            const userMap = users.reduce((map, user) => {
+              map[user.userID] = user.username;
+              return map;
+              
+            }, {});
+            
+            const updatedReviews = review.map(review => {
+              const username = userMap[review.reviewUser];
+              return { ...review, reviewUser: username };
+            });
+            
+            res.json({ success: true, review: updatedReviews });
+          } else {
+            res.status(404).json({ success: false, message: 'Beer not found' });
+          }
+        } catch (error) {
+          console.error("Error retrieving beer reviews:", error);
+          res.status(500).json({ success: false, message: "An error occurred while retrieving beer menu" });
+        }
+      }
     
 }
 

@@ -8,7 +8,7 @@ class Review {
         this.reviewRating = reviewRating;
     }
 
-    static async addReview(client, reviewText, rating, userID, reviewDate, venueID, res) {
+    static async addVenueReview(client, reviewText, rating, userID, reviewDate, venueID, res) {
         try {
           const db = client.db('FreshBearNearMe');
           const reviewsCollection = db.collection('Reviews');
@@ -43,7 +43,45 @@ class Review {
           console.error('Error adding review:', error);
           res.status(500).json({ success: false, message: 'Failed to add review' });
         }
+    }
+
+    static async addBeerReview(client, reviewText, rating, userID, reviewDate, beerID, res) {
+      try {
+        const db = client.db('FreshBearNearMe');
+        const reviewsCollection = db.collection('Reviews');
+        const beerCollection = db.collection('Beer');
+    
+        const latestReview = await reviewsCollection.findOne({}, { sort: { reviewID: -1 } });
+        const nextReviewID = latestReview ? latestReview.reviewID + 1 : 1;
+    
+        const newReview = {
+          reviewID: nextReviewID,
+          reviewUser: userID,
+          reviewDate: reviewDate,
+          reviewDescription: reviewText,
+          reviewRating: rating
+        };
+    
+        // Add the review to the Reviews collection
+        const result = await reviewsCollection.insertOne(newReview);
+    
+        // Update the beer with the new review
+        const updateResult = await beerCollection.updateOne(
+          { beerID: beerID },
+          { $push: { communityReviews: nextReviewID } }
+        );
+    
+        if (updateResult.modifiedCount === 1) {
+          res.status(200).json({ success: true, message: 'Review added!' });
+        } else {
+          res.status(500).json({ success: false, message: 'Failed to add review to venue' });
+        }
+      } catch (error) {
+        console.error('Error adding review:', error);
+        res.status(500).json({ success: false, message: 'Failed to add review' });
       }
+    }
+
 }
 
 module.exports = Review;

@@ -176,9 +176,16 @@ app.get('/getBeerData', async (req, res) => {
   await Beer.getBeerData(client, beerArray, res);
 });
 
+//Route to retrieve beer location
 app.get('/getBeerLocation', async (req, res) => {
   const beerID = parseInt(req.query.beerID);
   await Beer.getBeerLocation(client, beerID, beerArray, res);
+});
+
+//Route to retrieve beer review
+app.get('/getBeerReview', async (req, res) => {
+  const beerID = parseInt(req.query.beerID);
+  Beer.getBeerReview(client, beerID, beerArray, res);
 })
 //===================================================================================================================
 //=================================================All Venue Routes===================================================
@@ -200,13 +207,23 @@ app.get('/getVenueReview', async (req, res) => {
 })
 //===================================================================================================================
 //=================================================All Review Routes=================================================
-app.post('/addReview', async (req, res) => {
+app.post('/addVenueReview', async (req, res) => {
   const reviewDescription = req.body.reviewText;
   const rating = req.body.rating;
   const userID = req.body.userID;
   const reviewDate = req.body.reviewDate;
   const venueID = req.body.venueID;
 
-  Review.addReview(client, reviewDescription, rating, userID, reviewDate, venueID, res)
+  Review.addVenueReview(client, reviewDescription, rating, userID, reviewDate, venueID, res)
+})
+
+app.post('/addBeerReview', async (req, res) => {
+  const reviewDescription = req.body.reviewText;
+  const rating = req.body.rating;
+  const userID = req.body.userID;
+  const reviewDate = req.body.reviewDate;
+  const beerID = req.body.beerID;
+
+  Review.addBeerReview(client, reviewDescription, rating, userID, reviewDate, beerID, res)
 })
 //===================================================================================================================
