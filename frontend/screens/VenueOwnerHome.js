@@ -81,6 +81,10 @@ const VenueOwnerHome = ({ navigation }) => {
 		navigation.navigate('ManagePromotion');
 	};
 
+	const navigateToAnalytics = () => {
+		navigation.navigate('Analytics');
+	};
+
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -358,7 +362,7 @@ const VenueOwnerHome = ({ navigation }) => {
 										Analytics
 									</Text>
 									<TouchableOpacity
-										onPress={() => { }}
+										onPress={navigateToAnalytics}
 										style={{
 											marginLeft: 40,
 											marginBottom: 10,

@@ -24,6 +24,7 @@ import TopRated from "./user/TopRated";
 import Wishlist from "./user/Wishlist";
 import ManagePromotion from "./ManagePromotion";
 import CreatePromotion from "./CreatePromotion";
+import Analytics from "./Analytics";
 
 export {
 	BeersVenue,
@@ -51,5 +52,7 @@ export {
 	Wishlist,
 	WriteAReview,
 	ManagePromotion,
-	CreatePromotion
+	CreatePromotion,
+	Analytics
+
 };

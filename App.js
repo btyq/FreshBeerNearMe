@@ -8,13 +8,15 @@ import { AdminDashboard, ManageUsers } from "./frontend/components";
 import BottomTabNavigation from "./frontend/navigation/BottomTabNavigation";
 import {
 	VenueOwnerHome,
-	InquiriesNFeedback, 
-	Respond, 
-	VenueProfile, 
-	ManageInventory, 
-	ManageSocialInformation, 
-	ManagePromotion,	
-	CreatePromotion} from "./frontend/screens";
+	InquiriesNFeedback,
+	Respond,
+	VenueProfile,
+	ManageInventory,
+	ManageSocialInformation,
+	ManagePromotion,
+	CreatePromotion,
+	Analytics,
+} from "./frontend/screens";
 import {
 	Forums,
 	RateNReview,
@@ -137,6 +139,11 @@ export default function App() {
 					<Stack.Screen
 						name="CreatePromotion"
 						component={CreatePromotion}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="Analytics"
+						component={Analytics}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>
