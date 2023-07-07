@@ -960,13 +960,6 @@ const BeersVenue = ({ navigation }) => {
 							onPress={() => navigation.navigate("NearbyVenues")}
 						/>
 						<Button
-							title="Top Rated"
-							color={COLORS.white}
-							filled
-							style={styles.longButton}
-							onPress={() => navigation.navigate("TopRated")}
-						/>
-						<Button
 							title="Breweries"
 							color={COLORS.white}
 							filled

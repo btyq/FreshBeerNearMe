@@ -1,4 +1,10 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
+import {
+	Entypo,
+	FontAwesome,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -12,7 +18,9 @@ import {
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
+import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
 
@@ -31,10 +39,24 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 12, ...{ color: textColor } }}>
+			<Text
+				style={{
+					fontSize: 12,
+					...GlobalStyle.bodyFont,
+					...{ color: textColor },
+				}}
+			>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
+	);
+};
+
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
 	);
 };
 
@@ -42,45 +64,85 @@ const Button = (props) => {
 const BreweryItem = ({ breweryName, rating }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 
-	const handlePopupOpen = () => {
-		setPopupVisible(true);
-	};
-
-	const handlePopupClose = () => {
-		setPopupVisible(false);
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible);
 	};
 
 	return (
 		<View style={styles.subContainer}>
-			<TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
-				<View style={styles.leftContainer}>
-					<Text style={styles.breweryName}>{breweryName}</Text>
+			<TouchableOpacity style={styles.itemContainer} onPress={handlePopup}>
+				<View style={{ flex: 1, paddingHorizontal: 6, paddingTop: 6 }}>
+					<CustomText>{breweryName}</CustomText>
 				</View>
-				<View style={styles.rightContainer}>
-					<View style={styles.starRatingContainer}>
-						{[1, 2, 3, 4, 5].map((star) => (
-							<Ionicons
-								key={star}
-								name="star"
-								size={16}
-								color={star <= rating ? COLORS.foam : COLORS.grey}
-							/>
-						))}
-					</View>
+				<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+						paddingTop: 6,
+					}}
+				>
+					{[1, 2, 3, 4, 5].map((star) => (
+						<Ionicons
+							key={star}
+							name="star"
+							size={16}
+							color={star <= rating ? COLORS.foam : COLORS.grey}
+						/>
+					))}
 				</View>
 			</TouchableOpacity>
 
+			{/* popup */}
 			<Modal visible={popupVisible} transparent animationType="fade">
 				<View style={styles.modalContainer}>
-					<View style={styles.popup}>
-						<Text style={styles.popupTitle}>{breweryName}</Text>
-						<Text style={styles.popupContent}>Popup Content</Text>
-						<TouchableOpacity
-							style={styles.closeButton}
-							onPress={handlePopupClose}
+					<View
+						style={{
+							width: "100%",
+							height: "100%",
+							backgroundColor: COLORS.secondary,
+							borderRadius: 10,
+							paddingHorizontal: 20,
+							elevation: 5,
+						}}
+					>
+						<ScrollView
+							contentContainerStyle={{ flexGrow: 1, height: 1350 }}
+							showsVerticalScrollIndicator={false}
 						>
-							<Text style={styles.closeButtonText}>Close</Text>
-						</TouchableOpacity>
+							<Image
+								source={require("../../assets/specialtybeer.png")}
+								style={styles.venueImage}
+							/>
+							<CustomText
+								style={{
+									fontSize: 18,
+									textAlign: "center",
+									marginBottom: 12,
+								}}
+							>
+								{breweryName}
+							</CustomText>
+							<View style={{ marginHorizontal: 12 }}>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
+										marginBottom: 12,
+									}}
+								></View>
+								<CustomText style={{ fontSize: 17 }}>Description</CustomText>
+							</View>
+							<Button
+								title="Close"
+								onPress={handlePopup}
+								filled
+								style={{
+									elevation: 2,
+									borderColor: 0,
+								}}
+							/>
+						</ScrollView>
 					</View>
 				</View>
 			</Modal>
@@ -200,13 +262,6 @@ const Breweries = ({ navigation }) => {
 							filled
 							style={styles.longButton}
 							onPress={() => navigation.navigate("NearbyVenues")}
-						/>
-						<Button
-							title="Top Rated"
-							color={COLORS.white}
-							filled
-							style={styles.longButton}
-							onPress={() => navigation.navigate("TopRated")}
 						/>
 						<Button
 							title="Breweries"
@@ -353,37 +408,21 @@ const styles = StyleSheet.create({
 		marginBottom: 10,
 		backgroundColor: COLORS.white,
 		padding: 10,
-		borderRadius: 10,
+		borderRadius: 12,
+		borderWidth: 1,
 		shadowColor: COLORS.black, // Add shadow color
 		shadowOffset: { width: 0, height: 2 }, // Add shadow offset
 		shadowOpacity: 0.3, // Add shadow opacity
 		shadowRadius: 3, // Add shadow radius
-		elevation: 5, // Add elevation for Android
+		elevation: 5,
+		borderColor: 0,
 	},
 	itemContainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginBottom: 10,
-	},
-	leftContainer: {
-		flex: 1,
-	},
-	rightContainer: {
-		flex: 0.3,
-		marginRight: 12,
-		flexDirection: "row-reverse",
-		alignItems: "center",
-	},
-	breweryName: {
-		fontSize: 16,
-		fontWeight: "bold",
-		color: COLORS.black,
-	},
-	starRatingContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-		marginTop: 4,
+		borderColor: 0,
 	},
 	modalContainer: {
 		flex: 1,
@@ -399,32 +438,19 @@ const styles = StyleSheet.create({
 		padding: 20,
 		elevation: 5,
 	},
-	popupTitle: {
-		fontSize: 18,
-		fontWeight: "bold",
-		marginBottom: 10,
-	},
-	popupContent: {
-		fontSize: 16,
-		marginBottom: 20,
-	},
-	closeButton: {
-		backgroundColor: COLORS.orange,
-		padding: 10,
-		borderRadius: 8,
-		alignItems: "center",
-		marginTop: "50%", // Adjust the marginTop to shift the close button down
-	},
-	closeButtonText: {
-		color: COLORS.white,
-		fontWeight: "bold",
-		fontSize: 16,
-	},
 	venueImage: {
-		width: "100%",
 		height: 200,
-		resizeMode: "contain",
+		width: 320,
+		borderRadius: 15,
+		borderWidth: 5,
+		borderColor: 0,
+		marginTop: 20,
+		marginLeft: "auto",
+		marginRight: "auto",
+		justifyContent: "center",
+		alignContent: "center",
 		marginBottom: 10,
+		alignSelf: "center",
 	},
 });
 
