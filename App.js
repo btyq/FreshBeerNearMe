@@ -16,6 +16,7 @@ import {
 	ManagePromotion,
 	CreatePromotion,
 	Analytics,
+	VenueComparison
 } from "./frontend/screens";
 import {
 	Forums,
@@ -144,6 +145,11 @@ export default function App() {
 					<Stack.Screen
 						name="Analytics"
 						component={Analytics}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="VenueComparison"
+						component={VenueComparison}
 						options={{ headerShown: false }}
 					/>
 				</Stack.Navigator>

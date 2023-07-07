@@ -25,6 +25,7 @@ import Wishlist from "./user/Wishlist";
 import ManagePromotion from "./ManagePromotion";
 import CreatePromotion from "./CreatePromotion";
 import Analytics from "./Analytics";
+import VenueComparison from "./VenueComparison"
 
 export {
 	BeersVenue,
@@ -53,6 +54,7 @@ export {
 	WriteAReview,
 	ManagePromotion,
 	CreatePromotion,
-	Analytics
+	Analytics,
+	VenueComparison
 
 };

@@ -85,6 +85,10 @@ const VenueOwnerHome = ({ navigation }) => {
 		navigation.navigate('Analytics');
 	};
 
+	const navigateToVenueComparison = () => {
+		navigation.navigate('VenueComparison');
+	};
+
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -424,7 +428,7 @@ const VenueOwnerHome = ({ navigation }) => {
 										Venue Comparison
 									</Text>
 									<TouchableOpacity
-										onPress={() => { }}
+										onPress={navigateToVenueComparison}
 										style={{
 											marginLeft: 40,
 											marginBottom: 10,

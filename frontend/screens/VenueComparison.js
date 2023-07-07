@@ -38,7 +38,7 @@ const Button = (props) => {
     );
 };
 
-const Analytics = ({ navigation }) => {
+const VenueComparison = ({ navigation }) => {
     const { cookies } = useCookies();
 
     const [username, setUsername] = useState("");
@@ -134,13 +134,13 @@ const Analytics = ({ navigation }) => {
                                             flex: 1, // Take up remaining space
                                         }}
                                     >
-                                        Analytics
+                                        Venue Comparison
                                     </Text>
                                 </View>
                                 <View style={{ flex: 1, padding: 10, alignItems: 'center', justifyContent: 'center' }}>
                                     <View style={{ padding: 16 }}>
                                         <Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>
-                                            Beer Popularity this week
+                                            Venue Popularity this week
                                         </Text>
                                         <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                                             {data.map((value, index) => (
@@ -180,19 +180,19 @@ const Analytics = ({ navigation }) => {
                                 flex: 1, // Take up remaining space
                             }}
                         >
-                            All Analytics
+                            All Staticstics
                         </Text>
                         <View style={{
                             flex: 1,
                             borderBottomWidth: 1, // Adjust the thickness as desired
                             borderBottomColor: COLORS.black,
-                            marginLeft: -180, // Adjust the value toprevent overlapping
+                            marginLeft: -150, // Adjust the value toprevent overlapping
                         }} />
                     </View>
                     <View style={{ width: '95%', alignSelf: 'center', marginTop: 10, borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, padding: 10, marginBottom: 10 }}>
                         {/* First Subcontainer */}
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Most Popular Beer</Text>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>You vs Other Venue</Text>
                             {/* Add your input field or component for the title here */}
                         </View>
 
@@ -223,7 +223,7 @@ const Analytics = ({ navigation }) => {
                     <View style={{ width: '95%', alignSelf: 'center', marginTop: 10, borderWidth: 1, borderColor: COLORS.black, borderRadius: 10, padding: 10, marginBottom: 100 }}>
                         {/* First Subcontainer */}
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>Favorite Promotion</Text>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold' }}>You vs Other Venue</Text>
                             {/* Add your input field or component for the title here */}
                         </View>
 
@@ -247,10 +247,7 @@ const Analytics = ({ navigation }) => {
                                     <Text style={{ color: COLORS.black, fontSize: 14 }}>See More</Text>
                                 </TouchableOpacity>
                             </View>
-                            <Text style={{ fontSize: 16, fontWeight: 'bold', position: 'absolute', top: 0, left: 0 }}>
-                            
-                            
-                            </Text>
+                            <Text style={{ fontSize: 16, fontWeight: 'bold', position: 'absolute', top: 0, left: 0 }}>Summary</Text>
                             {/* Add your input field or component for the description here */}
                         </View>
                     </View>
@@ -364,4 +361,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Analytics;
+export default VenueComparison;
