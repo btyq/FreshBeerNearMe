@@ -81,9 +81,8 @@ const VenueItem = ({
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
 	const [reviewAdded, setReviewAdded] = useState(false);
-	
-	const HorizontalBarChart = ({ ratingCounter }) => {
 
+	const HorizontalBarChart = ({ ratingCounter }) => {
 		const data = Object.entries(ratingCounter).map(([key, value]) => {
 			return { label: key + "*", value: parseInt(value) };
 		});
@@ -521,6 +520,15 @@ const VenueItem = ({
 																		elevation: 5,
 																	}}
 																>
+																	<View style={{ marginTop: 12 }}>
+																		<TouchableOpacity onPress={handlePopUp3}>
+																			<Ionicons
+																				name="arrow-back"
+																				size={24}
+																				color={COLORS.black}
+																			/>
+																		</TouchableOpacity>
+																	</View>
 																	<View
 																		style={{
 																			marginHorizontal: 22,
@@ -678,7 +686,9 @@ const VenueItem = ({
 															Review Summary
 														</CustomText>
 														{Object.keys(ratingCounter).length > 0 && (
-															<HorizontalBarChart ratingCounter={ratingCounter} />
+															<HorizontalBarChart
+																ratingCounter={ratingCounter}
+															/>
 														)}
 													</View>
 													<View>
