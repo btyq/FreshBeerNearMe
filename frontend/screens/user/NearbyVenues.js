@@ -15,6 +15,7 @@ import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import MapView from 'react-native-maps';
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -38,117 +39,7 @@ const Button = (props) => {
 	);
 };
 
-const StarRating = () => {
-	const [rating, setRating] = useState(4);
-
-	const handleRating = () => {
-		const randomRating = Math.floor(Math.random() * 3) + 3; // Generate a random number between 3 and 5
-		setRating(randomRating);
-	};
-
-	return (
-		<View
-			style={{
-				flexDirection: "row",
-				justifyContent: "center",
-				alignItems: "center",
-				backgroundColor: COLORS.yellow,
-				marginTop: -7,
-			}}
-		>
-			{[1, 2, 3, 4, 5].map((star) => (
-				<TouchableOpacity key={star} onPress={() => handleRating(star)}>
-					<Ionicons
-						name="star"
-						size={20}
-						color={star <= rating ? COLORS.foam : COLORS.grey}
-					/>
-				</TouchableOpacity>
-			))}
-		</View>
-	);
-};
-
-// for popup
-const VenueItem = ({ venueName, rating }) => {
-	const [popupVisible, setPopupVisible] = useState(false);
-
-	const handlePopupOpen = () => {
-		setPopupVisible(true);
-	};
-
-	const handlePopupClose = () => {
-		setPopupVisible(false);
-	};
-
-	return (
-		<View style={styles.subContainer}>
-			<TouchableOpacity style={styles.itemContainer} onPress={handlePopupOpen}>
-				<View style={styles.leftContainer}>
-					<Text style={styles.venueName}>{venueName}</Text>
-				</View>
-				<View style={styles.rightContainer}>
-					<View style={styles.starRatingContainer}>
-						{[1, 2, 3, 4, 5].map((star) => (
-							<Ionicons
-								key={star}
-								name="star"
-								size={16}
-								color={star <= rating ? COLORS.foam : COLORS.grey}
-							/>
-						))}
-					</View>
-				</View>
-			</TouchableOpacity>
-
-			<Modal visible={popupVisible} transparent animationType="fade">
-				<View style={styles.modalContainer}>
-					<View style={styles.popup}>
-						<Text style={styles.popupTitle}>{venueName}</Text>
-						<Text style={styles.popupContent}>Popup Content</Text>
-						<TouchableOpacity
-							style={styles.closeButton}
-							onPress={handlePopupClose}
-						>
-							<Text style={styles.closeButtonText}>Close</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
-			</Modal>
-		</View>
-	);
-};
-
 const NearbyVenues = ({ navigation }) => {
-	const [sortBy, setSortBy] = useState("dist");
-	const [sortOrder, setSortOrder] = useState("asc");
-	const [searchInput, setSearchInput] = useState("");
-	const [venueData, setVenueData] = useState([]);
-
-	// for sorting and search function
-	const handleSortBy = (by) => {
-		if (by === sortBy) return;
-		setSortBy(by);
-	};
-
-	const handleSortOrder = (order) => {
-		if (order === sortOrder) return;
-		setSortOrder(order);
-		let sortedData = [...sortedVenueData];
-		if (order === "desc") {
-			sortedData.reverse();
-		}
-		setSortedVenueData(sortedData);
-	};
-
-	const handleSearch = (text) => {
-		setSearchInput(text);
-		const filteredData = venueData.filter((venue) =>
-			venue.venueName.toLowerCase().includes(searchInput.toLowerCase())
-		);
-		setSortedVenueData(filteredData);
-	};
-
 	return (
 		<View style={{ flex: 1 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
@@ -247,65 +138,16 @@ const NearbyVenues = ({ navigation }) => {
 							onPress={() => navigation.navigate("Breweries")}
 						/>
 					</View>
-					<View style={styles.searchContainer}>
-						<TextInput
-							placeholder="Search..."
-							style={styles.searchInput}
-							onChangeText={handleSearch}
-							value={searchInput}
-						/>
-					</View>
-					<View style={styles.grid}>
-						<Button
-							title="Sort by Distance"
-							color={COLORS.foam}
-							filled={sortBy === "dist"}
-							style={styles.shortButton}
-							onPress={() => handleSortBy("dist")}
-						/>
-						<Button
-							title="Sort by Name"
-							color={COLORS.foam}
-							filled={sortBy === "name"}
-							style={styles.shortButton}
-							onPress={() => handleSortBy("name")}
-						/>
-						<Button
-							title="Sort by Rating"
-							color={COLORS.foam}
-							filled={sortBy === "rating"}
-							style={styles.shortButton}
-							onPress={() => handleSortBy("rating")}
-						/>
-					</View>
-					<View style={styles.grid}>
-						<Button
-							title="Ascending"
-							color={COLORS.foam}
-							filled={sortOrder === "asc"}
-							style={styles.shortButton}
-							onPress={() => handleSortOrder("asc")}
-						/>
-						<Button
-							title="Descending"
-							color={COLORS.foam}
-							filled={sortOrder === "desc"}
-							style={styles.shortButton}
-							onPress={() => handleSortOrder("desc")}
-						/>
-					</View>
-
 					<View style={styles.container}>
-						<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-							{Array.from({ length: 10 }).map((_, index) => (
-								<VenueItem
-									key={index}
-									venueName={`Venue Name ${index + 1}`}
-									rating={Math.floor(Math.random() * 3) + 3}
-								/>
-							))}
-						</ScrollView>
-					</View>
+						<MapView 
+							initialRegion={{
+								latitude: 1.3040,
+								longitude: 103.8318,
+								latitudeDelta: 0.0922,
+								longitudeDelta: 0.0421,
+							}}
+							style={styles.map} />
+					</View>			
 				</SafeAreaView>
 			</SafeAreaView>
 		</View>
@@ -457,6 +299,14 @@ const styles = StyleSheet.create({
 		resizeMode: "contain",
 		marginBottom: 10,
 	},
+	mapContainer: {
+		width:"80%",
+		height:"80%"
+	},
+	map: {
+		width: "100%",
+		height: "100%"
+	}
 });
 
 export default NearbyVenues;
