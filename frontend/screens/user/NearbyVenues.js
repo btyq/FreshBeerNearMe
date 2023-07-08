@@ -1,6 +1,6 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import {
 	Image,
 	Modal,
@@ -10,12 +10,15 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
+	Animated,
+	Easing
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
 import MapView from 'react-native-maps';
+import * as Location from 'expo-location';
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -40,6 +43,52 @@ const Button = (props) => {
 };
 
 const NearbyVenues = ({ navigation }) => {
+	const [currentLocation, setCurrentLocation] = useState(null);
+	const [errorMsg, setErrorMsg] = useState(null);
+	const [isMapReady, setIsMapReady] = useState(false);
+	const rotateValue = useRef(new Animated.Value(0)).current;
+  
+	useEffect(() => {
+	  const fetchLocation = async () => {
+		let { status } = await Location.requestForegroundPermissionsAsync();
+		if (status !== 'granted') {
+		  setErrorMsg('Permission to access location was denied');
+		  return;
+		}
+  
+		let location = await Location.getCurrentPositionAsync({
+		  accuracy: Location.Accuracy.Highest,
+		  maximumAge: 10000,
+		});
+		setCurrentLocation(location);
+		setIsMapReady(true);
+	  };
+  
+	  fetchLocation();
+	}, []);
+  
+	useEffect(() => {
+	  const rotateAnimation = Animated.loop(
+		Animated.timing(rotateValue, {
+		  toValue: 1,
+		  duration: 1000,
+		  easing: Easing.linear,
+		  useNativeDriver: true,
+		})
+	  );
+  
+	  rotateAnimation.start();
+  
+	  return () => {
+		rotateAnimation.stop();
+	  };
+	}, [rotateValue]);
+  
+	const spin = rotateValue.interpolate({
+	  inputRange: [0, 1],
+	  outputRange: ['0deg', '360deg'],
+	});
+
 	return (
 		<View style={{ flex: 1 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
@@ -99,7 +148,6 @@ const NearbyVenues = ({ navigation }) => {
 						</View>
 					}
 				/>
-
 				<SafeAreaView style={{ flex: 1 }}>
 					<View style={styles.grid}>
 						<Button
@@ -139,15 +187,22 @@ const NearbyVenues = ({ navigation }) => {
 						/>
 					</View>
 					<View style={styles.container}>
-						<MapView 
+						{isMapReady && currentLocation ? (
+						<MapView
 							initialRegion={{
-								latitude: 1.3040,
-								longitude: 103.8318,
-								latitudeDelta: 0.0922,
-								longitudeDelta: 0.0421,
+							latitude: currentLocation.coords.latitude,
+							longitude: currentLocation.coords.longitude,
+							latitudeDelta: 0.0922,
+							longitudeDelta: 0.0421,
 							}}
-							style={styles.map} />
-					</View>			
+							style={styles.map}
+						/>
+						) : (
+						<Animated.View style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}>
+						<Image source={require("../../assets/beer.png")} style={{width: "50%", height: "50%"}}/>
+						</Animated.View>
+						)}
+					</View>	
 				</SafeAreaView>
 			</SafeAreaView>
 		</View>
@@ -306,7 +361,12 @@ const styles = StyleSheet.create({
 	map: {
 		width: "100%",
 		height: "100%"
-	}
+	},
+	loadingIcon: {
+		justifyContent: 'center', 
+		alignItems: 'center', 
+		flex: 1,
+	  },
 });
 
 export default NearbyVenues;
