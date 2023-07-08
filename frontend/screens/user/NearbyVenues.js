@@ -17,7 +17,7 @@ import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import MapView from 'react-native-maps';
+import MapView, {Marker} from 'react-native-maps';
 import * as Location from 'expo-location';
 
 const Button = (props) => {
@@ -47,7 +47,13 @@ const NearbyVenues = ({ navigation }) => {
 	const [errorMsg, setErrorMsg] = useState(null);
 	const [isMapReady, setIsMapReady] = useState(false);
 	const rotateValue = useRef(new Animated.Value(0)).current;
-  
+	
+	const markers = [
+		{ id: 1, latitude: 1.3529, longitude: 103.7549, title: 'Marker 1' },
+		{ id: 2, latitude: 1.3218, longitude: 103.7399, title: 'Marker 2' },
+		{ id: 3, latitude: 1.3345, longitude: 103.7444, title: 'Marker 3' },
+	  ];
+
 	useEffect(() => {
 	  const fetchLocation = async () => {
 		let { status } = await Location.requestForegroundPermissionsAsync();
@@ -61,9 +67,10 @@ const NearbyVenues = ({ navigation }) => {
 		  maximumAge: 10000,
 		});
 		setCurrentLocation(location);
-		setIsMapReady(true);
-	  };
-  
+		setTimeout(() => {
+			setIsMapReady(true);
+		  }, 3000);
+		};
 	  fetchLocation();
 	}, []);
   
@@ -149,7 +156,7 @@ const NearbyVenues = ({ navigation }) => {
 					}
 				/>
 				<SafeAreaView style={{ flex: 1 }}>
-					<View style={styles.grid}>
+				<View style={styles.grid}>
 						<Button
 							title="Find a Venue"
 							color={COLORS.white}
@@ -186,20 +193,36 @@ const NearbyVenues = ({ navigation }) => {
 							onPress={() => navigation.navigate("Breweries")}
 						/>
 					</View>
-					<View style={styles.container}>
+					<View style={{...styles.container}}>
 						{isMapReady && currentLocation ? (
 						<MapView
 							initialRegion={{
 							latitude: currentLocation.coords.latitude,
 							longitude: currentLocation.coords.longitude,
-							latitudeDelta: 0.0922,
-							longitudeDelta: 0.0421,
+							latitudeDelta: 0.01,
+							longitudeDelta: 0.01,
 							}}
 							style={styles.map}
-						/>
+						>
+							{markers.map((marker) => (
+							<Marker
+								key={marker.id}
+								coordinate={{
+								latitude: marker.latitude,
+								longitude: marker.longitude,
+								}}
+								title={marker.title}
+							/>
+							))}
+						</MapView>
 						) : (
-						<Animated.View style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}>
-						<Image source={require("../../assets/beer.png")} style={{width: "50%", height: "50%"}}/>
+						<Animated.View
+							style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
+						>
+							<Image
+							source={require("../../assets/beer.png")}
+							style={{ width: "50%", height: "50%" }}
+							/>
 						</Animated.View>
 						)}
 					</View>	
@@ -261,7 +284,7 @@ const styles = StyleSheet.create({
 		backgroundColor: COLORS.grey,
 	},
 	container: {
-		flex: 1,
+		height: "75%",
 		width: "95%",
 		alignSelf: "center",
 		marginTop: 10,
@@ -353,10 +376,6 @@ const styles = StyleSheet.create({
 		height: 200,
 		resizeMode: "contain",
 		marginBottom: 10,
-	},
-	mapContainer: {
-		width:"80%",
-		height:"80%"
 	},
 	map: {
 		width: "100%",
