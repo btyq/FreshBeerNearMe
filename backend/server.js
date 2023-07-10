@@ -7,6 +7,9 @@ const Review = require('./class/review');
 const venueArray = [];
 const beerArray = [];
 
+const csv = require('csv-parser');
+const path = require('path');
+const fs = require('fs');
 //===================================================================================================================
 //==============================================Connect to MongoDB===================================================
 const express = require('express');
@@ -85,6 +88,46 @@ app.post('/signup', async (req, res) => {
     res.status(500).json({ success: false, message: 'An error occurred during signup' });
   }
 });
+
+app.post('/readFreshness', async (req, res) => {
+  const csvFilePath = path.join(__dirname, '../CSVfiles/Freshness Report.csv');
+  const results = [];
+
+  fs.createReadStream(csvFilePath)
+    .pipe(csv())
+    .on('data', async (data) => {
+      data['Freshness (%)'] = parseFloat(data['Freshness (%)']);
+      results.push(data);
+    })
+    .on('end', async () => {
+      console.log(results[1].Location)
+      try {
+        const collection = db.collection('Test');
+        const newTrackerIds = results.map(data => data['Tracker ID']);
+        
+        await collection.deleteMany({ 'Tracker ID': { $in: newTrackerIds } });
+        const result = await collection.insertMany(results);
+
+        res.json({ success: true, data: results });
+      } catch (error) {
+        console.error('Error inserting data into MongoDB:', error);
+        res.status(500).json({ success: false, message: 'An error occurred while inserting data into MongoDB' });
+      }
+    });
+});
+
+app.post('/readTemperature', async (req, res) => {
+  const csvFilePath = path.join(__dirname, '../CSVfiles/Refrigeration Performance.csv');
+  const results = [];
+
+  fs.createReadStream(csvFilePath)
+    .pipe(csv({}))
+    .on('data', (data) => results.push(data))
+    .on('end', () => {
+      console.log(results);
+    })
+});
+
 //=======================================All User Routes=============================================
 // Custom middleware to store 'user' object in a global variable
 let globalUser = null;

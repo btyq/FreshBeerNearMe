@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Alert,
 	Image,
@@ -131,6 +131,21 @@ const Welcome = ({ navigation }) => {
 		{ key: "3", value: "Admin" },
 	];
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	
+	useEffect(() => {
+		const fetchData = async () => {
+		  try {
+			const freshnessResponse = await axios.post("http://10.0.2.2:3000/readFreshness");
+			
+			const temperatureResponse = await axios.post("http://10.0.2.2:3000/readTemperature");
+			
+		  } catch (error) {
+			console.log('An error occurred:', error.message);
+		  }
+		};
+	
+		fetchData(); 
+	  }, []);
 
 	const handleUserLogin = async () => {
 		try {
