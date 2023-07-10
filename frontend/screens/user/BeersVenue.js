@@ -440,22 +440,20 @@ const VenueItem = ({
 													elevation: 5,
 												}}
 											>
-												<ScrollView
-													style={{ marginTop: 12 }}
-													showsVerticalScrollIndicator={false}
-												>
-													<TouchableOpacity onPress={handlePopUp2}>
-														<Ionicons
-															name="arrow-back"
-															size={24}
-															color={COLORS.black}
-														/>
-													</TouchableOpacity>
+												<TouchableOpacity onPress={handlePopUp2}>
+													<Ionicons
+														name="arrow-back"
+														size={24}
+														color={COLORS.black}
+														style={{ marginTop: 12 }}
+													/>
+												</TouchableOpacity>
+												<ScrollView showsVerticalScrollIndicator={false}>
 													<View
 														style={{
 															justifyContent: "center",
 															alignItems: "center",
-															marginHorizontal: 32,
+															marginHorizontal: 22,
 															marginTop: 5,
 															marginBottom: 12,
 														}}
@@ -693,7 +691,18 @@ const VenueItem = ({
 														{venueReview.map((reviews) => (
 															<View
 																key={reviews.reviewID}
-																style={styles.container}
+																style={{
+																	flex: 1,
+																	width: "95%",
+																	alignSelf: "center",
+																	marginTop: 10,
+																	borderWidth: 1,
+																	borderColor: 0,
+																	borderRadius: 10,
+																	padding: 10,
+																	backgroundColor: COLORS.grey,
+																	elevation: 5,
+																}}
 															>
 																<CustomText>
 																	Posted By: {reviews.reviewUser}

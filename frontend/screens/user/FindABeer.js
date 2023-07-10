@@ -641,7 +641,18 @@ const BeerItem = ({
 													{beerReview.map((reviews) => (
 														<View
 															key={reviews.reviewID}
-															style={styles.container}
+															style={{
+																flex: 1,
+																width: "95%",
+																alignSelf: "center",
+																marginTop: 10,
+																borderWidth: 1,
+																borderColor: 0,
+																borderRadius: 10,
+																padding: 10,
+																backgroundColor: COLORS.grey,
+																elevation: 5,
+															}}
 														>
 															<CustomText>
 																Posted By: {reviews.reviewUser}
