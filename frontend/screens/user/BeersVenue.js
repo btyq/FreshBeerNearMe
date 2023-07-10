@@ -248,7 +248,6 @@ const VenueItem = ({
 				<View style={{ flex: 1, paddingHorizontal: 6, paddingTop: 6 }}>
 					<CustomText>{venueName}</CustomText>
 				</View>
-				{/* <View> */}
 				<View
 					style={{
 						flexDirection: "row",
@@ -265,7 +264,6 @@ const VenueItem = ({
 						/>
 					))}
 				</View>
-				{/* </View> */}
 			</TouchableOpacity>
 
 			{/* 1st popup */}
@@ -1016,7 +1014,10 @@ const BeersVenue = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView contentContainerStyle={{ flexGrow: 1, height: 600 }}>
+						<ScrollView
+							contentContainerStyle={{ flexGrow: 1, height: 400 }}
+							showsVerticalScrollIndicator={false}
+						>
 							{sortedVenueData.map((venue) => (
 								<VenueItem
 									key={venue._id}
@@ -1074,7 +1075,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginHorizontal: 20,
-		marginTop: 20, // Adjust the top spacing here
+		marginVertical: 12,
 	},
 	searchInput: {
 		flex: 1,
@@ -1082,12 +1083,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: 0,
 		borderRadius: 20,
-		paddingHorizontal: 10,
+		paddingHorizontal: 20,
 		marginRight: 10,
 		backgroundColor: COLORS.grey,
 	},
 	container: {
-		flex: 1,
+		height: "55%",
 		width: "95%",
 		alignSelf: "center",
 		marginTop: 10,

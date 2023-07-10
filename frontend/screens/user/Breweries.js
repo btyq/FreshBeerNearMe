@@ -320,7 +320,10 @@ const Breweries = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+						<ScrollView
+							contentContainerStyle={{ paddingBottom: 50 }}
+							showsVerticalScrollIndicator={false}
+						>
 							{Array.from({ length: 10 }).map((_, index) => (
 								<BreweryItem
 									key={index}
@@ -375,7 +378,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginHorizontal: 20,
-		marginTop: 20, // Adjust the top spacing here
+		marginVertical: 12,
 	},
 	searchInput: {
 		flex: 1,
@@ -383,12 +386,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: 0,
 		borderRadius: 20,
-		paddingHorizontal: 10,
+		paddingHorizontal: 20,
 		marginRight: 10,
 		backgroundColor: COLORS.grey,
 	},
 	container: {
-		flex: 1,
+		height: "53%",
 		width: "95%",
 		alignSelf: "center",
 		marginTop: 10,

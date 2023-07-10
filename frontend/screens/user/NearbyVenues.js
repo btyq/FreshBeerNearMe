@@ -1,7 +1,10 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useEffect, useState, useRef } from "react";
+import * as Location from "expo-location";
+import React, { useEffect, useRef, useState } from "react";
 import {
+	Animated,
+	Easing,
 	Image,
 	Modal,
 	ScrollView,
@@ -10,15 +13,12 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
-	Animated,
-	Easing
 } from "react-native";
 import { Header } from "react-native-elements";
+import MapView, { Marker } from "react-native-maps";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import MapView, {Marker} from 'react-native-maps';
-import * as Location from 'expo-location';
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -35,7 +35,13 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 12, ...{ color: textColor } }}>
+			<Text
+				style={{
+					fontSize: 12,
+					...GlobalStyle.bodyFont,
+					...{ color: textColor },
+				}}
+			>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
@@ -47,53 +53,53 @@ const NearbyVenues = ({ navigation }) => {
 	const [errorMsg, setErrorMsg] = useState(null);
 	const [isMapReady, setIsMapReady] = useState(false);
 	const rotateValue = useRef(new Animated.Value(0)).current;
-	
+
 	const markers = [
-		{ id: 1, latitude: 1.3529, longitude: 103.7549, title: 'Marker 1' },
-		{ id: 2, latitude: 1.3218, longitude: 103.7399, title: 'Marker 2' },
-		{ id: 3, latitude: 1.3345, longitude: 103.7444, title: 'Marker 3' },
-	  ];
+		{ id: 1, latitude: 1.3529, longitude: 103.7549, title: "Marker 1" },
+		{ id: 2, latitude: 1.3218, longitude: 103.7399, title: "Marker 2" },
+		{ id: 3, latitude: 1.3345, longitude: 103.7444, title: "Marker 3" },
+	];
 
 	useEffect(() => {
-	  const fetchLocation = async () => {
-		let { status } = await Location.requestForegroundPermissionsAsync();
-		if (status !== 'granted') {
-		  setErrorMsg('Permission to access location was denied');
-		  return;
-		}
-  
-		let location = await Location.getCurrentPositionAsync({
-		  accuracy: Location.Accuracy.Highest,
-		  maximumAge: 10000,
-		});
-		setCurrentLocation(location);
-		setTimeout(() => {
-			setIsMapReady(true);
-		  }, 3000);
+		const fetchLocation = async () => {
+			let { status } = await Location.requestForegroundPermissionsAsync();
+			if (status !== "granted") {
+				setErrorMsg("Permission to access location was denied");
+				return;
+			}
+
+			let location = await Location.getCurrentPositionAsync({
+				accuracy: Location.Accuracy.Highest,
+				maximumAge: 10000,
+			});
+			setCurrentLocation(location);
+			setTimeout(() => {
+				setIsMapReady(true);
+			}, 3000);
 		};
-	  fetchLocation();
+		fetchLocation();
 	}, []);
-  
+
 	useEffect(() => {
-	  const rotateAnimation = Animated.loop(
-		Animated.timing(rotateValue, {
-		  toValue: 1,
-		  duration: 1000,
-		  easing: Easing.linear,
-		  useNativeDriver: true,
-		})
-	  );
-  
-	  rotateAnimation.start();
-  
-	  return () => {
-		rotateAnimation.stop();
-	  };
+		const rotateAnimation = Animated.loop(
+			Animated.timing(rotateValue, {
+				toValue: 1,
+				duration: 1000,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			})
+		);
+
+		rotateAnimation.start();
+
+		return () => {
+			rotateAnimation.stop();
+		};
 	}, [rotateValue]);
-  
+
 	const spin = rotateValue.interpolate({
-	  inputRange: [0, 1],
-	  outputRange: ['0deg', '360deg'],
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"],
 	});
 
 	return (
@@ -156,7 +162,7 @@ const NearbyVenues = ({ navigation }) => {
 					}
 				/>
 				<SafeAreaView style={{ flex: 1 }}>
-				<View style={styles.grid}>
+					<View style={styles.grid}>
 						<Button
 							title="Find a Venue"
 							color={COLORS.white}
@@ -179,13 +185,6 @@ const NearbyVenues = ({ navigation }) => {
 							onPress={() => navigation.navigate("NearbyVenues")}
 						/>
 						<Button
-							title="Top Rated"
-							color={COLORS.white}
-							filled
-							style={styles.longButton}
-							onPress={() => navigation.navigate("TopRated")}
-						/>
-						<Button
 							title="Breweries"
 							color={COLORS.white}
 							filled
@@ -193,39 +192,39 @@ const NearbyVenues = ({ navigation }) => {
 							onPress={() => navigation.navigate("Breweries")}
 						/>
 					</View>
-					<View style={{...styles.container}}>
+					<View style={{ ...styles.container }}>
 						{isMapReady && currentLocation ? (
-						<MapView
-							initialRegion={{
-							latitude: currentLocation.coords.latitude,
-							longitude: currentLocation.coords.longitude,
-							latitudeDelta: 0.01,
-							longitudeDelta: 0.01,
-							}}
-							style={styles.map}
-						>
-							{markers.map((marker) => (
-							<Marker
-								key={marker.id}
-								coordinate={{
-								latitude: marker.latitude,
-								longitude: marker.longitude,
+							<MapView
+								initialRegion={{
+									latitude: currentLocation.coords.latitude,
+									longitude: currentLocation.coords.longitude,
+									latitudeDelta: 0.01,
+									longitudeDelta: 0.01,
 								}}
-								title={marker.title}
-							/>
-							))}
-						</MapView>
+								style={styles.map}
+							>
+								{markers.map((marker) => (
+									<Marker
+										key={marker.id}
+										coordinate={{
+											latitude: marker.latitude,
+											longitude: marker.longitude,
+										}}
+										title={marker.title}
+									/>
+								))}
+							</MapView>
 						) : (
-						<Animated.View
-							style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
-						>
-							<Image
-							source={require("../../assets/beer.png")}
-							style={{ width: "50%", height: "50%" }}
-							/>
-						</Animated.View>
+							<Animated.View
+								style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
+							>
+								<Image
+									source={require("../../assets/beer.png")}
+									style={{ width: "50%", height: "50%" }}
+								/>
+							</Animated.View>
 						)}
-					</View>	
+					</View>
 				</SafeAreaView>
 			</SafeAreaView>
 		</View>
@@ -379,13 +378,13 @@ const styles = StyleSheet.create({
 	},
 	map: {
 		width: "100%",
-		height: "100%"
+		height: "100%",
 	},
 	loadingIcon: {
-		justifyContent: 'center', 
-		alignItems: 'center', 
+		justifyContent: "center",
+		alignItems: "center",
 		flex: 1,
-	  },
+	},
 });
 
 export default NearbyVenues;
