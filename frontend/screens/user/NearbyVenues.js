@@ -1,4 +1,5 @@
 import {
+	FontAwesome,
 	FontAwesome5,
 	Ionicons,
 	MaterialIcons,
@@ -536,6 +537,7 @@ const NearbyVenues = ({ navigation }) => {
 							}
 						/>
 					</View>
+
 					<View style={styles.container}>
 						{isMapReady && currentLocation ? (
 							<MapView
@@ -567,31 +569,18 @@ const NearbyVenues = ({ navigation }) => {
 											<Callout tooltip>
 												<View>
 													<View style={styles.bubble}>
+														<FontAwesome5
+															name="warehouse"
+															size={20}
+															color="black"
+														/>
 														<View
 															style={{
 																flexDirection: "row",
-																//	paddingHorizontal: 12,
 																alignItems: "center",
-																//		marginHorizontal: 12,
 															}}
 														>
-															<FontAwesome5
-																name="warehouse"
-																size={20}
-																color="black"
-																style={{ marginRight: 12 }}
-															/>
 															<CustomText>{marker.title}</CustomText>
-															{/* <Text style={{ fontSize: 14 }}>Venues</Text> */}
-
-															{/* <Image
-															style={{
-																width: 40,
-																height: 40,
-																resizeMode: "contain",
-															}}
-															source={require("../../assets/food-banner1.jpg")}
-														/> */}
 														</View>
 													</View>
 													<View style={styles.arrowBorder} />
@@ -619,31 +608,18 @@ const NearbyVenues = ({ navigation }) => {
 											<Callout tooltip>
 												<View>
 													<View style={styles.bubble}>
+														<FontAwesome5
+															name="warehouse"
+															size={20}
+															color="black"
+														/>
 														<View
 															style={{
 																flexDirection: "row",
-																//	paddingHorizontal: 12,
 																alignItems: "center",
-																//		marginHorizontal: 12,
 															}}
 														>
-															<FontAwesome5
-																name="warehouse"
-																size={20}
-																color="black"
-																style={{ marginRight: 12 }}
-															/>
 															<CustomText>{marker.title_b}</CustomText>
-															{/* <Text style={{ fontSize: 14 }}>Venues</Text> */}
-
-															{/* <Image
-															style={{
-																width: 40,
-																height: 40,
-																resizeMode: "contain",
-															}}
-															source={require("../../assets/food-banner1.jpg")}
-														/> */}
 														</View>
 													</View>
 													<View style={styles.arrowBorder} />
@@ -657,10 +633,7 @@ const NearbyVenues = ({ navigation }) => {
 							<Animated.View
 								style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
 							>
-								<Image
-									source={require("../../assets/beer.png")}
-									style={{ width: "50%", height: "50%" }}
-								/>
+								<FontAwesome name="hourglass-1" size={24} color="black" />
 							</Animated.View>
 						)}
 						<MarkerVenueDetails />

@@ -20,7 +20,6 @@ import {
 	NearbyVenues,
 	Profile,
 	Social,
-	TopRated,
 	Welcome,
 	Wishlist,
 } from "../screens";
@@ -49,11 +48,6 @@ const DashboardStack = () => {
 			<Stack.Screen
 				name="NearbyVenues"
 				component={NearbyVenues}
-				options={{ headerShown: false }}
-			/>
-			<Stack.Screen
-				name="TopRated"
-				component={TopRated}
 				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
