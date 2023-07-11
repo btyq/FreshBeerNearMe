@@ -93,23 +93,32 @@ app.post('/signup', async (req, res) => {
 app.post('/readCSV', async (req, res) => {
   const freshnessFilePath = path.join(__dirname, '../CSVfiles/Freshness Report.csv');
   const refrigerationFilePath = path.join(__dirname, '../CSVfiles/Refrigeration Performance.csv');
+  const informationFilePath = path.join(__dirname, '../CSVfiles/Place List.csv');
   const freshnessResults = [];
   const refrigerationResults = [];
+  const informationResults = [];
 
   const readFreshnessPromise = new Promise((resolve, reject) => {
     fs.createReadStream(freshnessFilePath)
       .pipe(csv({}))
       .on('data', async (data) => {
         const newData = {
-          trackerID: data['Tracker ID'],
-          location: data.Location,
+          venueID: data['Tracker ID'],
+          venueName: data.Location,
           placeType: data['Place Type'],
-          emptyFull: data['Empty/Full'],
-          freshness: parseFloat(data['Freshness (%)']),
-          temperature: null
+          venueFreshness: parseFloat(data['Freshness (%)']),
+          venueTemperature: null
         };
-
-        freshnessResults.push(newData);
+  
+        const existingDataIndex = freshnessResults.findIndex(
+          (item) => item.venueName === newData.venueName
+        );
+  
+        if (existingDataIndex === -1) {
+          freshnessResults.push(newData);
+        } else {
+          freshnessResults[existingDataIndex].venueFreshness = newData.venueFreshness;
+        }
       })
       .on('end', () => {
         console.log("Reading of freshness done!");
@@ -139,20 +148,44 @@ app.post('/readCSV', async (req, res) => {
         reject(error); 
       });
   });
+  
+  const readInformationPromise = new Promise((resolve, reject) => {
+    fs.createReadStream(informationFilePath)
+      .pipe(csv({}))
+      .on('data', async (data) => {
+        const newData = {
+          venueName: data.Name,
+          venueType: data['Place Type'],
+          venueAddress:  data.Address + ',' + data.City + ',' + data.State + ',' + data.Postcode,
+          venueCountry: data.Country,
+        }
+        if (newData.venueCountry === "Australia") {
+          informationResults.push(newData);
+        }        
+      })
+      .on('end', () => {
+        console.log("Reading of information done!");
+        console.log(informationResults);
+        resolve();
+      })
+      .on('error', (error) => {
+        reject(error);
+      });
+  });
 
-  Promise.all([readFreshnessPromise, readTemperaturePromise])
+  Promise.all([readFreshnessPromise, readTemperaturePromise, readInformationPromise])
     .then(() => {
       for (const freshnessData of freshnessResults) {
         for (const refrigerationData of refrigerationResults) {
-          if (freshnessData.location === refrigerationData.place) {
-            freshnessData.temperature = refrigerationData.temperature;
+          if (freshnessData.venueName === refrigerationData.place) {
+            freshnessData.venueTemperature = refrigerationData.temperature;
           }
         }
       }
 
       for (const freshnessData of freshnessResults) {
-        if (freshnessData.temperature === null) {
-          freshnessData.temperature = Math.round((Math.random() * (5 - 2) + 2) * 10) / 10;
+        if (freshnessData.venueTemperature === null) {
+          freshnessData.venueTemperature = Math.round((Math.random() * (5 - 2) + 2) * 10) / 10;
         }
       }
       console.log(freshnessResults);
