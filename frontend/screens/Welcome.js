@@ -135,10 +135,7 @@ const Welcome = ({ navigation }) => {
 	useEffect(() => {
 		const fetchData = async () => {
 		  try {
-			const freshnessResponse = await axios.post("http://10.0.2.2:3000/readFreshness");
-			
-			const temperatureResponse = await axios.post("http://10.0.2.2:3000/readTemperature");
-			
+			const freshnessResponse = await axios.post("http://10.0.2.2:3000/readCSV");
 		  } catch (error) {
 			console.log('An error occurred:', error.message);
 		  }

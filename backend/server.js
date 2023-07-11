@@ -10,6 +10,7 @@ const beerArray = [];
 const csv = require('csv-parser');
 const path = require('path');
 const fs = require('fs');
+
 //===================================================================================================================
 //==============================================Connect to MongoDB===================================================
 const express = require('express');
@@ -89,43 +90,77 @@ app.post('/signup', async (req, res) => {
   }
 });
 
-app.post('/readFreshness', async (req, res) => {
-  const csvFilePath = path.join(__dirname, '../CSVfiles/Freshness Report.csv');
-  const results = [];
+app.post('/readCSV', async (req, res) => {
+  const freshnessFilePath = path.join(__dirname, '../CSVfiles/Freshness Report.csv');
+  const refrigerationFilePath = path.join(__dirname, '../CSVfiles/Refrigeration Performance.csv');
+  const freshnessResults = [];
+  const refrigerationResults = [];
 
-  fs.createReadStream(csvFilePath)
-    .pipe(csv())
-    .on('data', async (data) => {
-      data['Freshness (%)'] = parseFloat(data['Freshness (%)']);
-      results.push(data);
-    })
-    .on('end', async () => {
-      console.log(results[1].Location)
-      try {
-        const collection = db.collection('Test');
-        const newTrackerIds = results.map(data => data['Tracker ID']);
-        
-        await collection.deleteMany({ 'Tracker ID': { $in: newTrackerIds } });
-        const result = await collection.insertMany(results);
+  const readFreshnessPromise = new Promise((resolve, reject) => {
+    fs.createReadStream(freshnessFilePath)
+      .pipe(csv({}))
+      .on('data', async (data) => {
+        const newData = {
+          trackerID: data['Tracker ID'],
+          location: data.Location,
+          placeType: data['Place Type'],
+          emptyFull: data['Empty/Full'],
+          freshness: parseFloat(data['Freshness (%)']),
+          temperature: null
+        };
 
-        res.json({ success: true, data: results });
-      } catch (error) {
-        console.error('Error inserting data into MongoDB:', error);
-        res.status(500).json({ success: false, message: 'An error occurred while inserting data into MongoDB' });
+        freshnessResults.push(newData);
+      })
+      .on('end', () => {
+        console.log("Reading of freshness done!");
+        resolve();
+      })
+      .on('error', (error) => {
+        reject(error); 
+      });
+  });
+
+  const readTemperaturePromise = new Promise((resolve, reject) => {
+    fs.createReadStream(refrigerationFilePath)
+      .pipe(csv({}))
+      .on('data', async (data) => {
+        const newData = {
+          place: data.Place,
+          temperature: parseFloat(data['Average Temperature In Fridge (°C)'])
+        };
+
+        refrigerationResults.push(newData);
+      })
+      .on('end', () => {
+        console.log("Reading of temperature done!");
+        resolve(); 
+      })
+      .on('error', (error) => {
+        reject(error); 
+      });
+  });
+
+  Promise.all([readFreshnessPromise, readTemperaturePromise])
+    .then(() => {
+      for (const freshnessData of freshnessResults) {
+        for (const refrigerationData of refrigerationResults) {
+          if (freshnessData.location === refrigerationData.place) {
+            freshnessData.temperature = refrigerationData.temperature;
+          }
+        }
       }
-    });
-});
 
-app.post('/readTemperature', async (req, res) => {
-  const csvFilePath = path.join(__dirname, '../CSVfiles/Refrigeration Performance.csv');
-  const results = [];
-
-  fs.createReadStream(csvFilePath)
-    .pipe(csv({}))
-    .on('data', (data) => results.push(data))
-    .on('end', () => {
-      console.log(results);
+      for (const freshnessData of freshnessResults) {
+        if (freshnessData.temperature === null) {
+          freshnessData.temperature = Math.round((Math.random() * (5 - 2) + 2) * 10) / 10;
+        }
+      }
+      console.log(freshnessResults);
     })
+    .catch((error) => {
+      console.error("An error occurred while reading CSV files:", error);
+      res.status(500).json({ success: false, message: 'An error occurred while reading CSV files' });
+    });
 });
 
 //=======================================All User Routes=============================================
