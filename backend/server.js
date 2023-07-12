@@ -97,6 +97,7 @@ app.post('/readCSV', async (req, res) => {
   const freshnessResults = [];
   const refrigerationResults = [];
   const informationResults = [];
+  const pushResults = [];
 
   const readFreshnessPromise = new Promise((resolve, reject) => {
     fs.createReadStream(freshnessFilePath)
@@ -107,7 +108,9 @@ app.post('/readCSV', async (req, res) => {
           venueName: data.Location,
           placeType: data['Place Type'],
           venueFreshness: parseFloat(data['Freshness (%)']),
-          venueTemperature: null
+          venueTemperature: null,
+          venueAddress: null,
+          venueCountry: null,
         };
   
         const existingDataIndex = freshnessResults.findIndex(
@@ -165,7 +168,6 @@ app.post('/readCSV', async (req, res) => {
       })
       .on('end', () => {
         console.log("Reading of information done!");
-        console.log(informationResults);
         resolve();
       })
       .on('error', (error) => {
@@ -188,14 +190,48 @@ app.post('/readCSV', async (req, res) => {
           freshnessData.venueTemperature = Math.round((Math.random() * (5 - 2) + 2) * 10) / 10;
         }
       }
-      console.log(freshnessResults);
+
+      for (const informationData of informationResults) {
+        for (const freshnessData of freshnessResults) {
+          if (informationData.venueName === freshnessData.venueName) {
+            freshnessData.venueAddress = informationData.venueAddress
+            freshnessData.venueCountry = informationData.venueCountry
+          }
+        }
+      }
+
+      for (let i = freshnessResults.length - 1; i >= 0; i--) {
+        const freshnessData = freshnessResults[i];
+        if (freshnessData.venueAddress === null) {
+          freshnessResults.splice(i, 1);
+        }
+      }
+      
+      for (let i = freshnessResults.length - 1; i >= 0; i--) {
+        const freshnessData = freshnessResults[i];
+        const newData = {
+          venueID: freshnessData.venueID,
+          venueName: freshnessData.venueName,
+          venueAddress: freshnessData.venueAddress,
+          venueContact: null,
+          venueRating: Math.floor(Math.random() * 5) + 1,
+          venueImage: null,
+          venueOperatingHours: null,
+          venueMenu: [],
+          venueReview: [],
+          venueLatitude: 1.0,
+          venueLongtitude: 1.0,
+          venueFreshness: freshnessData.venueFreshness,
+          venueTemperature: freshnessData.venueTemperature,
+        }
+        pushResults.push(newData);
+      }
     })
     .catch((error) => {
       console.error("An error occurred while reading CSV files:", error);
       res.status(500).json({ success: false, message: 'An error occurred while reading CSV files' });
     });
 });
-
 //=======================================All User Routes=============================================
 // Custom middleware to store 'user' object in a global variable
 let globalUser = null;
