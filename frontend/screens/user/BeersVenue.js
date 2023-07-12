@@ -769,7 +769,7 @@ const VenueItem = ({
 												<Text
 													style={{
 														...GlobalStyle.headerFont,
-														fontSize: 15,
+														fontSize: 13,
 														marginBottom: 6,
 													}}
 												>
@@ -792,7 +792,7 @@ const VenueItem = ({
 												<Text
 													style={{
 														...GlobalStyle.headerFont,
-														fontSize: 15,
+														fontSize: 14,
 														marginBottom: 12,
 													}}
 												>
