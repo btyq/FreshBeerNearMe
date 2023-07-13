@@ -226,6 +226,7 @@ app.post('/readCSV', async (req, res) => {
         }
         pushResults.push(newData);
       }
+      res.status(200).json({ success: true, message: 'Data processed successfully'});
     })
     .catch((error) => {
       console.error("An error occurred while reading CSV files:", error);
