@@ -1024,7 +1024,7 @@ const BeersVenue = ({ navigation }) => {
 
 					<View style={styles.container}>
 						<ScrollView
-							contentContainerStyle={{ flexGrow: 1, height: 400 }}
+							contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
 							showsVerticalScrollIndicator={false}
 						>
 							{sortedVenueData.map((venue) => (
