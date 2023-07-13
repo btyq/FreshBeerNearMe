@@ -1,5 +1,5 @@
 class Venue {
-    constructor(client, venueID, venueName, venueAddress, venueContact, venueRating, venueImage, venueOperatingHours, venueMenu, venueReview){
+    constructor(client, venueID, venueName, venueAddress, venueContact, venueRating, venueImage, venueOperatingHours, venueMenu, venueReview, venueFreshness, venueLatitude, venueLongitude, venueTemperature) {
         this.client = client;
         this.venueID = venueID;
         this.venueName = venueName;
@@ -10,6 +10,10 @@ class Venue {
         this.venueOperatingHours = venueOperatingHours;
         this.venueMenu = venueMenu;
         this.venueReview = venueReview;
+        this.venueFreshness = venueFreshness;
+        this.venueLatitude = venueLatitude;
+        this.venueLongitude = venueLongitude;
+        this.venueTemperature = venueTemperature; 
     }
 
     static async getVenueData(client, venueArray, res) {
@@ -29,10 +33,12 @@ class Venue {
                 data.venueOperatingHours,
                 data.venueMenu,
                 data.venueReview,
+                data.venueFreshness,
+                data.venueLatitude,
+                data.venueLongitude,
+                data.venueTemperature,
                 );
-        
                 venueArray.push(venue);
-        
                 return venue;
             });
         
@@ -47,6 +53,7 @@ class Venue {
         try {
           const matchingVenue = venueArray.find(venue => venue.venueID === venueID);
           if (matchingVenue) {
+            console.log(matchingVenue);
             const beerID = matchingVenue.venueMenu;
             const collection = client.db('FreshBearNearMe').collection('Beer');
             const beers = await collection.find({ beerID: { $in: beerID } }).toArray();
@@ -60,37 +67,37 @@ class Venue {
         }
       }
     
-      static async getVenueReview(client, venueID, venueArray, res) {
-        try {
-          const matchingVenue = venueArray.find(venue => venue.venueID === venueID);
-          if (matchingVenue) {
-            const reviewID = matchingVenue.venueReview;
-            const collection = client.db('FreshBearNearMe').collection('Reviews');
-            const review = await collection.find({ reviewID: { $in: reviewID } }).toArray();
+    static async getVenueReview(client, venueID, venueArray, res) {
+      try {
+        const matchingVenue = venueArray.find(venue => venue.venueID === venueID);
+        if (matchingVenue) {
+          const reviewID = matchingVenue.venueReview;
+          const collection = client.db('FreshBearNearMe').collection('Reviews');
+          const review = await collection.find({ reviewID: { $in: reviewID } }).toArray();
 
-            const userCollection = client.db('FreshBearNearMe').collection('User');
-            const userID = review.map(review => review.reviewUser);
-            const users = await userCollection.find({ userID: { $in: userID} }).toArray();
-            const userMap = users.reduce((map, user) => {
-              map[user.userID] = user.username;
-              return map;
-              
-            }, {});
+          const userCollection = client.db('FreshBearNearMe').collection('User');
+          const userID = review.map(review => review.reviewUser);
+          const users = await userCollection.find({ userID: { $in: userID} }).toArray();
+          const userMap = users.reduce((map, user) => {
+            map[user.userID] = user.username;
+            return map;
             
-            const updatedReviews = review.map(review => {
-              const username = userMap[review.reviewUser];
-              return { ...review, reviewUser: username };
-            });
-            
-            res.json({ success: true, review: updatedReviews });
-          } else {
-            res.status(404).json({ success: false, message: 'Venue not found' });
-          }
-        } catch (error) {
-          console.error("Error retrieving venue reviews:", error);
-          res.status(500).json({ success: false, message: "An error occurred while retrieving beer menu" });
+          }, {});
+          
+          const updatedReviews = review.map(review => {
+            const username = userMap[review.reviewUser];
+            return { ...review, reviewUser: username };
+          });
+          
+          res.json({ success: true, review: updatedReviews });
+        } else {
+          res.status(404).json({ success: false, message: 'Venue not found' });
         }
+      } catch (error) {
+        console.error("Error retrieving venue reviews:", error);
+        res.status(500).json({ success: false, message: "An error occurred while retrieving beer menu" });
       }
+    }
 
 }
 

@@ -344,13 +344,13 @@ app.get('/getVenueData', async(req, res) => {
 
 //Route to retrieve menu data inside venue container
 app.get('/getVenueMenu', async (req, res) => {
-  const venueID = parseInt(req.query.venueID);
+  const venueID = req.query.venueID;
   Venue.getVenueMenu(client, venueID, venueArray, res);
 });
 
 //Route to retrieve venue review data inside venue container
 app.get('/getVenueReview', async (req, res) => {
-  const venueID = parseInt(req.query.venueID);
+  const venueID = req.query.venueID;
   Venue.getVenueReview(client, venueID, venueArray, res);
 })
 //===================================================================================================================
