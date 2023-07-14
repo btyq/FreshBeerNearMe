@@ -133,6 +133,13 @@ const BeerItem = ({
 		setReviewRating(ratingValue);
 	};
 
+	const generateRandomNumber = () => {
+		const min = 1000000;
+		const max = 10000000;
+		const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+		return randomNumber;
+	};
+
 	const handleSubmit = () => {
 		const currentDate = new Date();
 
@@ -156,12 +163,8 @@ const BeerItem = ({
 				if (response.data.success) {
 					console.log("Review Added");
 
-					const highestReviewID = Math.max(
-						...beerReview.map((review) => review.reviewID)
-					);
-
 					const newReview = {
-						reviewID: highestReviewID + 1,
+						reviewID: generateRandomNumber(),
 						reviewUser: cookies.username,
 						reviewDate: formattedDate,
 						reviewDescription: reviewText,
