@@ -6,8 +6,10 @@ import {
 	Octicons,
 } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+	Animated,
+	Easing,
 	Image,
 	Modal,
 	ScrollView,
@@ -280,7 +282,7 @@ const VenueItem = ({
 						}}
 					>
 						<ScrollView
-							contentContainerStyle={{ flexGrow: 1, height: 1350 }}
+							contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
 							showsVerticalScrollIndicator={false}
 						>
 							<Image source={{ uri: venueImage }} style={styles.venueImage} />
@@ -297,7 +299,8 @@ const VenueItem = ({
 								<View
 									style={{
 										flexDirection: "row",
-										justifyContent: "space-between",
+										//marginRight: 1,
+										// justifyContent: "space-between",
 										alignItems: "center",
 										marginBottom: 12,
 									}}
@@ -312,7 +315,7 @@ const VenueItem = ({
 											style={{
 												flexWrap: "wrap",
 												marginLeft: 4,
-												maxWidth: "70%",
+												maxWidth: "65%",
 											}}
 										>
 											{venueAddress}
@@ -322,6 +325,7 @@ const VenueItem = ({
 										style={{
 											flexDirection: "row",
 											alignItems: "center",
+											marginHorizontal: 12,
 										}}
 									>
 										<FontAwesome
@@ -330,7 +334,14 @@ const VenueItem = ({
 											color={COLORS.black}
 											style={{ marginRight: 4 }}
 										/>
-										<CustomText>{venueContact}</CustomText>
+										<CustomText
+											style={{
+												flexWrap: "wrap",
+												maxWidth: "80%",
+											}}
+										>
+											{venueContact}
+										</CustomText>
 									</View>
 								</View>
 
@@ -377,6 +388,16 @@ const VenueItem = ({
 											</View>
 										))}
 									</View>
+								</View>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
+									}}
+								>
+									<CustomText>Freshness:</CustomText>
+									<CustomText>Temperature: </CustomText>
 								</View>
 								<View
 									style={{
@@ -826,6 +847,8 @@ const BeersVenue = ({ navigation }) => {
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [searchInput, setSearchInput] = useState("");
 	const [venueData, setVenueData] = useState([]);
+	const rotateValue = useRef(new Animated.Value(0)).current;
+	const [isDataLoading, setIsDataLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchVenueData = async () => {
@@ -858,6 +881,29 @@ const BeersVenue = ({ navigation }) => {
 		};
 		fetchVenueData();
 	}, [sortBy, sortOrder]);
+
+	// for animated effect
+	useEffect(() => {
+		const rotateAnimation = Animated.loop(
+			Animated.timing(rotateValue, {
+				toValue: 1,
+				duration: 1000,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			})
+		);
+
+		rotateAnimation.start();
+
+		return () => {
+			rotateAnimation.stop();
+		};
+	}, [rotateValue, isDataLoading]);
+
+	const spin = rotateValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"],
+	});
 
 	// for sorting and search function
 	const handleSortBy = (by) => {
@@ -1023,10 +1069,14 @@ const BeersVenue = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView
-							contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
-							showsVerticalScrollIndicator={false}
-						>
+						{isDataLoading && (
+							<Animated.View
+								style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
+							>
+								<FontAwesome name="hourglass-1" size={24} color="black" />
+							</Animated.View>
+						)}
+						<ScrollView showsVerticalScrollIndicator={false}>
 							{sortedVenueData.map((venue) => (
 								<VenueItem
 									key={venue._id}
@@ -1160,7 +1210,12 @@ const styles = StyleSheet.create({
 	},
 	bar: {
 		height: 20,
-		backgroundColor: COLORS.foam, // Set the desired color for the bars
+		backgroundColor: COLORS.foam,
+	},
+	loadingIcon: {
+		justifyContent: "center",
+		flex: 1,
+		alignSelf: "center",
 	},
 });
 

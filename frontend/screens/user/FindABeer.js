@@ -1,7 +1,14 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import {
+	FontAwesome,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import {
+	Animated,
+	Easing,
 	Image,
 	Modal,
 	ScrollView,
@@ -688,6 +695,8 @@ const FindABeer = ({ navigation }) => {
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [searchInput, setSearchInput] = useState("");
 	const [beerData, setBeerData] = useState([]);
+	const rotateValue = useRef(new Animated.Value(0)).current;
+	const [isDataLoading, setIsDataLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchBeerData = async () => {
@@ -724,6 +733,29 @@ const FindABeer = ({ navigation }) => {
 
 		fetchBeerData();
 	}, [sortBy, sortOrder]);
+
+	// for animated effect
+	useEffect(() => {
+		const rotateAnimation = Animated.loop(
+			Animated.timing(rotateValue, {
+				toValue: 1,
+				duration: 1000,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			})
+		);
+
+		rotateAnimation.start();
+
+		return () => {
+			rotateAnimation.stop();
+		};
+	}, [rotateValue, isDataLoading]);
+
+	const spin = rotateValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"],
+	});
 
 	const handleSortBy = (by) => {
 		if (by === sortBy) return;
@@ -888,8 +920,15 @@ const FindABeer = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
+						{isDataLoading && (
+							<Animated.View
+								style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
+							>
+								<FontAwesome name="hourglass-1" size={24} color="black" />
+							</Animated.View>
+						)}
 						<ScrollView
-							contentContainerStyle={{ flexGrow: 1, height: 400 }}
+							// contentContainerStyle={{ flexGrow: 1, height: 400 }}
 							showsVerticalScrollIndicator={false}
 						>
 							{sortedBeerData.map((beer) => (
@@ -1037,6 +1076,11 @@ const styles = StyleSheet.create({
 	bar: {
 		height: 20,
 		backgroundColor: COLORS.foam, // Set the desired color for the bars
+	},
+	loadingIcon: {
+		justifyContent: "center",
+		flex: 1,
+		alignSelf: "center",
 	},
 });
 
