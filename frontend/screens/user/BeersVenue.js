@@ -162,7 +162,7 @@ const VenueItem = ({
 			.then((response) => {
 				if (response.data.success) {
 					console.log("Review Added");
-					
+
 					const newReview = {
 						reviewID: generateRandomNumber(),
 						reviewUser: cookies.username,
@@ -856,6 +856,7 @@ const BeersVenue = ({ navigation }) => {
 	useEffect(() => {
 		const fetchVenueData = async () => {
 			try {
+				setIsDataLoading(true);
 				const response = await axios.get("http://10.0.2.2:3000/getVenueData");
 				const { success, venueData } = response.data;
 				if (success) {
@@ -880,8 +881,11 @@ const BeersVenue = ({ navigation }) => {
 				}
 			} catch (error) {
 				console.error("Error retrieving venue data:", error);
+			} finally {
+				setIsDataLoading(false);
 			}
 		};
+
 		fetchVenueData();
 	}, [sortBy, sortOrder]);
 
@@ -901,7 +905,7 @@ const BeersVenue = ({ navigation }) => {
 		return () => {
 			rotateAnimation.stop();
 		};
-	}, [rotateValue, isDataLoading]);
+	}, [rotateValue]);
 
 	const spin = rotateValue.interpolate({
 		inputRange: [0, 1],
@@ -930,6 +934,7 @@ const BeersVenue = ({ navigation }) => {
 			venue.venueName.toLowerCase().includes(text.toLowerCase())
 		);
 		setSortedVenueData(filteredData);
+		setIsDataLoading(false);
 	};
 
 	return (

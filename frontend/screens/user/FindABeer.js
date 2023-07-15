@@ -704,6 +704,7 @@ const FindABeer = ({ navigation }) => {
 	useEffect(() => {
 		const fetchBeerData = async () => {
 			try {
+				setIsDataLoading(true);
 				const response = await axios.get("http://10.0.2.2:3000/getBeerData");
 				const { success, beerData } = response.data;
 				if (success) {
@@ -731,6 +732,8 @@ const FindABeer = ({ navigation }) => {
 				}
 			} catch (error) {
 				console.error("Error retrieving beer data:", error);
+			} finally {
+				setIsDataLoading(false);
 			}
 		};
 
@@ -753,7 +756,7 @@ const FindABeer = ({ navigation }) => {
 		return () => {
 			rotateAnimation.stop();
 		};
-	}, [rotateValue, isDataLoading]);
+	}, [rotateValue]);
 
 	const spin = rotateValue.interpolate({
 		inputRange: [0, 1],
@@ -781,6 +784,7 @@ const FindABeer = ({ navigation }) => {
 			beer.beerName.toLowerCase().includes(text.toLowerCase())
 		);
 		setSortedBeerData(filteredData);
+		setIsDataLoading(false);
 	};
 
 	return (
@@ -930,10 +934,7 @@ const FindABeer = ({ navigation }) => {
 								<FontAwesome name="hourglass-1" size={24} color="black" />
 							</Animated.View>
 						)}
-						<ScrollView
-							// contentContainerStyle={{ flexGrow: 1, height: 400 }}
-							showsVerticalScrollIndicator={false}
-						>
+						<ScrollView showsVerticalScrollIndicator={false}>
 							{sortedBeerData.map((beer) => (
 								<BeerItem
 									key={beer._id}
