@@ -1,34 +1,37 @@
-const Beer = require('./class/beer');
-const User = require('./class/user');
-const Venue = require('./class/venue');
-const VenueOwner = require('./class/venueowner');
-const Review = require('./class/review');
+const Beer = require("./class/beer");
+const User = require("./class/user");
+const Venue = require("./class/venue");
+const VenueOwner = require("./class/venueowner");
+const Review = require("./class/review");
+const Brewery = require("./class/brewery");
 
 const venueArray = [];
 const beerArray = [];
+const breweryArray = [];
 
-const csv = require('csv-parser');
-const path = require('path');
-const fs = require('fs');
+const csv = require("csv-parser");
+const path = require("path");
+const fs = require("fs");
 
 //===================================================================================================================
 //==============================================Connect to MongoDB===================================================
-const express = require('express');
+const express = require("express");
 const app = express();
 const port = 3000;
-const { MongoClient } = require('mongodb');
-const uri = 'mongodb+srv://Admin:admin123@fyp.qzlvrug.mongodb.net/?retryWrites=true&w=majority';
+const { MongoClient } = require("mongodb");
+const uri =
+	"mongodb+srv://Admin:admin123@fyp.qzlvrug.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri);
-const db = client.db('FreshBearNearMe');
-const collection = db.collection('User');
+const db = client.db("FreshBearNearMe");
+const collection = db.collection("User");
 
 async function connectToMongoDB() {
-  try {
-    await client.connect();
-    console.log('Connected to MongoDB successfully');
-  } catch (err) {
-    console.error('Error connecting to MongoDB:', err);
-  }
+	try {
+		await client.connect();
+		console.log("Connected to MongoDB successfully");
+	} catch (err) {
+		console.error("Error connecting to MongoDB:", err);
+	}
 }
 
 //Call the MongoDB connection function
@@ -36,342 +39,414 @@ connectToMongoDB();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', (req, res) => {
-  res.send('Server is up');
+app.get("/", (req, res) => {
+	res.send("Server is up");
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+	console.log(`Server is running on port ${port}`);
 });
 //===================================================================================================================
 //==============================================All Route Functions==================================================
 
 //Route to verify username and password
-app.post('/signup', async (req, res) => {
-  const { username, password, email, mobileNumber, receiveNotification } = req.body;
+app.post("/signup", async (req, res) => {
+	const { username, password, email, mobileNumber, receiveNotification } =
+		req.body;
 
-  try {
-    // Check if the username already exists
-    const existingUsername = await collection.findOne({ username });
-    if (existingUsername) {
-      return res.json({ success: false, message: 'Username already exists' });
-    }
+	try {
+		// Check if the username already exists
+		const existingUsername = await collection.findOne({ username });
+		if (existingUsername) {
+			return res.json({ success: false, message: "Username already exists" });
+		}
 
-    // Check if the email already exists
-    const existingEmail = await collection.findOne({ email });
-    if (existingEmail) {
-      return res.json({ success: false, message: 'Email already exists' });
-    }
+		// Check if the email already exists
+		const existingEmail = await collection.findOne({ email });
+		if (existingEmail) {
+			return res.json({ success: false, message: "Email already exists" });
+		}
 
-    // Check if the mobile number already exists
-    const existingMobileNumber = await collection.findOne({ mobileNumber });
-    if (existingMobileNumber) {
-      return res.json({ success: false, message: 'Mobile number already exists' });
-    }
+		// Check if the mobile number already exists
+		const existingMobileNumber = await collection.findOne({ mobileNumber });
+		if (existingMobileNumber) {
+			return res.json({
+				success: false,
+				message: "Mobile number already exists",
+			});
+		}
 
-    // Retrieve the last user document and get the next userID
-    const lastUser = await collection.find().sort({ userID: -1 }).limit(1).toArray();
-    const nextUserID = lastUser.length > 0 ? lastUser[0].userID + 1 : 1;
+		// Retrieve the last user document and get the next userID
+		const lastUser = await collection
+			.find()
+			.sort({ userID: -1 })
+			.limit(1)
+			.toArray();
+		const nextUserID = lastUser.length > 0 ? lastUser[0].userID + 1 : 1;
 
-    // Insert the user data into the MongoDB collection with the next userID
-    const result = await collection.insertOne({
-      userID: nextUserID,
-      username,
-      password,
-      email,
-      mobileNumber,
-      receiveNotification: false
-    });
+		// Insert the user data into the MongoDB collection with the next userID
+		const result = await collection.insertOne({
+			userID: nextUserID,
+			username,
+			password,
+			email,
+			mobileNumber,
+			receiveNotification: false,
+		});
 
-    res.json({ success: true, message: 'User signed up successfully' });
-  } catch (error) {
-    console.error('Error during signup:', error);
-    res.status(500).json({ success: false, message: 'An error occurred during signup' });
-  }
+		res.json({ success: true, message: "User signed up successfully" });
+	} catch (error) {
+		console.error("Error during signup:", error);
+		res
+			.status(500)
+			.json({ success: false, message: "An error occurred during signup" });
+	}
 });
 
-app.post('/readCSV', async (req, res) => {
-  const freshnessFilePath = path.join(__dirname, '../CSVfiles/Freshness Report.csv');
-  const refrigerationFilePath = path.join(__dirname, '../CSVfiles/Refrigeration Performance.csv');
-  const informationFilePath = path.join(__dirname, '../CSVfiles/Place List.csv');
-  const freshnessResults = [];
-  const refrigerationResults = [];
-  const informationResults = [];
-  const pushResults = [];
+app.post("/readCSV", async (req, res) => {
+	const freshnessFilePath = path.join(
+		__dirname,
+		"../CSVfiles/Freshness Report.csv"
+	);
+	const refrigerationFilePath = path.join(
+		__dirname,
+		"../CSVfiles/Refrigeration Performance.csv"
+	);
+	const informationFilePath = path.join(
+		__dirname,
+		"../CSVfiles/Place List.csv"
+	);
+	const freshnessResults = [];
+	const refrigerationResults = [];
+	const informationResults = [];
+	const pushResults = [];
 
-  const readFreshnessPromise = new Promise((resolve, reject) => {
-    fs.createReadStream(freshnessFilePath)
-      .pipe(csv({}))
-      .on('data', async (data) => {
-        const newData = {
-          venueID: data['Tracker ID'],
-          venueName: data.Location,
-          placeType: data['Place Type'],
-          venueFreshness: parseFloat(data['Freshness (%)']),
-          venueTemperature: null,
-          venueAddress: null,
-          venueCountry: null,
-        };
-  
-        const existingDataIndex = freshnessResults.findIndex(
-          (item) => item.venueName === newData.venueName
-        );
-  
-        if (existingDataIndex === -1) {
-          freshnessResults.push(newData);
-        } else {
-          freshnessResults[existingDataIndex].venueFreshness = newData.venueFreshness;
-        }
-      })
-      .on('end', () => {
-        console.log("Reading of freshness done!");
-        resolve();
-      })
-      .on('error', (error) => {
-        reject(error); 
-      });
-  });
+	const readFreshnessPromise = new Promise((resolve, reject) => {
+		fs.createReadStream(freshnessFilePath)
+			.pipe(csv({}))
+			.on("data", async (data) => {
+				const newData = {
+					venueID: data["Tracker ID"],
+					venueName: data.Location,
+					placeType: data["Place Type"],
+					venueFreshness: parseFloat(data["Freshness (%)"]),
+					venueTemperature: null,
+					venueAddress: null,
+					venueCountry: null,
+				};
 
-  const readTemperaturePromise = new Promise((resolve, reject) => {
-    fs.createReadStream(refrigerationFilePath)
-      .pipe(csv({}))
-      .on('data', async (data) => {
-        const newData = {
-          place: data.Place,
-          temperature: parseFloat(data['Average Temperature In Fridge (°C)'])
-        };
+				const existingDataIndex = freshnessResults.findIndex(
+					(item) => item.venueName === newData.venueName
+				);
 
-        refrigerationResults.push(newData);
-      })
-      .on('end', () => {
-        console.log("Reading of temperature done!");
-        resolve(); 
-      })
-      .on('error', (error) => {
-        reject(error); 
-      });
-  });
-  
-  const readInformationPromise = new Promise((resolve, reject) => {
-    fs.createReadStream(informationFilePath)
-      .pipe(csv({}))
-      .on('data', async (data) => {
-        const newData = {
-          venueName: data.Name,
-          venueType: data['Place Type'],
-          venueAddress:  data.Address + ',' + data.City + ',' + data.State + ',' + data.Postcode,
-          venueCountry: data.Country,
-        }
-        if (newData.venueCountry === "Australia") {
-          informationResults.push(newData);
-        }        
-      })
-      .on('end', () => {
-        console.log("Reading of information done!");
-        resolve();
-      })
-      .on('error', (error) => {
-        reject(error);
-      });
-  });
+				if (existingDataIndex === -1) {
+					freshnessResults.push(newData);
+				} else {
+					freshnessResults[existingDataIndex].venueFreshness =
+						newData.venueFreshness;
+				}
+			})
+			.on("end", () => {
+				console.log("Reading of freshness done!");
+				resolve();
+			})
+			.on("error", (error) => {
+				reject(error);
+			});
+	});
 
-  Promise.all([readFreshnessPromise, readTemperaturePromise, readInformationPromise])
-    .then(() => {
-      for (const freshnessData of freshnessResults) {
-        for (const refrigerationData of refrigerationResults) {
-          if (freshnessData.venueName === refrigerationData.place) {
-            freshnessData.venueTemperature = refrigerationData.temperature;
-          }
-        }
-      }
+	const readTemperaturePromise = new Promise((resolve, reject) => {
+		fs.createReadStream(refrigerationFilePath)
+			.pipe(csv({}))
+			.on("data", async (data) => {
+				const newData = {
+					place: data.Place,
+					temperature: parseFloat(data["Average Temperature In Fridge (°C)"]),
+				};
 
-      for (const freshnessData of freshnessResults) {
-        if (freshnessData.venueTemperature === null) {
-          freshnessData.venueTemperature = Math.round((Math.random() * (5 - 2) + 2) * 10) / 10;
-        }
-      }
+				refrigerationResults.push(newData);
+			})
+			.on("end", () => {
+				console.log("Reading of temperature done!");
+				resolve();
+			})
+			.on("error", (error) => {
+				reject(error);
+			});
+	});
 
-      for (const informationData of informationResults) {
-        for (const freshnessData of freshnessResults) {
-          if (informationData.venueName === freshnessData.venueName) {
-            freshnessData.venueAddress = informationData.venueAddress
-            freshnessData.venueCountry = informationData.venueCountry
-          }
-        }
-      }
+	const readInformationPromise = new Promise((resolve, reject) => {
+		fs.createReadStream(informationFilePath)
+			.pipe(csv({}))
+			.on("data", async (data) => {
+				const newData = {
+					venueName: data.Name,
+					venueType: data["Place Type"],
+					venueAddress:
+						data.Address +
+						"," +
+						data.City +
+						"," +
+						data.State +
+						"," +
+						data.Postcode,
+					venueCountry: data.Country,
+				};
+				if (newData.venueCountry === "Australia") {
+					informationResults.push(newData);
+				}
+			})
+			.on("end", () => {
+				console.log("Reading of information done!");
+				resolve();
+			})
+			.on("error", (error) => {
+				reject(error);
+			});
+	});
 
-      for (let i = freshnessResults.length - 1; i >= 0; i--) {
-        const freshnessData = freshnessResults[i];
-        if (freshnessData.venueAddress === null) {
-          freshnessResults.splice(i, 1);
-        }
-      }
-      
-      for (let i = freshnessResults.length - 1; i >= 0; i--) {
-        const freshnessData = freshnessResults[i];
-        const newData = {
-          venueID: freshnessData.venueID,
-          venueName: freshnessData.venueName,
-          venueAddress: freshnessData.venueAddress,
-          venueContact: null,
-          venueRating: Math.floor(Math.random() * 5) + 1,
-          venueImage: null,
-          venueOperatingHours: null,
-          venueMenu: [],
-          venueReview: [],
-          venueLatitude: 1.0,
-          venueLongtitude: 1.0,
-          venueFreshness: freshnessData.venueFreshness,
-          venueTemperature: freshnessData.venueTemperature,
-        }
-        pushResults.push(newData);
-      }
-      res.status(200).json({ success: true, message: 'Data processed successfully'});
-    })
-    .catch((error) => {
-      console.error("An error occurred while reading CSV files:", error);
-      res.status(500).json({ success: false, message: 'An error occurred while reading CSV files' });
-    });
+	Promise.all([
+		readFreshnessPromise,
+		readTemperaturePromise,
+		readInformationPromise,
+	])
+		.then(() => {
+			for (const freshnessData of freshnessResults) {
+				for (const refrigerationData of refrigerationResults) {
+					if (freshnessData.venueName === refrigerationData.place) {
+						freshnessData.venueTemperature = refrigerationData.temperature;
+					}
+				}
+			}
+
+			for (const freshnessData of freshnessResults) {
+				if (freshnessData.venueTemperature === null) {
+					freshnessData.venueTemperature =
+						Math.round((Math.random() * (5 - 2) + 2) * 10) / 10;
+				}
+			}
+
+			for (const informationData of informationResults) {
+				for (const freshnessData of freshnessResults) {
+					if (informationData.venueName === freshnessData.venueName) {
+						freshnessData.venueAddress = informationData.venueAddress;
+						freshnessData.venueCountry = informationData.venueCountry;
+					}
+				}
+			}
+
+			for (let i = freshnessResults.length - 1; i >= 0; i--) {
+				const freshnessData = freshnessResults[i];
+				if (freshnessData.venueAddress === null) {
+					freshnessResults.splice(i, 1);
+				}
+			}
+
+			for (let i = freshnessResults.length - 1; i >= 0; i--) {
+				const freshnessData = freshnessResults[i];
+				const newData = {
+					venueID: freshnessData.venueID,
+					venueName: freshnessData.venueName,
+					venueAddress: freshnessData.venueAddress,
+					venueContact: null,
+					venueRating: Math.floor(Math.random() * 5) + 1,
+					venueImage: null,
+					venueOperatingHours: null,
+					venueMenu: [],
+					venueReview: [],
+					venueLatitude: 1.0,
+					venueLongtitude: 1.0,
+					venueFreshness: freshnessData.venueFreshness,
+					venueTemperature: freshnessData.venueTemperature,
+				};
+				pushResults.push(newData);
+			}
+			res
+				.status(200)
+				.json({ success: true, message: "Data processed successfully" });
+		})
+		.catch((error) => {
+			console.error("An error occurred while reading CSV files:", error);
+			res.status(500).json({
+				success: false,
+				message: "An error occurred while reading CSV files",
+			});
+		});
 });
 //=======================================All User Routes=============================================
 // Custom middleware to store 'user' object in a global variable
 let globalUser = null;
 app.use((req, res, next) => {
-  if (req.url === '/userLogin') {
-    globalUser = new User(client, "", "", "", "", "", false);
-  } 
-  next();
+	if (req.url === "/userLogin") {
+		globalUser = new User(client, "", "", "", "", "", false);
+	}
+	next();
 });
 //Route to verify username and password
-app.post('/userLogin', async (req, res) => {
-  const { username, password } = req.body;
+app.post("/userLogin", async (req, res) => {
+	const { username, password } = req.body;
 
-  if (!globalUser) {
-    globalUser = new User(client, "", username, password, "", "", false);
-  } else {
-    globalUser.username = username;
-    globalUser.password = password;
-  }
-  await globalUser.login(res, username, password);
+	if (!globalUser) {
+		globalUser = new User(client, "", username, password, "", "", false);
+	} else {
+		globalUser.username = username;
+		globalUser.password = password;
+	}
+	await globalUser.login(res, username, password);
 });
 
 //Route to retrieve user data at userProfile
-app.post('/getUserData', async (req, res) => {
-  try {
-    await globalUser.getUserData(req,res);
-  } catch (error) {
-    console.error('Error retrieving user data:', error);
-    res.status(500).json({ success: false, message: 'An error occurred while retrieving user data' });
-  }
+app.post("/getUserData", async (req, res) => {
+	try {
+		await globalUser.getUserData(req, res);
+	} catch (error) {
+		console.error("Error retrieving user data:", error);
+		res.status(500).json({
+			success: false,
+			message: "An error occurred while retrieving user data",
+		});
+	}
 });
 
 //Route to edit user's profile
-app.post('/editProfile', async (req, res) => {
-  try {
-    if (globalUser) {
-      // Store the existing user data in 'oldData'
-      const oldData = {
-        userID: globalUser.userID,
-        username: globalUser.username,
-        password: globalUser.password,
-        email: globalUser.email,
-        mobileNumber: globalUser.mobileNumber,               
-        receiveNotification: globalUser.receiveNotification
-      };
-      const newData = {
-        username: req.body.username,
-        password: req.body.password,
-        email: req.body.email,
-        mobileNumber: req.body.mobileNumber,
-        receiveNotification: req.body.receiveNotification
-      };
-      
-      await globalUser.editProfile(res, oldData, newData);
-    } else {
-      res.json({ success: false, message: 'User not found' });
-    }
-  } catch (error) {
-    console.error('Error updating profile:', error);
-    res.status(500).json({ success: false, message: 'An error occurred while updating the profile' });
-  }
+app.post("/editProfile", async (req, res) => {
+	try {
+		if (globalUser) {
+			// Store the existing user data in 'oldData'
+			const oldData = {
+				userID: globalUser.userID,
+				username: globalUser.username,
+				password: globalUser.password,
+				email: globalUser.email,
+				mobileNumber: globalUser.mobileNumber,
+				receiveNotification: globalUser.receiveNotification,
+			};
+			const newData = {
+				username: req.body.username,
+				password: req.body.password,
+				email: req.body.email,
+				mobileNumber: req.body.mobileNumber,
+				receiveNotification: req.body.receiveNotification,
+			};
+
+			await globalUser.editProfile(res, oldData, newData);
+		} else {
+			res.json({ success: false, message: "User not found" });
+		}
+	} catch (error) {
+		console.error("Error updating profile:", error);
+		res.status(500).json({
+			success: false,
+			message: "An error occurred while updating the profile",
+		});
+	}
 });
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;
 app.use((req, res, next) => {
-  if (req.url === '/venueOwnerLogin') {
-    globalVenueOwner = new VenueOwner(client, "", "", "", "", "", "",);
-  } 
-  next();
+	if (req.url === "/venueOwnerLogin") {
+		globalVenueOwner = new VenueOwner(client, "", "", "", "", "", "");
+	}
+	next();
 });
 
-app.post('/venueOwnerLogin', async (req, res) => {
-  const { username, password } = req.body;
+app.post("/venueOwnerLogin", async (req, res) => {
+	const { username, password } = req.body;
 
-  if (!globalVenueOwner) {
-    globalVenueOwner = new VenueOwner(client, "", username, password, "", "", "");
-  } else {
-    globalVenueOwner.username = username;
-    globalVenueOwner.password = password;
-  }
-  await globalVenueOwner.login(res, username, password);
+	if (!globalVenueOwner) {
+		globalVenueOwner = new VenueOwner(
+			client,
+			"",
+			username,
+			password,
+			"",
+			"",
+			""
+		);
+	} else {
+		globalVenueOwner.username = username;
+		globalVenueOwner.password = password;
+	}
+	await globalVenueOwner.login(res, username, password);
 });
 
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
 //Route to retrieve beer data
-app.get('/getBeerData', async (req, res) => {
-  await Beer.getBeerData(client, beerArray, res);
+app.get("/getBeerData", async (req, res) => {
+	await Beer.getBeerData(client, beerArray, res);
 });
 
 //Route to retrieve beer location
-app.get('/getBeerLocation', async (req, res) => {
-  const beerID = parseInt(req.query.beerID);
-  await Beer.getBeerLocation(client, beerID, beerArray, res);
+app.get("/getBeerLocation", async (req, res) => {
+	const beerID = parseInt(req.query.beerID);
+	await Beer.getBeerLocation(client, beerID, beerArray, res);
 });
 
 //Route to retrieve beer review
-app.get('/getBeerReview', async (req, res) => {
-  const beerID = parseInt(req.query.beerID);
-  Beer.getBeerReview(client, beerID, beerArray, res);
-})
+app.get("/getBeerReview", async (req, res) => {
+	const beerID = parseInt(req.query.beerID);
+	Beer.getBeerReview(client, beerID, beerArray, res);
+});
 //===================================================================================================================
 //=================================================All Venue Routes===================================================
 //Route to retrieve venue data
-app.get('/getVenueData', async(req, res) => {
-  await Venue.getVenueData(client, venueArray, res);
+app.get("/getVenueData", async (req, res) => {
+	await Venue.getVenueData(client, venueArray, res);
 });
 
 //Route to retrieve menu data inside venue container
-app.get('/getVenueMenu', async (req, res) => {
-  const venueID = req.query.venueID;
-  Venue.getVenueMenu(client, venueID, venueArray, res);
+app.get("/getVenueMenu", async (req, res) => {
+	const venueID = req.query.venueID;
+	Venue.getVenueMenu(client, venueID, venueArray, res);
 });
 
 //Route to retrieve venue review data inside venue container
-app.get('/getVenueReview', async (req, res) => {
-  const venueID = req.query.venueID;
-  Venue.getVenueReview(client, venueID, venueArray, res);
-})
+app.get("/getVenueReview", async (req, res) => {
+	const venueID = req.query.venueID;
+	Venue.getVenueReview(client, venueID, venueArray, res);
+});
 //===================================================================================================================
 //=================================================All Review Routes=================================================
-app.post('/addVenueReview', async (req, res) => {
-  const reviewDescription = req.body.reviewText;
-  const rating = req.body.rating;
-  const userID = req.body.userID;
-  const reviewDate = req.body.reviewDate;
-  const venueID = req.body.venueID;
+app.post("/addVenueReview", async (req, res) => {
+	const reviewDescription = req.body.reviewText;
+	const rating = req.body.rating;
+	const userID = req.body.userID;
+	const reviewDate = req.body.reviewDate;
+	const venueID = req.body.venueID;
 
-  Review.addVenueReview(client, reviewDescription, rating, userID, reviewDate, venueID, res)
-})
+	Review.addVenueReview(
+		client,
+		reviewDescription,
+		rating,
+		userID,
+		reviewDate,
+		venueID,
+		res
+	);
+});
 
-app.post('/addBeerReview', async (req, res) => {
-  const reviewDescription = req.body.reviewText;
-  const rating = req.body.rating;
-  const userID = req.body.userID;
-  const reviewDate = req.body.reviewDate;
-  const beerID = req.body.beerID;
+app.post("/addBeerReview", async (req, res) => {
+	const reviewDescription = req.body.reviewText;
+	const rating = req.body.rating;
+	const userID = req.body.userID;
+	const reviewDate = req.body.reviewDate;
+	const beerID = req.body.beerID;
 
-  Review.addBeerReview(client, reviewDescription, rating, userID, reviewDate, beerID, res)
-})
+	Review.addBeerReview(
+		client,
+		reviewDescription,
+		rating,
+		userID,
+		reviewDate,
+		beerID,
+		res
+	);
+});
 //===================================================================================================================
+//=================================================All Brewery Routes===================================================
+//Route to retrieve brewery data
+app.get("/getBreweryData", async (req, res) => {
+	await Brewery.getBreweryData(client, breweryArray, res);
+});

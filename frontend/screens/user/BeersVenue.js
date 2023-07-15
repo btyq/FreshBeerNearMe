@@ -1084,7 +1084,10 @@ const BeersVenue = ({ navigation }) => {
 								<FontAwesome name="hourglass-1" size={24} color="black" />
 							</Animated.View>
 						)}
-						<ScrollView showsVerticalScrollIndicator={false}>
+						<ScrollView
+							contentContainerStyle={{ paddingBottom: 30 }}
+							showsVerticalScrollIndicator={false}
+						>
 							{sortedVenueData.map((venue) => (
 								<VenueItem
 									key={venue._id}
