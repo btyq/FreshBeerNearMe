@@ -137,6 +137,40 @@ class Venue {
       }
     }
 
+    static async getVenueCoordinates(client, venueArray, res) {
+      try {
+        const uniqueVenues = [];
+        const venueIDs = new Set();
+    
+        for (const venue of venueArray) {
+          if (!venueIDs.has(venue.venueID)) {
+            uniqueVenues.push(venue);
+            venueIDs.add(venue.venueID);
+          }
+        }
+        const simplifiedData = uniqueVenues.map((venue) => {
+          return {
+            venueID: venue.venueID,
+            venueName: venue.venueName,
+            venueAddress: venue.venueAddress,
+            venueRating: venue.venueRating,
+            venueImage: venue.venueImage,
+            venueOperatingHours: venue.venueOperatingHours,
+            venueLatitude: venue.venueLatitude,
+            venueLongitude: venue.venueLongitude,
+          };
+        });
+        res.json({ success: true, venues: simplifiedData });
+      } catch (error) {
+        console.error("Error retrieving venue coordinates:", error);
+        res
+          .status(500)
+          .json({
+            success: false,
+            message: "An error occurred while retrieving venue coordinates",
+          });
+      }
+    }
 }
 
 module.exports = Venue;

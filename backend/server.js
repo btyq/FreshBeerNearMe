@@ -407,6 +407,11 @@ app.get("/getVenueReview", async (req, res) => {
 	const venueID = req.query.venueID;
 	Venue.getVenueReview(client, venueID, venueArray, res);
 });
+
+//Route to retrieve venue coordinates
+app.get("/getVenueCoordinates", async (req, res) => {
+	Venue.getVenueCoordinates(client, venueArray, res);
+})
 //===================================================================================================================
 //=================================================All Review Routes=================================================
 app.post("/addVenueReview", async (req, res) => {

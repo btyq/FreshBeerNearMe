@@ -71,6 +71,7 @@ const NearbyVenues = ({ navigation }) => {
 	const [selectedMarker, setSelectedMarker] = useState(null);
 	const [modalVisible2, setModalVisible2] = useState(false); // 2nd modal
 	const [activeFilter, setActiveFilter] = useState(""); // filter button
+	const [venueData, setVenueData] = useState([]);
 
 	// for filtering options
 	const handleFilter = (filter) => {
@@ -145,6 +146,17 @@ const NearbyVenues = ({ navigation }) => {
 			</Modal>
 		);
 	};
+
+	useEffect(() => {
+		axios
+		  .get("http://10.0.2.2:3000/getVenueCoordinates")
+		  .then((response) => {
+			setVenueData(response.data.venues);
+		  })
+		  .catch((error) => {
+			console.error('Error retrieving venues:', error);
+		  });
+	  }, []);
 
 	// data for venues
 	const markerVenue = [
@@ -259,7 +271,7 @@ const NearbyVenues = ({ navigation }) => {
 			title: "Good Luck",
 		},
 	];
-
+	
 	// marker for breweries
 	const MarkerBreweriesDetails = () => {
 		if (!selectedMarker) {
@@ -551,16 +563,16 @@ const NearbyVenues = ({ navigation }) => {
 							>
 								{/* for venues */}
 								{(activeFilter === "venues" || activeFilter === "") &&
-									markerVenue.map((marker) => (
+									venueData.map((marker) => (
 										<Marker
 											onPress={() => {
 												setModalVisible(true);
 												setSelectedMarker(marker);
 											}}
-											key={marker.id}
+											key={marker.venueID}
 											coordinate={{
-												latitude: marker.latitude,
-												longitude: marker.longitude,
+												latitude: marker.venueLatitude,
+												longitude: marker.venueLongitude,
 											}}
 											//	title={marker.title}
 											//	description="This is the test description"
