@@ -66,6 +66,14 @@ class Brewery {
 			});
 		}
 	}
+
+	static async getBreweryCoordinates(client, res) {
+		try {
+
+		} catch { 
+			
+		}
+	}
 }
 
 module.exports = Brewery;
