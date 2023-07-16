@@ -1,7 +1,14 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import {
+	FontAwesome,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import {
+	Animated,
+	Easing,
 	Image,
 	Modal,
 	ScrollView,
@@ -126,6 +133,13 @@ const BeerItem = ({
 		setReviewRating(ratingValue);
 	};
 
+	const generateRandomNumber = () => {
+		const min = 1000000;
+		const max = 10000000;
+		const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+		return randomNumber;
+	};
+
 	const handleSubmit = () => {
 		const currentDate = new Date();
 
@@ -149,12 +163,8 @@ const BeerItem = ({
 				if (response.data.success) {
 					console.log("Review Added");
 
-					const highestReviewID = Math.max(
-						...beerReview.map((review) => review.reviewID)
-					);
-
 					const newReview = {
-						reviewID: highestReviewID + 1,
+						reviewID: generateRandomNumber(),
 						reviewUser: cookies.username,
 						reviewDate: formattedDate,
 						reviewDescription: reviewText,
@@ -641,7 +651,18 @@ const BeerItem = ({
 													{beerReview.map((reviews) => (
 														<View
 															key={reviews.reviewID}
-															style={styles.container}
+															style={{
+																flex: 1,
+																width: "95%",
+																alignSelf: "center",
+																marginTop: 10,
+																borderWidth: 1,
+																borderColor: 0,
+																borderRadius: 10,
+																padding: 10,
+																backgroundColor: COLORS.grey,
+																elevation: 5,
+															}}
 														>
 															<CustomText>
 																Posted By: {reviews.reviewUser}
@@ -677,10 +698,13 @@ const FindABeer = ({ navigation }) => {
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [searchInput, setSearchInput] = useState("");
 	const [beerData, setBeerData] = useState([]);
+	const rotateValue = useRef(new Animated.Value(0)).current;
+	const [isDataLoading, setIsDataLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchBeerData = async () => {
 			try {
+				setIsDataLoading(true);
 				const response = await axios.get("http://10.0.2.2:3000/getBeerData");
 				const { success, beerData } = response.data;
 				if (success) {
@@ -708,11 +732,36 @@ const FindABeer = ({ navigation }) => {
 				}
 			} catch (error) {
 				console.error("Error retrieving beer data:", error);
+			} finally {
+				setIsDataLoading(false);
 			}
 		};
 
 		fetchBeerData();
 	}, [sortBy, sortOrder]);
+
+	// for animated effect
+	useEffect(() => {
+		const rotateAnimation = Animated.loop(
+			Animated.timing(rotateValue, {
+				toValue: 1,
+				duration: 1000,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			})
+		);
+
+		rotateAnimation.start();
+
+		return () => {
+			rotateAnimation.stop();
+		};
+	}, [rotateValue]);
+
+	const spin = rotateValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"],
+	});
 
 	const handleSortBy = (by) => {
 		if (by === sortBy) return;
@@ -735,6 +784,7 @@ const FindABeer = ({ navigation }) => {
 			beer.beerName.toLowerCase().includes(text.toLowerCase())
 		);
 		setSortedBeerData(filteredData);
+		setIsDataLoading(false);
 	};
 
 	return (
@@ -877,7 +927,17 @@ const FindABeer = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView contentContainerStyle={{ flexGrow: 1, height: 600 }}>
+						{isDataLoading && (
+							<Animated.View
+								style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
+							>
+								<FontAwesome name="hourglass-1" size={24} color="black" />
+							</Animated.View>
+						)}
+						<ScrollView
+							contentContainerStyle={{ paddingBottom: 30 }}
+							showsVerticalScrollIndicator={false}
+						>
 							{sortedBeerData.map((beer) => (
 								<BeerItem
 									key={beer._id}
@@ -938,7 +998,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginHorizontal: 20,
-		marginTop: 20, // Adjust the top spacing here
+		marginVertical: 12,
 	},
 	searchInput: {
 		flex: 1,
@@ -946,12 +1006,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: 0,
 		borderRadius: 20,
-		paddingHorizontal: 10,
+		paddingHorizontal: 20,
 		marginRight: 10,
 		backgroundColor: COLORS.grey,
 	},
 	container: {
-		flex: 1,
+		height: "55%",
 		width: "95%",
 		alignSelf: "center",
 		marginTop: 10,
@@ -1023,6 +1083,11 @@ const styles = StyleSheet.create({
 	bar: {
 		height: 20,
 		backgroundColor: COLORS.foam, // Set the desired color for the bars
+	},
+	loadingIcon: {
+		justifyContent: "center",
+		flex: 1,
+		alignSelf: "center",
 	},
 });
 

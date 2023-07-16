@@ -6,8 +6,10 @@ import {
 	Octicons,
 } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+	Animated,
+	Easing,
 	Image,
 	Modal,
 	ScrollView,
@@ -131,6 +133,13 @@ const VenueItem = ({
 		setRating(ratingValue);
 	};
 
+	const generateRandomNumber = () => {
+		const min = 1000000;
+		const max = 10000000;
+		const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+		return randomNumber;
+	};
+
 	const handleSubmit = () => {
 		const currentDate = new Date();
 
@@ -154,12 +163,8 @@ const VenueItem = ({
 				if (response.data.success) {
 					console.log("Review Added");
 
-					const highestReviewID = Math.max(
-						...venueReview.map((review) => review.reviewID)
-					);
-
 					const newReview = {
-						reviewID: highestReviewID + 1,
+						reviewID: generateRandomNumber(),
 						reviewUser: cookies.username,
 						reviewDate: formattedDate,
 						reviewDescription: reviewText,
@@ -248,7 +253,6 @@ const VenueItem = ({
 				<View style={{ flex: 1, paddingHorizontal: 6, paddingTop: 6 }}>
 					<CustomText>{venueName}</CustomText>
 				</View>
-				{/* <View> */}
 				<View
 					style={{
 						flexDirection: "row",
@@ -265,7 +269,6 @@ const VenueItem = ({
 						/>
 					))}
 				</View>
-				{/* </View> */}
 			</TouchableOpacity>
 
 			{/* 1st popup */}
@@ -282,7 +285,7 @@ const VenueItem = ({
 						}}
 					>
 						<ScrollView
-							contentContainerStyle={{ flexGrow: 1, height: 1350 }}
+							contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
 							showsVerticalScrollIndicator={false}
 						>
 							<Image source={{ uri: venueImage }} style={styles.venueImage} />
@@ -299,7 +302,8 @@ const VenueItem = ({
 								<View
 									style={{
 										flexDirection: "row",
-										justifyContent: "space-between",
+										//marginRight: 1,
+										// justifyContent: "space-between",
 										alignItems: "center",
 										marginBottom: 12,
 									}}
@@ -314,7 +318,7 @@ const VenueItem = ({
 											style={{
 												flexWrap: "wrap",
 												marginLeft: 4,
-												maxWidth: "70%",
+												maxWidth: "65%",
 											}}
 										>
 											{venueAddress}
@@ -324,6 +328,7 @@ const VenueItem = ({
 										style={{
 											flexDirection: "row",
 											alignItems: "center",
+											marginHorizontal: 12,
 										}}
 									>
 										<FontAwesome
@@ -332,7 +337,14 @@ const VenueItem = ({
 											color={COLORS.black}
 											style={{ marginRight: 4 }}
 										/>
-										<CustomText>{venueContact}</CustomText>
+										<CustomText
+											style={{
+												flexWrap: "wrap",
+												maxWidth: "80%",
+											}}
+										>
+											{venueContact}
+										</CustomText>
 									</View>
 								</View>
 
@@ -379,6 +391,16 @@ const VenueItem = ({
 											</View>
 										))}
 									</View>
+								</View>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
+									}}
+								>
+									<CustomText>Freshness:</CustomText>
+									<CustomText>Temperature: </CustomText>
 								</View>
 								<View
 									style={{
@@ -442,22 +464,20 @@ const VenueItem = ({
 													elevation: 5,
 												}}
 											>
-												<ScrollView
-													style={{ marginTop: 12 }}
-													showsVerticalScrollIndicator={false}
-												>
-													<TouchableOpacity onPress={handlePopUp2}>
-														<Ionicons
-															name="arrow-back"
-															size={24}
-															color={COLORS.black}
-														/>
-													</TouchableOpacity>
+												<TouchableOpacity onPress={handlePopUp2}>
+													<Ionicons
+														name="arrow-back"
+														size={24}
+														color={COLORS.black}
+														style={{ marginTop: 12 }}
+													/>
+												</TouchableOpacity>
+												<ScrollView showsVerticalScrollIndicator={false}>
 													<View
 														style={{
 															justifyContent: "center",
 															alignItems: "center",
-															marginHorizontal: 32,
+															marginHorizontal: 22,
 															marginTop: 5,
 															marginBottom: 12,
 														}}
@@ -695,7 +715,18 @@ const VenueItem = ({
 														{venueReview.map((reviews) => (
 															<View
 																key={reviews.reviewID}
-																style={styles.container}
+																style={{
+																	flex: 1,
+																	width: "95%",
+																	alignSelf: "center",
+																	marginTop: 10,
+																	borderWidth: 1,
+																	borderColor: 0,
+																	borderRadius: 10,
+																	padding: 10,
+																	backgroundColor: COLORS.grey,
+																	elevation: 5,
+																}}
 															>
 																<CustomText>
 																	Posted By: {reviews.reviewUser}
@@ -762,7 +793,7 @@ const VenueItem = ({
 												<Text
 													style={{
 														...GlobalStyle.headerFont,
-														fontSize: 15,
+														fontSize: 13,
 														marginBottom: 6,
 													}}
 												>
@@ -785,7 +816,7 @@ const VenueItem = ({
 												<Text
 													style={{
 														...GlobalStyle.headerFont,
-														fontSize: 15,
+														fontSize: 14,
 														marginBottom: 12,
 													}}
 												>
@@ -819,10 +850,13 @@ const BeersVenue = ({ navigation }) => {
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [searchInput, setSearchInput] = useState("");
 	const [venueData, setVenueData] = useState([]);
+	const rotateValue = useRef(new Animated.Value(0)).current;
+	const [isDataLoading, setIsDataLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchVenueData = async () => {
 			try {
+				setIsDataLoading(true);
 				const response = await axios.get("http://10.0.2.2:3000/getVenueData");
 				const { success, venueData } = response.data;
 				if (success) {
@@ -847,10 +881,36 @@ const BeersVenue = ({ navigation }) => {
 				}
 			} catch (error) {
 				console.error("Error retrieving venue data:", error);
+			} finally {
+				setIsDataLoading(false);
 			}
 		};
+
 		fetchVenueData();
 	}, [sortBy, sortOrder]);
+
+	// for animated effect
+	useEffect(() => {
+		const rotateAnimation = Animated.loop(
+			Animated.timing(rotateValue, {
+				toValue: 1,
+				duration: 1000,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			})
+		);
+
+		rotateAnimation.start();
+
+		return () => {
+			rotateAnimation.stop();
+		};
+	}, [rotateValue]);
+
+	const spin = rotateValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"],
+	});
 
 	// for sorting and search function
 	const handleSortBy = (by) => {
@@ -874,6 +934,7 @@ const BeersVenue = ({ navigation }) => {
 			venue.venueName.toLowerCase().includes(text.toLowerCase())
 		);
 		setSortedVenueData(filteredData);
+		setIsDataLoading(false);
 	};
 
 	return (
@@ -1016,7 +1077,17 @@ const BeersVenue = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView contentContainerStyle={{ flexGrow: 1, height: 600 }}>
+						{isDataLoading && (
+							<Animated.View
+								style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
+							>
+								<FontAwesome name="hourglass-1" size={24} color="black" />
+							</Animated.View>
+						)}
+						<ScrollView
+							contentContainerStyle={{ paddingBottom: 30 }}
+							showsVerticalScrollIndicator={false}
+						>
 							{sortedVenueData.map((venue) => (
 								<VenueItem
 									key={venue._id}
@@ -1074,7 +1145,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginHorizontal: 20,
-		marginTop: 20, // Adjust the top spacing here
+		marginVertical: 12,
 	},
 	searchInput: {
 		flex: 1,
@@ -1082,12 +1153,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: 0,
 		borderRadius: 20,
-		paddingHorizontal: 10,
+		paddingHorizontal: 20,
 		marginRight: 10,
 		backgroundColor: COLORS.grey,
 	},
 	container: {
-		flex: 1,
+		height: "55%",
 		width: "95%",
 		alignSelf: "center",
 		marginTop: 10,
@@ -1150,7 +1221,12 @@ const styles = StyleSheet.create({
 	},
 	bar: {
 		height: 20,
-		backgroundColor: COLORS.foam, // Set the desired color for the bars
+		backgroundColor: COLORS.foam,
+	},
+	loadingIcon: {
+		justifyContent: "center",
+		flex: 1,
+		alignSelf: "center",
 	},
 });
 

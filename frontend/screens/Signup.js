@@ -1,4 +1,4 @@
-import { Ionicons, Octicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import axios from "axios";
 import CheckBox from "expo-checkbox";
 import React, { useState } from "react";
@@ -17,13 +17,14 @@ import {
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../constants/colors";
+import GlobalStyle from "../utils/GlobalStyle";
 
 // Button component
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.black : COLORS.primary;
+	const textColor = props.filled ? COLORS.black : COLORS.white;
 
 	return (
 		<TouchableOpacity
@@ -34,10 +35,24 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 16, color: textColor, fontWeight: "bold" }}>
+			<Text
+				style={{
+					fontSize: 16,
+					...GlobalStyle.headerFont,
+					color: textColor,
+				}}
+			>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
+	);
+};
+
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
 	);
 };
 
@@ -196,12 +211,26 @@ const Signup = ({ navigation }) => {
 						borderBottomLeftRadius: 40,
 						borderBottomRightRadius: 40,
 					}}
+					leftComponent={
+						<View
+							style={{
+								flexDirection: "row",
+							}}
+						>
+							<TouchableOpacity onPress={() => navigation.goBack()}>
+								<MaterialIcons
+									name="keyboard-arrow-left"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
 					centerComponent={{
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
 							justifyContent: "flex-start",
 						},
@@ -231,62 +260,50 @@ const Signup = ({ navigation }) => {
 					}
 				/>
 
-				<View style={{ flex: 1, marginHorizontal: 22 }}>
-					<View style={{ marginVertical: 22 }}>
+				<View style={{ flex: 1, marginHorizontal: 32, marginBottom: 12 }}>
+					<View style={{ marginBottom: 8 }}>
 						<Text
 							style={{
-								fontSize: 22,
-								fontWeight: "bold",
-								marginVertical: 12,
-								color: COLORS.black,
+								fontSize: 24,
+								...GlobalStyle.headerFont,
+								marginTop: 12,
 								textAlign: "center",
 							}}
 						>
 							Create Account
 						</Text>
 
-						<Text
+						<CustomText
 							style={{
-								fontSize: 16,
-								color: COLORS.black,
 								textAlign: "center",
+								marginBottom: 12,
 							}}
 						>
 							Welcome to Fresh Beer Near Me!
-						</Text>
+						</CustomText>
 					</View>
 
-					<View style={{ marginBottom: 12 }}>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								marginVertical: 8,
-								color: COLORS.black,
-							}}
-						>
-							Username
-						</Text>
-
+					<View style={{ marginBottom: 8 }}>
+						<CustomText style={{ marginTop: 10 }}>Username</CustomText>
 						<View
 							style={{
 								width: "100%",
-								height: 48,
-								borderColor: COLORS.black,
+								height: 50,
+								borderColor: 0,
 								borderWidth: 1,
-								borderRadius: 8,
+								borderRadius: 12,
 								alignItems: "center",
 								justifyContent: "center",
 								paddingLeft: 22,
+								marginTop: 8,
+								backgroundColor: COLORS.grey,
 							}}
 						>
 							<TextInput
 								placeholder="Enter your username"
-								placeholderTextColor={COLORS.black}
 								keyboardType="default"
 								style={{
 									width: "100%",
-									color: COLORS.black,
 								}}
 								value={username}
 								onChangeText={setUsername}
@@ -295,36 +312,26 @@ const Signup = ({ navigation }) => {
 					</View>
 
 					<View style={{ marginBottom: 12 }}>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								marginVertical: 8,
-								color: COLORS.black,
-							}}
-						>
-							Email
-						</Text>
-
+						<CustomText style={{ marginTop: 10 }}>Email</CustomText>
 						<View
 							style={{
 								width: "100%",
-								height: 48,
-								borderColor: COLORS.black,
+								height: 50,
+								borderColor: 0,
 								borderWidth: 1,
-								borderRadius: 8,
+								borderRadius: 12,
 								alignItems: "center",
 								justifyContent: "center",
 								paddingLeft: 22,
+								marginTop: 10,
+								backgroundColor: COLORS.grey,
 							}}
 						>
 							<TextInput
 								placeholder="Enter your email address"
-								placeholderTextColor={COLORS.black}
 								keyboardType="default"
 								style={{
 									width: "100%",
-									color: COLORS.black,
 								}}
 								value={email}
 								onChangeText={setEmail}
@@ -333,28 +340,20 @@ const Signup = ({ navigation }) => {
 					</View>
 
 					<View style={{ marginBottom: 12 }}>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								marginVertical: 8,
-								color: COLORS.black,
-							}}
-						>
-							Mobile Number
-						</Text>
-
+						<CustomText style={{ marginTop: 10 }}>Mobile Number</CustomText>
 						<View
 							style={{
 								width: "100%",
-								height: 48,
-								borderColor: COLORS.black,
+								height: 50,
+								borderColor: 0,
 								borderWidth: 1,
-								borderRadius: 8,
+								borderRadius: 12,
 								alignItems: "center",
-								flexDirection: "row",
 								justifyContent: "space-between",
+								flexDirection: "row",
 								paddingLeft: 22,
+								marginTop: 10,
+								backgroundColor: COLORS.grey,
 							}}
 						>
 							<Text
@@ -373,11 +372,9 @@ const Signup = ({ navigation }) => {
 
 							<TextInput
 								placeholder="Enter your phone number"
-								placeholderTextColor={COLORS.black}
 								keyboardType="numeric"
 								style={{
 									width: "80%",
-									color: COLORS.black,
 								}}
 								value={mobileNumber}
 								onChangeText={setMobileNumber}
@@ -386,37 +383,27 @@ const Signup = ({ navigation }) => {
 					</View>
 
 					<View style={{ marginBottom: 12 }}>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								marginVertical: 8,
-								color: COLORS.black,
-							}}
-						>
-							Password
-						</Text>
-
+						<CustomText style={{ marginTop: 10 }}>Password</CustomText>
 						<View
 							style={{
 								width: "100%",
-								height: 48,
-								borderColor: COLORS.black,
+								height: 50,
+								borderColor: 0,
 								borderWidth: 1,
-								borderRadius: 8,
+								borderRadius: 12,
 								alignItems: "center",
 								justifyContent: "center",
 								paddingLeft: 22,
+								marginTop: 10,
+								backgroundColor: COLORS.grey,
 								flexDirection: "row",
 							}}
 						>
 							<TextInput
 								placeholder="Enter your password"
-								placeholderTextColor={COLORS.black}
 								secureTextEntry={!isPasswordShown}
 								style={{
 									flex: 1,
-									color: COLORS.black,
 								}}
 								value={password1}
 								onChangeText={setPassword1}
@@ -439,37 +426,27 @@ const Signup = ({ navigation }) => {
 					</View>
 
 					<View style={{ marginBottom: 12 }}>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								marginVertical: 8,
-								color: COLORS.black,
-							}}
-						>
-							Confirm Password
-						</Text>
-
+						<CustomText style={{ marginTop: 10 }}>Confirm Password</CustomText>
 						<View
 							style={{
 								width: "100%",
-								height: 48,
-								borderColor: COLORS.black,
+								height: 50,
+								borderColor: 0,
 								borderWidth: 1,
-								borderRadius: 8,
+								borderRadius: 12,
 								alignItems: "center",
 								justifyContent: "center",
 								paddingLeft: 22,
+								marginTop: 10,
+								backgroundColor: COLORS.grey,
 								flexDirection: "row",
 							}}
 						>
 							<TextInput
 								placeholder="Re-enter your password"
-								placeholderTextColor={COLORS.black}
 								secureTextEntry={!isPasswordShown}
 								style={{
 									flex: 1,
-									color: COLORS.black,
 								}}
 								value={password2}
 								onChangeText={setPassword2}
@@ -494,7 +471,7 @@ const Signup = ({ navigation }) => {
 					<View
 						style={{
 							flexDirection: "row",
-							marginVertical: 6,
+							marginVertical: 12,
 							alignItems: "center",
 						}}
 					>
@@ -505,7 +482,7 @@ const Signup = ({ navigation }) => {
 							color={isChecked ? COLORS.black : undefined}
 						/>
 
-						<Text style={{ color: COLORS.black }}>I am above 18</Text>
+						<CustomText>I am above 18</CustomText>
 					</View>
 
 					<Button
@@ -514,13 +491,7 @@ const Signup = ({ navigation }) => {
 						onPress={handleSignUp}
 						style={{
 							marginTop: 15,
-							marginBottom: 5,
-							elevation: 2, // For Android shadow effect
-							shadowColor: COLORS.black, // For iOS shadow effect
-							shadowOpacity: 0.2,
-							shadowOffset: { width: 0, height: 2 },
-							borderColor: 0,
-							borderWidth: 1, // Set border width to 1
+							width: "100%",
 						}}
 					/>
 					<CustomAlert visible={isDialogVisible} onClose={handleCloseDialog} />
@@ -645,15 +616,14 @@ const Signup = ({ navigation }) => {
 							marginVertical: 22,
 						}}
 					>
-						<Text style={{ fontSize: 16, color: COLORS.black }}>
+						<CustomText style={{ fontSize: 16 }}>
 							Already have an account?
-						</Text>
+						</CustomText>
 						<Pressable onPress={() => navigation.navigate("Welcome")}>
 							<Text
 								style={{
 									fontSize: 16,
-									textDecorationLine: "underline",
-									color: COLORS.black,
+									...GlobalStyle.headerFont,
 									marginLeft: 6,
 								}}
 							>
@@ -669,9 +639,9 @@ const Signup = ({ navigation }) => {
 
 const styles = StyleSheet.create({
 	button: {
-		paddingBottom: 16,
+		paddingBottom: 10,
 		paddingVertical: 10,
-		borderColor: COLORS.primary,
+		borderColor: 0,
 		borderWidth: 2,
 		borderRadius: 12,
 		alignItems: "center",

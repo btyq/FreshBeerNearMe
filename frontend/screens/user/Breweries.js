@@ -6,8 +6,10 @@ import {
 	Octicons,
 } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
+	Animated,
+	Easing,
 	Image,
 	Modal,
 	ScrollView,
@@ -61,7 +63,7 @@ const CustomText = (props) => {
 };
 
 // for popup
-const BreweryItem = ({ breweryName, rating }) => {
+const BreweryItem = ({ breweryName, breweryRating, breweryImage }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 
 	const handlePopup = () => {
@@ -86,7 +88,7 @@ const BreweryItem = ({ breweryName, rating }) => {
 							key={star}
 							name="star"
 							size={16}
-							color={star <= rating ? COLORS.foam : COLORS.grey}
+							color={star <= breweryRating ? COLORS.foam : COLORS.grey}
 						/>
 					))}
 				</View>
@@ -105,13 +107,10 @@ const BreweryItem = ({ breweryName, rating }) => {
 							elevation: 5,
 						}}
 					>
-						<ScrollView
-							contentContainerStyle={{ flexGrow: 1, height: 1350 }}
-							showsVerticalScrollIndicator={false}
-						>
+						<ScrollView showsVerticalScrollIndicator={false}>
 							<Image
-								source={require("../../assets/specialtybeer.png")}
-								style={styles.venueImage}
+								source={{ uri: breweryImage }}
+								style={styles.breweryImage}
 							/>
 							<CustomText
 								style={{
@@ -151,10 +150,77 @@ const BreweryItem = ({ breweryName, rating }) => {
 };
 
 const Breweries = ({ navigation }) => {
+	const [sortedBreweryData, setSortedBreweryData] = useState([]);
 	const [sortBy, setSortBy] = useState("dist");
 	const [sortOrder, setSortOrder] = useState("asc");
 	const [searchInput, setSearchInput] = useState("");
-	const [venueData, setVenueData] = useState([]);
+	const [breweryData, setBreweryData] = useState([]);
+	const rotateValue = useRef(new Animated.Value(0)).current;
+	const [isDataLoading, setIsDataLoading] = useState(true);
+
+	useEffect(() => {
+		const fetchBreweryData = async () => {
+			try {
+				setIsDataLoading(true);
+				const response = await axios.get("http://10.0.2.2:3000/getBreweryData");
+				const { success, breweryData } = response.data;
+				if (success) {
+					let sortedData = [...breweryData];
+					switch (sortBy) {
+						case "name":
+							sortedData.sort((a, b) =>
+								a.breweryName.localeCompare(b.breweryName)
+							);
+							break;
+						case "rating":
+							sortedData.sort((a, b) => a.breweryRating - b.breweryRating);
+							break;
+						default:
+							break;
+					}
+					if (sortOrder === "desc") {
+						sortedData.reverse();
+					}
+					setSortedBreweryData(sortedData);
+					setBreweryData(breweryData);
+				} else {
+					console.error(
+						"Error retrieving brewery data:",
+						response.data.message
+					);
+				}
+			} catch (error) {
+				console.error("Error retrieving brewery data:", error);
+			} finally {
+				setIsDataLoading(false);
+			}
+		};
+
+		fetchBreweryData();
+	}, [sortBy, sortOrder]);
+
+	// for animated effect
+	useEffect(() => {
+		const rotateAnimation = Animated.loop(
+			Animated.timing(rotateValue, {
+				toValue: 1,
+				duration: 1000,
+				easing: Easing.linear,
+				useNativeDriver: true,
+			})
+		);
+
+		rotateAnimation.start();
+
+		return () => {
+			rotateAnimation.stop();
+		};
+	}, [rotateValue]);
+
+	const spin = rotateValue.interpolate({
+		inputRange: [0, 1],
+		outputRange: ["0deg", "360deg"],
+	});
 
 	// for sorting and search function
 	const handleSortBy = (by) => {
@@ -165,19 +231,20 @@ const Breweries = ({ navigation }) => {
 	const handleSortOrder = (order) => {
 		if (order === sortOrder) return;
 		setSortOrder(order);
-		let sortedData = [...sortedVenueData];
+		let sortedData = [...sortedBreweryData];
 		if (order === "desc") {
 			sortedData.reverse();
 		}
-		setSortedVenueData(sortedData);
+		setSortedBreweryData(sortedData);
 	};
 
 	const handleSearch = (text) => {
 		setSearchInput(text);
-		const filteredData = venueData.filter((venue) =>
-			venue.venueName.toLowerCase().includes(searchInput.toLowerCase())
+		const filteredData = breweryData.filter((brewery) =>
+			brewery.breweryName.toLowerCase().includes(text.toLowerCase())
 		);
-		setSortedVenueData(filteredData);
+		setSortedBreweryData(filteredData);
+		setIsDataLoading(false);
 	};
 
 	return (
@@ -288,11 +355,11 @@ const Breweries = ({ navigation }) => {
 							onPress={() => handleSortBy("dist")}
 						/>
 						<Button
-							title="Sort by Price"
+							title="Sort by Name"
 							color={COLORS.foam}
-							filled={sortBy === "price"}
+							filled={sortBy === "name"}
 							style={styles.shortButton}
-							onPress={() => handleSortBy("price")}
+							onPress={() => handleSortBy("name")}
 						/>
 						<Button
 							title="Sort by Rating"
@@ -320,12 +387,27 @@ const Breweries = ({ navigation }) => {
 					</View>
 
 					<View style={styles.container}>
-						<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
-							{Array.from({ length: 10 }).map((_, index) => (
+						{isDataLoading && (
+							<Animated.View
+								style={[styles.loadingIcon, { transform: [{ rotate: spin }] }]}
+							>
+								<FontAwesome name="hourglass-1" size={24} color="black" />
+							</Animated.View>
+						)}
+						<ScrollView
+							contentContainerStyle={{ paddingBottom: 30 }}
+							showsVerticalScrollIndicator={false}
+						>
+							{sortedBreweryData.map((brewery) => (
 								<BreweryItem
-									key={index}
-									breweryName={`Brewery Name ${index + 1}`}
-									rating={Math.floor(Math.random() * 3) + 3}
+									key={brewery._id}
+									breweryID={brewery.breweryID}
+									breweryName={brewery.breweryName}
+									breweryAddress={brewery.breweryAddress}
+									breweryContact={brewery.breweryContact}
+									breweryRating={brewery.breweryRating}
+									breweryImage={brewery.breweryImage}
+									breweryOperatingHours={brewery.breweryOperatingHours}
 								/>
 							))}
 						</ScrollView>
@@ -358,8 +440,6 @@ const styles = StyleSheet.create({
 		marginVertical: 5,
 		borderRadius: 30,
 		borderColor: 0,
-		marginHorizontal: "1%",
-		marginTop: 10, // Adjust the top spacing here
 		elevation: 2,
 	},
 	button: {
@@ -375,7 +455,7 @@ const styles = StyleSheet.create({
 		justifyContent: "space-between",
 		alignItems: "center",
 		marginHorizontal: 20,
-		marginTop: 20, // Adjust the top spacing here
+		marginVertical: 12,
 	},
 	searchInput: {
 		flex: 1,
@@ -383,12 +463,12 @@ const styles = StyleSheet.create({
 		borderWidth: 1,
 		borderColor: 0,
 		borderRadius: 20,
-		paddingHorizontal: 10,
+		paddingHorizontal: 20,
 		marginRight: 10,
 		backgroundColor: COLORS.grey,
 	},
 	container: {
-		flex: 1,
+		height: "53%",
 		width: "95%",
 		alignSelf: "center",
 		marginTop: 10,
@@ -438,7 +518,7 @@ const styles = StyleSheet.create({
 		padding: 20,
 		elevation: 5,
 	},
-	venueImage: {
+	breweryImage: {
 		height: 200,
 		width: 320,
 		borderRadius: 15,
@@ -450,6 +530,11 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignContent: "center",
 		marginBottom: 10,
+		alignSelf: "center",
+	},
+	loadingIcon: {
+		justifyContent: "center",
+		flex: 1,
 		alignSelf: "center",
 	},
 });

@@ -1,17 +1,17 @@
 class Beer {
-    constructor(client, beerID, beerName, abv, ibu, venueAvailability, price, rating, beerDescription, beerImage, communityReviews, beerLocation) {
+    constructor(client, beerID, beerName, beerLocation, beerDescription, beerImage, beerCategory, communityReview, abv, ibu, price, rating) {
         this.client = client;
         this.beerID = beerID;
         this.beerName = beerName;
-        this.abv = abv;
-        this.ibu = ibu;
-        this.venueAvailability = venueAvailability;
-        this.price = price;
-        this.rating = rating;
+        this.beerLocation = beerLocation;
         this.beerDescription = beerDescription;
         this.beerImage = beerImage;
-        this.communityReviews = communityReviews;
-        this.beerLocation = beerLocation;
+        this.beerCategory = beerCategory;
+        this.communityReview = communityReview;
+        this.abv = abv;
+        this.ibu = ibu;
+        this.price = price;
+        this.rating = rating;
     }
 
     static async getBeerData(client, beerArray, res) {
@@ -24,15 +24,15 @@ class Beer {
                     client,
                     data.beerID,
                     data.beerName,
-                    data.abv,
-                    data.ibu,
-                    data.venueAvailability,
-                    data.price,
-                    data.rating,
+                    data.beerLocation,
                     data.beerDescription,
                     data.beerImage,
-                    data.communityReviews,
-                    data.beerLocation
+                    data.beerCategory,
+                    data.communityReview,
+                    data.abv,
+                    data.ibu,
+                    data.price,
+                    data.rating
                 );
 
                 beerArray.push(beer);
@@ -67,7 +67,7 @@ class Beer {
         try {
           const matchingVenue = beerArray.find(beer => beer.beerID === beerID);
           if (matchingVenue) {
-            const reviewID = matchingVenue.communityReviews;
+            const reviewID = matchingVenue.communityReview;
             const collection = client.db('FreshBearNearMe').collection('Reviews');
             const review = await collection.find({ reviewID: { $in: reviewID } }).toArray();
             const userCollection = client.db('FreshBearNearMe').collection('User');

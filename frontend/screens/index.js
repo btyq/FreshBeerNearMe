@@ -1,9 +1,13 @@
+import Analytics from "./Analytics";
+import CreatePromotion from "./CreatePromotion";
 import InquiriesNFeedback from "./InquiriesNFeedback";
 import ManageInventory from "./ManageInventory";
+import ManagePromotion from "./ManagePromotion";
 import ManageSocialInformation from "./ManageSocialInformation";
 import RateNReview from "./RateNReview";
 import Respond from "./Respond";
 import Signup from "./Signup";
+import VenueComparison from "./VenueComparison";
 import VenueOwnerHome from "./VenueOwnerHome";
 import VenueProfile from "./VenueProfile";
 import Welcome from "./Welcome";
@@ -20,16 +24,13 @@ import Profile from "./user/Profile";
 import Recommendation from "./user/Recommendation";
 import ReferAFriend from "./user/ReferAFriend";
 import Social from "./user/Social";
-import TopRated from "./user/TopRated";
 import Wishlist from "./user/Wishlist";
-import ManagePromotion from "./ManagePromotion";
-import CreatePromotion from "./CreatePromotion";
-import Analytics from "./Analytics";
-import VenueComparison from "./VenueComparison"
 
 export {
+	Analytics,
 	BeersVenue,
 	Breweries,
+	CreatePromotion,
 	Dashboard,
 	Feedback,
 	FindABeer,
@@ -37,6 +38,7 @@ export {
 	InquiriesNFeedback,
 	Journal,
 	ManageInventory,
+	ManagePromotion,
 	ManageSocialInformation,
 	NearbyVenues,
 	Profile,
@@ -46,15 +48,10 @@ export {
 	Respond,
 	Signup,
 	Social,
-	TopRated,
+	VenueComparison,
 	VenueOwnerHome,
 	VenueProfile,
 	Welcome,
 	Wishlist,
 	WriteAReview,
-	ManagePromotion,
-	CreatePromotion,
-	Analytics,
-	VenueComparison
-
 };

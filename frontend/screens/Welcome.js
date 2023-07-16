@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	Alert,
 	Image,
@@ -17,6 +17,7 @@ import { SelectList } from "react-native-dropdown-select-list";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../CookieContext";
 import COLORS from "../constants/colors";
+import GlobalStyle from "../utils/GlobalStyle";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -35,11 +36,23 @@ const Button = (props) => {
 			onPress={props.onPress}
 		>
 			<Text
-				style={{ fontSize: 15, ...{ color: textColor, fontWeight: "bold" } }}
+				style={{
+					fontSize: 15,
+					...GlobalStyle.headerFont,
+					...{ color: textColor },
+				}}
 			>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
+	);
+};
+
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
 	);
 };
 
@@ -118,6 +131,18 @@ const Welcome = ({ navigation }) => {
 		{ key: "3", value: "Admin" },
 	];
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	
+	useEffect(() => {
+		const fetchData = async () => {
+		  try {
+			const freshnessResponse = await axios.post("http://10.0.2.2:3000/readCSV");
+		  } catch (error) {
+			console.log('An error occurred:', error.message);
+		  }
+		};
+	
+		fetchData(); 
+	  }, []);
 
 	const handleUserLogin = async () => {
 		try {
@@ -143,15 +168,18 @@ const Welcome = ({ navigation }) => {
 
 	const handleVenueOwnerLogin = async () => {
 		try {
-			const response = await axios.post("http://10.0.2.2:3000/venueOwnerLogin", {
-				username: username,
-				password: password,
-			});
+			const response = await axios.post(
+				"http://10.0.2.2:3000/venueOwnerLogin",
+				{
+					username: username,
+					password: password,
+				}
+			);
 
 			if (response.data.success) {
-				const { venueOwnerID, username} = response.data;
+				const { venueOwnerID, username } = response.data;
 				const sessionToken = "testtoken123";
-				setCookies({ sessionToken, venueOwnerID, username});
+				setCookies({ sessionToken, venueOwnerID, username });
 				navigation.navigate("VenueOwnerHome");
 			} else {
 				const { message } = response.data;
@@ -193,7 +221,7 @@ const Welcome = ({ navigation }) => {
 		} else if (selected === "3") {
 			handleAdminLogin();
 		}
-	}
+	};
 
 	const handleCloseDialog = () => {
 		setIsDialogVisible(false);
@@ -328,8 +356,6 @@ const Welcome = ({ navigation }) => {
 									backgroundColor: COLORS.white,
 									opacity: 1,
 									width: "100%",
-									//	marginTop: 10,
-									//	marginVertical: 12,
 								}}
 								dropdownStyles={{
 									position: "absolute",
@@ -489,15 +515,14 @@ const Welcome = ({ navigation }) => {
 								marginVertical: 22,
 							}}
 						>
-							<Text style={{ fontSize: 16, color: COLORS.black }}>
+							<CustomText style={{ fontSize: 16 }}>
 								Don't have an account?
-							</Text>
+							</CustomText>
 							<Pressable onPress={() => navigation.navigate("Signup")}>
 								<Text
 									style={{
 										fontSize: 16,
-										textDecorationLine: "underline",
-										color: COLORS.black,
+										...GlobalStyle.headerFont,
 										marginLeft: 6,
 									}}
 								>
@@ -514,9 +539,9 @@ const Welcome = ({ navigation }) => {
 
 const styles = StyleSheet.create({
 	button: {
-		paddingBottom: 16,
+		paddingBottom: 10,
 		paddingVertical: 10,
-		borderColor: COLORS.yellow,
+		borderColor: 0,
 		borderWidth: 2,
 		borderRadius: 12,
 		alignItems: "center",
