@@ -455,3 +455,17 @@ app.post("/addBeerReview", async (req, res) => {
 app.get("/getBreweryData", async (req, res) => {
 	await Brewery.getBreweryData(client, breweryArray, res);
 });
+
+//Route to retrieve brewery coordiantes
+app.get("/getBreweryCoordinates", async (req, res) => {
+	try {
+		const breweryData = await db.collection("Brewery").find().toArray();
+		res.json({ success: true, breweries: breweryData });
+	} catch (error) {
+		console.error("Error retrieving breweries:", error);
+		res.status(500).json({
+		success: false,
+		message: "An error occurred while retrieving breweries",
+	  });
+	}
+  });
