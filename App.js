@@ -7,25 +7,21 @@ import { CookieProvider } from "./frontend/CookieContext";
 import { AdminDashboard, ManageUsers } from "./frontend/components";
 import BottomTabNavigation from "./frontend/navigation/BottomTabNavigation";
 import {
-	VenueOwnerHome,
-	InquiriesNFeedback,
-	Respond,
-	VenueProfile,
-	ManageInventory,
-	ManageSocialInformation,
-	ManagePromotion,
-	CreatePromotion,
 	Analytics,
-	VenueComparison
-} from "./frontend/screens";
-import {
+	CreatePromotion,
 	Forums,
-	RateNReview,
+	InquiriesNFeedback,
+	ManageInventory,
+	ManagePromotion,
+	ManageSocialInformation,
 	Recommendation,
 	ReferAFriend,
+	Respond,
 	Signup,
+	VenueComparison,
+	VenueOwnerHome,
+	VenueProfile,
 	Welcome,
-	WriteAReview,
 } from "./frontend/screens";
 
 const Stack = createNativeStackNavigator();
@@ -83,11 +79,6 @@ export default function App() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="RateNReview"
-						component={RateNReview}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
 						name="ReferAFriend"
 						component={ReferAFriend}
 						options={{ headerShown: false }}
@@ -95,11 +86,6 @@ export default function App() {
 					<Stack.Screen
 						name="Recommendation"
 						component={Recommendation}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="WriteAReview"
-						component={WriteAReview}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

@@ -1,6 +1,4 @@
-import { Ionicons, Octicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { LinearGradient } from "expo-linear-gradient";
+import { Feather, Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
 	Image,
@@ -16,13 +14,13 @@ import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
-// Button component
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.black : COLORS.primary;
+	const textColor = COLORS.black;
 
 	return (
 		<TouchableOpacity
@@ -33,10 +31,24 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 12, ...{ color: textColor } }}>
+			<Text
+				style={{
+					fontSize: 12,
+					...GlobalStyle.bodyFont,
+					...{ color: textColor },
+				}}
+			>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
+	);
+};
+
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
 	);
 };
 
@@ -56,10 +68,7 @@ const ModalWindow = (props) => {
 	);
 };
 
-const Recommendation = () => {
-	const navigation = useNavigation();
-	const [comment, setComment] = useState("Bitter, but it's decent");
-	const [comments, setComments] = useState([]);
+const Recommendation = ({ navigation }) => {
 	const [modalVisible1, setModalVisible1] = useState(false);
 	const [modalVisible2, setModalVisible2] = useState(false);
 
@@ -81,34 +90,9 @@ const Recommendation = () => {
 		setModalVisible2(false);
 	};
 
-	const navigateToSocial = () => {
-		// Navigate to the Social.js page
-		navigation.navigate("Social");
-	};
-
-	const navigateToForums = () => {
-		// Navigate to the Forums.js page
-		navigation.navigate("Forums");
-	};
-
-	const navigateToRateNReview = () => {
-		// Navigate to the RateNReview.js page
-		navigation.navigate("RateNReview");
-	};
-
-	const navigateToReferAFriend = () => {
-		// Navigate to the ReferAFriend.js page
-		navigation.navigate("ReferAFriend");
-	};
-
-	const navigateToRecommendation = () => {
-		// Navigate to the Recommendation.js page
-		navigation.navigate("Recommendation");
-	};
-
 	return (
-		<ScrollView>
-			<View style={{ height: 1500, backgroundColor: COLORS.white }}>
+		<View style={{ flex: 1 }}>
+			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
 					backgroundColor={COLORS.primary}
@@ -117,23 +101,42 @@ const Recommendation = () => {
 						borderBottomLeftRadius: 40,
 						borderBottomRightRadius: 40,
 					}}
+					leftComponent={
+						<View
+							style={{
+								flexDirection: "row",
+							}}
+						>
+							<TouchableOpacity onPress={() => navigation.goBack()}>
+								<MaterialIcons
+									name="keyboard-arrow-left"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
 					centerComponent={{
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
+							justifyContent: "flex-start",
 						},
 					}}
 					rightComponent={
-						<View style={{ flexDirection: "row", marginTop: 5 }}>
+						<View
+							style={{
+								flexDirection: "row",
+							}}
+						>
 							<TouchableOpacity>
 								<Octicons
 									name="bookmark"
 									size={24}
 									color={COLORS.black}
-									style={{ marginRight: 5 }}
+									style={{ marginRight: 10 }}
 								/>
 							</TouchableOpacity>
 							<TouchableOpacity>
@@ -146,6 +149,7 @@ const Recommendation = () => {
 						</View>
 					}
 				/>
+
 				<SafeAreaView style={{ flex: 1 }}>
 					<View style={styles.grid}>
 						<Button
@@ -153,244 +157,171 @@ const Recommendation = () => {
 							color={COLORS.white}
 							filled
 							style={styles.longButton}
-							onPress={navigateToSocial}
+							onPress={() => navigation.navigate("Social")}
 						/>
 						<Button
 							title="Forums"
 							color={COLORS.white}
 							filled
 							style={styles.longButton}
-							onPress={navigateToForums}
-						/>
-						<Button
-							title="Rate & Review"
-							color={COLORS.white}
-							filled
-							style={styles.longButton}
-							onPress={navigateToRateNReview}
+							onPress={() => navigation.navigate("Forums")}
 						/>
 						<Button
 							title="Refer a friend"
 							color={COLORS.white}
 							filled
 							style={styles.longButton}
-							onPress={navigateToReferAFriend}
+							onPress={() => navigation.navigate("ReferAFriend")}
 						/>
 						<Button
 							title="Recommendation"
-							color={COLORS.grey}
+							color={COLORS.foam}
 							filled
-							style={styles.mediumButton}
-							onPress={navigateToRecommendation}
+							style={styles.longButton}
+							onPress={() => navigation.navigate("Recommendation")}
 						/>
 					</View>
-					<View>
+
+					<View style={{ marginHorizontal: 20, marginVertical: 20 }}>
 						<Text
 							style={{
-								marginTop: 50,
+								...GlobalStyle.headerFont,
+								marginVertical: 12,
 								marginLeft: 15,
-								fontSize: 15,
-								color: COLORS.black,
 							}}
 						>
-							Your Friend Recommendation
+							Your friends' recommendations
 						</Text>
-						<View
+						<TouchableOpacity
 							style={{
-								borderBottomWidth: 2,
-								borderBottomColor: COLORS.grey,
-								marginHorizontal: 10,
-								marginTop: -6,
-								marginLeft: 220,
-								width: "45%",
+								backgroundColor: COLORS.grey,
+								flexDirection: "row",
+								justifyContent: "space-between",
+								alignItems: "center",
+								marginTop: 5,
+								borderRadius: 20,
+								padding: 10,
+								borderWidth: 1,
+								borderColor: 0,
 							}}
-						/>
-					</View>
-					<TouchableOpacity
-						style={{
-							backgroundColor: COLORS.white,
-							width: "95%",
-							height: "3%",
-							borderWidth: 1,
-							borderColor: COLORS.grey,
-							borderRadius: 10,
-							marginTop: 20,
-							marginLeft: 0,
-							alignSelf: "center",
-							...styles.containerContent,
-						}}
-						onPress={showModal1}
-					>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								marginLeft: 10,
-								marginTop: 6,
-								...styles.beerName,
-							}}
+							onPress={showModal1}
 						>
-							Beer Name
-						</Text>
-						<View
-							style={{
-								position: "relative",
-								top: -13,
-								marginLeft: "auto",
-								marginRight: 0,
-								...styles.starContainer,
-							}}
-						>
-							{/* Add Airbnb star component here */}
+							<CustomText
+								style={{
+									marginLeft: 10,
+								}}
+							>
+								Beer Name
+							</CustomText>
 							<AirbnbRating
 								count={5}
 								defaultRating={4}
 								showRating={false}
-								size={20}
-								starContainerStyle={{
-									marginLeft: -8, // Adjust the value to bring the stars closer
-									marginTop: -15,
-									...styles.ratingStarContainer,
+								size={16}
+								isDisabled={true}
+							/>
+						</TouchableOpacity>
+
+						<Text
+							style={{
+								...GlobalStyle.headerFont,
+								marginTop: 22,
+								marginLeft: 15,
+								marginBottom: 12,
+							}}
+						>
+							Your turn to recommend a beer!
+						</Text>
+
+						<View style={{ flexDirection: "row" }}>
+							<View
+								style={{
+									height: 45,
+									width: "70%",
+									backgroundColor: COLORS.grey,
+									borderRadius: 20,
+									flexDirection: "row",
+									paddingHorizontal: 20,
+									alignItems: "center",
+									marginBottom: 12,
+									marginRight: 5,
 								}}
-								starStyle={styles.ratingStyle}
-								isDisabled={true} // Make the star rating read-only
+							>
+								<Feather name="search" size={24} />
+								<TextInput
+									placeholder="Search for beer"
+									style={{ flex: 1, marginLeft: 12, ...GlobalStyle.bodyFont }}
+								/>
+							</View>
+							<Button
+								title="Search"
+								color={COLORS.foam}
+								filled
+								style={{
+									width: "30%",
+									height: 45,
+									borderRadius: 30,
+									borderColor: 0,
+								}}
 							/>
 						</View>
-					</TouchableOpacity>
-					<View>
-						<Text
+
+						<TouchableOpacity
 							style={{
-								marginTop: 50,
-								marginLeft: 20,
-								fontSize: 15,
-								color: COLORS.black,
-							}}
-						>
-							Recommend a Beer
-						</Text>
-					</View>
-					<View
-						style={{
-							borderBottomWidth: 2,
-							borderBottomColor: COLORS.grey,
-							marginHorizontal: 10,
-							marginTop: -8,
-							marginLeft: 160,
-							marginBottom: 10,
-							width: "60%",
-						}}
-					/>
-					<View
-						style={{
-							flexDirection: "row",
-							justifyContent: "space-between",
-							padding: 10,
-							alignItems: "center",
-							borderColor: COLORS.grey,
-						}}
-					>
-						<TextInput
-							placeholder="Search for beer"
-							style={{
-								height: 40,
-								borderColor: "grey",
+								backgroundColor: COLORS.grey,
+								flexDirection: "row",
+								justifyContent: "space-between",
+								alignItems: "center",
+								marginTop: 5,
+								borderRadius: 20,
+								padding: 10,
 								borderWidth: 1,
-								borderRadius: 10,
-								paddingLeft: 10,
-								flex: 1,
-								marginRight: 10,
+								borderColor: 0,
 							}}
-						/>
-						<Button
-							title="Search"
-							color={COLORS.grey}
-							filled
-							style={{
-								width: "30%",
-								height: 40,
-								borderRadius: 30,
-								borderWidth: 1,
-								borderColor: COLORS.grey,
-							}}
-						/>
-					</View>
-					<TouchableOpacity
-						style={{
-							backgroundColor: COLORS.white,
-							width: "95%",
-							height: "3%",
-							borderWidth: 1,
-							borderColor: COLORS.grey,
-							borderRadius: 10,
-							marginTop: 20,
-							marginLeft: 0,
-							alignSelf: "center",
-							...styles.containerContent,
-						}}
-						onPress={showModal2}
-					>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								marginLeft: 10,
-								marginTop: 6,
-								...styles.beerName,
-							}}
+							onPress={showModal1}
 						>
-							Beer Name
-						</Text>
-						<View
-							style={{
-								position: "relative",
-								top: -13,
-								marginLeft: "auto",
-								marginRight: 0,
-								...styles.starContainer,
-							}}
-						>
-							{/* Add Airbnb star component here */}
+							<CustomText
+								style={{
+									marginLeft: 10,
+								}}
+							>
+								Beer Name
+							</CustomText>
 							<AirbnbRating
 								count={5}
 								defaultRating={4}
 								showRating={false}
-								size={20}
-								starContainerStyle={{
-									marginLeft: -1, // Adjust the value to bring the stars closer
-									marginTop: -15,
-									...styles.ratingStarContainer,
+								size={16}
+								isDisabled={true}
+							/>
+						</TouchableOpacity>
+						<View style={{ marginTop: 12 }}>
+							<Button
+								title="Recommend!"
+								color={COLORS.foam}
+								filled
+								style={{
+									//	width: "30%",
+									height: 45,
+									borderRadius: 30,
+									borderColor: 0,
 								}}
-								starStyle={styles.ratingStyle}
-								isDisabled={true} // Make the star rating read-only
 							/>
 						</View>
-					</TouchableOpacity>
-					<Button
-						title="Recommend"
-						color={COLORS.grey}
-						filled
-						style={{
-							marginLeft: 280,
-							width: "30%",
-							height: 40,
-							borderRadius: 30,
-							borderWidth: 1,
-							borderColor: COLORS.grey,
-						}}
-					/>
+					</View>
 				</SafeAreaView>
-			</View>
-			<ModalWindow
-				visible={modalVisible1}
-				text="Modal 1 Content"
-				onPress={closeModal}
-			/>
-			<ModalWindow
-				visible={modalVisible2}
-				text="Modal 2 Content"
-				onPress={closeModal}
-			/>
-		</ScrollView>
+				<ModalWindow
+					visible={modalVisible1}
+					text="Modal 1 Content"
+					onPress={closeModal}
+				/>
+				<ModalWindow
+					visible={modalVisible2}
+					text="Modal 2 Content"
+					onPress={closeModal}
+				/>
+			</SafeAreaView>
+		</View>
 	);
 };
 
@@ -398,15 +329,16 @@ const styles = StyleSheet.create({
 	grid: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		flexWrap: "wrap",
-		marginHorizontal: 10,
+		marginHorizontal: 20,
 	},
 	longButton: {
-		width: "15%",
+		width: "20%",
 		height: 55,
 		marginVertical: 0,
-		borderRadius: 50,
-		marginRight: 0,
+		borderRadius: 20,
+		marginRight: 15,
+		borderColor: 0,
+		elevation: 2,
 	},
 	mediumButton: {
 		width: "35%",
@@ -423,8 +355,17 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	containerContent: {
-		marginBottom: 20,
+	inputContainer: {
+		height: 60,
+		width: "100%",
+		backgroundColor: COLORS.white,
+		borderRadius: 10,
+		position: "absolute",
+		top: 90,
+		flexDirection: "row",
+		paddingHorizontal: 20,
+		alignItems: "center",
+		elevation: 12,
 	},
 	beerName: {
 		marginBottom: 5,
