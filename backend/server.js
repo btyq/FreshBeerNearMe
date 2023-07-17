@@ -347,6 +347,13 @@ app.post("/editProfile", async (req, res) => {
 app.get("/getFeed", async (req, res) => {
 	globalUser.getFeed(client, res);
 })
+
+//Route for user's follow button
+app.post("/followUser", async (req, res) => {
+	const {userID, reviewUserID} = req.body;
+	console.log(userID);
+	console.log(reviewUserID);
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;

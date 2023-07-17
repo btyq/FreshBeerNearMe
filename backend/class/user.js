@@ -104,10 +104,18 @@ class User {
     try {
       const db = client.db("FreshBearNearMe");
       const feedData = await db.collection("Reviews").find().toArray();
-      res.json({ reviews: feedData }); 
+      const promises = feedData.map(async (data) => {
+        const user = await db.collection("User").findOne({ userID: data.reviewUser });
+        if (user) {
+          data.reviewUsername = user.username;
+        }
+        return data;
+      });
+      const updatedFeedData = await Promise.all(promises);
+      res.json({ reviews: updatedFeedData });
+      console.log(updatedFeedData);
     } catch (error) {
-      console.error("Error retrieving feed:", error);
-      res.status(500).json({ error: "Error retrieving feed" }); 
+      res.status(500).json({ error: "Error retrieving feed" });
     }
   }
 

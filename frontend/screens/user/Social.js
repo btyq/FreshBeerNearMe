@@ -1,6 +1,7 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import {
+	Alert,
 	Image,
 	Modal,
 	ScrollView,
@@ -60,13 +61,90 @@ const FeedItem = ({
 	reviewDate,
 	reviewDescription,
 	reviewRating,
+	reviewUsername,
+	userID
   }) => {
 	//UseEffect here
 	
 	const handleFollow = () => {
-	  
+
+		const data = {
+			userID: userID,
+			reviewUserID: reviewUser
+		}
+
+		axios
+			.post("http://10.0.2.2:3000/followUser", data)
+			.then((response) => {
+				if (response.data.success) {
+					console.log("Followed User");
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
-  
+
+	const CustomAlert = ({ visible, onClose }) => {
+		return (
+			<Modal visible={visible} transparent animationType="fade">
+				<View
+					style={{
+						flex: 1,
+						backgroundColor: "rgba(0, 0, 0, 0.5)",
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				>
+					<View
+						style={{
+							width: "80%",
+							backgroundColor: COLORS.white,
+							borderRadius: 40,
+							padding: 30,
+						}}
+					>
+						<Ionicons
+							name="md-beer"
+							size={34}
+							color={COLORS.foam}
+							style={{ alignSelf: "center" }}
+						/>
+						<Text
+							style={{
+								fontSize: 18,
+								fontWeight: "bold",
+								alignSelf: "center",
+								marginBottom: 20,
+							}}
+						>
+							Account Signup Success
+						</Text>
+						<Text style={{ fontSize: 16, marginBottom: 20 }}>
+							Your account has been successfully created!
+						</Text>
+						<TouchableOpacity
+							style={{
+								backgroundColor: COLORS.foam,
+								padding: 10,
+								borderRadius: 8,
+								alignItems: "center",
+								marginHorizontal: 22,
+							}}
+							onPress={onClose}
+						>
+							<Text
+								style={{ color: COLORS.black, fontWeight: "bold", fontSize: 16 }}
+							>
+								OK
+							</Text>
+						</TouchableOpacity>
+					</View>
+				</View>
+			</Modal>
+		);
+	};
+
 	return (
 	  <View style={{ marginHorizontal: 20 }}>
 		{/* Rated beer name */}
@@ -82,7 +160,7 @@ const FeedItem = ({
 			  }}
 			>
 			  <Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
-				{reviewUser}
+				{reviewUsername}
 			  </Text>
 			  <Button
 				title="Follow"
@@ -151,10 +229,6 @@ const Social = ({ navigation }) => {
 				console.error("Error retrieving feed:", error);
 			});
 	}, []);
-
-	const handleFollow = () => {
-		console.log(feedData);
-	}
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -264,6 +338,8 @@ const Social = ({ navigation }) => {
 								reviewDate={feed.reviewDate}
 								reviewDescription={feed.reviewDescription}
 								reviewRating={feed.reviewRating}
+								reviewUsername={feed.reviewUsername}
+								userID={userID}
 							/>
 						))}	
 					</ScrollView>
