@@ -1,5 +1,5 @@
 class User {
-  constructor(client, userID, username, password, email, mobileNumber, receiveNotification) {
+  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray) {
     this.client = client;
     this.userID = userID;
     this.username = username;
@@ -7,6 +7,7 @@ class User {
     this.email = email;
     this.mobileNumber = mobileNumber;
     this.receiveNotification = receiveNotification;
+    this.followArray = followArray;
   }
 
   async login(res, username, password) {
@@ -21,6 +22,7 @@ class User {
         this.email = result.email;
         this.mobileNumber = result.mobileNumber;
         this.receiveNotification = result.receiveNotification;
+        this.followArray = result.followArray;
 
         //Create a session token
         const sessionToken = 'testtoken123';
@@ -95,6 +97,17 @@ class User {
     } catch (error) {
       console.error('Error during profile update:', error);
       res.status(500).json({ success: false, message: 'An error occurred during profile update' });
+    }
+  }
+
+  async getFeed(client, res) {
+    try {
+      const db = client.db("FreshBearNearMe");
+      const feedData = await db.collection("Reviews").find().toArray();
+      res.json({ reviews: feedData }); 
+    } catch (error) {
+      console.error("Error retrieving feed:", error);
+      res.status(500).json({ error: "Error retrieving feed" }); 
     }
   }
 

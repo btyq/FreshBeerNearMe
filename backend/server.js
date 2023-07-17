@@ -92,6 +92,7 @@ app.post("/signup", async (req, res) => {
 			email,
 			mobileNumber,
 			receiveNotification: false,
+			followArray: [],
 		});
 
 		res.json({ success: true, message: "User signed up successfully" });
@@ -341,6 +342,11 @@ app.post("/editProfile", async (req, res) => {
 		});
 	}
 });
+
+//Route to get user's Feed
+app.get("/getFeed", async (req, res) => {
+	globalUser.getFeed(client, res);
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;
