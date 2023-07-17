@@ -4,14 +4,12 @@ import InquiriesNFeedback from "./InquiriesNFeedback";
 import ManageInventory from "./ManageInventory";
 import ManagePromotion from "./ManagePromotion";
 import ManageSocialInformation from "./ManageSocialInformation";
-import RateNReview from "./RateNReview";
 import Respond from "./Respond";
 import Signup from "./Signup";
 import VenueComparison from "./VenueComparison";
 import VenueOwnerHome from "./VenueOwnerHome";
 import VenueProfile from "./VenueProfile";
 import Welcome from "./Welcome";
-import WriteAReview from "./WriteAReview";
 import BeersVenue from "./user/BeersVenue";
 import Breweries from "./user/Breweries";
 import Dashboard from "./user/Dashboard";
@@ -42,7 +40,6 @@ export {
 	ManageSocialInformation,
 	NearbyVenues,
 	Profile,
-	RateNReview,
 	Recommendation,
 	ReferAFriend,
 	Respond,
@@ -53,5 +50,4 @@ export {
 	VenueProfile,
 	Welcome,
 	Wishlist,
-	WriteAReview,
 };
