@@ -89,7 +89,6 @@ const NearbyVenues = ({ navigation }) => {
 			setModalVisible(!modalVisible);
 		};
 
-
 		const { venueName, venueAddress, venueImage } = selectedMarker;
 
 		return (
@@ -103,7 +102,7 @@ const NearbyVenues = ({ navigation }) => {
 								resizeMode: "contain",
 								marginBottom: 10,
 							}}
-							source={{ uri: venueImage}}
+							source={{ uri: venueImage }}
 						/>
 						<CustomText style={{ marginBottom: 10 }}>
 							Venue Name: {venueName}
@@ -149,7 +148,7 @@ const NearbyVenues = ({ navigation }) => {
 								resizeMode: "contain",
 								marginBottom: 10,
 							}}
-							source={{ uri : breweryImage }}
+							source={{ uri: breweryImage }}
 						/>
 						<CustomText style={{ marginBottom: 10 }}>
 							Venue Name: {breweryName}
@@ -216,25 +215,25 @@ const NearbyVenues = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-		  .get("http://10.0.2.2:3000/getVenueCoordinates")
-		  .then((response) => {
-			setVenueData(response.data.venues);
-		  })
-		  .catch((error) => {
-			console.error('Error retrieving venues:', error);
-		  });
+			.get("http://10.0.2.2:3000/getVenueCoordinates")
+			.then((response) => {
+				setVenueData(response.data.venues);
+			})
+			.catch((error) => {
+				console.error("Error retrieving venues:", error);
+			});
 	}, []);
 
 	useEffect(() => {
 		axios
-		  .get("http://10.0.2.2:3000/getBreweryCoordinates")
-		  .then((response) => {
-			setBreweryData(response.data.breweries);
-		  })
-		  .catch((error) => {
-			console.error("Error retrieving breweries:", error);
-		  });
-	  }, []);
+			.get("http://10.0.2.2:3000/getBreweryCoordinates")
+			.then((response) => {
+				setBreweryData(response.data.breweries);
+			})
+			.catch((error) => {
+				console.error("Error retrieving breweries:", error);
+			});
+	}, []);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -359,6 +358,14 @@ const NearbyVenues = ({ navigation }) => {
 									longitudeDelta: 0.01,
 								}}
 							>
+								<Marker
+									coordinate={{
+										latitude: currentLocation.coords.latitude,
+										longitude: currentLocation.coords.longitude,
+									}}
+									title="My Location"
+									description="Current location"
+								/>
 								{/* for venues */}
 								{(activeFilter === "venues" || activeFilter === "") &&
 									venueData.map((marker) => (
@@ -372,8 +379,6 @@ const NearbyVenues = ({ navigation }) => {
 												latitude: marker.venueLatitude,
 												longitude: marker.venueLongitude,
 											}}
-											//	title={marker.title}
-											//	description="This is the test description"
 										>
 											<Ionicons name="location" size={34} color="#AF7FE2" />
 											<Callout tooltip>

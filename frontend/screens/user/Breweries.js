@@ -63,7 +63,14 @@ const CustomText = (props) => {
 };
 
 // for popup
-const BreweryItem = ({ breweryName, breweryRating, breweryImage }) => {
+const BreweryItem = ({
+	breweryName,
+	breweryRating,
+	breweryImage,
+	breweryAddress,
+	breweryContact,
+	breweryOperatingHours,
+}) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 
 	const handlePopup = () => {
@@ -129,8 +136,91 @@ const BreweryItem = ({ breweryName, breweryRating, breweryImage }) => {
 										alignItems: "center",
 										marginBottom: 12,
 									}}
-								></View>
-								<CustomText style={{ fontSize: 17 }}>Description</CustomText>
+								>
+									<View style={{ flexDirection: "row", alignItems: "center" }}>
+										<Entypo
+											name="location-pin"
+											size={24}
+											color={COLORS.black}
+										/>
+										<CustomText
+											style={{
+												flexWrap: "wrap",
+												marginLeft: 4,
+												maxWidth: "65%",
+											}}
+										>
+											{breweryAddress}
+										</CustomText>
+									</View>
+									<View
+										style={{
+											flexDirection: "row",
+											alignItems: "center",
+											marginHorizontal: 12,
+										}}
+									>
+										<FontAwesome
+											name="phone"
+											size={24}
+											color={COLORS.black}
+											style={{ marginRight: 4 }}
+										/>
+										<CustomText
+											style={{
+												flexWrap: "wrap",
+												maxWidth: "80%",
+											}}
+										>
+											{breweryContact}
+										</CustomText>
+									</View>
+								</View>
+
+								<View
+									style={{
+										width: "100%",
+										borderColor: 0,
+										paddingHorizontal: 20,
+										paddingVertical: 10,
+										borderRadius: 30,
+										marginBottom: 25,
+										backgroundColor: COLORS.grey,
+										elevation: 2,
+									}}
+								>
+									<CustomText
+										style={{
+											fontSize: 18,
+										}}
+									>
+										Operating Hours{" "}
+									</CustomText>
+									<View>
+										{breweryOperatingHours?.split("\n").map((line, index) => (
+											<View
+												key={index}
+												style={{
+													flexDirection: "row",
+													justifyContent: "space-between",
+												}}
+											>
+												<Text
+													style={{
+														...GlobalStyle.headerFont,
+														fontSize: 14,
+														flex: 1,
+													}}
+												>
+													{line.split(" ")[0]}
+												</Text>
+												<CustomText style={{ justifyContent: "flex-end" }}>
+													{line.substring(line.indexOf(" ") + 1)}
+												</CustomText>
+											</View>
+										))}
+									</View>
+								</View>
 							</View>
 							<Button
 								title="Close"
@@ -468,7 +558,7 @@ const styles = StyleSheet.create({
 		backgroundColor: COLORS.grey,
 	},
 	container: {
-		height: "53%",
+		height: "55%",
 		width: "95%",
 		alignSelf: "center",
 		marginTop: 10,
