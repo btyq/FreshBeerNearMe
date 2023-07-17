@@ -1,5 +1,5 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Image,
 	Modal,
@@ -15,6 +15,8 @@ import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -52,7 +54,108 @@ const CustomText = (props) => {
 	);
 };
 
+const FeedItem = ({
+	reviewID,
+	reviewUser,
+	reviewDate,
+	reviewDescription,
+	reviewRating,
+  }) => {
+	//UseEffect here
+	
+	const handleFollow = () => {
+	  
+	};
+  
+	return (
+	  <View style={{ marginHorizontal: 20 }}>
+		{/* Rated beer name */}
+		<View style={styles.feedContainer}>
+		  <View style={{ marginHorizontal: 12 }}>
+			<View
+			  style={{
+				flexDirection: "row",
+				justifyContent: "space-between",
+				alignItems: "center",
+				backgroundColor: COLORS.grey,
+				marginTop: 5,
+			  }}
+			>
+			  <Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
+				{reviewUser}
+			  </Text>
+			  <Button
+				title="Follow"
+				filled
+				style={{
+				  width: "50%",
+				  borderRadius: 30,
+				  borderColor: 0,
+				}}
+				onPress={handleFollow}
+			  />
+			</View>
+  
+			<View>
+			  <Text
+				style={{
+				  ...GlobalStyle.headerFont,
+				  fontSize: 14,
+				  marginTop: 12,
+				}}
+			  >
+				{reviewDate}
+			  </Text>
+			</View>
+			<Image
+			  source={require("../../assets/specialtybeer.png")}
+			  style={styles.feedImage}
+			/>
+			<CustomText style={{ marginTop: 10 }}>
+			  {reviewDescription}
+			</CustomText>
+  
+			<View
+			  style={{
+				flexDirection: "row",
+				justifyContent: "flex-end",
+			  }}
+			>
+			  <AirbnbRating
+				count={5}
+				defaultRating={reviewRating}
+				size={18}
+				showRating={false}
+				isDisabled={true}
+			  />
+			</View>
+		  </View>
+		</View>
+	  </View>
+	);
+  };
+
 const Social = ({ navigation }) => {
+	const { cookies } = useCookies();
+	const [userID, setUserID] = useState("");
+	const [feedData, setFeedData] = useState([]);
+
+	useEffect(() => {
+		setUserID(cookies.userID);
+		axios
+			.get("http://10.0.2.2:3000/getFeed")
+			.then((response) => {
+				setFeedData(response.data.reviews)
+			})
+			.catch((error) => {
+				console.error("Error retrieving feed:", error);
+			});
+	}, []);
+
+	const handleFollow = () => {
+		console.log(feedData);
+	}
+
 	return (
 		<View style={{ flex: 1 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
@@ -153,132 +256,16 @@ const Social = ({ navigation }) => {
 						showsVerticalScrollIndicator={false}
 						contentContainerStyle={{ flexGrow: 1, paddingBottom: 50 }}
 					>
-						<View style={{ marginHorizontal: 20 }}>
-							{/* rated beer name */}
-							<View style={styles.feedContainer}>
-								<View style={{ marginHorizontal: 12 }}>
-									<View
-										style={{
-											flexDirection: "row",
-											justifyContent: "space-between",
-											alignItems: "center",
-											backgroundColor: COLORS.grey,
-											marginTop: 5,
-										}}
-									>
-										<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
-											Fred
-										</Text>
-										<Button
-											title="Follow"
-											filled
-											style={{
-												width: "50%",
-												borderRadius: 30,
-												borderColor: 0,
-											}}
-										/>
-									</View>
-
-									<View>
-										<Text
-											style={{
-												...GlobalStyle.headerFont,
-												fontSize: 14,
-												marginTop: 12,
-											}}
-										>
-											Rated beer name
-										</Text>
-									</View>
-									<Image
-										source={require("../../assets/specialtybeer.png")}
-										style={styles.feedImage}
-									/>
-									<CustomText style={{ marginTop: 10 }}>
-										Bitter but its decent
-									</CustomText>
-
-									<View
-										style={{
-											flexDirection: "row",
-											justifyContent: "flex-end",
-										}}
-									>
-										<AirbnbRating
-											count={5}
-											defaultRating={3}
-											size={18}
-											showRating={false}
-											isDisabled={true}
-										/>
-									</View>
-								</View>
-							</View>
-
-							{/* rated venue name */}
-							<View style={styles.feedContainer}>
-								<View style={{ marginHorizontal: 12 }}>
-									<View
-										style={{
-											flexDirection: "row",
-											justifyContent: "space-between",
-											alignItems: "center",
-											backgroundColor: COLORS.grey,
-											marginTop: 5,
-										}}
-									>
-										<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
-											Fred
-										</Text>
-										<Button
-											title="Follow"
-											filled
-											style={{
-												width: "50%",
-												borderRadius: 30,
-												borderColor: 0,
-											}}
-										/>
-									</View>
-
-									<View>
-										<Text
-											style={{
-												...GlobalStyle.headerFont,
-												fontSize: 14,
-												marginTop: 12,
-											}}
-										>
-											Rated venue name
-										</Text>
-									</View>
-									<Image
-										source={require("../../assets/specialtybeer.png")}
-										style={styles.feedImage}
-									/>
-									<CustomText style={{ marginTop: 10 }}>
-										Love the vibes, great variety of beers. Would come back
-										again for a night out!
-									</CustomText>
-
-									<View
-										style={{
-											flexDirection: "row",
-											justifyContent: "flex-end",
-										}}
-									>
-										<AirbnbRating
-											count={5}
-											defaultRating={4}
-											size={18}
-											showRating={false}
-											isDisabled={true}
-										/>
-									</View>
-								</View>
-							</View>
-						</View>
+						{feedData.map((feed) => (
+							<FeedItem
+								key={feed.reviewID}
+								reviewID={feed.reviewID}
+								reviewUser={feed.reviewUser}
+								reviewDate={feed.reviewDate}
+								reviewDescription={feed.reviewDescription}
+								reviewRating={feed.reviewRating}
+							/>
+						))}	
 					</ScrollView>
 				</SafeAreaView>
 			</SafeAreaView>
