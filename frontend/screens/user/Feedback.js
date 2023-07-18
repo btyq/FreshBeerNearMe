@@ -1,5 +1,4 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
 	Image,
@@ -13,13 +12,13 @@ import {
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
 const Button = (props) => {
-	const filledBgColor = props.color || COLORS.orange;
+	const filledBgColor = props.color || COLORS.primary;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.black : COLORS.black;
-	const fontSize = props.selected ? 16 : 15;
+	const textColor = COLORS.black;
 
 	return (
 		<TouchableOpacity
@@ -30,18 +29,34 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize, ...{ color: textColor } }}>{props.title}</Text>
+			<Text
+				style={{
+					fontSize: 14,
+					textAlign: "center",
+					flexWrap: "wrap",
+					...GlobalStyle.bodyFont,
+					...{ color: textColor },
+				}}
+			>
+				{props.title}
+			</Text>
 		</TouchableOpacity>
 	);
 };
 
-const Feedback = () => {
-	const navigation = useNavigation();
-	const [selectedButton, setSelectedButton] = useState("");
-	const [issueDescription, setIssueDescription] = useState("");
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
+	);
+};
 
-	const handleButtonPress = (title) => {
-		setSelectedButton(title);
+const Feedback = ({ navigation }) => {
+	const [activeButton, setActiveButton] = useState("issues"); // selected button
+
+	const handleButton = (title) => {
+		setActiveButton(title);
 	};
 
 	const handleSubmit = () => {
@@ -50,7 +65,7 @@ const Feedback = () => {
 	};
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1000 }}>
+		<View style={{ flex: 1 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
@@ -79,8 +94,7 @@ const Feedback = () => {
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
 							justifyContent: "flex-start",
 						},
@@ -110,78 +124,139 @@ const Feedback = () => {
 					}
 				/>
 
-				<View style={styles.buttonContainer}>
-					<Button
-						title="Report an Issue"
-						color={COLORS.orange}
-						filled={selectedButton === "Report an Issue"}
-						selected={selectedButton === "Report an Issue"}
-						style={styles.mediumButton}
-						onPress={() => handleButtonPress("Report an Issue")}
-					/>
-					<Button
-						title="Submit feedback"
-						color={COLORS.orange}
-						filled={selectedButton === "Submit feedback"}
-						selected={selectedButton === "Submit feedback"}
-						style={styles.largeButton}
-						onPress={() => handleButtonPress("Submit feedback")}
-					/>
+				<View style={{ marginHorizontal: 20 }}>
+					<View style={{ flexDirection: "row", marginVertical: 18 }}>
+						{/* for reporting issues */}
+						<Button
+							title="Report an issue"
+							onPress={() => handleButton("issues")}
+							style={
+								activeButton === "issues"
+									? styles.activeFilterButton
+									: styles.filterButton
+							}
+						/>
+						<Button
+							title="Submit feedback & requests"
+							onPress={() => handleButton("feedback")}
+							style={
+								activeButton === "feedback"
+									? styles.activeFilterButton
+									: styles.filterButton
+							}
+						/>
+					</View>
+
+					{/* for reporting issues */}
+					{activeButton === "issues" ? (
+						<SafeAreaView>
+							<Text style={{ ...GlobalStyle.headerFont }}>
+								Please describe the issue:
+							</Text>
+							<View
+								style={{
+									flexDirection: "column",
+									height: 300,
+									width: "100%",
+									elevation: 2,
+									backgroundColor: COLORS.grey,
+									marginTop: 10,
+									borderRadius: 15,
+									borderColor: 0,
+									marginBottom: 10,
+									paddingHorizontal: 12,
+								}}
+							>
+								<View
+									style={{
+										flex: 1,
+										borderColor: 0,
+										borderWidth: 1,
+										borderRadius: 12,
+										resizeMode: "contain",
+										paddingLeft: 12,
+										marginTop: 15,
+										backgroundColor: COLORS.grey,
+									}}
+								>
+									<TextInput
+										placeholder="Write your issues here"
+										multiline
+										style={{ ...GlobalStyle.bodyFont }}
+									></TextInput>
+								</View>
+							</View>
+							<Button
+								title="Submit"
+								//	onPress={handleSubmit}
+								filled
+								style={{
+									elevation: 2,
+									borderColor: 0,
+									marginTop: 12,
+								}}
+							/>
+						</SafeAreaView>
+					) : (
+						// for sending feedback
+						activeButton === "feedback" && (
+							<SafeAreaView>
+								<Text style={{ ...GlobalStyle.headerFont }}>
+									Send us feedback:
+								</Text>
+								<View
+									style={{
+										flexDirection: "column",
+										height: 300,
+										width: "100%",
+										elevation: 2,
+										backgroundColor: COLORS.grey,
+										marginTop: 10,
+										borderRadius: 15,
+										borderColor: 0,
+										marginBottom: 10,
+										paddingHorizontal: 12,
+									}}
+								>
+									<View
+										style={{
+											flex: 1,
+											borderColor: 0,
+											borderWidth: 1,
+											borderRadius: 12,
+											resizeMode: "contain",
+											paddingLeft: 12,
+											marginTop: 15,
+											backgroundColor: COLORS.grey,
+										}}
+									>
+										<TextInput
+											placeholder="Write your feedback here"
+											multiline
+											style={{ ...GlobalStyle.bodyFont }}
+										/>
+									</View>
+								</View>
+								<Button
+									title="Submit"
+									// onPress={handleSubmit}
+									filled
+									style={{
+										elevation: 2,
+										borderColor: 0,
+										marginTop: 12,
+									}}
+								/>
+							</SafeAreaView>
+						)
+					)}
 				</View>
-
-				<Text style={styles.descriptionLabel}>Please describe the issue:</Text>
-				<TextInput
-					style={styles.textInput}
-					multiline
-					placeholder="Type here..."
-					value={issueDescription}
-					onChangeText={setIssueDescription}
-				/>
-
-				<TouchableOpacity style={styles.submitButton} onPress={handleSubmit}>
-					<Text style={styles.submitButtonText}>Submit</Text>
-				</TouchableOpacity>
 			</SafeAreaView>
-		</ScrollView>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: COLORS.foam,
-	},
-	gradient: {
-		flex: 1,
-	},
-	buttonContainer: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		paddingHorizontal: 16,
-		paddingTop: 16,
-	},
-	mediumButton: {
-		width: "48%",
-		height: 48,
-		borderRadius: 30,
-		borderWidth: 1,
-		shadowColor: COLORS.black,
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.3,
-		shadowRadius: 3,
-		elevation: 5,
-	},
-	largeButton: {
-		width: "50%",
-		height: 48,
-		borderRadius: 30,
-		borderWidth: 1,
-		shadowColor: COLORS.black,
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.3,
-		shadowRadius: 3,
-		elevation: 5,
-	},
 	button: {
 		paddingVertical: 10,
 		borderColor: COLORS.black,
@@ -190,38 +265,25 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	descriptionLabel: {
-		fontSize: 16,
-		fontWeight: "bold",
-		marginHorizontal: 16,
-		marginTop: 16,
+	activeFilterButton: {
+		width: "50%",
+		height: 60,
+		marginVertical: 12,
+		borderRadius: 20,
+		marginRight: 5,
+		borderColor: 0,
+		elevation: 2,
+		backgroundColor: COLORS.foam,
 	},
-	textInput: {
-		height: 300, // Adjust the height value as needed
-		fontSize: 20, // Adjust the font size value as needed
-		marginHorizontal: 16,
-		marginTop: 8,
-		paddingHorizontal: 12,
-		paddingVertical: 8,
-		borderWidth: 1,
-		borderColor: COLORS.black,
-		borderRadius: 10,
-		textAlignVertical: "top", // Align text to start at the top
-	},
-	submitButton: {
-		backgroundColor: COLORS.orange,
-		borderRadius: 30,
-		marginHorizontal: 16,
-		marginTop: 16,
-		paddingVertical: 12,
-		alignItems: "center",
-		borderWidth: 1, // Add border width
-		borderColor: COLORS.black, // Add border color
-	},
-	submitButtonText: {
-		fontSize: 16,
-		fontWeight: "bold",
-		color: COLORS.black,
+	filterButton: {
+		width: "50%",
+		height: 60,
+		marginVertical: 12,
+		borderRadius: 20,
+		marginRight: 5,
+		borderColor: 0,
+		elevation: 2,
+		backgroundColor: COLORS.white,
 	},
 });
 
