@@ -100,7 +100,7 @@ class User {
     }
   }
 
-  async getFeed(client, res) {
+  async getFeed(client, res, userID) {
     try {
       const db = client.db("FreshBearNearMe");
       const feedData = await db.collection("Reviews").find().toArray();
@@ -111,11 +111,51 @@ class User {
         }
         return data;
       });
+  
       const updatedFeedData = await Promise.all(promises);
+  
+      const user2 = await db.collection("User").findOne({ userID: parseInt(userID) });
+      if (user2) {
+        updatedFeedData.forEach((data) => {
+          data.followArray = user2.followArray;
+        });
+      }
       res.json({ reviews: updatedFeedData });
-      console.log(updatedFeedData);
     } catch (error) {
       res.status(500).json({ error: "Error retrieving feed" });
+    }
+  }
+
+  async followUser(client, res, userID, reviewUserID) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const collection = db.collection('User');
+  
+      const userToFollow = await collection.findOne({ userID: reviewUserID });
+  
+      if (userToFollow) {
+        const currentUser = await collection.findOne({ userID });
+  
+        if (currentUser) {
+          if (!currentUser.followArray.includes(reviewUserID)) {
+            currentUser.followArray.push(reviewUserID);
+            const result = await collection.updateOne(
+              { userID },
+              { $set: { followArray: currentUser.followArray } }
+            );
+            res.json({ success: true, message: `You are now following user with ID ${reviewUserID}` });
+          } else {
+            res.json({ success: false, message: `You are already following user with ID ${reviewUserID}` });
+          }
+        } else {
+          res.json({ success: false, message: 'Current user not found' });
+        }
+      } else {
+        res.json({ success: false, message: 'User to follow not found' });
+      }
+    } catch (error) {
+      console.error('Error during followUser:', error);
+      res.status(500).json({ success: false, message: 'An error occurred during followUser' });
     }
   }
 

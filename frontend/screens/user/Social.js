@@ -62,89 +62,28 @@ const FeedItem = ({
 	reviewDescription,
 	reviewRating,
 	reviewUsername,
-	userID
+	followArray,
+	userID,
   }) => {
-	//UseEffect here
-	
+	const isFollowing = followArray.includes(reviewUser) || reviewUser === userID;
+  
 	const handleFollow = () => {
-
-		const data = {
-			userID: userID,
-			reviewUserID: reviewUser
-		}
-
-		axios
-			.post("http://10.0.2.2:3000/followUser", data)
-			.then((response) => {
-				if (response.data.success) {
-					console.log("Followed User");
-				}
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+	  const data = {
+		userID: userID,
+		reviewUserID: reviewUser,
+	  };
+	  axios
+		.post("http://10.0.2.2:3000/followUser", data)
+		.then((response) => {
+		  if (response.data.success) {
+			// CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY FOLLOWED
+		  }
+		})
+		.catch((error) => {
+		  console.error(error);
+		});
 	};
-
-	const CustomAlert = ({ visible, onClose }) => {
-		return (
-			<Modal visible={visible} transparent animationType="fade">
-				<View
-					style={{
-						flex: 1,
-						backgroundColor: "rgba(0, 0, 0, 0.5)",
-						justifyContent: "center",
-						alignItems: "center",
-					}}
-				>
-					<View
-						style={{
-							width: "80%",
-							backgroundColor: COLORS.white,
-							borderRadius: 40,
-							padding: 30,
-						}}
-					>
-						<Ionicons
-							name="md-beer"
-							size={34}
-							color={COLORS.foam}
-							style={{ alignSelf: "center" }}
-						/>
-						<Text
-							style={{
-								fontSize: 18,
-								fontWeight: "bold",
-								alignSelf: "center",
-								marginBottom: 20,
-							}}
-						>
-							Account Signup Success
-						</Text>
-						<Text style={{ fontSize: 16, marginBottom: 20 }}>
-							Your account has been successfully created!
-						</Text>
-						<TouchableOpacity
-							style={{
-								backgroundColor: COLORS.foam,
-								padding: 10,
-								borderRadius: 8,
-								alignItems: "center",
-								marginHorizontal: 22,
-							}}
-							onPress={onClose}
-						>
-							<Text
-								style={{ color: COLORS.black, fontWeight: "bold", fontSize: 16 }}
-							>
-								OK
-							</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
-			</Modal>
-		);
-	};
-
+  
 	return (
 	  <View style={{ marginHorizontal: 20 }}>
 		{/* Rated beer name */}
@@ -162,16 +101,28 @@ const FeedItem = ({
 			  <Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
 				{reviewUsername}
 			  </Text>
-			  <Button
-				title="Follow"
-				filled
-				style={{
-				  width: "50%",
-				  borderRadius: 30,
-				  borderColor: 0,
-				}}
-				onPress={handleFollow}
-			  />
+			  {isFollowing ? (
+				<Button
+				  title="Unfollow"
+				  filled
+				  style={{
+					width: "50%",
+					borderRadius: 30,
+					borderColor: 0,
+				  }}
+				/>
+			  ) : (
+				<Button
+				  title="Follow"
+				  filled
+				  style={{
+					width: "50%",
+					borderRadius: 30,
+					borderColor: 0,
+				  }}
+				  onPress={handleFollow}
+				/>
+			  )}
 			</View>
   
 			<View>
@@ -192,7 +143,6 @@ const FeedItem = ({
 			<CustomText style={{ marginTop: 10 }}>
 			  {reviewDescription}
 			</CustomText>
-  
 			<View
 			  style={{
 				flexDirection: "row",
@@ -211,7 +161,7 @@ const FeedItem = ({
 		</View>
 	  </View>
 	);
-  };
+};
 
 const Social = ({ navigation }) => {
 	const { cookies } = useCookies();
@@ -221,7 +171,11 @@ const Social = ({ navigation }) => {
 	useEffect(() => {
 		setUserID(cookies.userID);
 		axios
-			.get("http://10.0.2.2:3000/getFeed")
+			.get("http://10.0.2.2:3000/getFeed", {
+				params: {
+					userID : cookies.userID
+				}
+			})
 			.then((response) => {
 				setFeedData(response.data.reviews)
 			})
@@ -339,6 +293,7 @@ const Social = ({ navigation }) => {
 								reviewDescription={feed.reviewDescription}
 								reviewRating={feed.reviewRating}
 								reviewUsername={feed.reviewUsername}
+								followArray={feed.followArray}
 								userID={userID}
 							/>
 						))}	

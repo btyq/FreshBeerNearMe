@@ -345,14 +345,14 @@ app.post("/editProfile", async (req, res) => {
 
 //Route to get user's Feed
 app.get("/getFeed", async (req, res) => {
-	globalUser.getFeed(client, res);
+	const userID = req.query.userID;
+	globalUser.getFeed(client, res, userID);
 })
 
 //Route for user's follow button
 app.post("/followUser", async (req, res) => {
 	const {userID, reviewUserID} = req.body;
-	console.log(userID);
-	console.log(reviewUserID);
+	globalUser.followUser(client, res, userID, reviewUserID)
 })
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
