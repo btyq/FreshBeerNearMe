@@ -1,5 +1,4 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
 import {
 	Image,
@@ -68,16 +67,8 @@ const PopOut = (props) => {
 	);
 };
 
-const ReferAFriend = () => {
-	const navigation = useNavigation();
-	const [comment, setComment] = useState("Bitter, but it's decent");
-	const [comments, setComments] = useState([]);
+const ReferAFriend = ({ navigation }) => {
 	const [popOutVisible, setPopOutVisible] = useState(false);
-
-	const handleComment = () => {
-		setComments([...comments, comment]);
-		setComment("");
-	};
 
 	const showPopOut = () => {
 		setPopOutVisible(true);

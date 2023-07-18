@@ -71,6 +71,8 @@ const VenueItem = ({
 	venueRating,
 	venueImage,
 	venueOperatingHours,
+	venueFreshness,
+	venueTemperature,
 }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
@@ -392,16 +394,12 @@ const VenueItem = ({
 										))}
 									</View>
 								</View>
-								<View
-									style={{
-										flexDirection: "row",
-										justifyContent: "space-between",
-										alignItems: "center",
-									}}
-								>
-									<CustomText>Freshness:</CustomText>
-									<CustomText>Temperature: </CustomText>
-								</View>
+								<CustomText>
+									Average Beer Freshness: {venueFreshness}
+								</CustomText>
+								<CustomText>
+									Average Beer Temperature: {venueTemperature}
+								</CustomText>
 								<View
 									style={{
 										borderTopColor: "black",
