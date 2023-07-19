@@ -1,5 +1,6 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
 	Alert,
 	Image,
@@ -14,10 +15,9 @@ import {
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import { useCookies } from "../../CookieContext";
-import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -55,6 +55,132 @@ const CustomText = (props) => {
 	);
 };
 
+// custom alert for follow
+const CustomAlertFollow = ({ visible, onClose }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 40,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						Success
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						You followed!
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginHorizontal: 22,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
+// custom alert for unfollow
+const CustomAlertFollow2 = ({ visible, onClose }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 40,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						Success
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						You have unfollowed
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginHorizontal: 22,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
 const FeedItem = ({
 	reviewID,
 	reviewUser,
@@ -67,122 +193,127 @@ const FeedItem = ({
 	isFollowing,
 	feedImage,
 	updateFollowArray,
-  }) => {
-  
+}) => {
+	const [isDialogVisible, setIsDialogVisible] = useState(false);
+	const [isDialogVisible2, setIsDialogVisible2] = useState(false);
 	const handleFollow = () => {
-	  const data = {
-		userID: userID,
-		reviewUserID: reviewUser,
-	  };
-	  axios
-		.post("http://10.0.2.2:3000/followUser", data)
-		.then((response) => {
-		  if (response.data.success) {
-			updateFollowArray(reviewUser, true)
-			// CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY FOLLOWED
-			Alert.alert("hello");
-		  }
-		})
-		.catch((error) => {
-		  console.error(error);
-		});
+		const data = {
+			userID: userID,
+			reviewUserID: reviewUser,
+		};
+		axios
+			.post("http://10.0.2.2:3000/followUser", data)
+			.then((response) => {
+				if (response.data.success) {
+					updateFollowArray(reviewUser, true);
+					// CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY FOLLOWED
+					setIsDialogVisible(true);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
 
 	const handleUnfollow = () => {
 		const data = {
-		  userID: userID,
-		  reviewUserID: reviewUser,
+			userID: userID,
+			reviewUserID: reviewUser,
 		};
 		axios
-		  .post("http://10.0.2.2:3000/unfollowUser", data)
-		  .then((response) => {
-			if (response.data.success) {
-			  updateFollowArray(reviewUser, false);
-			  // CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY UNFOLLOWED
-			  Alert.alert("You have unfollowed " + reviewUsername);
-			}
-		  })
-		  .catch((error) => {
-			console.error(error);
-		  });
+			.post("http://10.0.2.2:3000/unfollowUser", data)
+			.then((response) => {
+				if (response.data.success) {
+					updateFollowArray(reviewUser, false);
+					// CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY UNFOLLOWED
+					setIsDialogVisible2(true);
+					// Alert.alert("You have unfollowed " + reviewUsername);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
-  
+
 	return (
-	  <View style={{ marginHorizontal: 20 }}>
-		<View style={styles.feedContainer}>
-		  <View style={{ marginHorizontal: 12 }}>
-			<View
-			  style={{
-				flexDirection: "row",
-				justifyContent: "space-between",
-				alignItems: "center",
-				backgroundColor: COLORS.grey,
-				marginTop: 5,
-			  }}
-			>
-			  <Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
-				{reviewUsername}
-			  </Text>
-			  {isFollowing ? (
-				<Button
-				  title="Unfollow"
-				  filled
-				  style={{
-					width: "50%",
-					borderRadius: 30,
-					borderColor: 0,
-				  }}
-				  onPress={handleUnfollow}
-				/>
-			  ) : (
-				<Button
-				  title="Follow"
-				  filled
-				  style={{
-					width: "50%",
-					borderRadius: 30,
-					borderColor: 0,
-				  }}
-				  onPress={handleFollow}
-				/>
-			  )}
+		<View style={{ marginHorizontal: 20 }}>
+			<View style={styles.feedContainer}>
+				<View style={{ marginHorizontal: 12 }}>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "space-between",
+							alignItems: "center",
+							backgroundColor: COLORS.grey,
+							marginTop: 5,
+						}}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
+							{reviewUsername}
+						</Text>
+						{isFollowing ? (
+							<Button
+								title="Unfollow"
+								filled
+								style={{
+									width: "50%",
+									borderRadius: 30,
+									borderColor: 0,
+								}}
+								onPress={handleUnfollow}
+							/>
+						) : (
+							<Button
+								title="Follow"
+								filled
+								style={{
+									width: "50%",
+									borderRadius: 30,
+									borderColor: 0,
+								}}
+								onPress={handleFollow}
+							/>
+						)}
+						<CustomAlertFollow
+							visible={isDialogVisible}
+							onClose={() => setIsDialogVisible(false)}
+						/>
+						<CustomAlertFollow2
+							visible={isDialogVisible2}
+							onClose={() => setIsDialogVisible2(false)}
+						/>
+					</View>
+
+					<View>
+						<Text
+							style={{
+								...GlobalStyle.headerFont,
+								fontSize: 14,
+								marginTop: 12,
+							}}
+						>
+							{reviewDate}
+						</Text>
+					</View>
+					<Image source={{ uri: feedImage }} style={styles.feedImage} />
+					<CustomText style={{ marginTop: 10 }}>{reviewDescription}</CustomText>
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "flex-end",
+						}}
+					>
+						<AirbnbRating
+							count={5}
+							defaultRating={reviewRating}
+							size={18}
+							showRating={false}
+							isDisabled={true}
+						/>
+					</View>
+				</View>
 			</View>
-  
-			<View>
-			  <Text
-				style={{
-				  ...GlobalStyle.headerFont,
-				  fontSize: 14,
-				  marginTop: 12,
-				}}
-			  >
-				{reviewDate}
-			  </Text>
-			</View>
-			<Image
-			  source={{ uri: feedImage}}
-			  style={styles.feedImage}
-			/>
-			<CustomText style={{ marginTop: 10 }}>
-			  {reviewDescription}
-			</CustomText>
-			<View
-			  style={{
-				flexDirection: "row",
-				justifyContent: "flex-end",
-			  }}
-			>
-			  <AirbnbRating
-				count={5}
-				defaultRating={reviewRating}
-				size={18}
-				showRating={false}
-				isDisabled={true}
-			  />
-			</View>
-		  </View>
 		</View>
-	  </View>
 	);
 };
 
@@ -193,9 +324,9 @@ const Social = ({ navigation }) => {
 
 	const updateFollowArray = (reviewUserID, isFollowing) => {
 		setFeedData((prevFeedData) =>
-		  prevFeedData.map((feed) =>
-			feed.reviewUser === reviewUserID ? { ...feed, isFollowing } : feed
-		  )
+			prevFeedData.map((feed) =>
+				feed.reviewUser === reviewUserID ? { ...feed, isFollowing } : feed
+			)
 		);
 	};
 
@@ -204,11 +335,11 @@ const Social = ({ navigation }) => {
 		axios
 			.get("http://10.0.2.2:3000/getFeed", {
 				params: {
-					userID : cookies.userID
-				}
+					userID: cookies.userID,
+				},
 			})
 			.then((response) => {
-				setFeedData(response.data.reviews)
+				setFeedData(response.data.reviews);
 			})
 			.catch((error) => {
 				console.error("Error retrieving feed:", error);
@@ -330,7 +461,7 @@ const Social = ({ navigation }) => {
 								userID={userID}
 								updateFollowArray={updateFollowArray}
 							/>
-						))}	
+						))}
 					</ScrollView>
 				</SafeAreaView>
 			</SafeAreaView>
