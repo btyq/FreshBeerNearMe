@@ -1,5 +1,5 @@
 import { Feather, Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Image,
 	Modal,
@@ -15,6 +15,8 @@ import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -68,9 +70,85 @@ const ModalWindow = (props) => {
 	);
 };
 
+const RecommendationItem = ({ data }) => {
+	if (data.venueID) {
+	  return (
+		<TouchableOpacity
+		  style={{
+			backgroundColor: COLORS.grey,
+			flexDirection: "row",
+			justifyContent: "space-between",
+			alignItems: "center",
+			marginTop: 5,
+			borderRadius: 20,
+			padding: 10,
+			borderWidth: 1,
+			borderColor: 0,
+		  }}
+		  //onPress={}
+		>
+		  <CustomText style={{ marginLeft: 10 }}>Venue Name: {data.venueName}</CustomText>
+		  <AirbnbRating
+			count={5}
+			defaultRating={data.venueRating}
+			showRating={false}
+			size={16}
+			isDisabled={true}
+		  />
+		</TouchableOpacity>
+	  );
+	} else if (data.beerID) {
+	  return (
+		<TouchableOpacity
+		  style={{
+			backgroundColor: COLORS.grey,
+			flexDirection: "row",
+			justifyContent: "space-between",
+			alignItems: "center",
+			marginTop: 5,
+			borderRadius: 20,
+			padding: 10,
+			borderWidth: 1,
+			borderColor: 0,
+		  }}
+		  //onPress={}
+		>
+		  <CustomText style={{ marginLeft: 10 }}>Beer Name: {data.beerName}</CustomText>
+		  <AirbnbRating
+			count={5}
+			defaultRating={data.rating}
+			showRating={false}
+			size={16}
+			isDisabled={true}
+		  />
+		</TouchableOpacity>
+	  );
+	}
+  };
+
+
 const Recommendation = ({ navigation }) => {
 	const [modalVisible1, setModalVisible1] = useState(false);
 	const [modalVisible2, setModalVisible2] = useState(false);
+	const { cookies } = useCookies();
+	const [userID, setUserID] = useState(""); 
+	const [recommendationData, setRecommendationData] = useState([]);
+
+	useEffect(() => {
+		setUserID(cookies.userID);
+		axios
+			.get("http://10.0.2.2:3000/getRecommendation", {
+				params: {
+					userID : cookies.userID
+				}
+			})
+			.then((response) => {
+				setRecommendationData(response.data);
+			})
+			.catch((error) => {
+				console.error("Error retrieving recommendation:", error);
+			})
+	}, []);
 
 	const handleComment = () => {
 		setComments([...comments, comment]);
@@ -79,6 +157,7 @@ const Recommendation = ({ navigation }) => {
 
 	const showModal1 = () => {
 		setModalVisible1(true);
+		console.log(recommendationData);
 	};
 
 	const showModal2 = () => {
@@ -186,45 +265,6 @@ const Recommendation = ({ navigation }) => {
 						<Text
 							style={{
 								...GlobalStyle.headerFont,
-								marginVertical: 12,
-								marginLeft: 15,
-							}}
-						>
-							Your friends' recommendations
-						</Text>
-						<TouchableOpacity
-							style={{
-								backgroundColor: COLORS.grey,
-								flexDirection: "row",
-								justifyContent: "space-between",
-								alignItems: "center",
-								marginTop: 5,
-								borderRadius: 20,
-								padding: 10,
-								borderWidth: 1,
-								borderColor: 0,
-							}}
-							onPress={showModal1}
-						>
-							<CustomText
-								style={{
-									marginLeft: 10,
-								}}
-							>
-								Beer Name
-							</CustomText>
-							<AirbnbRating
-								count={5}
-								defaultRating={4}
-								showRating={false}
-								size={16}
-								isDisabled={true}
-							/>
-						</TouchableOpacity>
-
-						<Text
-							style={{
-								...GlobalStyle.headerFont,
 								marginTop: 22,
 								marginLeft: 15,
 								marginBottom: 12,
@@ -232,7 +272,6 @@ const Recommendation = ({ navigation }) => {
 						>
 							Your turn to recommend a beer!
 						</Text>
-
 						<View style={{ flexDirection: "row" }}>
 							<View
 								style={{
@@ -308,6 +347,20 @@ const Recommendation = ({ navigation }) => {
 								}}
 							/>
 						</View>
+						<ScrollView>
+							<Text
+								style={{
+									...GlobalStyle.headerFont,
+									marginVertical: 12,
+									marginLeft: 15,
+								}}
+							>
+								Your friends' recommendations
+							</Text>
+							{recommendationData.map((item, index) => (
+								<RecommendationItem key={index} data={item} />
+							))}		
+						</ScrollView>
 					</View>
 				</SafeAreaView>
 				<ModalWindow

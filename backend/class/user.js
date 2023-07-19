@@ -1,5 +1,5 @@
 class User {
-  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray) {
+  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray, recommendationArray) {
     this.client = client;
     this.userID = userID;
     this.username = username;
@@ -8,6 +8,7 @@ class User {
     this.mobileNumber = mobileNumber;
     this.receiveNotification = receiveNotification;
     this.followArray = followArray;
+    this.recommendationArray = recommendationArray;
   }
 
   async login(res, username, password) {
@@ -23,6 +24,7 @@ class User {
         this.mobileNumber = result.mobileNumber;
         this.receiveNotification = result.receiveNotification;
         this.followArray = result.followArray;
+        this.recommendationArray = result.recommendationArray;
 
         //Create a session token
         const sessionToken = 'testtoken123';
@@ -133,7 +135,6 @@ class User {
         });
       }
       res.json({ reviews: updatedFeedData });
-      console.log(updatedFeedData);
     } catch (error) {
       res.status(500).json({ error: "Error retrieving feed" });
     }
@@ -205,6 +206,31 @@ class User {
       console.error('Error during unfollowUser:', error);
       res.status(500).json({ success: false, message: 'An error occurred during unfollowUser' });
     }
+  }
+
+  async getRecommendation(client, res, userID) {
+    const db = client.db("FreshBearNearMe");
+    const userData = await db.collection("User").findOne({ userID: parseInt(userID) });
+    const userDataFollowingArray = userData.followArray;
+  
+    const recommendationData = await db.collection("Recommendation").find({
+      recommendationUser: { $in: userDataFollowingArray }
+    }).toArray();
+  
+    const responseData = [];
+  
+    for (const recommendation of recommendationData) {
+      if (recommendation.recommendationType === 'Venue') {
+        const venueID = recommendation.recommendationItem;
+        const venueData = await db.collection("Venue").findOne({ venueID: venueID });
+        responseData.push(venueData);
+      } else if (recommendation.recommendationType === 'Beer') {
+        const beerID = recommendation.recommendationItem;
+        const beerData = await db.collection("Beer").findOne({ beerID: beerID });
+        responseData.push(beerData);
+      }
+    }
+    res.send(responseData);
   }
   
   logout() {

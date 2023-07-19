@@ -93,6 +93,7 @@ app.post("/signup", async (req, res) => {
 			mobileNumber,
 			receiveNotification: false,
 			followArray: [],
+			recommendationArray: [],
 		});
 
 		res.json({ success: true, message: "User signed up successfully" });
@@ -356,9 +357,15 @@ app.post("/followUser", async (req, res) => {
 })
 
 //Route for user's unfollow button
-app.post("/unfollowUser", async ( req, res) => {
+app.post("/unfollowUser", async (req, res) => {
 	const { userID, reviewUserID } = req.body;
 	globalUser.unfollowUser(client, res, userID, reviewUserID)
+})
+
+//Route to get user's Recommendation
+app.get("/getRecommendation", async (req, res) => {
+	const userID = req.query.userID;
+	globalUser.getRecommendation(client, res, userID)	
 })
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
