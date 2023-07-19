@@ -109,6 +109,17 @@ class User {
         if (user) {
           data.reviewUsername = user.username;
         }
+        
+        const venue = await db.collection("Venue").findOne({ venueReview: data.reviewID });
+        if (venue) {
+          data.feedImage = venue.venueImage;
+        } else {
+          const beer = await db.collection("Beer").findOne({ communityReview: data.reviewID });
+          if (beer) {
+            data.feedImage = beer.beerImage;
+          }
+        }
+        
         return data;
       });
   
@@ -118,9 +129,11 @@ class User {
       if (user2) {
         updatedFeedData.forEach((data) => {
           data.followArray = user2.followArray;
+          data.isFollowing = data.followArray.includes(data.reviewUser) || data.reviewUser === parseInt(userID);
         });
       }
       res.json({ reviews: updatedFeedData });
+      console.log(updatedFeedData);
     } catch (error) {
       res.status(500).json({ error: "Error retrieving feed" });
     }
@@ -159,6 +172,41 @@ class User {
     }
   }
 
+  async unfollowUser(client, res, userID, reviewUserID) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const collection = db.collection('User');
+  
+      const userToUnfollow = await collection.findOne({ userID: reviewUserID });
+  
+      if (userToUnfollow) {
+        const currentUser = await collection.findOne({ userID });
+  
+        if (currentUser) {
+          const reviewUserIndex = currentUser.followArray.indexOf(reviewUserID);
+  
+          if (reviewUserIndex !== -1) {
+            currentUser.followArray.splice(reviewUserIndex, 1);
+            const result = await collection.updateOne(
+              { userID },
+              { $set: { followArray: currentUser.followArray } }
+            );
+            res.json({ success: true, message: `You have unfollowed user with ID ${reviewUserID}` });
+          } else {
+            res.json({ success: false, message: `You were not following user with ID ${reviewUserID}` });
+          }
+        } else {
+          res.json({ success: false, message: 'Current user not found' });
+        }
+      } else {
+        res.json({ success: false, message: 'User to unfollow not found' });
+      }
+    } catch (error) {
+      console.error('Error during unfollowUser:', error);
+      res.status(500).json({ success: false, message: 'An error occurred during unfollowUser' });
+    }
+  }
+  
   logout() {
     console.log("User logged out");
   }

@@ -351,8 +351,14 @@ app.get("/getFeed", async (req, res) => {
 
 //Route for user's follow button
 app.post("/followUser", async (req, res) => {
-	const {userID, reviewUserID} = req.body;
+	const { userID, reviewUserID } = req.body;
 	globalUser.followUser(client, res, userID, reviewUserID)
+})
+
+//Route for user's unfollow button
+app.post("/unfollowUser", async ( req, res) => {
+	const { userID, reviewUserID } = req.body;
+	globalUser.unfollowUser(client, res, userID, reviewUserID)
 })
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================

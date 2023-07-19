@@ -64,8 +64,10 @@ const FeedItem = ({
 	reviewUsername,
 	followArray,
 	userID,
+	isFollowing,
+	feedImage,
+	updateFollowArray,
   }) => {
-	const isFollowing = followArray.includes(reviewUser) || reviewUser === userID;
   
 	const handleFollow = () => {
 	  const data = {
@@ -76,17 +78,37 @@ const FeedItem = ({
 		.post("http://10.0.2.2:3000/followUser", data)
 		.then((response) => {
 		  if (response.data.success) {
+			updateFollowArray(reviewUser, true)
 			// CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY FOLLOWED
+			Alert.alert("hello");
 		  }
 		})
 		.catch((error) => {
 		  console.error(error);
 		});
 	};
+
+	const handleUnfollow = () => {
+		const data = {
+		  userID: userID,
+		  reviewUserID: reviewUser,
+		};
+		axios
+		  .post("http://10.0.2.2:3000/unfollowUser", data)
+		  .then((response) => {
+			if (response.data.success) {
+			  updateFollowArray(reviewUser, false);
+			  // CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY UNFOLLOWED
+			  Alert.alert("You have unfollowed " + reviewUsername);
+			}
+		  })
+		  .catch((error) => {
+			console.error(error);
+		  });
+	};
   
 	return (
 	  <View style={{ marginHorizontal: 20 }}>
-		{/* Rated beer name */}
 		<View style={styles.feedContainer}>
 		  <View style={{ marginHorizontal: 12 }}>
 			<View
@@ -110,6 +132,7 @@ const FeedItem = ({
 					borderRadius: 30,
 					borderColor: 0,
 				  }}
+				  onPress={handleUnfollow}
 				/>
 			  ) : (
 				<Button
@@ -137,7 +160,7 @@ const FeedItem = ({
 			  </Text>
 			</View>
 			<Image
-			  source={require("../../assets/specialtybeer.png")}
+			  source={{ uri: feedImage}}
 			  style={styles.feedImage}
 			/>
 			<CustomText style={{ marginTop: 10 }}>
@@ -167,6 +190,14 @@ const Social = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
 	const [feedData, setFeedData] = useState([]);
+
+	const updateFollowArray = (reviewUserID, isFollowing) => {
+		setFeedData((prevFeedData) =>
+		  prevFeedData.map((feed) =>
+			feed.reviewUser === reviewUserID ? { ...feed, isFollowing } : feed
+		  )
+		);
+	};
 
 	useEffect(() => {
 		setUserID(cookies.userID);
@@ -294,7 +325,10 @@ const Social = ({ navigation }) => {
 								reviewRating={feed.reviewRating}
 								reviewUsername={feed.reviewUsername}
 								followArray={feed.followArray}
+								isFollowing={feed.isFollowing}
+								feedImage={feed.feedImage}
 								userID={userID}
+								updateFollowArray={updateFollowArray}
 							/>
 						))}	
 					</ScrollView>

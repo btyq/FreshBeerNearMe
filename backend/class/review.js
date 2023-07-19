@@ -68,7 +68,7 @@ class Review {
         // Update the beer with the new review
         const updateResult = await beerCollection.updateOne(
           { beerID: beerID },
-          { $push: { communityReviews: nextReviewID } }
+          { $push: { communityReview: nextReviewID } }
         );
     
         if (updateResult.modifiedCount === 1) {
