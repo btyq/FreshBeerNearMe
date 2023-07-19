@@ -854,7 +854,6 @@ const BeersVenue = ({ navigation }) => {
 	useEffect(() => {
 		const fetchVenueData = async () => {
 			try {
-				setIsDataLoading(true);
 				const response = await axios.get("http://10.0.2.2:3000/getVenueData");
 				const { success, venueData } = response.data;
 				if (success) {
@@ -879,8 +878,6 @@ const BeersVenue = ({ navigation }) => {
 				}
 			} catch (error) {
 				console.error("Error retrieving venue data:", error);
-			} finally {
-				setIsDataLoading(false);
 			}
 		};
 
@@ -1096,6 +1093,8 @@ const BeersVenue = ({ navigation }) => {
 									venueRating={venue.venueRating}
 									venueImage={venue.venueImage}
 									venueOperatingHours={venue.venueOperatingHours}
+									venueFreshness={venue.venueFreshness}
+									venueTemperature={venue.venueTemperature}
 								/>
 							))}
 						</ScrollView>

@@ -194,10 +194,10 @@ const BreweryItem = ({
 											fontSize: 18,
 										}}
 									>
-										Operating Hours{" "}
+										Operating Hours
 									</CustomText>
 									<View>
-										{breweryOperatingHours?.split("\n").map((line, index) => (
+										{breweryOperatingHours.split("\n").map((line, index) => (
 											<View
 												key={index}
 												style={{
@@ -251,7 +251,6 @@ const Breweries = ({ navigation }) => {
 	useEffect(() => {
 		const fetchBreweryData = async () => {
 			try {
-				setIsDataLoading(true);
 				const response = await axios.get("http://10.0.2.2:3000/getBreweryData");
 				const { success, breweryData } = response.data;
 				if (success) {
@@ -281,8 +280,6 @@ const Breweries = ({ navigation }) => {
 				}
 			} catch (error) {
 				console.error("Error retrieving brewery data:", error);
-			} finally {
-				setIsDataLoading(false);
 			}
 		};
 

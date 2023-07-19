@@ -381,7 +381,7 @@ const NearbyVenues = ({ navigation }) => {
 											}}
 										>
 											<Ionicons name="location" size={34} color="#AF7FE2" />
-											<Callout tooltip>
+											<Callout>
 												<View>
 													<View style={styles.bubble}>
 														<FontAwesome5
@@ -420,7 +420,7 @@ const NearbyVenues = ({ navigation }) => {
 											}}
 										>
 											<Ionicons name="location" size={34} color="#11DAF6" />
-											<Callout tooltip>
+											<Callout>
 												<View>
 													<View style={styles.bubble}>
 														<FontAwesome5
@@ -512,12 +512,12 @@ const styles = StyleSheet.create({
 	},
 	bubble: {
 		flexDirection: "column",
-		alignSelf: "flex-start",
+		//	alignSelf: "flex-start",
 		backgroundColor: "#FFF",
 		borderRadius: 6,
 		borderColor: 0,
 		borderWidth: 5,
-		paddingHorizontal: 25,
+		paddingHorizontal: 15,
 		padding: 10,
 		width: 150,
 		flexWrap: "wrap",
