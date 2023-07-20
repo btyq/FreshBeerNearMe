@@ -247,6 +247,21 @@ class User {
     }
     res.send(userRecommendations);
   }
+
+  async getSearch(client, res) {
+    try {
+      const db = client.db("FreshBearNearMe");
+      const venues = await db.collection("Venue").find().toArray();
+      const beers = await db.collection("Beer").find().toArray();
+      
+      const searchData = { venues, beers };
+      
+      res.json(searchData);
+    } catch (error) {
+      console.error('Error during search:', error);
+      res.status(500).json({ success: false, message: 'An error occurred during search' });
+    }
+  }
   
   logout() {
     console.log("User logged out");

@@ -133,6 +133,7 @@ const Recommendation = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState(""); 
 	const [recommendationData, setRecommendationData] = useState({});
+	const [searchData, setSearchData] = useState([]);
 
 	useEffect(() => {
 		setUserID(cookies.userID);
@@ -147,6 +148,18 @@ const Recommendation = ({ navigation }) => {
 			})
 			.catch((error) => {
 				console.error("Error retrieving recommendation:", error);
+			})
+	}, []);
+
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getSearch")
+			.then((response) => {
+				const { venues, beers } = response.data;
+				setSearchData({ venues, beers });
+			})
+			.catch((error) => {
+				console.error("Error retrieving search results:", error);
 			})
 	}, []);
 
@@ -167,6 +180,10 @@ const Recommendation = ({ navigation }) => {
 	const closeModal = () => {
 		setModalVisible1(false);
 		setModalVisible2(false);
+	};
+
+	const searchButton = () => {
+		
 	};
 
 	return (
@@ -262,91 +279,7 @@ const Recommendation = ({ navigation }) => {
 					</View>
 
 					<View style={{ marginHorizontal: 20, marginVertical: 20 }}>
-						<Text
-							style={{
-								...GlobalStyle.headerFont,
-								marginTop: 22,
-								marginLeft: 15,
-								marginBottom: 12,
-							}}
-						>
-							Your turn to recommend!
-						</Text>
-						<View style={{ flexDirection: "row" }}>
-							<View
-								style={{
-									height: 45,
-									width: "70%",
-									backgroundColor: COLORS.grey,
-									borderRadius: 20,
-									flexDirection: "row",
-									paddingHorizontal: 20,
-									alignItems: "center",
-									marginBottom: 12,
-									marginRight: 5,
-								}}
-							>
-								<Feather name="search" size={24} />
-								<TextInput
-									placeholder="Search"
-									style={{ flex: 1, marginLeft: 12, ...GlobalStyle.bodyFont }}
-								/>
-							</View>
-							<Button
-								title="Search"
-								color={COLORS.foam}
-								filled
-								style={{
-									width: "30%",
-									height: 45,
-									borderRadius: 30,
-									borderColor: 0,
-								}}
-							/>
-						</View>
-
-						<TouchableOpacity
-							style={{
-								backgroundColor: COLORS.grey,
-								flexDirection: "row",
-								justifyContent: "space-between",
-								alignItems: "center",
-								marginTop: 5,
-								borderRadius: 20,
-								padding: 10,
-								borderWidth: 1,
-								borderColor: 0,
-							}}
-							onPress={showModal1}
-						>
-							<CustomText
-								style={{
-									marginLeft: 10,
-								}}
-							>
-								Beer Name
-							</CustomText>
-							<AirbnbRating
-								count={5}
-								defaultRating={4}
-								showRating={false}
-								size={16}
-								isDisabled={true}
-							/>
-						</TouchableOpacity>
-						<View style={{ marginTop: 12 }}>
-							<Button
-								title="Recommend!"
-								color={COLORS.foam}
-								filled
-								style={{
-									//	width: "30%",
-									height: 45,
-									borderRadius: 30,
-									borderColor: 0,
-								}}
-							/>
-						</View>
+						
 						<ScrollView>
 							<Text
 								style={{
@@ -374,6 +307,92 @@ const Recommendation = ({ navigation }) => {
 								</View>
 								))
 							)}
+							<Text
+							style={{
+								...GlobalStyle.headerFont,
+								marginTop: 22,
+								marginLeft: 15,
+								marginBottom: 12,
+							}}
+							>
+								Your turn to recommend!
+							</Text>
+							<View style={{ flexDirection: "row" }}>
+								<View
+									style={{
+										height: 45,
+										width: "70%",
+										backgroundColor: COLORS.grey,
+										borderRadius: 20,
+										flexDirection: "row",
+										paddingHorizontal: 20,
+										alignItems: "center",
+										marginBottom: 12,
+										marginRight: 5,
+									}}
+								>
+									<Feather name="search" size={24} />
+									<TextInput
+										placeholder="Search"
+										style={{ flex: 1, marginLeft: 12, ...GlobalStyle.bodyFont }}
+									/>
+								</View>
+								<Button
+									title="Search"
+									color={COLORS.foam}
+									filled
+									style={{
+										width: "30%",
+										height: 45,
+										borderRadius: 30,
+										borderColor: 0,
+									}}
+									onPress={searchButton}
+								/>
+							</View>
+
+							<TouchableOpacity
+								style={{
+									backgroundColor: COLORS.grey,
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+									marginTop: 5,
+									borderRadius: 20,
+									padding: 10,
+									borderWidth: 1,
+									borderColor: 0,
+								}}
+								onPress={showModal1}
+							>
+								<CustomText
+									style={{
+										marginLeft: 10,
+									}}
+								>
+									Beer Name
+								</CustomText>
+								<AirbnbRating
+									count={5}
+									defaultRating={4}
+									showRating={false}
+									size={16}
+									isDisabled={true}
+								/>
+							</TouchableOpacity>
+							<View style={{ marginTop: 12 }}>
+								<Button
+									title="Recommend!"
+									color={COLORS.foam}
+									filled
+									style={{
+										//	width: "30%",
+										height: 45,
+										borderRadius: 30,
+										borderColor: 0,
+									}}
+								/>
+							</View>
 						</ScrollView>
 					</View>
 				</SafeAreaView>

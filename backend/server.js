@@ -367,6 +367,11 @@ app.get("/getRecommendation", async (req, res) => {
 	const userID = req.query.userID;
 	globalUser.getRecommendation(client, res, userID)	
 })
+
+//Route to get user's search recommendation
+app.get("/getSearch", async (req, res) => {
+	globalUser.getSearch(client, res)
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;
