@@ -54,6 +54,16 @@ app.post("/signup", async (req, res) => {
 	const { username, password, email, mobileNumber, receiveNotification } =
 		req.body;
 
+	function generateRandomString(length) {
+		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+		let randomString = '';
+		for (let i = 0; i < length; i++) {
+			const randomIndex = Math.floor(Math.random() * characters.length);
+			randomString += characters[randomIndex];
+		}
+		return randomString;
+	}
+
 	try {
 		// Check if the username already exists
 		const existingUsername = await collection.findOne({ username });
@@ -94,6 +104,8 @@ app.post("/signup", async (req, res) => {
 			receiveNotification: false,
 			followArray: [],
 			recommendationArray: [],
+			referralCode: generateRandomString(8),
+			referralPoints: 0,
 		});
 
 		res.json({ success: true, message: "User signed up successfully" });
@@ -371,6 +383,12 @@ app.get("/getRecommendation", async (req, res) => {
 //Route to get user's search recommendation
 app.get("/getSearch", async (req, res) => {
 	globalUser.getSearch(client, res)
+})
+
+//Route to get user's referral Code
+app.get("/getReferralCode", async (req, res) => {
+	const userID = req.query.userID;
+	globalUser.getReferralCode(client, res, userID)
 })
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================

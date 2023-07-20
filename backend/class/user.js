@@ -1,5 +1,5 @@
 class User {
-  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray, recommendationArray) {
+  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray, recommendationArray, referralCode, referralPoints) {
     this.client = client;
     this.userID = userID;
     this.username = username;
@@ -9,6 +9,8 @@ class User {
     this.receiveNotification = receiveNotification;
     this.followArray = followArray;
     this.recommendationArray = recommendationArray;
+    this.referralCode = referralCode;
+    this.referralPoints = referralPoints;
   }
 
   async login(res, username, password) {
@@ -25,6 +27,8 @@ class User {
         this.receiveNotification = result.receiveNotification;
         this.followArray = result.followArray;
         this.recommendationArray = result.recommendationArray;
+        this.referralCode = result.referralCode;
+        this.referralPoints = result.referralPoints;
 
         //Create a session token
         const sessionToken = 'testtoken123';
@@ -260,6 +264,25 @@ class User {
     } catch (error) {
       console.error('Error during search:', error);
       res.status(500).json({ success: false, message: 'An error occurred during search' });
+    }
+  }
+
+  async getReferralCode(client, res, userID) {
+    try {
+      const db = client.db("FreshBearNearMe");
+      const collection = db.collection("User");
+
+      const user = await collection.findOne({ userID: parseInt(userID) });
+      
+      if (user) {
+        const { referralCode, referralPoints } = user;
+        res.json({ success: true, referralCode, referralPoints });
+      } else {
+        res.json({ success: false, message: "User not found" });
+      }
+    } catch (error) {
+      console.error("Error retrieving referral data:", error);
+      res.status(500).json({ success: false, message: "An error occurred while retrieving referral data" });
     }
   }
   

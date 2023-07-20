@@ -1,5 +1,5 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Image,
 	Modal,
@@ -15,6 +15,8 @@ import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -69,6 +71,9 @@ const PopOut = (props) => {
 
 const ReferAFriend = ({ navigation }) => {
 	const [popOutVisible, setPopOutVisible] = useState(false);
+	const { cookies } = useCookies();
+	const [userID, setUserID] = useState("");
+	const [userData, setUserData] = useState([]);
 
 	const showPopOut = () => {
 		setPopOutVisible(true);
@@ -77,6 +82,23 @@ const ReferAFriend = ({ navigation }) => {
 	const closePopOut = () => {
 		setPopOutVisible(false);
 	};
+
+	useEffect(() => {
+		setUserID(cookies.userID);
+		axios
+			.get("http://10.0.2.2:3000/getReferralCode", {
+				params: {
+					userID : cookies.userID
+				}
+			})
+			.then((response) => {
+				const { referralCode, referralPoints} = response.data;
+				setUserData({referralCode, referralPoints});
+			})
+			.catch((error) => {
+				console.error("Error retrieving userData:", error);
+			})
+	}, []);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -179,7 +201,7 @@ const ReferAFriend = ({ navigation }) => {
 							}}
 						>
 							<CustomText style={{ fontSize: 15 }}>
-								Your referral code: XYZABC
+								Your referral code: {userData.referralCode}
 							</CustomText>
 							<Button
 								title="Copy"
@@ -191,6 +213,11 @@ const ReferAFriend = ({ navigation }) => {
 									borderColor: 0,
 								}}
 							/>
+						</View>
+						<View>
+							<CustomText style={{ fontSize: 15 }}>
+								Your Points: {userData.referralPoints}
+							</CustomText>
 						</View>
 						<View
 							style={{
@@ -223,6 +250,18 @@ const ReferAFriend = ({ navigation }) => {
 							<TextInput
 								placeholder="eg. XYZABC"
 								style={{ ...GlobalStyle.bodyFont }}
+							/>
+						</View>
+						<View>
+							<Button
+								title="Submit"
+								color={COLORS.foam}
+								filled
+								style={{
+									width: "20%",
+									borderRadius: 30,
+									borderColor: 0,
+								}}
 							/>
 						</View>
 					</View>
