@@ -217,20 +217,35 @@ class User {
       recommendationUser: { $in: userDataFollowingArray }
     }).toArray();
   
-    const responseData = [];
+    const userRecommendations = {};
+  
+    const userNames = await db.collection("User").find(
+      { userID: { $in: userDataFollowingArray } },
+      { projection: { _id: 0, userID: 1, username: 1 } }
+    ).toArray();
+  
+    const userNameMap = {};
+    userNames.forEach(user => {
+      userNameMap[user.userID] = user.username;
+    });
   
     for (const recommendation of recommendationData) {
+      const user = recommendation.recommendationUser;
+      if (!userRecommendations[userNameMap[user]]) {
+        userRecommendations[userNameMap[user]] = [];
+      }
+  
       if (recommendation.recommendationType === 'Venue') {
         const venueID = recommendation.recommendationItem;
         const venueData = await db.collection("Venue").findOne({ venueID: venueID });
-        responseData.push(venueData);
+        userRecommendations[userNameMap[user]].push(venueData);
       } else if (recommendation.recommendationType === 'Beer') {
         const beerID = recommendation.recommendationItem;
         const beerData = await db.collection("Beer").findOne({ beerID: beerID });
-        responseData.push(beerData);
+        userRecommendations[userNameMap[user]].push(beerData);
       }
     }
-    res.send(responseData);
+    res.send(userRecommendations);
   }
   
   logout() {

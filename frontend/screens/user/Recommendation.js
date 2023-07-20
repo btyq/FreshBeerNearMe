@@ -132,7 +132,7 @@ const Recommendation = ({ navigation }) => {
 	const [modalVisible2, setModalVisible2] = useState(false);
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState(""); 
-	const [recommendationData, setRecommendationData] = useState([]);
+	const [recommendationData, setRecommendationData] = useState({});
 
 	useEffect(() => {
 		setUserID(cookies.userID);
@@ -270,7 +270,7 @@ const Recommendation = ({ navigation }) => {
 								marginBottom: 12,
 							}}
 						>
-							Your turn to recommend a beer!
+							Your turn to recommend!
 						</Text>
 						<View style={{ flexDirection: "row" }}>
 							<View
@@ -288,7 +288,7 @@ const Recommendation = ({ navigation }) => {
 							>
 								<Feather name="search" size={24} />
 								<TextInput
-									placeholder="Search for beer"
+									placeholder="Search"
 									style={{ flex: 1, marginLeft: 12, ...GlobalStyle.bodyFont }}
 								/>
 							</View>
@@ -357,9 +357,23 @@ const Recommendation = ({ navigation }) => {
 							>
 								Your friends' recommendations
 							</Text>
-							{recommendationData.map((item, index) => (
-								<RecommendationItem key={index} data={item} />
-							))}		
+							{Object.keys(recommendationData).length === 0 ? (
+								<View style={{alignItems: "center"}}>
+									<Text style={{ ...GlobalStyle.bodyFont, textAlign: "center" }}>
+									Start following someone!
+									</Text>
+									<Image source={require("../../assets/beer.png")} style={{width: 100, height: 100 }}/>
+								</View>
+							) : (
+								Object.keys(recommendationData).map((username) => (
+								<View key={username}>
+									<Text>Username: {username}</Text>
+									{recommendationData[username].map((item, index) => (
+									<RecommendationItem key={index} data={item} />
+									))}
+								</View>
+								))
+							)}
 						</ScrollView>
 					</View>
 				</SafeAreaView>
