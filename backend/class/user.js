@@ -285,6 +285,24 @@ class User {
       res.status(500).json({ success: false, message: "An error occurred while retrieving referral data" });
     }
   }
+
+  async submitReferralCode(client, res, userID, referralCode) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const collection = db.collection('User');
+      const user = await collection.findOne({ referralCode: referralCode });
+  
+      if (user) {
+        const { username } = user;
+        res.json({ success: true, username });
+      } else {
+        res.json({ success: false, message: 'Invalid referral code' });
+      }
+    } catch (error) {
+      console.error('Error during referral code submission:', error);
+      res.status(500).json({ success: false, message: 'An error occurred during referral code submission' });
+    }
+  }
   
   logout() {
     console.log("User logged out");

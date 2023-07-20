@@ -390,6 +390,12 @@ app.get("/getReferralCode", async (req, res) => {
 	const userID = req.query.userID;
 	globalUser.getReferralCode(client, res, userID)
 })
+
+//Route to submit user's inputted referral Code
+app.post("/submitReferralCode", async (req, res) => {
+	const { userID, referralCode } = req.body;
+	globalUser.submitReferralCode(client, res, userID, referralCode)
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;

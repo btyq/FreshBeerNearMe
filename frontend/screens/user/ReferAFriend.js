@@ -1,6 +1,7 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import React, { useState, useEffect } from "react";
 import {
+	Alert,
 	Image,
 	Modal,
 	ScrollView,
@@ -74,6 +75,7 @@ const ReferAFriend = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
 	const [userData, setUserData] = useState([]);
+	const [referralCode, setReferralCode] = useState("");
 
 	const showPopOut = () => {
 		setPopOutVisible(true);
@@ -81,6 +83,26 @@ const ReferAFriend = ({ navigation }) => {
 
 	const closePopOut = () => {
 		setPopOutVisible(false);
+	};
+
+	const submitReferral = () => {
+		const data = {
+			userID: userID,
+			referralCode: referralCode,
+		};
+		axios
+			.post("http://10.0.2.2:3000/submitReferralCode", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("you gained 50 points noob");
+				}
+				else {
+					Alert.alert("Invalid referral code !");
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
 
 	useEffect(() => {
@@ -98,7 +120,7 @@ const ReferAFriend = ({ navigation }) => {
 			.catch((error) => {
 				console.error("Error retrieving userData:", error);
 			})
-	}, []);
+	}, [submitReferral]);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -250,6 +272,8 @@ const ReferAFriend = ({ navigation }) => {
 							<TextInput
 								placeholder="eg. XYZABC"
 								style={{ ...GlobalStyle.bodyFont }}
+								value={referralCode}
+								onChangeText={(text) => setReferralCode(text)}
 							/>
 						</View>
 						<View>
@@ -262,8 +286,14 @@ const ReferAFriend = ({ navigation }) => {
 									borderRadius: 30,
 									borderColor: 0,
 								}}
+								onPress={submitReferral}
 							/>
 						</View>
+					</View>
+					<View>
+						<CustomText>
+							Rewards
+						</CustomText>
 					</View>
 				</SafeAreaView>
 			</SafeAreaView>
