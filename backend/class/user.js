@@ -288,12 +288,38 @@ class User {
 
   async submitReferralCode(client, res, userID, referralCode) {
     try {
+      const currentUserID = userID;
       const db = client.db('FreshBearNearMe');
       const collection = db.collection('User');
       const user = await collection.findOne({ referralCode: referralCode });
   
       if (user) {
-        const { username } = user;
+        const { userID, username, referralPoints, referralClaim } = user;
+  
+        if (referralClaim && referralClaim.includes(currentUserID)) {
+          return res.json({ success: false, message: 'You have already claimed this referral code' });
+        }
+        
+        if (currentUserID === userID) {
+          return res.json({ success: false, message: 'You cannot claim your own referral code' });
+        }
+  
+        const updatedReferralPoints = referralPoints + 50;
+        await collection.updateOne(
+          { userID: userID },
+          { $set: { referralPoints: updatedReferralPoints }, $push: { referralClaim: currentUserID } }
+        );
+  
+        const currentUser = await collection.findOne({ userID: currentUserID });
+        if (currentUser) {
+          const { referralPoints } = currentUser;
+          const updatedReferralPoints2 = referralPoints + 50;
+          await collection.updateOne(
+            { userID: currentUserID },
+            { $set: { referralPoints: updatedReferralPoints2 } }
+          );
+        }
+  
         res.json({ success: true, username });
       } else {
         res.json({ success: false, message: 'Invalid referral code' });

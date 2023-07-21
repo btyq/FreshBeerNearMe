@@ -87,22 +87,24 @@ const ReferAFriend = ({ navigation }) => {
 
 	const submitReferral = () => {
 		const data = {
-			userID: userID,
-			referralCode: referralCode,
+		  userID: userID,
+		  referralCode: referralCode,
 		};
 		axios
-			.post("http://10.0.2.2:3000/submitReferralCode", data)
-			.then((response) => {
-				if (response.data.success) {
-					Alert.alert("you gained 50 points noob");
-				}
-				else {
-					Alert.alert("Invalid referral code !");
-				}
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+		  .post("http://10.0.2.2:3000/submitReferralCode", data)
+		  .then((response) => {
+			if (response.data.success) {
+			  const { username } = response.data;
+			  Alert.alert("Success!",
+				`You claimed a referral from ${username}. Both of you gained 50 points!`);
+			} else {
+				const { message } = response.data;
+			  Alert.alert("Error!", message);
+			}
+		  })
+		  .catch((error) => {
+			console.error(error);
+		  });
 	};
 
 	useEffect(() => {
@@ -236,10 +238,27 @@ const ReferAFriend = ({ navigation }) => {
 								}}
 							/>
 						</View>
-						<View>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								justifyContent: "space-between",
+								marginTop: 10
+							}}
+						>
 							<CustomText style={{ fontSize: 15 }}>
-								Your Points: {userData.referralPoints}
+								Your points: {userData.referralPoints}
 							</CustomText>
+							<Button
+								title="Redeem"
+								color={COLORS.foam}
+								filled
+								style={{
+									width: "20%",
+									borderRadius: 30,
+									borderColor: 0,
+								}}
+							/>
 						</View>
 						<View
 							style={{
@@ -292,7 +311,7 @@ const ReferAFriend = ({ navigation }) => {
 					</View>
 					<View>
 						<CustomText>
-							Rewards
+							Your Rewards
 						</CustomText>
 					</View>
 				</SafeAreaView>
