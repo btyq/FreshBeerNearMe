@@ -1,5 +1,5 @@
 class User {
-  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray, recommendationArray, referralCode, referralPoints) {
+  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray, recommendationArray, referralCode, referralPoints, referralClaim, rewardArray) {
     this.client = client;
     this.userID = userID;
     this.username = username;
@@ -11,6 +11,8 @@ class User {
     this.recommendationArray = recommendationArray;
     this.referralCode = referralCode;
     this.referralPoints = referralPoints;
+    this.referralClaim = referralClaim;
+    this.rewardArray = rewardArray;
   }
 
   async login(res, username, password) {
@@ -29,6 +31,8 @@ class User {
         this.recommendationArray = result.recommendationArray;
         this.referralCode = result.referralCode;
         this.referralPoints = result.referralPoints;
+        this.referralClaim = result.referralClaim;
+        this.rewardArray = result.rewardArray;
 
         //Create a session token
         const sessionToken = 'testtoken123';
@@ -270,13 +274,28 @@ class User {
   async getReferralCode(client, res, userID) {
     try {
       const db = client.db("FreshBearNearMe");
-      const collection = db.collection("User");
-
-      const user = await collection.findOne({ userID: parseInt(userID) });
-      
+      const usersCollection = db.collection("User");
+      const rewardsCollection = db.collection("Rewards");
+  
+      const user = await usersCollection.findOne({ userID: parseInt(userID) });
+  
       if (user) {
-        const { referralCode, referralPoints } = user;
-        res.json({ success: true, referralCode, referralPoints });
+        const { referralCode, referralPoints, rewardArray } = user;
+        const rewardIDCountMap = new Map();
+        rewardArray.forEach(rewardID => {
+          rewardIDCountMap.set(rewardID, (rewardIDCountMap.get(rewardID) || 0) + 1);
+        });
+  
+        const rewardData = await rewardsCollection
+          .find({ rewardID: { $in: Array.from(rewardIDCountMap.keys()) } })
+          .toArray();
+  
+        const expandedRewardData = rewardData.flatMap(reward => {
+          const count = rewardIDCountMap.get(reward.rewardID);
+          return Array.from({ length: count }, () => reward);
+        });
+  
+        res.json({ success: true, referralCode, referralPoints, rewardData: expandedRewardData });
       } else {
         res.json({ success: false, message: "User not found" });
       }
@@ -330,6 +349,39 @@ class User {
     }
   }
   
+  async getRewards(client, res) {
+    try { 
+      const db = client.db('FreshBearNearMe');
+      const rewards = await db.collection('Rewards').find().toArray();
+      res.json({rewards})
+    } catch (error) {
+      console.error('Error retrieving Rewards:', error);
+    }
+  }
+
+  async redeemRewards(client, res, userID, rewardID, rewardPrice) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const usersCollection = db.collection('User');
+      const result = await usersCollection.updateOne(
+        { userID: userID },
+        { 
+          $push: { rewardArray: rewardID },
+          $inc: { referralPoints: -rewardPrice }
+        }
+      );
+  
+      if (result.modifiedCount === 1) {
+        res.json({ success: true });
+      } else {
+        res.json({ success: false, message: 'Failed to update user document' });
+      }
+    } catch (error) {
+      console.error('Error trying to claim rewards:', error);
+      res.status(500).json({ error: 'Failed to claim rewards' });
+    }
+  }
+
   logout() {
     console.log("User logged out");
   }

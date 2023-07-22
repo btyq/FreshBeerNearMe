@@ -106,6 +106,8 @@ app.post("/signup", async (req, res) => {
 			recommendationArray: [],
 			referralCode: generateRandomString(8),
 			referralPoints: 0,
+			referralClaim: [],
+			rewardArray: [],
 		});
 
 		res.json({ success: true, message: "User signed up successfully" });
@@ -395,6 +397,17 @@ app.get("/getReferralCode", async (req, res) => {
 app.post("/submitReferralCode", async (req, res) => {
 	const { userID, referralCode } = req.body;
 	globalUser.submitReferralCode(client, res, userID, referralCode)
+})
+
+//Route to retrieve user's reward selection
+app.get("/getRewards", async(req, res) => {
+	globalUser.getRewards(client, res)
+})
+
+//Route for user to claim reward
+app.post("/redeemRewards", async(req, res) => {
+	const { userID, rewardID, rewardPrice } = req.body;
+	globalUser.redeemRewards(client, res, userID, rewardID, rewardPrice)
 })
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
