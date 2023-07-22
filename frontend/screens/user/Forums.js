@@ -238,7 +238,7 @@ const Posts = () => {
 							<View
 								style={{
 									flex: 1,
-									backgroundColor: COLORS.overlay,
+									backgroundColor: "rgba(0, 0, 0, 0.5)",
 									justifyContent: "flex-end",
 									alignItems: "center",
 								}}
@@ -248,8 +248,6 @@ const Posts = () => {
 										backgroundColor: COLORS.secondary,
 										width: "100%",
 										padding: 20,
-										borderColor: COLORS.black,
-										borderWidth: 1,
 										borderTopLeftRadius: 20,
 										borderTopRightRadius: 20,
 									}}
