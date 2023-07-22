@@ -1,5 +1,6 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
 	Alert,
 	Image,
@@ -14,10 +15,9 @@ import {
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import { useCookies } from "../../CookieContext";
-import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -55,14 +55,123 @@ const CustomText = (props) => {
 	);
 };
 
-const PopOut = (props) => {
+// popup to redeem awards
+const PopUp = ({ visible, onClose }) => {
+	const [popupVisible2, setPopupVisible2] = useState(false); // 2nd popup
+
+	const handlePopUp2 = () => {
+		setPopupVisible2(!popupVisible2); // 2nd popup
+	};
+
 	return (
-		<Modal visible={props.visible} transparent={true} animationType="fade">
-			<View style={styles.popOutContainer}>
-				<View style={styles.popOutContent}>
-					<Text style={styles.popOutText}>{props.text}</Text>
-					<TouchableOpacity style={styles.popOutButton} onPress={props.onPress}>
-						<Text style={styles.popOutButtonText}>Close</Text>
+		<Modal visible={visible} transparent animationType="slide">
+			<View
+				style={{
+					width: "100%",
+					height: "100%",
+					backgroundColor: COLORS.secondary,
+					borderRadius: 10,
+					paddingHorizontal: 20,
+					elevation: 5,
+				}}
+			>
+				<TouchableOpacity onPress={onClose}>
+					<Ionicons
+						name="arrow-back"
+						size={24}
+						color={COLORS.black}
+						style={{ marginTop: 12 }}
+					/>
+				</TouchableOpacity>
+				<View style={{ marginTop: 20, marginHorizontal: 12 }}>
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							borderColor: 0,
+							paddingHorizontal: 20,
+							paddingVertical: 10,
+							borderRadius: 5,
+							backgroundColor: COLORS.grey,
+							elevation: 2,
+						}}
+						onPress={handlePopUp2}
+					>
+						<View style={{ flexDirection: "row", alignItems: "center" }}>
+							<Image
+								source={require("../../assets/beer.png")}
+								style={{
+									height: 70,
+									width: 70,
+									marginRight: 10,
+								}}
+								resizeMode="contain"
+							></Image>
+							<CustomText>Redeem a Free Drink</CustomText>
+						</View>
+
+						{/* 2nd popup */}
+						<Modal visible={popupVisible2} transparent animationType="fade">
+							<View
+								style={{
+									flex: 1,
+									backgroundColor: "rgba(0, 0, 0, 0.5)",
+									justifyContent: "center",
+									alignItems: "center",
+								}}
+							>
+								<View
+									style={{
+										width: "80%",
+										backgroundColor: COLORS.white,
+										borderRadius: 40,
+										padding: 30,
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<CustomText>Are you sure you want to redeem?</CustomText>
+									<Button
+										title="Yes"
+										filled
+										style={{
+											width: "40%",
+											borderRadius: 10,
+											marginTop: 15,
+											borderColor: 0,
+											elevation: 2,
+										}}
+										onPress={handlePopUp2}
+									/>
+								</View>
+							</View>
+						</Modal>
+					</TouchableOpacity>
+
+					<TouchableOpacity
+						style={{
+							width: "100%",
+							borderColor: 0,
+							paddingHorizontal: 20,
+							paddingVertical: 10,
+							borderRadius: 5,
+							marginTop: 20,
+							backgroundColor: COLORS.grey,
+							elevation: 2,
+						}}
+						onPress={handlePopUp2}
+					>
+						<View style={{ flexDirection: "row", alignItems: "center" }}>
+							<Image
+								source={require("../../assets/event1.png")}
+								style={{
+									height: 70,
+									width: 70,
+									marginRight: 10,
+								}}
+								resizeMode="contain"
+							></Image>
+							<CustomText>30% of Total Bill</CustomText>
+						</View>
 					</TouchableOpacity>
 				</View>
 			</View>
@@ -71,40 +180,38 @@ const PopOut = (props) => {
 };
 
 const ReferAFriend = ({ navigation }) => {
-	const [popOutVisible, setPopOutVisible] = useState(false);
+	const [popupVisible, setPopupVisible] = useState(false);
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
 	const [userData, setUserData] = useState([]);
 	const [referralCode, setReferralCode] = useState("");
 
-	const showPopOut = () => {
-		setPopOutVisible(true);
-	};
-
-	const closePopOut = () => {
-		setPopOutVisible(false);
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible); // created 1st modal
 	};
 
 	const submitReferral = () => {
 		const data = {
-		  userID: userID,
-		  referralCode: referralCode,
+			userID: userID,
+			referralCode: referralCode,
 		};
 		axios
-		  .post("http://10.0.2.2:3000/submitReferralCode", data)
-		  .then((response) => {
-			if (response.data.success) {
-			  const { username } = response.data;
-			  Alert.alert("Success!",
-				`You claimed a referral from ${username}. Both of you gained 50 points!`);
-			} else {
-				const { message } = response.data;
-			  Alert.alert("Error!", message);
-			}
-		  })
-		  .catch((error) => {
-			console.error(error);
-		  });
+			.post("http://10.0.2.2:3000/submitReferralCode", data)
+			.then((response) => {
+				if (response.data.success) {
+					const { username } = response.data;
+					Alert.alert(
+						"Success!",
+						`You claimed a referral from ${username}. Both of you gained 50 points!`
+					);
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
 
 	useEffect(() => {
@@ -112,16 +219,16 @@ const ReferAFriend = ({ navigation }) => {
 		axios
 			.get("http://10.0.2.2:3000/getReferralCode", {
 				params: {
-					userID : cookies.userID
-				}
+					userID: cookies.userID,
+				},
 			})
 			.then((response) => {
-				const { referralCode, referralPoints} = response.data;
-				setUserData({referralCode, referralPoints});
+				const { referralCode, referralPoints } = response.data;
+				setUserData({ referralCode, referralPoints });
 			})
 			.catch((error) => {
 				console.error("Error retrieving userData:", error);
-			})
+			});
 	}, [submitReferral]);
 
 	return (
@@ -243,7 +350,7 @@ const ReferAFriend = ({ navigation }) => {
 								flexDirection: "row",
 								alignItems: "center",
 								justifyContent: "space-between",
-								marginTop: 10
+								marginTop: 10,
 							}}
 						>
 							<CustomText style={{ fontSize: 15 }}>
@@ -251,6 +358,7 @@ const ReferAFriend = ({ navigation }) => {
 							</CustomText>
 							<Button
 								title="Redeem"
+								onPress={handlePopup}
 								color={COLORS.foam}
 								filled
 								style={{
@@ -259,7 +367,9 @@ const ReferAFriend = ({ navigation }) => {
 									borderColor: 0,
 								}}
 							/>
+							<PopUp visible={popupVisible} onClose={handlePopup} />
 						</View>
+
 						<View
 							style={{
 								borderBottomColor: COLORS.black,
@@ -267,13 +377,7 @@ const ReferAFriend = ({ navigation }) => {
 								marginVertical: 20,
 							}}
 						/>
-						<Text
-							style={{
-								...GlobalStyle.headerFont,
-							}}
-						>
-							Have a referral?
-						</Text>
+						<Text style={{ ...GlobalStyle.headerFont }}>Have a referral?</Text>
 						<View
 							style={{
 								height: 50,
@@ -295,24 +399,27 @@ const ReferAFriend = ({ navigation }) => {
 								onChangeText={(text) => setReferralCode(text)}
 							/>
 						</View>
-						<View>
+						<View
+							style={{
+								justifyContent: "center",
+								alignItems: "flex-end",
+							}}
+						>
 							<Button
 								title="Submit"
 								color={COLORS.foam}
 								filled
 								style={{
-									width: "20%",
-									borderRadius: 30,
+									width: "40%",
+									borderRadius: 10,
+									marginBottom: 15,
 									borderColor: 0,
+									elevation: 2,
 								}}
 								onPress={submitReferral}
 							/>
 						</View>
-					</View>
-					<View>
-						<CustomText>
-							Your Rewards
-						</CustomText>
+						<CustomText>Your Rewards</CustomText>
 					</View>
 				</SafeAreaView>
 			</SafeAreaView>
