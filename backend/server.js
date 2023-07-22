@@ -409,6 +409,11 @@ app.post("/redeemRewards", async(req, res) => {
 	const { userID, rewardID, rewardPrice } = req.body;
 	globalUser.redeemRewards(client, res, userID, rewardID, rewardPrice)
 })
+
+//Route for user to retrieve forum's post
+app.get("/getPosts", async(req, res) => { 
+	globalUser.getPosts(client, res)
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;

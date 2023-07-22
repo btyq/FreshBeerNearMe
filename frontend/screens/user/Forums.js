@@ -1,5 +1,5 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Image,
 	Modal,
@@ -15,6 +15,8 @@ import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
+import { useCookies } from "../../CookieContext";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -52,123 +54,68 @@ const CustomText = (props) => {
 	);
 };
 
-const Posts = () => {
+const Posts = ( {postData} ) => {
 	const [popupVisible, setPopupVisible] = useState(false); // 1st popup
 	const [popupVisible2, setPopupVisible2] = useState(false); // 2nd popup for comments
 	const [comment, setcomment] = useState(null);
 
-	const handlePopUp = (comment) => {
-		setcomment(comment);
+	const handlePopUp = (post) => {
+		setcomment(post);
 		setPopupVisible(!popupVisible);
 	};
 
 	const handlePopUp2 = () => {
 		setPopupVisible2(!popupVisible2);
 	};
-
-	const comments = [
-		{
-			text: "Bitter, but it's decent",
-			image: require("../../assets/beer.png"),
-			description: "Bitter like my life",
-		},
-		{
-			text: "Smooth and refreshing",
-			image: require("../../assets/beer1.png"),
-			description: "Smooth like butter",
-		},
-		{
-			text: "Great aroma and flavor",
-			image: require("../../assets/beer3.png"),
-			description: "Nice smell i guess",
-		},
-		{
-			text: "Not my favorite, too hoppy",
-			image: require("../../assets/beer.png"),
-			description: "Ya so I don't like beer",
-		},
-		{
-			text: "Love the rich maltiness",
-			image: require("../../assets/beer1.png"),
-			description: "Rich is good",
-		},
-		{
-			text: "Too bitter for my taste",
-			image: require("../../assets/beer3.png"),
-			description: "Very bitter, very salty",
-		},
-		{
-			text: "Lacks complexity",
-			image: require("../../assets/beer.png"),
-			description: "Not smooth like butter already",
-		},
-		{
-			text: "Delicious and well-balanced",
-			image: require("../../assets/beer1.png"),
-			description: "I can't even balance myself",
-		},
-		{
-			text: "A bit watery, but still enjoyable",
-			image: require("../../assets/beer3.png"),
-			description: "Watery is bad",
-		},
-		{
-			text: "Strong and full-bodied",
-			image: require("../../assets/beer.png"),
-			description: "Wow stronk stronk",
-		},
-	];
-
+	
 	return (
 		<ScrollView
 			showsVerticalScrollIndicator={false}
 			contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
 		>
 			<SafeAreaView style={{ marginHorizontal: 20 }}>
-				{comments.map((comment, index) => (
-					<TouchableOpacity
-						onPress={() => handlePopUp(comment)}
-						key={index}
+				{postData.map((post, index) => ( 
+				<TouchableOpacity
+					onPress={() => handlePopUp(post)}
+					key={index}
+					style={{
+					backgroundColor: COLORS.grey,
+					borderWidth: 1,
+					borderColor: 0,
+					borderRadius: 15,
+					padding: 10,
+					marginBottom: 5,
+					}}
+				>
+					<View
+					style={{
+						flexDirection: "row",
+						alignItems: "center",
+					}}
+					>
+					<Image
+						source={require("../../assets/beer.png")}
 						style={{
-							backgroundColor: COLORS.grey,
-							borderWidth: 1,
-							borderColor: 0,
-							borderRadius: 15,
-							padding: 10,
-							marginBottom: 5,
+						width: 60,
+						height: 60,
+						borderRadius: 10,
+						alignSelf: "flex-start",
+						}}
+						resizeMode="contain"
+					/>
+					<Text
+						style={{
+						...GlobalStyle.headerFont,
+						fontSize: 15,
+						marginHorizontal: 15,
 						}}
 					>
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-							}}
-						>
-							<Image
-								source={comment.image}
-								style={{
-									width: 60,
-									height: 60,
-									borderRadius: 10,
-									alignSelf: "flex-start",
-								}}
-								resizeMode="contain"
-							/>
-							<Text
-								style={{
-									...GlobalStyle.headerFont,
-									fontSize: 15,
-									marginHorizontal: 15,
-								}}
-							>
-								{comment.text}
-							</Text>
-						</View>
-						<CustomText style={{ marginTop: 22 }}>Posted by:</CustomText>
-					</TouchableOpacity>
+						{post.postTitle}
+					</Text>
+					</View>
+					<CustomText style={{ marginTop: 22 }}>Posted by: {post.username}</CustomText>
+				</TouchableOpacity>
 				))}
-
-				{/* for popup */}
 				<Modal visible={popupVisible} transparent animationType="fade">
 					{/* <View> */}
 					<View
@@ -291,6 +238,32 @@ const Posts = () => {
 };
 
 const Forum = ({ navigation }) => {
+	const { cookies } = useCookies();
+	const [title, setTitle] = useState("");
+	const [postDescription, setPostDescription] = useState("");
+	const [showCreatePostModal, setShowCreatePostModal] = useState(false);
+	const [postData, setPostData] = useState([]);
+
+	const toggleCreatePostModal = () => {
+		setShowCreatePostModal(!showCreatePostModal);
+	}
+
+	const submitPost = () => {
+		console.log(postData);
+		toggleCreatePostModal();
+	}
+
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getPosts")
+			.then((response) => {
+				setPostData(response.data.posts)
+			})
+			.catch((error) => {
+				console.error("Error retrieving posts:", error);
+			})
+	}, []); 
+
 	return (
 		<View style={{ flex: 1 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
@@ -388,6 +361,8 @@ const Forum = ({ navigation }) => {
 								placeholder="What's going on your mind?"
 								keyboardType="default"
 								style={{ flex: 1 }}
+								value={title}
+								onChangeText={(text) => setTitle(text)}
 							/>
 						</View>
 						<Button
@@ -401,11 +376,73 @@ const Forum = ({ navigation }) => {
 								borderRadius: 10,
 								marginLeft: 10,
 							}}
-							// onPress={navigateToNewPost}
+							onPress={toggleCreatePostModal}
 						/>
+						<Modal visible={showCreatePostModal} transparent animationType="fade">
+							<View
+								style={{
+								flex: 1,
+								justifyContent: "center",
+								alignItems: "center",
+								backgroundColor: "rgba(0, 0, 0, 0.5)",
+								}}
+							>
+								<View
+								style={{
+									backgroundColor: COLORS.secondary,
+									width: "80%",
+									borderRadius: 20,
+									padding: 20,
+									elevation: 5,
+								}}
+								>
+								<Text style={{ ...GlobalStyle.headerFont, fontSize: 18, marginBottom: 10 }}>
+									Create a New Post
+								</Text>
+								<TextInput
+									placeholder="What's going on your mind?"
+									keyboardType="default"
+									style={{
+									height: 100,
+									borderColor: COLORS.grey,
+									borderWidth: 1,
+									borderRadius: 10,
+									paddingHorizontal: 10,
+									marginBottom: 10,
+									}}
+									multiline
+									numberOfLines={4}
+									value={title}
+									onChangeText={(text) => setTitle(text)}
+								/>
+								<TextInput
+									placeholder="Description"
+									keyboardType="default"
+									style={{
+									height: 100,
+									borderColor: COLORS.grey,
+									borderWidth: 1,
+									borderRadius: 10,
+									paddingHorizontal: 10,
+									marginBottom: 10,
+									}}
+									multiline
+									numberOfLines={4}
+									value={postDescription}
+									onChangeText={(text) => setPostDescription(text)}
+								/>
+								<Button
+									title="Submit Post"
+									color={COLORS.foam}
+									filled
+									style={{ width: "50%", alignSelf: "center", borderRadius: 10 }}
+									onPress={submitPost}
+								/>
+								</View>
+							</View>
+						</Modal>
 					</View>
-
-					<Posts />
+					<Posts postData={postData} />
 				</SafeAreaView>
 			</SafeAreaView>
 		</View>

@@ -382,6 +382,30 @@ class User {
     }
   }
 
+  async getPosts(client, res) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const posts = await db.collection('Post').find().toArray();
+  
+      const postsWithUsername = [];
+
+      for (const post of posts) {
+        const userID = post.postUser; 
+        const user = await db.collection('User').findOne({ userID: userID }, { projection: { username: 1 } });
+        if (user && user.username) {
+          post.username = user.username;
+        } else {
+          post.username = 'Unknown User';
+        }
+        postsWithUsername.push(post);
+      }
+  
+      res.json({ posts: postsWithUsername });
+    } catch (error) {
+      console.error('Error retrieving Posts:', error);
+    }
+  }
+
   logout() {
     console.log("User logged out");
   }
