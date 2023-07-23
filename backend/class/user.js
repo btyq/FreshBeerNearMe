@@ -363,22 +363,32 @@ class User {
     try {
       const db = client.db('FreshBearNearMe');
       const usersCollection = db.collection('User');
-      const result = await usersCollection.updateOne(
-        { userID: userID },
-        { 
-          $push: { rewardArray: rewardID },
-          $inc: { referralPoints: -rewardPrice }
-        }
-      );
   
-      if (result.modifiedCount === 1) {
-        res.json({ success: true });
+      const user = await usersCollection.findOne({ userID: userID });
+  
+      if (!user) {
+        return res.json({ success: false, message: 'User not found' });
+      }
+      if (user.referralPoints >= rewardPrice) {
+        const result = await usersCollection.updateOne(
+          { userID: userID },
+          {
+            $push: { rewardArray: rewardID },
+            $inc: { referralPoints: -rewardPrice },
+          }
+        );
+  
+        if (result.modifiedCount === 1) {
+          return res.json({ success: true });
+        } else {
+          return res.json({ success: false, message: 'Failed to update user document' });
+        }
       } else {
-        res.json({ success: false, message: 'Failed to update user document' });
+        return res.json({ success: false, message: 'Insufficient points to redeem the reward' });
       }
     } catch (error) {
       console.error('Error trying to claim rewards:', error);
-      res.status(500).json({ error: 'Failed to claim rewards' });
+      return res.status(500).json({ error: 'Failed to claim rewards' });
     }
   }
 
@@ -386,23 +396,99 @@ class User {
     try {
       const db = client.db('FreshBearNearMe');
       const posts = await db.collection('Post').find().toArray();
+      const commentCollection = db.collection('Comment');
   
-      const postsWithUsername = [];
-
+      const postsWithUsernameAndComments = [];
+  
       for (const post of posts) {
-        const userID = post.postUser; 
+        const userID = post.postUser;
         const user = await db.collection('User').findOne({ userID: userID }, { projection: { username: 1 } });
         if (user && user.username) {
           post.username = user.username;
         } else {
           post.username = 'Unknown User';
         }
-        postsWithUsername.push(post);
+  
+        const comments = await commentCollection
+          .find({ commentID: { $in: post.postCommentArray } })
+          .toArray();
+  
+        const commentsWithUsername = [];
+  
+        for (const comment of comments) {
+          const commentUser = comment.commentUser;
+          const commentUserObj = await db.collection('User').findOne({ userID: commentUser }, { projection: { username: 1 } });
+          if (commentUserObj && commentUserObj.username) {
+            comment.username = commentUserObj.username;
+          } else {
+            comment.username = 'Unknown User';
+          }
+          commentsWithUsername.push(comment);
+        }
+  
+        post.comments = commentsWithUsername;
+  
+        postsWithUsernameAndComments.push(post);
       }
   
-      res.json({ posts: postsWithUsername });
+      res.json({ posts: postsWithUsernameAndComments });
     } catch (error) {
       console.error('Error retrieving Posts:', error);
+    }
+  }
+
+  async submitComment(client, res, userID, postID, commentDescription, commentDate) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const commentCollection = db.collection('Comment');
+      const postCollection = db.collection('Post');
+  
+      const latestComment = await commentCollection.findOne({}, { sort: { commentID: -1 }, projection: { commentID: 1 } });
+      const latestCommentID = latestComment ? latestComment.commentID : 0;
+      const newCommentID = latestCommentID + 1;
+  
+      const newComment = {
+        commentID: newCommentID,
+        commentUser: userID,
+        commentDate: commentDate,
+        commentDescription: commentDescription,
+      };
+  
+      await commentCollection.insertOne(newComment);
+  
+      await postCollection.updateOne({ postID: postID }, { $push: { postCommentArray: newCommentID } });
+  
+      res.json({ success: true, message: 'Successfully submitted comment' });
+    } catch (error) {
+      console.error('Error submitting comment:', error);
+      res.status(500).json({ success: false, message: 'Failed to submit comment' });
+    }
+  }
+
+  async submitPost(client, res, userID, postTitle, postDate, postDescription) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const postCollection = db.collection('Post');
+  
+      const latestPost = await postCollection.findOne({}, { sort: { postID: -1 }, projection: { postID: 1 } });
+      const latestPostID = latestPost ? latestPost.postID : 0;
+      const newPostID = latestPostID + 1;
+  
+      const newPost = {
+        postID: newPostID,
+        postUser: userID,
+        postTitle: postTitle,
+        postCommentArray: [], 
+        postDate: postDate,
+        postDescription: postDescription,
+      };
+  
+      await postCollection.insertOne(newPost);
+  
+      res.json({ success: true, message: 'Successfully submitted post' });
+    } catch (error) {
+      console.error('Error submitting post:', error);
+      res.status(500).json({ success: false, message: 'Failed to submit post' });
     }
   }
 

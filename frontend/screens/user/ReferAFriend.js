@@ -56,7 +56,7 @@ const CustomText = (props) => {
 };
 
 // popup to redeem awards
-const PopUp = ({ visible, onClose }) => {
+const PopUp = ({ visible, onClose, handleSubmitYes }) => {
 	const [popupVisible2, setPopupVisible2] = useState(false); // 2nd popup
 	const [rewards, setRewards] = useState([]);
 	const [selectedRewardID, setSelectedRewardID] = useState(null);
@@ -80,9 +80,11 @@ const PopUp = ({ visible, onClose }) => {
 			.then((response) => {
 				if (response.data.success) {
 					setPopupVisible2(!popupVisible2);
+					handleSubmitYes();
 				} else {
 					const { message } = response.data;
 					Alert.alert("Error!", message);
+					setPopupVisible2(!popupVisible2)
 				}
 			})
 			.catch((error) => {
@@ -202,9 +204,15 @@ const ReferAFriend = ({ navigation }) => {
 	const [userData, setUserData] = useState([]);
 	const [referralCode, setReferralCode] = useState("");
 	const [rewards, setRewards] = useState([]);
+	const [referralState, setReferralState] = useState(false);
+	const [submitYesState, setSubmitYesState] = useState(false);
 
 	const handlePopup = () => {
 		setPopupVisible(!popupVisible); // created 1st modal
+	};
+
+	const handleSubmitYes = () => {
+		setSubmitYesState(true);
 	};
 
 	const submitReferral = () => {
@@ -221,6 +229,8 @@ const ReferAFriend = ({ navigation }) => {
 						"Success!",
 						`You claimed a referral from ${username}. Both of you gained 50 points!`
 					);
+					setReferralState(true);
+					setReferralCode("");
 				} else {
 					const { message } = response.data;
 					Alert.alert("Error!", message);
@@ -243,11 +253,13 @@ const ReferAFriend = ({ navigation }) => {
 				const { referralCode, referralPoints, rewardData } = response.data;
 				setUserData({ referralCode, referralPoints });
 				setRewards(rewardData);
+				setReferralState(false);
+				setSubmitYesState(false);
 			})
 			.catch((error) => {
 				console.error("Error retrieving userData:", error);
 			});
-	},  []);
+	},  [referralState, submitYesState]);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -385,7 +397,7 @@ const ReferAFriend = ({ navigation }) => {
 									borderColor: 0,
 								}}
 							/>
-							<PopUp visible={popupVisible} onClose={handlePopup} />
+							<PopUp visible={popupVisible} onClose={handlePopup} handleSubmitYes={handleSubmitYes} />
 						</View>
 
 						<View

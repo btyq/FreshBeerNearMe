@@ -414,6 +414,18 @@ app.post("/redeemRewards", async(req, res) => {
 app.get("/getPosts", async(req, res) => { 
 	globalUser.getPosts(client, res)
 })
+
+//Route to submit comment for a forum's post
+app.post("/submitComment", async(req, res) => {
+	const { userID, postID, commentDescription, commentDate } = req.body;
+	globalUser.submitComment(client, res, userID, postID, commentDescription, commentDate)
+})
+
+//Route to submit new psot for forum
+app.post("/submitPost", async(req, res) => {
+	const { userID, postTitle, postDate, postDescription } = req.body;
+	globalUser.submitPost(client, res, userID, postTitle, postDate, postDescription)
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;

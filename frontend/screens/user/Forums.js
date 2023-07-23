@@ -2,6 +2,7 @@ import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+	Alert,
 	Image,
 	Modal,
 	ScrollView,
@@ -55,9 +56,20 @@ const CustomText = (props) => {
 };
 
 // for popup
-const PostItem = ({}) => {
+const PostItem = ({
+	postID,
+	postUser,
+	postTitle,
+	postDate,
+	postDescription,
+	username,
+	comments,
+	onCommentSubmitted,
+}) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
+	const [comment, setComment] = useState("");
+	const { cookies } = useCookies();
 
 	const handlePopup = () => {
 		setPopupVisible(!popupVisible); // created 1st modal
@@ -65,6 +77,38 @@ const PostItem = ({}) => {
 
 	const handlePopUp2 = () => {
 		setPopupVisible2(!popupVisible2); // created 2nd modal
+	};
+
+	const submitComment = () => {
+		const currentDate = new Date();
+		const day = currentDate.getDate();
+		const month = currentDate.getMonth() + 1;
+		const year = currentDate.getFullYear();
+		const formattedDate = `${day}/${month}/${year}`;
+
+		const data = {
+			userID : cookies.userID,
+			postID : postID,
+			commentDescription : comment,
+			commentDate : formattedDate,
+		}
+		axios
+			.post("http://10.0.2.2:3000/submitComment", data)
+			.then((response) => {
+				if (response.data.success) {
+					setPopupVisible2(!popupVisible2);
+					setComment("");
+					Alert.alert("Commented!");
+					onCommentSubmitted();
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+					setPopupVisible2(!popupVisible2);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});	
 	};
 
 	return (
@@ -96,10 +140,9 @@ const PostItem = ({}) => {
 								fontSize: 15,
 							}}
 						>
-							Post title
-							{/* {post.postTitle} */}
+							{postTitle}
 						</Text>
-						<CustomText>Posted by:</CustomText>
+						<CustomText>Posted by: {username}</CustomText>
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -143,15 +186,29 @@ const PostItem = ({}) => {
 						/>
 						<View style={{ flexDirection: "column", marginLeft: 15 }}>
 							<Text style={{ ...GlobalStyle.headerFont, fontSize: 15 }}>
-								username
+								{username}
 							</Text>
-							<CustomText style={{ fontSize: 12 }}>1 day ago</CustomText>
+							<CustomText style={{ fontSize: 12 }}>{postDate}</CustomText>
 						</View>
 					</View>
 					<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
-						comment text
+						{postTitle}
 					</Text>
-					<CustomText>comment description</CustomText>
+					<CustomText>{postDescription}</CustomText>
+					{comments && comments.length > 0 && (
+						<View>
+							<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
+							Comments:
+							</Text>
+							{comments.map((comment) => (
+							<View key={comment.commentID}>
+								<Text>{comment.commentDescription}</Text>
+								<Text>{comment.commentDate}</Text>
+								<Text>{comment.username}</Text>
+							</View>
+							))}
+						</View>
+						)}
 					<Button
 						title="+ Add a comment"
 						onPress={handlePopUp2}
@@ -197,11 +254,13 @@ const PostItem = ({}) => {
 									<TextInput
 										placeholder="Type a comment here"
 										keyboardType="default"
+										value={comment}
+										onChangeText={(text) => setComment(text)}
 									/>
 								</View>
 								<Button
 									title="Submit"
-									onPress={handlePopUp2}
+									onPress={submitComment}
 									filled
 									style={{
 										elevation: 2,
@@ -217,89 +276,56 @@ const PostItem = ({}) => {
 	);
 };
 
-// const Posts = ({ postData }) => {
-// 	const [popupVisible, setPopupVisible] = useState(false); // 1st popup
-// 	const [popupVisible2, setPopupVisible2] = useState(false); // 2nd popup for comments
-// 	const [comment, setcomment] = useState(null);
-
-// 	const handlePopUp = (post) => {
-// 		setcomment(post);
-// 		setPopupVisible(!popupVisible);
-// 	};
-
-// 	const handlePopUp2 = () => {
-// 		setPopupVisible2(!popupVisible2);
-// 	};
-
-// 	return (
-// 		<ScrollView
-// 			showsVerticalScrollIndicator={false}
-// 			contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
-// 		>
-// 			<SafeAreaView style={{ marginHorizontal: 20 }}>
-// 				{postData.map((post, index) => (
-// 					<TouchableOpacity
-// 						onPress={() => handlePopUp(post)}
-// 						key={index}
-// 						style={{
-// 							backgroundColor: COLORS.grey,
-// 							borderWidth: 1,
-// 							borderColor: 0,
-// 							borderRadius: 15,
-// 							padding: 10,
-// 							marginBottom: 5,
-// 						}}
-// 					>
-// 						<View
-// 							style={{
-// 								flexDirection: "row",
-// 								alignItems: "center",
-// 							}}
-// 						>
-// 							<Image
-// 								source={require("../../assets/beer.png")}
-// 								style={{
-// 									width: 60,
-// 									height: 60,
-// 									borderRadius: 10,
-// 									alignSelf: "flex-start",
-// 								}}
-// 								resizeMode="contain"
-// 							/>
-// 							<Text
-// 								style={{
-// 									...GlobalStyle.headerFont,
-// 									fontSize: 15,
-// 									marginHorizontal: 15,
-// 								}}
-// 							>
-// 								{post.postTitle}
-// 							</Text>
-// 						</View>
-// 						<CustomText style={{ marginTop: 22 }}>
-// 							Posted by: {post.username}
-// 						</CustomText>
-// 					</TouchableOpacity>
-// 				))}
-// 			</SafeAreaView>
-// 		</ScrollView>
-// 	);
-// };
-
 const Forum = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [title, setTitle] = useState("");
 	const [postDescription, setPostDescription] = useState("");
 	const [showCreatePostModal, setShowCreatePostModal] = useState(false);
 	const [postData, setPostData] = useState([]);
+	const [commentSubmitted, setCommentSubmitted] = useState(false);
+	const [postSubmitted, setPostSubmitted] = useState(false);
 
 	const toggleCreatePostModal = () => {
 		setShowCreatePostModal(!showCreatePostModal);
 	};
 
 	const submitPost = () => {
-		console.log(postData);
-		toggleCreatePostModal();
+		const currentDate = new Date();
+		const day = currentDate.getDate();
+		const month = currentDate.getMonth() + 1;
+		const year = currentDate.getFullYear();
+		const formattedDate = `${day}/${month}/${year}`;
+
+		const data = {
+			userID : cookies.userID,
+			postTitle : title,
+			postDate : formattedDate,
+			postDescription : postDescription,
+			
+		}
+		axios
+			.post("http://10.0.2.2:3000/submitPost", data)
+			.then((response) => {
+				if (response.data.success) {
+					setTitle("");
+					setPostDescription("");
+					toggleCreatePostModal();
+					Alert.alert("Posted!");
+					setPostSubmitted(true);
+					
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+					toggleCreatePostModal();
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});	
+	};
+
+	const handleCommentSubmitted = () => {
+		setCommentSubmitted(true);
 	};
 
 	useEffect(() => {
@@ -307,11 +333,13 @@ const Forum = ({ navigation }) => {
 			.get("http://10.0.2.2:3000/getPosts")
 			.then((response) => {
 				setPostData(response.data.posts);
+				setCommentSubmitted(false);
+				setPostSubmitted(false);
 			})
 			.catch((error) => {
 				console.error("Error retrieving posts:", error);
 			});
-	}, []);
+	}, [commentSubmitted, postSubmitted]);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -431,7 +459,19 @@ const Forum = ({ navigation }) => {
 							contentContainerStyle={{ paddingBottom: 30 }}
 							showsVerticalScrollIndicator={false}
 						>
-							<PostItem />
+							{postData.map((post) => (
+								<PostItem
+								key={post.postID}
+								postID={post.postID}
+								postUser={post.postUser}
+								postTitle={post.postTitle}
+								postDescription={post.postDescription}
+								username={post.username}
+								postDate={post.postDate}
+								comments={post.comments}
+								onCommentSubmitted={handleCommentSubmitted}
+								/>
+							))}
 						</ScrollView>
 					</View>
 
@@ -511,8 +551,7 @@ const Forum = ({ navigation }) => {
 							</View>
 						</View>
 					</Modal>
-
-					{/* <Posts postData={postData} /> */}
+					
 				</SafeAreaView>
 			</SafeAreaView>
 		</View>
