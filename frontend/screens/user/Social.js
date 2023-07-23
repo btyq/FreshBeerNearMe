@@ -321,6 +321,8 @@ const Social = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
 	const [feedData, setFeedData] = useState([]);
+	const [originalFeedData, setOriginalFeedData] = useState([]);
+	const [searchInput, setSearchInput] = useState("");
 
 	const updateFollowArray = (reviewUserID, isFollowing) => {
 		setFeedData((prevFeedData) =>
@@ -340,11 +342,20 @@ const Social = ({ navigation }) => {
 			})
 			.then((response) => {
 				setFeedData(response.data.reviews);
+				setOriginalFeedData(response.data.reviews);
 			})
 			.catch((error) => {
 				console.error("Error retrieving feed:", error);
 			});
 	}, []);
+
+	const handleSearch = (text) => {
+		setSearchInput(text);
+		const filteredFeedData = originalFeedData.filter((feed) =>
+			feed.reviewUsername.toLowerCase().includes(text.toLowerCase())
+		);
+		setFeedData(filteredFeedData);
+	};
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -439,7 +450,12 @@ const Social = ({ navigation }) => {
 					</View>
 
 					<View style={styles.searchContainer}>
-						<TextInput placeholder="Search..." style={styles.searchInput} />
+						<TextInput
+							placeholder="Search user"
+							style={{ ...GlobalStyle.bodyFont, ...styles.searchInput }}
+							onChangeText={handleSearch}
+							value={searchInput}
+						/>
 					</View>
 
 					<ScrollView
