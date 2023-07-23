@@ -1,5 +1,6 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
 	Image,
 	Modal,
@@ -13,10 +14,9 @@ import {
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import axios from "axios";
-import { useCookies } from "../../CookieContext";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -54,188 +54,237 @@ const CustomText = (props) => {
 	);
 };
 
-const Posts = ( {postData} ) => {
-	const [popupVisible, setPopupVisible] = useState(false); // 1st popup
-	const [popupVisible2, setPopupVisible2] = useState(false); // 2nd popup for comments
-	const [comment, setcomment] = useState(null);
+// for popup
+const PostItem = ({}) => {
+	const [popupVisible, setPopupVisible] = useState(false);
+	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
 
-	const handlePopUp = (post) => {
-		setcomment(post);
-		setPopupVisible(!popupVisible);
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible); // created 1st modal
 	};
 
 	const handlePopUp2 = () => {
-		setPopupVisible2(!popupVisible2);
+		setPopupVisible2(!popupVisible2); // created 2nd modal
 	};
-	
+
 	return (
-		<ScrollView
-			showsVerticalScrollIndicator={false}
-			contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
-		>
-			<SafeAreaView style={{ marginHorizontal: 20 }}>
-				{postData.map((post, index) => ( 
-				<TouchableOpacity
-					onPress={() => handlePopUp(post)}
-					key={index}
+		<View style={styles.subContainer}>
+			<TouchableOpacity style={styles.itemContainer} onPress={handlePopup}>
+				<View
 					style={{
-					backgroundColor: COLORS.grey,
-					borderWidth: 1,
-					borderColor: 0,
-					borderRadius: 15,
-					padding: 10,
-					marginBottom: 5,
-					}}
-				>
-					<View
-					style={{
+						flex: 1,
+						paddingHorizontal: 6,
+						paddingTop: 6,
 						flexDirection: "row",
 						alignItems: "center",
 					}}
-					>
+				>
 					<Image
 						source={require("../../assets/beer.png")}
 						style={{
-						width: 60,
-						height: 60,
-						borderRadius: 10,
-						alignSelf: "flex-start",
+							width: 60,
+							height: 60,
+							borderRadius: 10,
+							alignSelf: "flex-start",
 						}}
 						resizeMode="contain"
 					/>
-					<Text
-						style={{
-						...GlobalStyle.headerFont,
-						fontSize: 15,
-						marginHorizontal: 15,
-						}}
-					>
-						{post.postTitle}
-					</Text>
-					</View>
-					<CustomText style={{ marginTop: 22 }}>Posted by: {post.username}</CustomText>
-				</TouchableOpacity>
-				))}
-				<Modal visible={popupVisible} transparent animationType="fade">
-					{/* <View> */}
-					<View
-						style={{
-							width: "100%",
-							height: "100%",
-							backgroundColor: COLORS.secondary,
-							borderRadius: 10,
-							paddingHorizontal: 20,
-							elevation: 5,
-						}}
-					>
-						<TouchableOpacity onPress={handlePopUp}>
-							<Ionicons
-								name="arrow-back"
-								size={24}
-								color={COLORS.black}
-								style={{ marginTop: 12 }}
-							/>
-						</TouchableOpacity>
-						<View
+					<View style={{ marginLeft: 10 }}>
+						<Text
 							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								marginVertical: 20,
+								...GlobalStyle.headerFont,
+								fontSize: 15,
 							}}
 						>
-							<Image
-								source={require("../../assets/beer.png")}
-								style={{
-									width: 60,
-									height: 60,
-									borderRadius: 80,
-									alignSelf: "flex-start",
-								}}
-								resizeMode="contain"
-							/>
-							<View style={{ flexDirection: "column", marginLeft: 15 }}>
-								<Text style={{ ...GlobalStyle.headerFont, fontSize: 15 }}>
-									username
-								</Text>
-								<CustomText style={{ fontSize: 12 }}>1 day ago</CustomText>
-							</View>
-						</View>
-						{comment ? (
-							<View>
-								<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
-									{comment.text}
-								</Text>
-								<CustomText>{comment.description}</CustomText>
-							</View>
-						) : (
-							<CustomText>No comment selected</CustomText>
-						)}
-						<Button
-							title="+ Add a comment"
-							onPress={handlePopUp2}
-							filled
-							style={{
-								elevation: 2,
-								borderColor: 0,
-								marginTop: 20,
-							}}
+							Post title
+							{/* {post.postTitle} */}
+						</Text>
+						<CustomText>Posted by:</CustomText>
+					</View>
+				</View>
+			</TouchableOpacity>
+
+			{/* 1st popup */}
+			<Modal visible={popupVisible} transparent animationType="fade">
+				<View
+					style={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: COLORS.secondary,
+						borderRadius: 10,
+						paddingHorizontal: 20,
+						elevation: 5,
+					}}
+				>
+					<TouchableOpacity onPress={handlePopup}>
+						<Ionicons
+							name="arrow-back"
+							size={24}
+							color={COLORS.black}
+							style={{ marginTop: 12 }}
 						/>
-						{/* 2nd popup */}
-						<Modal visible={popupVisible2} transparent animationType="slide">
+					</TouchableOpacity>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							marginVertical: 20,
+						}}
+					>
+						<Image
+							source={require("../../assets/beer.png")}
+							style={{
+								width: 60,
+								height: 60,
+								borderRadius: 80,
+								alignSelf: "flex-start",
+							}}
+							resizeMode="contain"
+						/>
+						<View style={{ flexDirection: "column", marginLeft: 15 }}>
+							<Text style={{ ...GlobalStyle.headerFont, fontSize: 15 }}>
+								username
+							</Text>
+							<CustomText style={{ fontSize: 12 }}>1 day ago</CustomText>
+						</View>
+					</View>
+					<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
+						comment text
+					</Text>
+					<CustomText>comment description</CustomText>
+					<Button
+						title="+ Add a comment"
+						onPress={handlePopUp2}
+						filled
+						style={{
+							elevation: 2,
+							borderColor: 0,
+							marginTop: 20,
+						}}
+					/>
+					{/* 2nd popup */}
+					<Modal visible={popupVisible2} transparent animationType="slide">
+						<View
+							style={{
+								flex: 1,
+								backgroundColor: "rgba(0, 0, 0, 0.5)",
+								justifyContent: "flex-end",
+								alignItems: "center",
+							}}
+						>
 							<View
 								style={{
-									flex: 1,
-									backgroundColor: "rgba(0, 0, 0, 0.5)",
-									justifyContent: "flex-end",
-									alignItems: "center",
+									backgroundColor: COLORS.secondary,
+									width: "100%",
+									padding: 20,
+									borderTopLeftRadius: 20,
+									borderTopRightRadius: 20,
 								}}
 							>
 								<View
 									style={{
-										backgroundColor: COLORS.secondary,
-										width: "100%",
-										padding: 20,
-										borderTopLeftRadius: 20,
-										borderTopRightRadius: 20,
+										height: 45,
+										borderColor: 0,
+										borderWidth: 1,
+										borderRadius: 10,
+										alignItems: "center",
+										justifyContent: "center",
+										paddingLeft: 22,
+										marginVertical: 20,
+										backgroundColor: COLORS.grey,
 									}}
 								>
-									<View
-										style={{
-											height: 45,
-											borderColor: 0,
-											borderWidth: 1,
-											borderRadius: 10,
-											alignItems: "center",
-											justifyContent: "center",
-											paddingLeft: 22,
-											marginVertical: 20,
-											backgroundColor: COLORS.grey,
-										}}
-									>
-										<TextInput
-											placeholder="Type a comment here"
-											keyboardType="default"
-										/>
-									</View>
-									<Button
-										title="Submit"
-										onPress={handlePopUp2}
-										filled
-										style={{
-											elevation: 2,
-											borderColor: 0,
-										}}
+									<TextInput
+										placeholder="Type a comment here"
+										keyboardType="default"
 									/>
 								</View>
+								<Button
+									title="Submit"
+									onPress={handlePopUp2}
+									filled
+									style={{
+										elevation: 2,
+										borderColor: 0,
+									}}
+								/>
 							</View>
-						</Modal>
-					</View>
-					{/* </View> */}
-				</Modal>
-			</SafeAreaView>
-		</ScrollView>
+						</View>
+					</Modal>
+				</View>
+			</Modal>
+		</View>
 	);
 };
+
+// const Posts = ({ postData }) => {
+// 	const [popupVisible, setPopupVisible] = useState(false); // 1st popup
+// 	const [popupVisible2, setPopupVisible2] = useState(false); // 2nd popup for comments
+// 	const [comment, setcomment] = useState(null);
+
+// 	const handlePopUp = (post) => {
+// 		setcomment(post);
+// 		setPopupVisible(!popupVisible);
+// 	};
+
+// 	const handlePopUp2 = () => {
+// 		setPopupVisible2(!popupVisible2);
+// 	};
+
+// 	return (
+// 		<ScrollView
+// 			showsVerticalScrollIndicator={false}
+// 			contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
+// 		>
+// 			<SafeAreaView style={{ marginHorizontal: 20 }}>
+// 				{postData.map((post, index) => (
+// 					<TouchableOpacity
+// 						onPress={() => handlePopUp(post)}
+// 						key={index}
+// 						style={{
+// 							backgroundColor: COLORS.grey,
+// 							borderWidth: 1,
+// 							borderColor: 0,
+// 							borderRadius: 15,
+// 							padding: 10,
+// 							marginBottom: 5,
+// 						}}
+// 					>
+// 						<View
+// 							style={{
+// 								flexDirection: "row",
+// 								alignItems: "center",
+// 							}}
+// 						>
+// 							<Image
+// 								source={require("../../assets/beer.png")}
+// 								style={{
+// 									width: 60,
+// 									height: 60,
+// 									borderRadius: 10,
+// 									alignSelf: "flex-start",
+// 								}}
+// 								resizeMode="contain"
+// 							/>
+// 							<Text
+// 								style={{
+// 									...GlobalStyle.headerFont,
+// 									fontSize: 15,
+// 									marginHorizontal: 15,
+// 								}}
+// 							>
+// 								{post.postTitle}
+// 							</Text>
+// 						</View>
+// 						<CustomText style={{ marginTop: 22 }}>
+// 							Posted by: {post.username}
+// 						</CustomText>
+// 					</TouchableOpacity>
+// 				))}
+// 			</SafeAreaView>
+// 		</ScrollView>
+// 	);
+// };
 
 const Forum = ({ navigation }) => {
 	const { cookies } = useCookies();
@@ -246,23 +295,23 @@ const Forum = ({ navigation }) => {
 
 	const toggleCreatePostModal = () => {
 		setShowCreatePostModal(!showCreatePostModal);
-	}
+	};
 
 	const submitPost = () => {
 		console.log(postData);
 		toggleCreatePostModal();
-	}
+	};
 
 	useEffect(() => {
 		axios
 			.get("http://10.0.2.2:3000/getPosts")
 			.then((response) => {
-				setPostData(response.data.posts)
+				setPostData(response.data.posts);
 			})
 			.catch((error) => {
 				console.error("Error retrieving posts:", error);
-			})
-	}, []); 
+			});
+	}, []);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -355,16 +404,13 @@ const Forum = ({ navigation }) => {
 							onPress={() => navigation.navigate("Recommendation")}
 						/>
 					</View>
-					<View style={{ marginHorizontal: 20, flexDirection: "row" }}>
-						<View style={styles.newPost}>
-							<TextInput
-								placeholder="What's going on your mind?"
-								keyboardType="default"
-								style={{ flex: 1 }}
-								value={title}
-								onChangeText={(text) => setTitle(text)}
-							/>
-						</View>
+					<View style={styles.postContainer}>
+						<TextInput
+							placeholder="What's going on your mind?"
+							style={styles.postInput}
+							value={title}
+							onChangeText={(text) => setTitle(text)}
+						/>
 						<Button
 							title="Create post"
 							color={COLORS.foam}
@@ -378,16 +424,28 @@ const Forum = ({ navigation }) => {
 							}}
 							onPress={toggleCreatePostModal}
 						/>
-						<Modal visible={showCreatePostModal} transparent animationType="fade">
-							<View
-								style={{
+					</View>
+
+					<View style={styles.container}>
+						<ScrollView
+							contentContainerStyle={{ paddingBottom: 30 }}
+							showsVerticalScrollIndicator={false}
+						>
+							<PostItem />
+						</ScrollView>
+					</View>
+
+					{/* create new post */}
+					<Modal visible={showCreatePostModal} transparent animationType="fade">
+						<View
+							style={{
 								flex: 1,
 								justifyContent: "center",
 								alignItems: "center",
 								backgroundColor: "rgba(0, 0, 0, 0.5)",
-								}}
-							>
-								<View
+							}}
+						>
+							<View
 								style={{
 									backgroundColor: COLORS.secondary,
 									width: "80%",
@@ -395,20 +453,27 @@ const Forum = ({ navigation }) => {
 									padding: 20,
 									elevation: 5,
 								}}
+							>
+								<Text
+									style={{
+										...GlobalStyle.headerFont,
+										fontSize: 18,
+										marginBottom: 10,
+									}}
 								>
-								<Text style={{ ...GlobalStyle.headerFont, fontSize: 18, marginBottom: 10 }}>
 									Create a New Post
 								</Text>
 								<TextInput
 									placeholder="What's going on your mind?"
 									keyboardType="default"
 									style={{
-									height: 100,
-									borderColor: COLORS.grey,
-									borderWidth: 1,
-									borderRadius: 10,
-									paddingHorizontal: 10,
-									marginBottom: 10,
+										height: 100,
+										borderColor: 0,
+										borderWidth: 1,
+										borderRadius: 10,
+										paddingHorizontal: 10,
+										marginBottom: 10,
+										backgroundColor: COLORS.grey,
 									}}
 									multiline
 									numberOfLines={4}
@@ -419,12 +484,13 @@ const Forum = ({ navigation }) => {
 									placeholder="Description"
 									keyboardType="default"
 									style={{
-									height: 100,
-									borderColor: COLORS.grey,
-									borderWidth: 1,
-									borderRadius: 10,
-									paddingHorizontal: 10,
-									marginBottom: 10,
+										height: 100,
+										borderColor: 0,
+										borderWidth: 1,
+										borderRadius: 10,
+										paddingHorizontal: 10,
+										marginBottom: 10,
+										backgroundColor: COLORS.grey,
 									}}
 									multiline
 									numberOfLines={4}
@@ -435,14 +501,18 @@ const Forum = ({ navigation }) => {
 									title="Submit Post"
 									color={COLORS.foam}
 									filled
-									style={{ width: "50%", alignSelf: "center", borderRadius: 10 }}
+									style={{
+										width: "50%",
+										alignSelf: "center",
+										borderRadius: 10,
+									}}
 									onPress={submitPost}
 								/>
-								</View>
 							</View>
-						</Modal>
-					</View>
-					<Posts postData={postData} />
+						</View>
+					</Modal>
+
+					{/* <Posts postData={postData} /> */}
 				</SafeAreaView>
 			</SafeAreaView>
 		</View>
@@ -472,18 +542,59 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	newPost: {
-		flex: 1,
-		height: 50,
-		borderColor: 0,
-		borderWidth: 1,
-		borderRadius: 10,
-		alignItems: "center",
-		justifyContent: "center",
-		paddingLeft: 22,
-		marginVertical: 20,
-		backgroundColor: COLORS.grey,
+	postContainer: {
 		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginHorizontal: 20,
+		marginVertical: 12,
+	},
+	postInput: {
+		flex: 1,
+		height: 45,
+		borderWidth: 1,
+		borderColor: 0,
+		borderRadius: 10,
+		paddingHorizontal: 20,
+		marginRight: 10,
+		backgroundColor: COLORS.grey,
+	},
+	container: {
+		height: "65%",
+		width: "95%",
+		alignSelf: "center",
+		marginTop: 10,
+		borderWidth: 1,
+		borderColor: 0,
+		borderRadius: 10,
+		padding: 10,
+		minHeight: 50, // Adjust the height as per your requirement
+		backgroundColor: COLORS.grey,
+		shadowColor: COLORS.black,
+		shadowOffset: { width: 0, height: 2 },
+		shadowOpacity: 0.3,
+		shadowRadius: 4,
+		elevation: 5,
+	},
+	subContainer: {
+		marginBottom: 10,
+		backgroundColor: COLORS.white,
+		padding: 10,
+		borderRadius: 12,
+		borderWidth: 1,
+		shadowColor: COLORS.black, // Add shadow color
+		shadowOffset: { width: 0, height: 2 }, // Add shadow offset
+		shadowOpacity: 0.3, // Add shadow opacity
+		shadowRadius: 3, // Add shadow radius
+		elevation: 5, // Add elevation for Android
+		borderColor: 0,
+	},
+	itemContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginBottom: 10,
+		borderColor: 0,
 	},
 });
 
