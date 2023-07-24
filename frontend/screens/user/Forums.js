@@ -87,11 +87,11 @@ const PostItem = ({
 		const formattedDate = `${day}/${month}/${year}`;
 
 		const data = {
-			userID : cookies.userID,
-			postID : postID,
-			commentDescription : comment,
-			commentDate : formattedDate,
-		}
+			userID: cookies.userID,
+			postID: postID,
+			commentDescription: comment,
+			commentDate: formattedDate,
+		};
 		axios
 			.post("http://10.0.2.2:3000/submitComment", data)
 			.then((response) => {
@@ -108,7 +108,7 @@ const PostItem = ({
 			})
 			.catch((error) => {
 				console.error(error);
-			});	
+			});
 	};
 
 	return (
@@ -116,9 +116,8 @@ const PostItem = ({
 			<TouchableOpacity style={styles.itemContainer} onPress={handlePopup}>
 				<View
 					style={{
-						flex: 1,
-						paddingHorizontal: 6,
-						paddingTop: 6,
+						paddingHorizontal: 10,
+						paddingVertical: 5,
 						flexDirection: "row",
 						alignItems: "center",
 					}}
@@ -129,20 +128,22 @@ const PostItem = ({
 							width: 60,
 							height: 60,
 							borderRadius: 10,
-							alignSelf: "flex-start",
 						}}
 						resizeMode="contain"
 					/>
-					<View style={{ marginLeft: 10 }}>
+					<View style={{ marginLeft: 10, flex: 1 }}>
 						<Text
 							style={{
 								...GlobalStyle.headerFont,
 								fontSize: 15,
+								flexWrap: "wrap",
 							}}
 						>
 							{postTitle}
 						</Text>
-						<CustomText>Posted by: {username}</CustomText>
+						<CustomText style={{ flexWrap: "wrap" }}>
+							Posted by: {username}
+						</CustomText>
 					</View>
 				</View>
 			</TouchableOpacity>
@@ -191,34 +192,60 @@ const PostItem = ({
 							<CustomText style={{ fontSize: 12 }}>{postDate}</CustomText>
 						</View>
 					</View>
-					<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
-						{postTitle}
-					</Text>
-					<CustomText>{postDescription}</CustomText>
-					{comments && comments.length > 0 && (
-						<View>
+
+					<SafeAreaView style={{ flex: 1 }}>
+						<ScrollView showsVerticalScrollIndicator={false}>
 							<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
-							Comments:
+								{postTitle}
 							</Text>
-							{comments.map((comment) => (
-							<View key={comment.commentID}>
-								<Text>{comment.commentDescription}</Text>
-								<Text>{comment.commentDate}</Text>
-								<Text>{comment.username}</Text>
-							</View>
-							))}
-						</View>
-						)}
-					<Button
-						title="+ Add a comment"
-						onPress={handlePopUp2}
-						filled
-						style={{
-							elevation: 2,
-							borderColor: 0,
-							marginTop: 20,
-						}}
-					/>
+							<CustomText>{postDescription}</CustomText>
+							{comments && comments.length > 0 && (
+								<View>
+									<View
+										style={{
+											borderBottomWidth: 1,
+											borderBottomColor: COLORS.black,
+											marginVertical: 10,
+										}}
+									></View>
+									<Button
+										title="+ Add a comment"
+										onPress={handlePopUp2}
+										filled
+										style={{
+											width: "50%",
+											elevation: 2,
+											borderColor: 0,
+											marginVertical: 10,
+										}}
+									/>
+									{comments.map((comment) => (
+										<View key={comment.commentID}>
+											<View
+												style={{
+													flexDirection: "row",
+													justifyContent: "space-between",
+												}}
+											>
+												<Text
+													style={{
+														...GlobalStyle.headerFont,
+													}}
+												>
+													{comment.username}
+												</Text>
+												<CustomText>{comment.commentDate}</CustomText>
+											</View>
+											<CustomText style={{ marginBottom: 12 }}>
+												{comment.commentDescription}
+											</CustomText>
+										</View>
+									))}
+								</View>
+							)}
+						</ScrollView>
+					</SafeAreaView>
+
 					{/* 2nd popup */}
 					<Modal visible={popupVisible2} transparent animationType="slide">
 						<View
@@ -238,6 +265,14 @@ const PostItem = ({
 									borderTopRightRadius: 20,
 								}}
 							>
+								<TouchableOpacity onPress={handlePopUp2}>
+									<Ionicons
+										name="arrow-back"
+										size={24}
+										color={COLORS.black}
+										style={{ marginTop: 12 }}
+									/>
+								</TouchableOpacity>
 								<View
 									style={{
 										height: 45,
@@ -253,11 +288,13 @@ const PostItem = ({
 								>
 									<TextInput
 										placeholder="Type a comment here"
+										style={{ ...GlobalStyle.bodyFont, width: "100%" }}
 										keyboardType="default"
 										value={comment}
 										onChangeText={(text) => setComment(text)}
 									/>
 								</View>
+
 								<Button
 									title="Submit"
 									onPress={submitComment}
@@ -297,12 +334,11 @@ const Forum = ({ navigation }) => {
 		const formattedDate = `${day}/${month}/${year}`;
 
 		const data = {
-			userID : cookies.userID,
-			postTitle : title,
-			postDate : formattedDate,
-			postDescription : postDescription,
-			
-		}
+			userID: cookies.userID,
+			postTitle: title,
+			postDate: formattedDate,
+			postDescription: postDescription,
+		};
 		axios
 			.post("http://10.0.2.2:3000/submitPost", data)
 			.then((response) => {
@@ -312,7 +348,6 @@ const Forum = ({ navigation }) => {
 					toggleCreatePostModal();
 					Alert.alert("Posted!");
 					setPostSubmitted(true);
-					
 				} else {
 					const { message } = response.data;
 					Alert.alert("Error!", message);
@@ -321,7 +356,7 @@ const Forum = ({ navigation }) => {
 			})
 			.catch((error) => {
 				console.error(error);
-			});	
+			});
 	};
 
 	const handleCommentSubmitted = () => {
@@ -435,7 +470,11 @@ const Forum = ({ navigation }) => {
 					<View style={styles.postContainer}>
 						<TextInput
 							placeholder="What's going on your mind?"
-							style={styles.postInput}
+							style={{
+								...styles.postInput,
+								...GlobalStyle.bodyFont,
+								fontSize: 12,
+							}}
 							value={title}
 							onChangeText={(text) => setTitle(text)}
 						/>
@@ -461,39 +500,45 @@ const Forum = ({ navigation }) => {
 						>
 							{postData.map((post) => (
 								<PostItem
-								key={post.postID}
-								postID={post.postID}
-								postUser={post.postUser}
-								postTitle={post.postTitle}
-								postDescription={post.postDescription}
-								username={post.username}
-								postDate={post.postDate}
-								comments={post.comments}
-								onCommentSubmitted={handleCommentSubmitted}
+									key={post.postID}
+									postID={post.postID}
+									postUser={post.postUser}
+									postTitle={post.postTitle}
+									postDescription={post.postDescription}
+									username={post.username}
+									postDate={post.postDate}
+									comments={post.comments}
+									onCommentSubmitted={handleCommentSubmitted}
 								/>
 							))}
 						</ScrollView>
 					</View>
 
 					{/* create new post */}
-					<Modal visible={showCreatePostModal} transparent animationType="fade">
+					<Modal
+						visible={showCreatePostModal}
+						transparent
+						animationType="slide"
+					>
 						<View
 							style={{
-								flex: 1,
-								justifyContent: "center",
-								alignItems: "center",
-								backgroundColor: "rgba(0, 0, 0, 0.5)",
+								width: "100%",
+								height: "100%",
+								backgroundColor: COLORS.secondary,
+								borderRadius: 10,
+								paddingHorizontal: 20,
+								elevation: 5,
 							}}
 						>
-							<View
-								style={{
-									backgroundColor: COLORS.secondary,
-									width: "80%",
-									borderRadius: 20,
-									padding: 20,
-									elevation: 5,
-								}}
-							>
+							<TouchableOpacity onPress={toggleCreatePostModal}>
+								<Ionicons
+									name="arrow-back"
+									size={24}
+									color={COLORS.black}
+									style={{ marginTop: 12 }}
+								/>
+							</TouchableOpacity>
+							<View style={{ marginTop: 20, marginHorizontal: 12 }}>
 								<Text
 									style={{
 										...GlobalStyle.headerFont,
@@ -504,16 +549,18 @@ const Forum = ({ navigation }) => {
 									Create a New Post
 								</Text>
 								<TextInput
-									placeholder="What's going on your mind?"
+									placeholder="Post title"
 									keyboardType="default"
 									style={{
-										height: 100,
 										borderColor: 0,
 										borderWidth: 1,
-										borderRadius: 10,
+										borderRadius: 15,
 										paddingHorizontal: 10,
-										marginBottom: 10,
 										backgroundColor: COLORS.grey,
+										elevation: 2,
+										...GlobalStyle.bodyFont,
+										textAlignVertical: "top",
+										paddingTop: 15,
 									}}
 									multiline
 									numberOfLines={4}
@@ -521,16 +568,20 @@ const Forum = ({ navigation }) => {
 									onChangeText={(text) => setTitle(text)}
 								/>
 								<TextInput
-									placeholder="Description"
+									placeholder=" Post description"
 									keyboardType="default"
 									style={{
-										height: 100,
-										borderColor: 0,
-										borderWidth: 1,
-										borderRadius: 10,
-										paddingHorizontal: 10,
-										marginBottom: 10,
+										height: 300,
+										width: "100%",
+										elevation: 2,
 										backgroundColor: COLORS.grey,
+										marginVertical: 10,
+										borderRadius: 15,
+										borderColor: 0,
+										paddingHorizontal: 12,
+										...GlobalStyle.bodyFont,
+										textAlignVertical: "top",
+										paddingTop: 15,
 									}}
 									multiline
 									numberOfLines={4}
@@ -541,17 +592,11 @@ const Forum = ({ navigation }) => {
 									title="Submit Post"
 									color={COLORS.foam}
 									filled
-									style={{
-										width: "50%",
-										alignSelf: "center",
-										borderRadius: 10,
-									}}
 									onPress={submitPost}
 								/>
 							</View>
 						</View>
 					</Modal>
-					
 				</SafeAreaView>
 			</SafeAreaView>
 		</View>
@@ -590,7 +635,7 @@ const styles = StyleSheet.create({
 	},
 	postInput: {
 		flex: 1,
-		height: 45,
+		height: 50,
 		borderWidth: 1,
 		borderColor: 0,
 		borderRadius: 10,

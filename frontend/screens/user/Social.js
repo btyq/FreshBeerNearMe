@@ -55,8 +55,8 @@ const CustomText = (props) => {
 	);
 };
 
-// custom alert for follow
-const CustomAlertFollow = ({ visible, onClose }) => {
+// custom alert for follow and unfollow
+const CustomFollowAlert = ({ visible, onClose, title, message }) => {
 	return (
 		<Modal visible={visible} transparent animationType="fade">
 			<View
@@ -71,7 +71,7 @@ const CustomAlertFollow = ({ visible, onClose }) => {
 					style={{
 						width: "80%",
 						backgroundColor: COLORS.white,
-						borderRadius: 40,
+						borderRadius: 20,
 						padding: 30,
 					}}
 				>
@@ -89,7 +89,7 @@ const CustomAlertFollow = ({ visible, onClose }) => {
 							marginBottom: 20,
 						}}
 					>
-						Success
+						{title}
 					</Text>
 					<CustomText
 						style={{
@@ -98,7 +98,7 @@ const CustomAlertFollow = ({ visible, onClose }) => {
 							marginBottom: 20,
 						}}
 					>
-						You followed!
+						{message}
 					</CustomText>
 					<TouchableOpacity
 						style={{
@@ -106,70 +106,7 @@ const CustomAlertFollow = ({ visible, onClose }) => {
 							padding: 10,
 							borderRadius: 8,
 							alignItems: "center",
-							marginHorizontal: 22,
-						}}
-						onPress={onClose}
-					>
-						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
-					</TouchableOpacity>
-				</View>
-			</View>
-		</Modal>
-	);
-};
-
-// custom alert for unfollow
-const CustomAlertFollow2 = ({ visible, onClose }) => {
-	return (
-		<Modal visible={visible} transparent animationType="fade">
-			<View
-				style={{
-					flex: 1,
-					backgroundColor: "rgba(0, 0, 0, 0.5)",
-					justifyContent: "center",
-					alignItems: "center",
-				}}
-			>
-				<View
-					style={{
-						width: "80%",
-						backgroundColor: COLORS.white,
-						borderRadius: 40,
-						padding: 30,
-					}}
-				>
-					<Ionicons
-						name="md-beer"
-						size={34}
-						color={COLORS.foam}
-						style={{ alignSelf: "center" }}
-					/>
-					<Text
-						style={{
-							fontSize: 18,
-							...GlobalStyle.headerFont,
-							alignSelf: "center",
-							marginBottom: 20,
-						}}
-					>
-						Success
-					</Text>
-					<CustomText
-						style={{
-							alignSelf: "center",
-							fontSize: 16,
-							marginBottom: 20,
-						}}
-					>
-						You have unfollowed
-					</CustomText>
-					<TouchableOpacity
-						style={{
-							backgroundColor: COLORS.foam,
-							padding: 10,
-							borderRadius: 8,
-							alignItems: "center",
-							marginHorizontal: 22,
+							marginTop: 20,
 						}}
 						onPress={onClose}
 					>
@@ -194,8 +131,10 @@ const FeedItem = ({
 	feedImage,
 	updateFollowArray,
 }) => {
-	const [isDialogVisible, setIsDialogVisible] = useState(false);
-	const [isDialogVisible2, setIsDialogVisible2] = useState(false);
+	const [isFollowVisible, setIsFollowVisible] = useState(false);
+	const [FollowTitle, setFollowTitle] = useState("");
+	const [FollowMessage, setFollowMessage] = useState("");
+
 	const handleFollow = () => {
 		const data = {
 			userID: userID,
@@ -206,9 +145,10 @@ const FeedItem = ({
 			.then((response) => {
 				if (response.data.success) {
 					updateFollowArray(reviewUser, true);
-					// CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY FOLLOWED
-					setIsDialogVisible(true);
+					setFollowTitle("Success!");
+					setFollowMessage("You followed!");
 				}
+				setIsFollowVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -225,10 +165,10 @@ const FeedItem = ({
 			.then((response) => {
 				if (response.data.success) {
 					updateFollowArray(reviewUser, false);
-					// CUSTOM ALERT TO SHOW THAT THE USER SUCCESSFULLY UNFOLLOWED
-					setIsDialogVisible2(true);
-					// Alert.alert("You have unfollowed " + reviewUsername);
+					setFollowTitle("Bye!");
+					setFollowMessage("You unfollowed");
 				}
+				setIsFollowVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -274,13 +214,11 @@ const FeedItem = ({
 								onPress={handleFollow}
 							/>
 						)}
-						<CustomAlertFollow
-							visible={isDialogVisible}
-							onClose={() => setIsDialogVisible(false)}
-						/>
-						<CustomAlertFollow2
-							visible={isDialogVisible2}
-							onClose={() => setIsDialogVisible2(false)}
+						<CustomFollowAlert
+							visible={isFollowVisible}
+							onClose={() => setIsFollowVisible(false)}
+							title={FollowTitle}
+							message={FollowMessage}
 						/>
 					</View>
 
