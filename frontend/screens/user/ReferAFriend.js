@@ -1,5 +1,6 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import axios from "axios";
+import * as Clipboard from "expo-clipboard";
 import React, { useEffect, useState } from "react";
 import {
 	Alert,
@@ -13,7 +14,6 @@ import {
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
-import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
@@ -67,14 +67,14 @@ const PopUp = ({ visible, onClose, handleSubmitYes }) => {
 		setPopupVisible2(!popupVisible2);
 		setSelectedRewardID(reward.rewardID);
 		setSelectedRewardPrice(reward.rewardPrice);
-	}
+	};
 
 	const handleYes = () => {
 		const data = {
-			userID : cookies.userID,
-			rewardID : selectedRewardID,
+			userID: cookies.userID,
+			rewardID: selectedRewardID,
 			rewardPrice: selectedRewardPrice,
-		}
+		};
 		axios
 			.post("http://10.0.2.2:3000/redeemRewards", data)
 			.then((response) => {
@@ -84,7 +84,7 @@ const PopUp = ({ visible, onClose, handleSubmitYes }) => {
 				} else {
 					const { message } = response.data;
 					Alert.alert("Error!", message);
-					setPopupVisible2(!popupVisible2)
+					setPopupVisible2(!popupVisible2);
 				}
 			})
 			.catch((error) => {
@@ -96,103 +96,192 @@ const PopUp = ({ visible, onClose, handleSubmitYes }) => {
 		axios
 			.get("http://10.0.2.2:3000/getRewards")
 			.then((response) => {
-				setRewards(response.data.rewards)
+				setRewards(response.data.rewards);
 			})
 			.catch((error) => {
 				console.error("Error retrieving rewards:", error);
-			})
+			});
 	}, []);
 
 	return (
 		<Modal visible={visible} transparent animationType="slide">
-		  <View
-			style={{
-			  width: "100%",
-			  height: "100%",
-			  backgroundColor: COLORS.secondary,
-			  borderRadius: 10,
-			  paddingHorizontal: 20,
-			  elevation: 5,
-			}}
-		  >
-			<TouchableOpacity onPress={onClose}>
-			  <Ionicons
-				name="arrow-back"
-				size={24}
-				color={COLORS.black}
-				style={{ marginTop: 12 }}
-			  />
-			</TouchableOpacity>
-			<View style={{ marginTop: 20, marginHorizontal: 12 }}>
-			  {rewards.map((reward) => (
-				<TouchableOpacity
-				  key={reward.rewardID}
-				  style={{
+			<View
+				style={{
 					width: "100%",
-					borderColor: 0,
+					height: "100%",
+					backgroundColor: COLORS.secondary,
+					borderRadius: 10,
 					paddingHorizontal: 20,
-					paddingVertical: 10,
-					borderRadius: 5,
-					backgroundColor: COLORS.grey,
-					elevation: 2,
-					marginBottom: 20,
-				  }}
-				  onPress={() => handlePopUp2(reward)}
-				>
-				  <View style={{ flexDirection: "row", alignItems: "center" }}>
-					<Image
-					  source={require("../../assets/beer.png")} // You can replace this static image with the image URL from the `reward` object if you have one.
-					  style={{
-						height: 70,
-						width: 70,
-						marginRight: 10,
-					  }}
-					  resizeMode="contain"
+					elevation: 5,
+				}}
+			>
+				<TouchableOpacity onPress={onClose}>
+					<Ionicons
+						name="arrow-back"
+						size={24}
+						color={COLORS.black}
+						style={{ marginTop: 12 }}
 					/>
-					<CustomText>{reward.rewardName}</CustomText>
-					<CustomText>      {reward.rewardPrice}points</CustomText>
-				  </View>
-	
-				  {/* 2nd popup */}
-				  <Modal visible={popupVisible2} transparent animationType="fade">
-					<View
-					  style={{
-						flex: 1,
-						backgroundColor: "rgba(0, 0, 0, 0.5)",
-						justifyContent: "center",
-						alignItems: "center",
-					  }}
-					>
-					  <View
-						style={{
-						  width: "80%",
-						  backgroundColor: COLORS.white,
-						  borderRadius: 40,
-						  padding: 30,
-						  justifyContent: "center",
-						  alignItems: "center",
-						}}
-					  >
-						<CustomText>Are you sure you want to redeem?</CustomText>
-						<Button
-						  title="Yes"
-						  filled
-						  style={{
-							width: "40%",
-							borderRadius: 10,
-							marginTop: 15,
-							borderColor: 0,
-							elevation: 2,
-						  }}
-						  onPress={handleYes}
-						/>
-					  </View>
-					</View>
-				  </Modal>
 				</TouchableOpacity>
-			  ))}
+
+				<View style={{ marginTop: 20, marginHorizontal: 12 }}>
+					{rewards.map((reward) => (
+						<TouchableOpacity
+							key={reward.rewardID}
+							style={{
+								width: "100%",
+								borderColor: 0,
+								paddingHorizontal: 20,
+								paddingVertical: 10,
+								borderRadius: 5,
+								backgroundColor: COLORS.grey,
+								elevation: 2,
+								marginBottom: 20,
+							}}
+							onPress={() => handlePopUp2(reward)}
+						>
+							<View style={{ flexDirection: "row", alignItems: "center" }}>
+								<Image
+									source={require("../../assets/beer.png")}
+									style={{
+										height: 70,
+										width: 70,
+										marginRight: 10,
+									}}
+									resizeMode="contain"
+								/>
+								<View
+									style={{
+										flex: 1,
+										flexDirection: "row",
+										justifyContent: "space-between",
+									}}
+								>
+									<CustomText style={{ flexWrap: "wrap" }}>
+										{reward.rewardName}
+									</CustomText>
+								</View>
+								<CustomText>{reward.rewardPrice} points</CustomText>
+							</View>
+
+							{/* 2nd popup */}
+							<Modal visible={popupVisible2} transparent animationType="fade">
+								<View
+									style={{
+										flex: 1,
+										backgroundColor: "rgba(0, 0, 0, 0.5)",
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											width: "80%",
+											backgroundColor: COLORS.white,
+											borderRadius: 40,
+											padding: 30,
+											justifyContent: "center",
+											alignItems: "center",
+										}}
+									>
+										<CustomText>Are you sure you want to redeem?</CustomText>
+										<View style={{ flexDirection: "row" }}>
+											<Button
+												title="Yes"
+												filled
+												style={{
+													width: "40%",
+													borderRadius: 10,
+													marginTop: 15,
+													borderColor: 0,
+													elevation: 2,
+													marginRight: 12,
+												}}
+												onPress={handleYes}
+											/>
+											<Button
+												title="No"
+												filled
+												style={{
+													width: "40%",
+													borderRadius: 10,
+													marginTop: 15,
+													borderColor: 0,
+													elevation: 2,
+												}}
+												onPress={handlePopUp2}
+											/>
+										</View>
+									</View>
+								</View>
+							</Modal>
+						</TouchableOpacity>
+					))}
+				</View>
 			</View>
-		  </View>
+		</Modal>
+	);
+};
+
+// custom alert for successful and unsuccessful referral codes
+const CustomReferralAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
 		</Modal>
 	);
 };
@@ -206,6 +295,19 @@ const ReferAFriend = ({ navigation }) => {
 	const [rewards, setRewards] = useState([]);
 	const [referralState, setReferralState] = useState(false);
 	const [submitYesState, setSubmitYesState] = useState(false);
+	const [isReferralVisible, setIsReferralVisible] = useState(false);
+	const [ReferralTitle, setReferralTitle] = useState("");
+	const [ReferralMessage, setReferralMessage] = useState("");
+
+	// for copy button
+	const copyText = (text) => {
+		Clipboard.setString(text);
+	};
+
+	const setInputToCopiedText = async () => {
+		const text = await Clipboard.getStringAsync();
+		setReferralCode(text);
+	};
 
 	const handlePopup = () => {
 		setPopupVisible(!popupVisible); // created 1st modal
@@ -225,16 +327,18 @@ const ReferAFriend = ({ navigation }) => {
 			.then((response) => {
 				if (response.data.success) {
 					const { username } = response.data;
-					Alert.alert(
-						"Success!",
+					setReferralTitle("Success!");
+					setReferralMessage(
 						`You claimed a referral from ${username}. Both of you gained 50 points!`
 					);
 					setReferralState(true);
 					setReferralCode("");
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
+					setReferralTitle("Error");
+					setReferralMessage(message);
 				}
+				setIsReferralVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -259,7 +363,7 @@ const ReferAFriend = ({ navigation }) => {
 			.catch((error) => {
 				console.error("Error retrieving userData:", error);
 			});
-	},  [referralState, submitYesState]);
+	}, [referralState, submitYesState]);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -353,7 +457,7 @@ const ReferAFriend = ({ navigation }) => {
 						/>
 					</View>
 
-					<View style={{ marginHorizontal: 20, marginVertical: 20 }}>
+					<View style={{ marginHorizontal: 20, marginTop: 20 }}>
 						<View
 							style={{
 								flexDirection: "row",
@@ -373,6 +477,7 @@ const ReferAFriend = ({ navigation }) => {
 									borderRadius: 30,
 									borderColor: 0,
 								}}
+								onPress={() => copyText(userData.referralCode)}
 							/>
 						</View>
 						<View
@@ -397,7 +502,11 @@ const ReferAFriend = ({ navigation }) => {
 									borderColor: 0,
 								}}
 							/>
-							<PopUp visible={popupVisible} onClose={handlePopup} handleSubmitYes={handleSubmitYes} />
+							<PopUp
+								visible={popupVisible}
+								onClose={handlePopup}
+								handleSubmitYes={handleSubmitYes}
+							/>
 						</View>
 
 						<View
@@ -442,43 +551,57 @@ const ReferAFriend = ({ navigation }) => {
 								style={{
 									width: "40%",
 									borderRadius: 10,
-									marginBottom: 15,
 									borderColor: 0,
 									elevation: 2,
 								}}
 								onPress={submitReferral}
 							/>
+							<CustomReferralAlert
+								visible={isReferralVisible}
+								onClose={() => setIsReferralVisible(false)}
+								title={ReferralTitle}
+								message={ReferralMessage}
+							/>
 						</View>
-						<CustomText>Your Rewards</CustomText>
-						{rewards.map((reward, index) => (
-							<TouchableOpacity
-							key={index}
-							style={{
-								width: "100%",
-								borderColor: 0,
-								paddingHorizontal: 20,
-								paddingVertical: 10,
-								borderRadius: 5,
-								backgroundColor: COLORS.grey,
-								elevation: 2,
-								marginBottom: 20,
-							}}
-							>
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Image
-								source={require("../../assets/beer.png")}
-								style={{
-									height: 70,
-									width: 70,
-									marginRight: 10,
-								}}
-								resizeMode="contain"
-								/>
-								<CustomText>{reward.rewardName}</CustomText>
-							</View>
-							</TouchableOpacity>
-						))}
 					</View>
+
+					<SafeAreaView style={{ flex: 1 }}>
+						<View style={{ marginHorizontal: 20 }}>
+							<Text style={{ ...GlobalStyle.headerFont }}>Your Rewards</Text>
+							<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+								{rewards.map((reward, index) => (
+									<View
+										key={index}
+										style={{
+											width: "100%",
+											borderColor: 0,
+											paddingHorizontal: 20,
+											paddingVertical: 10,
+											borderRadius: 10,
+											backgroundColor: COLORS.grey,
+											elevation: 2,
+											marginBottom: 10,
+										}}
+									>
+										<View
+											style={{ flexDirection: "row", alignItems: "center" }}
+										>
+											<Image
+												source={require("../../assets/beer.png")}
+												style={{
+													height: 70,
+													width: 70,
+													marginRight: 10,
+												}}
+												resizeMode="contain"
+											/>
+											<CustomText>{reward.rewardName}</CustomText>
+										</View>
+									</View>
+								))}
+							</ScrollView>
+						</View>
+					</SafeAreaView>
 				</SafeAreaView>
 			</SafeAreaView>
 		</View>
