@@ -108,6 +108,7 @@ app.post("/signup", async (req, res) => {
 			referralPoints: 0,
 			referralClaim: [],
 			rewardArray: [],
+			wishlistArray: [],
 		});
 
 		res.json({ success: true, message: "User signed up successfully" });
@@ -425,6 +426,18 @@ app.post("/submitComment", async(req, res) => {
 app.post("/submitPost", async(req, res) => {
 	const { userID, postTitle, postDate, postDescription } = req.body;
 	globalUser.submitPost(client, res, userID, postTitle, postDate, postDescription)
+})
+
+//Route to add item to wishlist for user
+app.post("/addToWishlist", async(req, res) => {
+	const { beerID, venueID, userID } = req.body;
+	globalUser.addToWishlist(client, res, beerID, venueID, userID)
+})
+
+//Route to retrieve wishlist for user
+app.get("/getWishlist", async (req, res) => {
+	const userID = req.query.userID;
+	globalUser.getWishlist(client, res, userID)
 })
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================

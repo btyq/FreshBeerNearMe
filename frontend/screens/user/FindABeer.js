@@ -7,6 +7,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import {
+	Alert,
 	Animated,
 	Easing,
 	Image,
@@ -17,6 +18,7 @@ import {
 	TextInput,
 	TouchableOpacity,
 	View,
+	PanResponder,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
@@ -71,6 +73,7 @@ const BeerItem = ({
 	beerImage,
 	ABV,
 	IBU,
+	onSlide,
 }) => {
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
@@ -83,13 +86,13 @@ const BeerItem = ({
 	const { cookies } = useCookies();
 	const [userID, setUserID] = useState("");
 	const [reviewAdded, setReviewAdded] = useState(false);
+	const slideAnim = useRef(new Animated.Value(0)).current;
 
 	const HorizontalBarChart = ({ ratingCounter }) => {
 		const data = Object.entries(ratingCounter).map(([key, value]) => {
 			return { label: key + "*", value: parseInt(value) };
 		});
 		const maxValue = Math.max(...data.map((item) => item.value));
-
 		return (
 			<View>
 				{data.map((item, index) => (
@@ -112,6 +115,25 @@ const BeerItem = ({
 			</View>
 		);
 	};
+
+	const panResponder = useRef(
+		PanResponder.create({
+		onStartShouldSetPanResponder: () => true,
+		onPanResponderMove: (_, gestureState) => {
+			slideAnim.setValue(gestureState.dx);
+		},
+		onPanResponderRelease: (_, gestureState) => {
+			if (gestureState.dx > 50) {
+			onSlide(beerID);
+			}
+	
+			Animated.spring(slideAnim, {
+			toValue: 0,
+			useNativeDriver: false,
+			}).start();
+		},
+		})
+	).current;
 
 	const handlePopup = () => {
 		setPopupVisible(!popupVisible); // created 1st modal
@@ -246,32 +268,37 @@ const BeerItem = ({
 	}, [popupVisible, reviewAdded]);
 
 	return (
-		<View style={styles.subContainer}>
-			<TouchableOpacity style={styles.itemContainer} onPress={handlePopup}>
-				<View style={{ flex: 1, paddingHorizontal: 6, paddingTop: 6 }}>
-					<CustomText>{beerName}</CustomText>
-					<CustomText>Price: ${price}</CustomText>
-				</View>
-				<View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							paddingTop: 6,
-						}}
-					>
-						{[1, 2, 3, 4, 5].map((star) => (
-							<Ionicons
-								key={star}
-								name="star"
-								size={16}
-								color={star <= rating ? COLORS.foam : COLORS.grey}
-							/>
-						))}
+		<Animated.View
+			style={{
+				transform: [{ translateX: slideAnim }],
+			}}
+			{...panResponder.panHandlers}
+		>
+			<View style={styles.subContainer}>
+				<TouchableOpacity style={styles.itemContainer} onPress={handlePopup}>
+					<View style={{ flex: 1, paddingHorizontal: 6, paddingTop: 6 }}>
+						<CustomText>{beerName}</CustomText>
+						<CustomText>Price: ${price}</CustomText>
 					</View>
-				</View>
-			</TouchableOpacity>
-
+					<View>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								paddingTop: 6,
+							}}
+						>
+							{[1, 2, 3, 4, 5].map((star) => (
+								<Ionicons
+									key={star}
+									name="star"
+									size={16}
+									color={star <= rating ? COLORS.foam : COLORS.grey}
+								/>
+							))}
+						</View>
+					</View>
+				</TouchableOpacity>
 			{/* 1st popup */}
 			<Modal visible={popupVisible} transparent animationType="fade">
 				<View style={styles.modalContainer}>
@@ -689,6 +716,7 @@ const BeerItem = ({
 				</View>
 			</Modal>
 		</View>
+	</Animated.View>
 	);
 };
 
@@ -700,6 +728,7 @@ const FindABeer = ({ navigation }) => {
 	const [beerData, setBeerData] = useState([]);
 	const rotateValue = useRef(new Animated.Value(0)).current;
 	const [isDataLoading, setIsDataLoading] = useState(true);
+	const { cookies } = useCookies();
 
 	useEffect(() => {
 		const fetchBeerData = async () => {
@@ -785,6 +814,27 @@ const FindABeer = ({ navigation }) => {
 		);
 		setSortedBeerData(filteredData);
 		setIsDataLoading(false);
+	};
+
+	const handleSlide = (beerID) => {
+		console.log("BeerItem with ID", beerID, "was slided.");
+		const data = { 
+			beerID: beerID,
+			userID: cookies.userID
+		}
+		axios
+			.post("http://10.0.2.2:3000/addToWishlist", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Added to Wishlist!")
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
 	};
 
 	return (
@@ -951,6 +1001,7 @@ const FindABeer = ({ navigation }) => {
 									IBU={beer.ibu}
 									communityReviews={beer.communityReviews}
 									venueAvailability={beer.venueAvailability}
+									onSlide={handleSlide}
 								/>
 							))}
 						</ScrollView>

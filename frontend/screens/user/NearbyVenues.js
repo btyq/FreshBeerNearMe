@@ -186,7 +186,7 @@ const NearbyVenues = ({ navigation }) => {
 			setCurrentLocation(location);
 			setTimeout(() => {
 				setIsMapReady(true);
-			}, 3000);
+			}, 1000);
 		};
 		fetchLocation();
 	}, []);

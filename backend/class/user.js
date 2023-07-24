@@ -1,5 +1,5 @@
 class User {
-  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray, recommendationArray, referralCode, referralPoints, referralClaim, rewardArray) {
+  constructor(client, userID, username, password, email, mobileNumber, receiveNotification, followArray, recommendationArray, referralCode, referralPoints, referralClaim, rewardArray, wishlistArray) {
     this.client = client;
     this.userID = userID;
     this.username = username;
@@ -13,6 +13,7 @@ class User {
     this.referralPoints = referralPoints;
     this.referralClaim = referralClaim;
     this.rewardArray = rewardArray;
+    this.wishlistArray = wishlistArray;
   }
 
   async login(res, username, password) {
@@ -33,6 +34,7 @@ class User {
         this.referralPoints = result.referralPoints;
         this.referralClaim = result.referralClaim;
         this.rewardArray = result.rewardArray;
+        this.wishlistArray = result.wishlistArray;
 
         //Create a session token
         const sessionToken = 'testtoken123';
@@ -489,6 +491,53 @@ class User {
     } catch (error) {
       console.error('Error submitting post:', error);
       res.status(500).json({ success: false, message: 'Failed to submit post' });
+    }
+  }
+
+  async addToWishlist(client, res, beerID, venueID, userID) {
+    try {
+      const db = client.db("FreshBearNearMe");
+      const usersCollection = db.collection("User");
+      const user = await usersCollection.findOne({ userID });
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
+  
+      let itemToAdd = {};
+      if (beerID !== undefined) {
+        itemToAdd = { beerID: beerID };
+      } else if (venueID !== undefined) {
+        itemToAdd = { venueID: venueID };
+      } else {
+        return res.status(400).json({ success: false, message: "Invalid input" });
+      }
+  
+      const beerExistsInWishlist = user.wishlistArray.some(
+        (item) => item.beerID === beerID || item.venueID === venueID
+      );
+  
+      if (beerExistsInWishlist) {
+        return res.status(200).json({ success: false, message: "Item already in wishlist" });
+      }
+  
+      await usersCollection.updateOne(
+        { userID },
+        { $push: { wishlistArray: itemToAdd } }
+      );
+  
+      return res.status(200).json({ success: true, message: "Item added to wishlist successfully" });
+    } catch (error) {
+      console.error("Error adding item to wishlist:", error);
+      return res.status(500).json({ success: false, message: "Internal server error" });
+    }
+  };
+
+  async getWishlist (client, res, userID) { 
+    try {
+      console.log(userID);
+    } catch {
+
     }
   }
 
