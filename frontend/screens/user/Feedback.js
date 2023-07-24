@@ -1,6 +1,7 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+	Alert,
 	Image,
 	ScrollView,
 	StyleSheet,
@@ -9,10 +10,13 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import { SelectList } from "react-native-dropdown-select-list";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -54,15 +58,92 @@ const CustomText = (props) => {
 
 const Feedback = ({ navigation }) => {
 	const [activeButton, setActiveButton] = useState("issues"); // selected button
+	const [issueDescription, setIssueDescription] = useState("");
+	const [feedbackDescription, setFeedbackDescription] = useState("");
+	const [venueData, setVenueData] = useState([]);
+	const [selectedVenue, setSelectedVenue] = useState(null);
+	const { cookies } = useCookies();
 
 	const handleButton = (title) => {
 		setActiveButton(title);
 	};
 
-	const handleSubmit = () => {
-		// Implement your submit logic here
-		console.log("Issue Description:", issueDescription);
+	const handleSubmitIssue = () => {
+		const currentDate = new Date();
+		const day = currentDate.getDate();
+		const month = currentDate.getMonth() + 1;
+		const year = currentDate.getFullYear();
+		const formattedDate = `${day}/${month}/${year}`;
+
+		const data = {
+			userID: cookies.userID,
+			issueDate: formattedDate,
+			issueDescription: issueDescription,
+		};
+
+		axios
+			.post("http://10.0.2.2:3000/submitIssue", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Issue submitted!");
+					setIssueDescription("");
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
 	};
+
+	const handleSubmitFeedback = () => {
+		const currentDate = new Date();
+		const day = currentDate.getDate();
+		const month = currentDate.getMonth() + 1;
+		const year = currentDate.getFullYear();
+		const formattedDate = `${day}/${month}/${year}`;
+
+		const data = {
+			userID: cookies.userID,
+			venueName: selectedVenue,
+			feedbackDate: formattedDate,
+			feedbackDescription: feedbackDescription,
+		};
+
+		axios
+			.post("http://10.0.2.2:3000/submitFeedback", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Feedback submitted!");
+					setFeedbackDescription("");
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	}
+
+	useEffect(() => {
+		const fetchVenueData = async () => {
+			try {
+				const response = await axios.get("http://10.0.2.2:3000/getVenueData");
+				const { success, venueData } = response.data;
+				if (success) {
+					setVenueData(venueData);
+				} else {
+					console.error("Error retrieving venue data:", response.data.message)
+				}
+			} catch (error) {
+				console.error("Error retrieving venue data:", error);
+			}
+		}
+		
+		fetchVenueData();
+	}, []);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -123,86 +204,35 @@ const Feedback = ({ navigation }) => {
 						</View>
 					}
 				/>
-
-				<View style={{ marginHorizontal: 20 }}>
-					<View style={{ flexDirection: "row", marginVertical: 18 }}>
-						{/* for reporting issues */}
-						<Button
-							title="Report an issue"
-							onPress={() => handleButton("issues")}
-							style={
-								activeButton === "issues"
-									? styles.activeFilterButton
-									: styles.filterButton
-							}
-						/>
-						<Button
-							title="Submit feedback & requests"
-							onPress={() => handleButton("feedback")}
-							style={
-								activeButton === "feedback"
-									? styles.activeFilterButton
-									: styles.filterButton
-							}
-						/>
-					</View>
-
-					{/* for reporting issues */}
-					{activeButton === "issues" ? (
-						<SafeAreaView>
-							<Text style={{ ...GlobalStyle.headerFont }}>
-								Please describe the issue:
-							</Text>
-							<View
-								style={{
-									flexDirection: "column",
-									height: 300,
-									width: "100%",
-									elevation: 2,
-									backgroundColor: COLORS.grey,
-									marginTop: 10,
-									borderRadius: 15,
-									borderColor: 0,
-									marginBottom: 10,
-									paddingHorizontal: 12,
-								}}
-							>
-								<View
-									style={{
-										flex: 1,
-										borderColor: 0,
-										borderWidth: 1,
-										borderRadius: 12,
-										resizeMode: "contain",
-										paddingLeft: 12,
-										marginTop: 15,
-										backgroundColor: COLORS.grey,
-									}}
-								>
-									<TextInput
-										placeholder="Write your issues here"
-										multiline
-										style={{ ...GlobalStyle.bodyFont }}
-									></TextInput>
-								</View>
-							</View>
+				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+					<View style={{ marginHorizontal: 20 }}>
+						<View style={{ flexDirection: "row", marginVertical: 18 }}>
+							{/* for reporting issues */}
 							<Button
-								title="Submit"
-								//	onPress={handleSubmit}
-								filled
-								style={{
-									elevation: 2,
-									borderColor: 0,
-									marginTop: 12,
-								}}
+								title="Report an issue"
+								onPress={() => handleButton("issues")}
+								style={
+									activeButton === "issues"
+										? styles.activeFilterButton
+										: styles.filterButton
+								}
 							/>
-						</SafeAreaView>
-					) : (
-						// for sending feedback
-						activeButton === "feedback" && (
+							<Button
+								title="Submit feedback & requests"
+								onPress={() => handleButton("feedback")}
+								style={
+									activeButton === "feedback"
+										? styles.activeFilterButton
+										: styles.filterButton
+								}
+							/>
+						</View>
+
+						{/* for reporting issues */}
+						{activeButton === "issues" ? (
 							<SafeAreaView>
 								<Text style={{ ...GlobalStyle.headerFont }}>
-									Send us feedback:
+									Please describe the issue:
 								</Text>
 								<View
 									style={{
@@ -231,15 +261,17 @@ const Feedback = ({ navigation }) => {
 										}}
 									>
 										<TextInput
-											placeholder="Write your feedback here"
+											placeholder="Write your issues here"
 											multiline
 											style={{ ...GlobalStyle.bodyFont }}
-										/>
+											value={issueDescription}
+											onChangeText={(text) => setIssueDescription(text)}
+										></TextInput>
 									</View>
 								</View>
 								<Button
 									title="Submit"
-									// onPress={handleSubmit}
+									onPress={handleSubmitIssue}
 									filled
 									style={{
 										elevation: 2,
@@ -248,9 +280,89 @@ const Feedback = ({ navigation }) => {
 									}}
 								/>
 							</SafeAreaView>
-						)
-					)}
-				</View>
+						) : (
+							// for sending feedback
+							activeButton === "feedback" && (
+								<SafeAreaView>
+									<View style={{ flexDirection: "row", alignItems: "center" }}>
+										<Text style={{ ...GlobalStyle.headerFont }}>Select Venue: </Text>
+										<SelectList
+											data={venueData.map((venue) => ({
+											label: venue.venueName,
+											value: venue.venueName,
+											}))}
+											value={selectedVenue}
+											setSelected={(value) => setSelectedVenue(value)}
+											boxStyles={{
+											borderRadius: 12,
+											borderColor: 0,
+											backgroundColor: COLORS.white,
+											opacity: 1,
+											width: "70%",
+											}}
+											dropdownStyles={{
+											right: 0,
+											borderColor: 0,
+											backgroundColor: COLORS.white,
+											opacity: 1,
+											}}
+											defaultOption={selectedVenue}
+											search={true}
+										/>
+									</View>
+									<Text style={{ ...GlobalStyle.headerFont }}>
+										Send us feedback / request:
+									</Text>
+									<View
+										style={{
+											flexDirection: "column",
+											height: 300,
+											width: "100%",
+											elevation: 2,
+											backgroundColor: COLORS.grey,
+											marginTop: 10,
+											borderRadius: 15,
+											borderColor: 0,
+											marginBottom: 10,
+											paddingHorizontal: 12,
+										}}
+									>
+										<View
+											style={{
+												flex: 1,
+												borderColor: 0,
+												borderWidth: 1,
+												borderRadius: 12,
+												resizeMode: "contain",
+												paddingLeft: 12,
+												marginTop: 15,
+												backgroundColor: COLORS.grey,
+											}}
+										>
+											<TextInput
+												placeholder="Write your feedback here"
+												multiline
+												style={{ ...GlobalStyle.bodyFont }}
+												value={feedbackDescription}
+												onChangeText={(text) => setFeedbackDescription(text)}
+											/>
+										</View>
+									</View>
+									<Button
+										title="Submit"
+										onPress={handleSubmitFeedback}
+										filled
+										style={{
+											elevation: 2,
+											borderColor: 0,
+											marginBottom: 12,
+										}}
+									/>
+								</SafeAreaView>
+							)
+						)}
+					</View>
+				</ScrollView>
 			</SafeAreaView>
 		</View>
 	);

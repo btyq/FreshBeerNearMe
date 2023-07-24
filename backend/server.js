@@ -445,6 +445,18 @@ app.post("/removeWishlist", async(req, res) => {
 	const { beerID, venueID, userID } = req.body;
 	globalUser.removeWishlist(client, res, beerID, venueID, userID)
 })
+
+//Route for user to submit issue
+app.post("/submitIssue", async (req, res) => {
+	const { userID, issueDate, issueDescription } = req.body;
+	globalUser.submitIssue(client, res, userID, issueDate, issueDescription)
+})
+
+//Route for user to submit feedback
+app.post("/submitFeedback", async (req, res) => {
+	const { userID, venueName, feedbackDate, feedbackDescription } = req.body;
+	globalUser.submitFeedback(client, res, userID, venueName, feedbackDate, feedbackDescription);
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;

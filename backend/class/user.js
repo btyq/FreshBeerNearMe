@@ -607,6 +607,62 @@ class User {
     }
   }
 
+  async submitIssue(client, res, userID, issueDate, issueDescription) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const issueCollection = db.collection('Issue');
+  
+      const latestIssue = await issueCollection.findOne({}, { sort: { issueID: -1 }, projection: { issueID: 1 } });
+      const latestIssueID = latestIssue ? latestIssue.issueID : 0;
+      const newIssueID = latestIssueID + 1;
+  
+      const newIssue = {
+        issueID: newIssueID,
+        issueUser: userID,
+        issueDate: issueDate,
+        issueDescription: issueDescription,
+      };
+  
+      await issueCollection.insertOne(newIssue);
+  
+      res.json({ success: true, message: 'Successfully submitted issue' });
+    } catch (error) {
+      console.error('Error submitting issue:', error);
+      res.status(500).json({ success: false, message: 'Failed to submit issue' });
+    }
+  }
+
+  async submitFeedback(client, res, userID, venueName, feedbackDate, feedbackDescription) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const feedbackCollection = db.collection('Feedback');
+      const venueCollection = db.collection('Venue');
+  
+      const latestFeedback = await feedbackCollection.findOne({}, { sort: { feedbackID: -1 }, projection: { feedbackID: 1 } });
+      const latestFeedbackID = latestFeedback ? latestFeedback.feedbackID : 0;
+      const newFeedbackID = latestFeedbackID + 1;
+  
+      const newFeedback = {
+        feedbackID: newFeedbackID,
+        feedbackUser: userID,
+        feedbackDate: feedbackDate,
+        feedbackDescription: feedbackDescription,
+      };
+  
+      await feedbackCollection.insertOne(newFeedback);
+  
+      await venueCollection.updateOne(
+        { venueName: venueName },
+        { $push: { venueFeedback: newFeedbackID } }
+      );
+  
+      res.json({ success: true, message: 'Successfully submitted feedback' });
+    } catch (error) {
+      console.error('Error submitting feedback:', error);
+      res.status(500).json({ success: false, message: 'Failed to submit feedback' });
+    }
+  }
+
   logout() {
     console.log("User logged out");
   }

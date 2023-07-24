@@ -1,5 +1,5 @@
 class Venue {
-    constructor(client, venueID, venueName, venueAddress, venueContact, venueRating, venueImage, venueOperatingHours, venueMenu, venueReview, venueFreshness, venueLatitude, venueLongitude, venueTemperature) {
+    constructor(client, venueID, venueName, venueAddress, venueContact, venueRating, venueImage, venueOperatingHours, venueMenu, venueReview, venueFreshness, venueLatitude, venueLongitude, venueTemperature, venueFeedback) {
         this.client = client;
         this.venueID = venueID;
         this.venueName = venueName;
@@ -13,7 +13,8 @@ class Venue {
         this.venueFreshness = venueFreshness;
         this.venueLatitude = venueLatitude;
         this.venueLongitude = venueLongitude;
-        this.venueTemperature = venueTemperature; 
+        this.venueTemperature = venueTemperature;
+        this.venueFeedback = venueFeedback;
     }
 
     static async getVenueData(client, venueArray, res) {
@@ -37,6 +38,7 @@ class Venue {
                 data.venueLatitude,
                 data.venueLongitude,
                 data.venueTemperature,
+                data.venueFeedback,
                 );
                 venueArray.push(venue);
                 return venue;
