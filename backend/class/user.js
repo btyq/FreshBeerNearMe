@@ -514,7 +514,7 @@ class User {
       }
   
       const beerExistsInWishlist = user.wishlistArray.some(
-        (item) => item.beerID === beerID || item.venueID === venueID
+        (item) => (beerID !== undefined && item.beerID === beerID) || (venueID !== undefined && item.venueID === venueID)
       );
   
       if (beerExistsInWishlist) {
@@ -533,11 +533,77 @@ class User {
     }
   };
 
-  async getWishlist (client, res, userID) { 
+  async getWishlist(client, res, userID) {
     try {
-      console.log(userID);
-    } catch {
+      const db = client.db("FreshBearNearMe");
+      const usersCollection = db.collection("User");
+      const venuesCollection = db.collection("Venue");
+      const beersCollection = db.collection("Beer");
+  
+      const user = await usersCollection.findOne({ userID: parseInt(userID) });
+  
+      if (!user) {
+        return res.json({ success: false, message: "User not found" });
+      }
+  
+      const wishlistArray = user.wishlistArray;
+      const matchingData = [];
+  
+      for (const item of wishlistArray) {
+        if (item.hasOwnProperty("venueID")) {
+          const venueID = item.venueID;
+          const venue = await venuesCollection.findOne({ venueID: venueID });
+  
+          if (venue) {
+            matchingData.push(venue);
+          }
+        } else if (item.hasOwnProperty("beerID")) {
+          const beerID = item.beerID;
+          const beer = await beersCollection.findOne({ beerID: beerID });
+  
+          if (beer) {
+            matchingData.push(beer);
+          }
+        }
+      }
+  
+      return res.json({ wishlistArray: matchingData });
+    } catch (error) {
+      console.error("Error getting wishlist:", error);
+      return res.json({ success: false, message: "Internal server error" });
+    }
+  }
 
+  async removeWishlist(client, res, beerID, venueID, userID) {
+    try {
+      const db = client.db("FreshBearNearMe");
+      const usersCollection = db.collection("User");
+      const user = await usersCollection.findOne({ userID: parseInt(userID) });
+  
+      if (!user) {
+        return res.json({ success: false, message: "User not found" });
+      }
+  
+      const wishlistArray = user.wishlistArray;
+      const index = wishlistArray.findIndex(
+        (item) => (item.beerID && item.beerID === beerID) || (item.venueID && item.venueID === venueID)
+      );
+  
+      if (index === -1) {
+        return res.json({ success: false, message: "Item not found in wishlist" });
+      }
+  
+      wishlistArray.splice(index, 1);
+
+      await usersCollection.updateOne(
+        { userID: parseInt(userID) },
+        { $set: { wishlistArray: wishlistArray } }
+      );
+  
+      return res.json({ success: true, message: "Item removed from wishlist" });
+    } catch (error) {
+      console.error("Error removing item from wishlist:", error);
+      return res.json({ success: false, message: "Internal server error" });
     }
   }
 

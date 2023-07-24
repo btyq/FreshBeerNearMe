@@ -1,61 +1,233 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
 import {
+	Entypo,
+	FontAwesome,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
+import axios from "axios";
+import React, { useEffect, useRef, useState } from "react";
+import {
+	Alert,
 	Button,
+	Animated,
+	Easing,
+	Image,
 	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
+	TextInput,
 	TouchableOpacity,
 	View,
+	PanResponder,
 } from "react-native";
 import { Header } from "react-native-elements";
+import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
-const Wishlist = () => {
-	const navigation = useNavigation();
-	const [beerModalVisible, setBeerModalVisible] = useState(false);
-	const [venueModalVisible, setVenueModalVisible] = useState(false);
-	const [selectedBeer, setSelectedBeer] = useState(null);
-	const [selectedVenue, setSelectedVenue] = useState(null);
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
+	);
+};
 
-	const beerData = [
-		{ beerName: "Beer Name 1", rating: 3 },
-		{ beerName: "Beer Name 2", rating: 4 },
-		{ beerName: "Beer Name 3", rating: 3 },
-		{ beerName: "Beer Name 4", rating: 4 },
-		{ beerName: "Beer Name 5", rating: 3 },
-		{ beerName: "Beer Name 6", rating: 4 },
-		{ beerName: "Beer Name 7", rating: 3 },
-		{ beerName: "Beer Name 8", rating: 4 },
-		{ beerName: "Beer Name 9", rating: 3 },
-		{ beerName: "Beer Name 10", rating: 4 },
-	];
+const BeerItem = ({
+	beerID,
+	beerName,
+	price,
+	rating,
+	beerDescription,
+	beerImage,
+	ABV,
+	IBU,
+	onSlide,
+}) => {
+	const [popupVisible, setPopupVisible] = useState(false);
+	const slideAnim = useRef(new Animated.Value(0)).current;
+	
+	const panResponder = useRef(
+		PanResponder.create({
+		onStartShouldSetPanResponder: () => true,
+		onPanResponderMove: (_, gestureState) => {
+			slideAnim.setValue(gestureState.dx);
+		},
+		onPanResponderRelease: (_, gestureState) => {
+			if (gestureState.dx > 50) {
+			const type = 'beer'
+			onSlide(type, beerID);
+			}
+	
+			Animated.spring(slideAnim, {
+			toValue: 0,
+			useNativeDriver: false,
+			}).start();
+		},
+		})
+	).current;
 
-	const venueData = [
-		{ venueName: "Venue Name 1", rating: 3 },
-		{ venueName: "Venue Name 2", rating: 4 },
-		{ venueName: "Venue Name 3", rating: 3 },
-		{ venueName: "Venue Name 4", rating: 4 },
-		{ venueName: "Venue Name 5", rating: 3 },
-		{ venueName: "Venue Name 6", rating: 4 },
-		{ venueName: "Venue Name 7", rating: 3 },
-		{ venueName: "Venue Name 8", rating: 4 },
-		{ venueName: "Venue Name 9", rating: 3 },
-		{ venueName: "Venue Name 10", rating: 4 },
-	];
-
-	const openBeerModal = (beer) => {
-		setSelectedBeer(beer);
-		setBeerModalVisible(true);
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible); // created 1st modal
 	};
 
-	const openVenueModal = (venue) => {
-		setSelectedVenue(venue);
-		setVenueModalVisible(true);
+	return (
+		<Animated.View
+			style={{
+				transform: [{ translateX: slideAnim }],
+			}}
+			{...panResponder.panHandlers}
+		>
+			<View style={styles.subContainer}>
+				<TouchableOpacity style={styles.itemContainer} onPress={handlePopup}>
+					<View style={{ flex: 1, paddingHorizontal: 6, paddingTop: 6 }}>
+						<CustomText>{beerName}</CustomText>
+						<CustomText>Price: ${price}</CustomText>
+					</View>
+					<View>
+						<View
+							style={{
+								flexDirection: "row",
+								alignItems: "center",
+								paddingTop: 6,
+							}}
+						>
+							{[1, 2, 3, 4, 5].map((star) => (
+								<Ionicons
+									key={star}
+									name="star"
+									size={16}
+									color={star <= rating ? COLORS.foam : COLORS.grey}
+								/>
+							))}
+						</View>
+					</View>
+				</TouchableOpacity>
+			</View>
+		</Animated.View>
+	);
+};
+
+const VenueItem = ({
+	venueID,
+	venueName,
+	venueAddress,
+	venueContact,
+	venueRating,
+	venueImage,
+	venueOperatingHours,
+	venueFreshness,
+	venueTemperature,
+	onSlide,
+}) => {
+	const [popupVisible, setPopupVisible] = useState(false);
+	const slideAnim = useRef(new Animated.Value(0)).current;
+
+	const panResponder = useRef(
+		PanResponder.create({
+		onStartShouldSetPanResponder: () => true,
+		onPanResponderMove: (_, gestureState) => {
+			slideAnim.setValue(gestureState.dx);
+		},
+		onPanResponderRelease: (_, gestureState) => {
+			if (gestureState.dx > 50) {
+			const type = 'venue'
+			onSlide(type, venueID);
+			}
+	
+			Animated.spring(slideAnim, {
+			toValue: 0,
+			useNativeDriver: false,
+			}).start();
+		},
+		})
+	).current;
+
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible); // created 1st modal
 	};
+	return (
+		<Animated.View
+			style={{
+				transform: [{ translateX: slideAnim }],
+			}}
+			{...panResponder.panHandlers}
+		>
+			<View style={styles.subContainer}>
+				<TouchableOpacity style={styles.itemContainer} onPress={handlePopup}>
+					<View style={{ flex: 1, paddingHorizontal: 6, paddingTop: 6 }}>
+						<CustomText>{venueName}</CustomText>
+					</View>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							paddingTop: 6,
+						}}
+					>
+						{[1, 2, 3, 4, 5].map((star) => (
+							<Ionicons
+								key={star}
+								name="star"
+								size={16}
+								color={star <= venueRating ? COLORS.foam : COLORS.grey}
+							/>
+						))}
+					</View>
+				</TouchableOpacity>
+			</View>
+		</Animated.View>
+	);
+};
+
+const Wishlist = ( { navigation }) => {
+	const [wishlistData, setWishlistData] = useState([]);
+	const [removedWishlistState, setRemovedWishlistState] = useState(false);
+	const { cookies } = useCookies();
+
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getWishlist", {
+				params: {
+					userID: cookies.userID
+				}
+			})
+			.then((response) => {
+				setWishlistData(response.data);
+				setRemovedWishlistState(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving wishlist", error);
+			})
+	}, [removedWishlistState]);
+
+	const handleSlide = (type, ID) => {
+		let data = { userID: cookies.userID };
+	
+		if (type === 'beer') {
+		  data = { ...data, beerID: ID };
+		} else if (type === 'venue') {
+		  data = { ...data, venueID: ID };
+		}
+		axios
+			.post("http://10.0.2.2:3000/removeWishlist", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Removed from Wishlist!")
+					setRemovedWishlistState(true);
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	  };
 
 	return (
 		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
@@ -129,168 +301,48 @@ const Wishlist = () => {
 				}}
 			>
 				<Text style={{ fontSize: 18 }}>My Wishlist</Text>
-				<TouchableOpacity style={styles.editButton}>
-					<Text>Edit</Text>
-				</TouchableOpacity>
 			</View>
 			<ScrollView style={{ marginHorizontal: 12 }}>
 				<View style={styles.containerSection}>
-					{beerData.map((item, index) => (
-						<TouchableOpacity
-							key={index}
-							style={styles.containerItem}
-							onPress={() => openBeerModal(item)}
-						>
-							<View style={styles.leftContainer}>
-								<Text style={styles.beerName}>{item.beerName}</Text>
-							</View>
-							<View style={styles.rightContainer}>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 3 ? COLORS.foam : COLORS.white}
-								/>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 4 ? COLORS.foam : COLORS.white}
-								/>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 5 ? COLORS.foam : COLORS.white}
-								/>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 6 ? COLORS.foam : COLORS.white}
-								/>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 7 ? COLORS.foam : COLORS.white}
-								/>
-							</View>
-						</TouchableOpacity>
-					))}
-				</View>
-				<View style={styles.containerSection}>
-					{venueData.map((item, index) => (
-						<TouchableOpacity
-							key={index}
-							style={styles.containerItem}
-							onPress={() => openVenueModal(item)}
-						>
-							<View style={styles.leftContainer}>
-								<Text style={styles.venueName}>{item.venueName}</Text>
-							</View>
-							<View style={styles.rightContainer}>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 3 ? COLORS.foam : COLORS.white}
-								/>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 4 ? COLORS.foam : COLORS.white}
-								/>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 5 ? COLORS.foam : COLORS.white}
-								/>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 6 ? COLORS.foam : COLORS.white}
-								/>
-								<Ionicons
-									name="star"
-									size={20}
-									color={item.rating >= 7 ? COLORS.foam : COLORS.white}
-								/>
-							</View>
-						</TouchableOpacity>
-					))}
+				{wishlistData?.wishlistArray?.map((item) => {
+					if (item.beerID) {
+						return (
+						<BeerItem
+							key={item.beerID}
+							beerID={item.beerID}
+							beerName={item.beerName}
+							price={item.price}
+							rating={item.rating}
+							beerDescription={item.beerDescription}
+							beerImage={item.beerImage}
+							ABV={item.abv}
+							IBU={item.ibu}
+							communityReviews={item.communityReviews}
+							venueAvailability={item.venueAvailability}
+							onSlide={handleSlide}
+						/>
+						);
+					} else if (item.venueID) {
+						return (
+						<VenueItem
+							key={item.venueID}
+							venueID={item.venueID}
+							venueName={item.venueName}
+							venueAddress={item.venueAddress}
+							venueContact={item.venueContact}
+							venueRating={item.venueRating}
+							venueImage={item.venueImage}
+							venueOperatingHours={item.venueOperatingHours}
+							venueFreshness={item.venueFreshness}
+							venueTemperature={item.venueTemperature}
+							onSlide={handleSlide}
+						/>
+						);
+					}
+					return null;
+					})}
 				</View>
 			</ScrollView>
-
-			{/* Beer Modal */}
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={beerModalVisible}
-				onRequestClose={() => setBeerModalVisible(false)}
-			>
-				<View style={styles.modalContainer}>
-					<View style={styles.modalContent}>
-						<Text style={styles.modalTitle}>Beer Details</Text>
-						<Text style={styles.modalText}>
-							Beer Name: {selectedBeer?.beerName}
-						</Text>
-						{/* Add more beer details here */}
-						<TouchableOpacity
-							style={{
-								backgroundColor: COLORS.foam,
-								padding: 10,
-								borderRadius: 8,
-								alignItems: "center",
-								marginHorizontal: 22,
-							}}
-							onPress={() => setBeerModalVisible(false)}
-						>
-							<Text
-								style={{
-									color: COLORS.black,
-									fontWeight: "bold",
-									fontSize: 16,
-								}}
-							>
-								Close
-							</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
-			</Modal>
-
-			{/* Venue Modal */}
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={venueModalVisible}
-				onRequestClose={() => setVenueModalVisible(false)}
-			>
-				<View style={styles.modalContainer}>
-					<View style={styles.modalContent}>
-						<Text style={styles.modalTitle}>Venue Details</Text>
-						<Text style={styles.modalText}>
-							Venue Name: {selectedVenue?.venueName}
-						</Text>
-						{/* Add more venue details here */}
-						<TouchableOpacity
-							style={{
-								backgroundColor: COLORS.foam,
-								padding: 10,
-								borderRadius: 8,
-								alignItems: "center",
-								marginHorizontal: 22,
-							}}
-							onPress={() => setVenueModalVisible(false)}
-						>
-							<Text
-								style={{
-									color: COLORS.black,
-									fontWeight: "bold",
-									fontSize: 16,
-								}}
-							>
-								Close
-							</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
-			</Modal>
 		</SafeAreaView>
 	);
 };
@@ -361,6 +413,26 @@ const styles = StyleSheet.create({
 	modalText: {
 		fontSize: 16,
 		marginBottom: 10,
+	},
+	itemContainer: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center",
+		marginBottom: 10,
+		borderColor: 0,
+	},
+	subContainer: {
+		marginBottom: 10,
+		backgroundColor: COLORS.white,
+		padding: 10,
+		borderRadius: 12,
+		borderWidth: 1,
+		shadowColor: COLORS.black, // Add shadow color
+		shadowOffset: { width: 0, height: 2 }, // Add shadow offset
+		shadowOpacity: 0.3, // Add shadow opacity
+		shadowRadius: 3, // Add shadow radius
+		elevation: 5, // Add elevation for Android
+		borderColor: 0,
 	},
 });
 

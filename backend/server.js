@@ -439,6 +439,12 @@ app.get("/getWishlist", async (req, res) => {
 	const userID = req.query.userID;
 	globalUser.getWishlist(client, res, userID)
 })
+
+//Route for user to remove item from wishlist
+app.post("/removeWishlist", async(req, res) => {
+	const { beerID, venueID, userID } = req.body;
+	globalUser.removeWishlist(client, res, beerID, venueID, userID)
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;
