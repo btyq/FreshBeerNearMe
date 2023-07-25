@@ -1,5 +1,6 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
 	Alert,
 	Image,
@@ -13,10 +14,9 @@ import {
 import { SelectList } from "react-native-dropdown-select-list";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import { useCookies } from "../../CookieContext";
-import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -94,7 +94,7 @@ const Feedback = ({ navigation }) => {
 			})
 			.catch((error) => {
 				console.error(error);
-			})
+			});
 	};
 
 	const handleSubmitFeedback = () => {
@@ -124,8 +124,8 @@ const Feedback = ({ navigation }) => {
 			})
 			.catch((error) => {
 				console.error(error);
-			})
-	}
+			});
+	};
 
 	useEffect(() => {
 		const fetchVenueData = async () => {
@@ -135,13 +135,13 @@ const Feedback = ({ navigation }) => {
 				if (success) {
 					setVenueData(venueData);
 				} else {
-					console.error("Error retrieving venue data:", response.data.message)
+					console.error("Error retrieving venue data:", response.data.message);
 				}
 			} catch (error) {
 				console.error("Error retrieving venue data:", error);
 			}
-		}
-		
+		};
+
 		fetchVenueData();
 	}, []);
 
@@ -204,7 +204,7 @@ const Feedback = ({ navigation }) => {
 						</View>
 					}
 				/>
-				<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+				<ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 70 }}>
 					<View style={{ marginHorizontal: 20 }}>
 						<View style={{ flexDirection: "row", marginVertical: 18 }}>
 							{/* for reporting issues */}
@@ -284,27 +284,34 @@ const Feedback = ({ navigation }) => {
 							// for sending feedback
 							activeButton === "feedback" && (
 								<SafeAreaView>
-									<View style={{ flexDirection: "row", alignItems: "center" }}>
-										<Text style={{ ...GlobalStyle.headerFont }}>Select Venue: </Text>
+									<Text style={{ ...GlobalStyle.headerFont }}>
+										Select Venue:
+									</Text>
+									<View
+										style={{
+											position: "relative",
+											zIndex: 1,
+											marginBottom: 12,
+										}}
+									>
 										<SelectList
 											data={venueData.map((venue) => ({
-											label: venue.venueName,
-											value: venue.venueName,
+												label: venue.venueName,
+												value: venue.venueName,
 											}))}
 											value={selectedVenue}
 											setSelected={(value) => setSelectedVenue(value)}
 											boxStyles={{
-											borderRadius: 12,
-											borderColor: 0,
-											backgroundColor: COLORS.white,
-											opacity: 1,
-											width: "70%",
+												borderRadius: 12,
+												borderColor: 0,
+												backgroundColor: COLORS.grey,
+												opacity: 1,
 											}}
 											dropdownStyles={{
-											right: 0,
-											borderColor: 0,
-											backgroundColor: COLORS.white,
-											opacity: 1,
+												right: 0,
+												borderColor: 0,
+												backgroundColor: COLORS.grey,
+												opacity: 1,
 											}}
 											defaultOption={selectedVenue}
 											search={true}
@@ -325,6 +332,7 @@ const Feedback = ({ navigation }) => {
 											borderColor: 0,
 											marginBottom: 10,
 											paddingHorizontal: 12,
+											position: "relative",
 										}}
 									>
 										<View
