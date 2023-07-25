@@ -560,7 +560,7 @@ const BeerItem = ({
 																	>
 																		<AirbnbRating
 																			count={5}
-																			defaultRating={4}
+																			defaultRating={rating}
 																			size={18}
 																			showRating={false}
 																			isDisabled={true}

@@ -663,6 +663,202 @@ class User {
     }
   }
 
+  async submitJournal(client, res, userID, journalDate, journalBeer, journalNotes, journalRating) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const journalCollection = db.collection('Journal');
+      const beerCollection = db.collection('Beer');
+  
+      const latestJournal = await journalCollection.findOne({}, { sort: { journalID: -1 } });
+      const journalID = latestJournal ? latestJournal.journalID + 1 : 1;
+      const beer = await beerCollection.findOne({ beerName: journalBeer });
+      if (!beer) {
+        return res.json({ success: false, message: 'Beer not found' });
+      }
+      const journalImage = beer.beerImage;
+      const newJournal = {
+        journalID,
+        journalUser: userID,
+        journalDate,
+        journalBeer,
+        journalNotes,
+        journalRating,
+        journalImage,
+      };
+  
+      await journalCollection.insertOne(newJournal);
+      const userCollection = db.collection('User');
+      await userCollection.updateOne(
+        { userID: userID },
+        { $push: { journalArray: journalID } }
+      );
+  
+      res.json({ success: true, message: 'Successfully submitted feedback', journal: newJournal });
+    } catch (error) {
+      console.error('Error submitting journal:', error);
+      res.json({ success: false, message: 'Internal server error' });
+    }
+  }
+  
+  async getJournal(client, res, userID) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const userCollection = db.collection('User');
+      const journalCollection = db.collection('Journal');
+  
+      const user = await userCollection.findOne({ userID: parseInt(userID) });
+  
+      if (!user) {
+        return res.json({ success: false, message: 'User not found' });
+      }
+      const journalIDs = user.journalArray || [];
+      const journals = await journalCollection.find({ journalID: { $in: journalIDs } }).toArray();
+  
+      res.send(journals);
+    } catch (error) {
+      console.error('Error getting journals:', error);
+      res.json({ success: false, message: 'Internal server error' });
+    }
+  }
+
+  async editJournal(client, res, journalID, journalNotes, journalRating) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const journalCollection = db.collection('Journal');
+  
+      const updatedJournal = await journalCollection.findOneAndUpdate(
+        { journalID: journalID },
+        { $set: { journalNotes: journalNotes, journalRating: journalRating } },
+        { returnOriginal: false }
+      );
+  
+      if (!updatedJournal.value) {
+        return res.json({ success: false, message: 'Journal not found' });
+      }
+  
+      res.json({ success: true, message: 'Journal updated successfully', updatedJournal: updatedJournal.value });
+    } catch (error) {
+      console.error('Error updating journal:', error);
+      res.json({ success: false, message: 'Internal server error' });
+    }
+  }
+
+  async getStatistics(client, res, userID) {
+    try {
+      const db = client.db('FreshBearNearMe');
+      const userCollection = db.collection('User');
+      const reviewCollection = db.collection('Reviews');
+      const journalCollection = db.collection('Journal');
+  
+      const userData = await userCollection.findOne({ userID: parseInt(userID) });
+  
+      if (!userData) {
+        return res.json({ success: false, message: 'User not found' });
+      }
+  
+      const reviews = await reviewCollection.find({ reviewUser: parseInt(userID) }).toArray();
+  
+      const uniqueBeers = new Set();
+      const uniqueVenues = new Set();
+      const venueCountMap = new Map();
+      let maxFrequency = 0;
+      let favoriteTastingNote = null;
+      let mostFrequentVenueID = null;
+      let mostRecentBeerID = null;
+      let mostRecentVenueID = null;
+      let mostRecentBeerDate = null;
+      let mostRecentVenueDate = null;
+  
+      reviews.forEach((review) => {
+        const { reviewType, reviewItem, reviewDate } = review;
+        if (reviewType === 'Beer') {
+          uniqueBeers.add(reviewItem);
+          if (reviewDate) {
+            const reviewDateObject = new Date(reviewDate);
+            if (!mostRecentBeerDate || reviewDateObject > mostRecentBeerDate) {
+              mostRecentBeerDate = reviewDateObject;
+              mostRecentBeerID = reviewItem;
+            }
+          }
+        } else if (reviewType === 'Venue') {
+          uniqueVenues.add(reviewItem);
+          if (reviewDate) {
+            const reviewDateObject = new Date(reviewDate);
+            if (!mostRecentVenueDate || reviewDateObject > mostRecentVenueDate) {
+              mostRecentVenueDate = reviewDateObject;
+              mostRecentVenueID = reviewItem;
+            }
+          }
+  
+          const count = venueCountMap.get(reviewItem) || 0;
+          const newCount = count + 1;
+          venueCountMap.set(reviewItem, newCount);
+  
+          if (newCount > maxFrequency) {
+            maxFrequency = newCount;
+            mostFrequentVenueID = reviewItem;
+          }
+        }
+      });
+  
+      const numUniqueBeers = uniqueBeers.size;
+      const numUniqueVenues = uniqueVenues.size;
+  
+      const journalIDs = userData.journalArray || [];
+      const journals = await journalCollection.find({ journalID: { $in: journalIDs } }).toArray();
+  
+      const allJournalNotes = journals.map((journal) => journal.journalNotes);
+      const frequencyCount = {};
+      allJournalNotes.forEach((note) => {
+        frequencyCount[note] = (frequencyCount[note] || 0) + 1;
+      });
+  
+      for (const note in frequencyCount) {
+        if (frequencyCount[note] > maxFrequency) {
+          maxFrequency = frequencyCount[note];
+          favoriteTastingNote = note;
+        }
+      }
+  
+      let favoriteVenueName = null;
+      let numberOfTimes = 0;
+      if (mostFrequentVenueID) {
+        const venueCollection = db.collection('Venue');
+        const venue = await venueCollection.findOne({ venueID: mostFrequentVenueID });
+        favoriteVenueName = venue ? venue.venueName : null;
+        numberOfTimes = venueCountMap.get(mostFrequentVenueID) || 0;
+      }
+  
+      let mostRecentBeer = null;
+      if (mostRecentBeerID) {
+        const beerCollection = db.collection('Beer');
+        mostRecentBeer = await beerCollection.findOne({ beerID: mostRecentBeerID });
+      }
+
+      let mostRecentVenue = null;
+      if (mostRecentVenueID) {
+        const venueCollection = db.collection('Venue');
+        mostRecentVenue = await venueCollection.findOne({ venueID: mostRecentVenueID });
+      }
+
+      const statisticsObject = {
+        favoriteTastingNote,
+        numUniqueBeers,
+        numUniqueVenues,
+        favoriteVenueName,
+        numberOfTimes,
+        mostRecentBeer,
+        mostRecentVenue,
+      };
+
+      console.log(statisticsObject);
+      res.send(statisticsObject);
+    } catch (error) {
+      console.error('Error getting user data:', error);
+      res.json({ success: false, message: 'Internal server error' });
+    }
+}
+
   logout() {
     console.log("User logged out");
   }

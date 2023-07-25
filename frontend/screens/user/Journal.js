@@ -1,7 +1,8 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+	Alert,
 	Image,
 	Modal,
 	ScrollView,
@@ -15,6 +16,9 @@ import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
+import { useCookies } from "../../CookieContext";
+import { SelectList } from "react-native-dropdown-select-list";
+import axios from "axios";
 
 const Button = ({ title, selected, onSelect }) => {
 	return (
@@ -32,6 +36,229 @@ const Button = ({ title, selected, onSelect }) => {
 	);
 };
 
+const JournalItem = ({
+	journalID,
+	journalUser,
+	journalDate,
+	journalBeer,
+	journalNotes,
+	journalRating,
+	journalImage,
+	handleJournalEditState,
+}) => {
+	const [showModal, setShowModal] = useState(false);
+	const [tastingNotes, setTastingNotes] = useState(journalNotes);
+	const [tastingNotesRating, setTastingNotesRating] = useState(journalRating);
+
+	const handleEdit = () => {
+		setShowModal(true);
+	}
+
+	const submitEdit = () => {
+		const data = {
+			journalID : journalID,
+			journalNotes : tastingNotes,
+			journalRating : tastingNotesRating
+		}
+		axios
+			.post("http://10.0.2.2:3000/editJournal", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Editted Journal!")
+					setShowModal(false);
+					handleJournalEditState();
+				}
+				else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	};
+
+	return (
+		<TouchableOpacity
+		style={{
+			width: "90%",
+			alignSelf: "center",
+			marginBottom: 20,
+			borderColor: 0,
+			borderRadius: 40,
+			elevation: 3,
+		}}
+		>
+			<View
+				style={{
+				width: "100%",
+				height: 200,
+				position: "relative",
+				backgroundColor: COLORS.grey,
+				borderColor: 0,
+				}}
+			>
+				<Image
+				source={{ uri: journalImage }}
+				style={{
+					width: "100%",
+					height: 200,
+					borderTopLeftRadius: 20,
+					borderTopRightRadius: 20,
+					position: "relative",
+				}}
+				/>
+				<TouchableOpacity
+				style={{
+					position: "absolute",
+					top: 10,
+					right: 10,
+					padding: 10,
+					backgroundColor: COLORS.foam,
+					borderRadius: 12,
+					borderColor: 0,
+				}}
+				onPress={handleEdit}
+				>
+				<Text>Edit</Text>
+				</TouchableOpacity>
+			</View>
+		
+			<View style={styles.detailContainer}>
+				<View
+				style={{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+					marginBottom: 10,
+				}}
+				>
+				<Text
+					style={{
+					fontWeight: "bold",
+					fontSize: 15,
+					backgroundColor: COLORS.grey,
+					}}
+				>
+					{journalBeer}
+				</Text>
+				<View>
+					<Text>{journalDate}</Text>
+				</View>
+				<View style={{ marginLeft: 0 }}>
+					<AirbnbRating
+					count={5}
+					defaultRating={journalRating}
+					size={20}
+					selectedColor={COLORS.foam}
+					unSelectedColor={COLORS.gray}
+					reviews={[]}
+					isDisabled={true}
+					/>
+				</View>
+				</View>
+				<View style={styles.tastingNoteContainer}>
+				<Text
+					style={{
+					fontSize: 15,
+					color: COLORS.black,
+					}}
+				>
+					{journalNotes}
+				</Text>
+				</View>
+			</View>
+			<Modal visible={showModal} animationType="slide" transparent>
+				<View
+				style={{
+					flex: 1,
+					justifyContent: "center",
+					alignItems: "center",
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+				}}
+				>
+				<View
+					style={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: COLORS.white,
+						padding: 20,
+						justifyContent: "center",
+						alignItems: "center",
+					}}
+				>
+					<Text>Edit Journal</Text>
+					<Image
+					source={{ uri: journalImage }}
+					style={{
+						width: "100%",
+						height: 200,
+						borderTopLeftRadius: 20,
+						borderTopRightRadius: 20,
+						position: "relative",
+					}}
+					/>
+					<Text>Beer name: {journalBeer}</Text>
+					<Text>Tasting Notes: </Text>
+					<TextInput
+						style={{...styles.textInput, flex: 0, width: 200}}
+						value={tastingNotes}
+						onChangeText={setTastingNotes}
+						multiline
+					/>
+					<Text>Ratings: </Text>
+					<View style={{...styles.ratingStarContainer, flex: 0}}>
+						<AirbnbRating
+							count={5}
+							defaultRating={tastingNotesRating}
+							size={20}
+							selectedColor={COLORS.black}
+							unSelectedColor={COLORS.gray}
+							reviews={[]}
+							isDisabled={false}
+							showRating={false}
+							onFinishRating={setTastingNotesRating}
+						/>
+					</View>
+					<TouchableOpacity
+					style={{
+						paddingVertical: 10,
+						paddingHorizontal: 20,
+						backgroundColor: COLORS.foam,
+						borderRadius: 20,
+						borderWidth: 1,
+						borderColor: COLORS.black,
+						marginTop: 20,
+					}}
+					onPress={() => setShowModal(false)}
+					>				
+					<Text style={{ color: COLORS.white, fontSize: 16, }}>
+						Close
+					</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+					style={{
+						paddingVertical: 10,
+						paddingHorizontal: 20,
+						backgroundColor: COLORS.foam,
+						borderRadius: 20,
+						borderWidth: 1,
+						borderColor: COLORS.black,
+						marginTop: 20,
+					}}
+					onPress={submitEdit}
+					>				
+					<Text style={{ color: COLORS.white, fontSize: 16, }}>
+						Edit
+					</Text>
+					</TouchableOpacity>
+				</View>
+				</View>
+			</Modal>
+		</TouchableOpacity>
+	);
+};
+
 const Journal = () => {
 	const navigation = useNavigation();
 	const [selectedButton, setSelectedButton] = useState("My Beer Journal");
@@ -41,9 +268,98 @@ const Journal = () => {
 	const [tastingNotesRating, setTastingNotesRating] = useState(0);
 	const [showPopup, setShowPopup] = useState(false);
 
-	const handleSave = () => {
-		// Handle save functionality
+	const { cookies } = useCookies();
+	const [beerData, setBeerData] = useState([]);
+	const [selectedBeer, setSelectedBeer] = useState(null);	
+	const [journalData, setJournalData] = useState([]);
+	const [journalEditState, setJournalEditState] = useState(false);
+	const [statisticsData, setStatisticsData] = useState([]);
+
+	const handleJournalEditState = () => {
+		setJournalEditState(true);
+	}
+
+	const submitJournal = () => {
+		const currentDate = new Date();
+		const day = currentDate.getDate();
+		const month = currentDate.getMonth() + 1;
+		const year = currentDate.getFullYear();
+		const formattedDate = `${day}/${month}/${year}`;
+
+		const data = {
+			userID: cookies.userID,
+			journalDate: formattedDate,
+			journalBeer: selectedBeer,
+			journalNotes: tastingNotes,
+			journalRating: tastingNotesRating,
+		}
+
+		axios
+			.post("http://10.0.2.2:3000/submitJournal", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Journal Added!");
+					setTastingNotes("");
+					setTastingNotesRating(0);
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
 	};
+
+
+	useEffect(() => {
+		const fetchBeerData = async () => {
+			try {
+				const response = await axios.get("http://10.0.2.2:3000/getBeerData");
+				const { success, beerData } = response.data;
+				if (success) {
+					setBeerData(beerData);
+				} else {
+					console.error("Error retrieving beer data:", response.data.message)
+				}
+			} catch (error) {
+				console.error("Error retrieving beer data:", error);
+			}
+		}
+		
+		fetchBeerData();
+	}, []);
+
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getJournal", {
+				params: {
+					userID: cookies.userID
+				}
+			})
+			.then((response) => {
+				setJournalData(response.data);
+				setJournalEditState(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving Journal", error)
+			})
+	}, [journalEditState]);
+
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getStatistics", {
+				params: {
+					userID: cookies.userID
+				}
+			})
+			.then((response) => {
+				setStatisticsData(response.data);
+			})
+			.catch((error) => {
+				console.error("Error retrieving Statistics", error)
+			})
+	}, []);
 
 	return (
 		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
@@ -130,101 +446,19 @@ const Journal = () => {
 			{selectedButton === "My Beer Journal" ? (
 				<View style={{ flex: 1 }}>
 					<ScrollView>
-						<TouchableOpacity
-							style={{
-								width: "90%",
-								alignSelf: "center",
-								marginBottom: 20,
-								borderColor: 0,
-								borderRadius: 40,
-								elevation: 3,
-							}}
-							onPress={() => setShowPopup(true)}
-						>
-							<View
-								style={{
-									width: "100%",
-									height: 200,
-									position: "relative",
-									backgroundColor: COLORS.grey,
-									borderColor: 0,
-								}}
-							>
-								<Image
-									source={require("../../assets/specialtybeer.png")}
-									style={{
-										width: "100%",
-										height: 200,
-										borderTopLeftRadius: 20,
-										borderTopRightRadius: 20,
-										position: "relative",
-									}}
-								/>
-								<TouchableOpacity
-									style={{
-										position: "absolute",
-										top: 10,
-										right: 10,
-										padding: 10,
-										backgroundColor: COLORS.foam,
-										borderRadius: 12,
-										borderColor: 0,
-									}}
-									onPress={() => {}}
-								>
-									<Text>Edit</Text>
-								</TouchableOpacity>
-							</View>
-
-							<View style={styles.detailContainer}>
-								<View
-									style={{
-										flexDirection: "row",
-										alignItems: "center",
-										justifyContent: "space-between",
-										marginBottom: 10,
-									}}
-								>
-									<Text
-										style={{
-											fontWeight: "bold",
-											fontSize: 20,
-											backgroundColor: COLORS.grey,
-										}}
-									>
-										Beer Name
-									</Text>
-									<View style={{ marginLeft: 10 }}>
-										<AirbnbRating
-											count={5}
-											defaultRating={beerNameRating}
-											size={20}
-											selectedColor={COLORS.foam}
-											unSelectedColor={COLORS.gray}
-											reviews={[]}
-											isDisabled={false}
-											showRating={false}
-											onFinishRating={setBeerNameRating}
-										/>
-									</View>
-								</View>
-								<View style={styles.tastingNoteContainer}>
-									<Text
-										style={{
-											fontSize: 15,
-											color: COLORS.black,
-										}}
-									>
-										Tasting Notes
-									</Text>
-								</View>
-							</View>
-						</TouchableOpacity>
-
-						<TouchableOpacity style={styles.shortButton}>
-							<Text>Add a Beer</Text>
-						</TouchableOpacity>
-
+					{journalData.map((journal) => (
+						<JournalItem
+							key={journal.journalID}
+							journalID={journal.journalID}
+							journalUser={journal.journalUser}
+							journalDate={journal.journalDate}
+							journalBeer={journal.journalBeer}
+							journalNotes={journal.journalNotes}
+							journalRating={journal.journalRating}
+							journalImage={journal.journalImage}
+							handleJournalEditState={handleJournalEditState}
+						/>
+						))}
 						<View
 							style={{
 								height: 1,
@@ -257,11 +491,29 @@ const Journal = () => {
 								<View style={{ marginRight: 10 }}>
 									<Text>Name of Beer</Text>
 								</View>
-								<TextInput
-									style={styles.textInput}
-									value={beerName}
-									onChangeText={setBeerName}
-								/>
+								<SelectList
+											data={beerData.map((beer) => ({
+											label: beer.beerName,
+											value: beer.beerName,
+											}))}
+											value={selectedBeer}
+											setSelected={(value) => setSelectedBeer(value)}
+											boxStyles={{
+											borderRadius: 12,
+											borderColor: 0,
+											backgroundColor: COLORS.white,
+											opacity: 1,
+											width: "70%",
+											}}
+											dropdownStyles={{
+											right: 0,
+											borderColor: 0,
+											backgroundColor: COLORS.white,
+											opacity: 1,
+											}}
+											defaultOption={selectedBeer}
+											search={true}
+										/>
 							</View>
 
 							<View
@@ -304,11 +556,10 @@ const Journal = () => {
 										onFinishRating={setTastingNotesRating}
 									/>
 								</View>
+								<TouchableOpacity style={styles.shortButton} onPress={submitJournal}>
+									<Text>Add a Journal</Text>
+								</TouchableOpacity>
 							</View>
-
-							<TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-								<Text>Save</Text>
-							</TouchableOpacity>
 						</View>
 					</ScrollView>
 				</View>
@@ -317,14 +568,15 @@ const Journal = () => {
 					<View style={{ height: 120, backgroundColor: COLORS.white }}>
 						<View style={styles.emptyContainer}>
 							<Text style={{ lineHeight: 30 }}>
-								Number of unique places checked in: 5
+								Number of unique places checked in: {statisticsData.numUniqueVenues}
 							</Text>
-							<Text style={{ lineHeight: 30 }}>Types of beer tried: 10</Text>
+							
+							<Text style={{ lineHeight: 30 }}>Types of beer tried: {statisticsData.numUniqueBeers}</Text>
 							<Text style={{ lineHeight: 30 }}>
-								Your favorite tasting notes are: fruity
+								Your favorite tasting notes are: {statisticsData.favoriteTastingNote}
 							</Text>
 							<Text style={{ lineHeight: 30 }}>
-								Your favorite bar is: Brewerkz Orchard (Visited 20 times!)
+								Your favorite bar is: {statisticsData. favoriteVenueName} (Visited {statisticsData.numberOfTimes} times!)
 							</Text>
 						</View>
 					</View>
@@ -336,14 +588,14 @@ const Journal = () => {
 							<View style={styles.container1}>
 								<Text style={styles.label}>Most Recently Visited</Text>
 								<Image
-									source={require("../../assets/event1.png")}
+									source={{ uri: statisticsData.mostRecentVenue?.venueImage }}
 									style={styles.placeImage}
 								/>
 								<View style={styles.detailsContainer}>
-									<Text style={styles.placeLabel}>Brewerkz Orchard</Text>
+									<Text style={styles.placeLabel}>{statisticsData.mostRecentVenue?.venueName}</Text>
 									<AirbnbRating
 										count={5}
-										defaultRating={4}
+										defaultRating={statisticsData.mostRecentVenue?.venueRating}
 										size={15}
 										selectedColor={COLORS.foam}
 										unSelectedColor={COLORS.gray}
@@ -353,18 +605,17 @@ const Journal = () => {
 									/>
 								</View>
 							</View>
-
 							<View style={styles.container1}>
 								<Text style={styles.label}>Most Recently Tried</Text>
 								<Image
-									source={require("../../assets/specialtybeer.png")}
+									source={{ uri: statisticsData.mostRecentBeer?.beerImage }}
 									style={styles.placeImage}
 								/>
 								<View style={styles.detailsContainer}>
-									<Text style={styles.placeLabel}>Tiger Beer</Text>
+									<Text style={styles.placeLabel}>{statisticsData.mostRecentBeer?.beerName}</Text>
 									<AirbnbRating
 										count={5}
-										defaultRating={4}
+										defaultRating={statisticsData.mostRecentBeer?.rating}
 										size={15}
 										selectedColor={COLORS.foam}
 										unSelectedColor={COLORS.gray}

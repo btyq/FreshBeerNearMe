@@ -22,7 +22,9 @@ class Review {
             reviewUser: userID,
             reviewDate: reviewDate,
             reviewDescription: reviewText,
-            reviewRating: rating
+            reviewRating: rating,
+            reviewItem: venueID,
+            reviewType: "Venue"
           };
       
           // Add the review to the Reviews collection
@@ -59,7 +61,9 @@ class Review {
           reviewUser: userID,
           reviewDate: reviewDate,
           reviewDescription: reviewText,
-          reviewRating: rating
+          reviewRating: rating,
+          reviewItem: beerID,
+          reviewType: "Beer"
         };
     
         // Add the review to the Reviews collection

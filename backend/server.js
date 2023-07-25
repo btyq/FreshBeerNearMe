@@ -457,6 +457,30 @@ app.post("/submitFeedback", async (req, res) => {
 	const { userID, venueName, feedbackDate, feedbackDescription } = req.body;
 	globalUser.submitFeedback(client, res, userID, venueName, feedbackDate, feedbackDescription);
 })
+
+//Route for user to submit journal
+app.post("/submitJournal", async (req, res) => {
+	const { userID, journalDate, journalBeer, journalNotes, journalRating} = req.body;
+	globalUser.submitJournal(client, res, userID, journalDate, journalBeer, journalNotes, journalRating);
+})
+
+//Route for user to retrieve Journal
+app.get("/getJournal", async (req, res) => {
+	const userID = req.query.userID;
+	globalUser.getJournal(client, res, userID)
+})
+
+//Route for user to edit Journal
+app.post("/editJournal", async (req, res) => {
+	const { journalID, journalNotes, journalRating } = req.body;
+	globalUser.editJournal(client, res, journalID, journalNotes, journalRating)
+})
+
+//Route to retrieve user's statistics
+app.get("/getStatistics", async (req, res) => {
+	const userID = req.query.userID;
+	globalUser.getStatistics(client, res, userID)
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;
