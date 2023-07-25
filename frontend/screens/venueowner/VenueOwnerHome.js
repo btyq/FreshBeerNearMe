@@ -1,7 +1,7 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import {
 	ImageBackground,
 	ScrollView,
@@ -12,9 +12,9 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCookies } from "../CookieContext";
-import COLORS from "../constants/colors";
-import GlobalStyle from "../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -52,41 +52,41 @@ const VenueOwnerHome = ({ navigation }) => {
 	}, []);
 
 	const data = [30, 40, 25, 50, 45, 20];
-	const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+	const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
 
 	const maxDataValue = Math.max(...data);
 	const scaleY = 150 / maxDataValue;
 
 	const navigateToInquiriesNFeedback = () => {
-		navigation.navigate('InquiriesNFeedback');
+		navigation.navigate("InquiriesNFeedback");
 	};
 
 	const navigateToRespond = () => {
-		navigation.navigate('Respond');
+		navigation.navigate("Respond");
 	};
 
 	const navigateToVenueProfile = () => {
-		navigation.navigate('VenueProfile');
+		navigation.navigate("VenueProfile");
 	};
 
 	const navigateToManageInventory = () => {
-		navigation.navigate('ManageInventory');
+		navigation.navigate("ManageInventory");
 	};
 
 	const navigateToManageSocialInformation = () => {
-		navigation.navigate('ManageSocialInformation');
+		navigation.navigate("ManageSocialInformation");
 	};
 
 	const navigateToManagePromotion = () => {
-		navigation.navigate('ManagePromotion');
+		navigation.navigate("ManagePromotion");
 	};
 
 	const navigateToAnalytics = () => {
-		navigation.navigate('Analytics');
+		navigation.navigate("Analytics");
 	};
 
 	const navigateToVenueComparison = () => {
-		navigation.navigate('VenueComparison');
+		navigation.navigate("VenueComparison");
 	};
 
 	// ================================== Functions for different button ==================================
@@ -141,7 +141,13 @@ const VenueOwnerHome = ({ navigation }) => {
 						}
 					/>
 
-					<View style={{ justifyContent: "center", alignItems: "center", marginTop: 5 }}>
+					<View
+						style={{
+							justifyContent: "center",
+							alignItems: "center",
+							marginTop: 5,
+						}}
+					>
 						<Text
 							style={{
 								fontSize: 26,
@@ -175,9 +181,18 @@ const VenueOwnerHome = ({ navigation }) => {
 							What would you like to do?
 						</Text>
 					</View>
-					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-						<View style={{ marginTop: 20, width: '100%',  borderRadius: 20 }}>
-							<View style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 10 }}>
+					<View
+						style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+					>
+						<View style={{ marginTop: 20, width: "100%", borderRadius: 20 }}>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									paddingHorizontal: 16,
+									paddingVertical: 10,
+								}}
+							>
 								<Text
 									style={{
 										flex: 1, // Take up remaining space
@@ -201,48 +216,66 @@ const VenueOwnerHome = ({ navigation }) => {
 										borderRadius: 20,
 									}}
 								>
-									<Text style={{ color: 'black', fontSize: 15 }}>See All</Text>
+									<Text style={{ color: "black", fontSize: 15 }}>See All</Text>
 								</TouchableOpacity>
 							</View>
-							<View style={{ marginTop: 10, alignItems: 'center' }}>
+							<View style={{ marginTop: 10, alignItems: "center" }}>
 								<TouchableOpacity onPress={navigateToRespond}>
-									<View style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										paddingHorizontal: 10,
-										paddingVertical: 10,
-										width: 300,
-									}}>
+									<View
+										style={{
+											borderWidth: 1,
+											borderColor: COLORS.black,
+											borderRadius: 10,
+											paddingHorizontal: 10,
+											paddingVertical: 10,
+											width: 300,
+										}}
+									>
 										<Text style={styles.label}>User Ask:</Text>
-										<Text style={{
-											fontSize: 14,
-										}}>What is the status of my inquiry?</Text>
+										<Text
+											style={{
+												fontSize: 14,
+											}}
+										>
+											What is the status of my inquiry?
+										</Text>
 									</View>
 								</TouchableOpacity>
 							</View>
-							<View style={{ marginTop: 10, alignItems: 'center' }}>
+							<View style={{ marginTop: 10, alignItems: "center" }}>
 								<TouchableOpacity onPress={navigateToRespond}>
-									<View style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										paddingHorizontal: 10,
-										paddingVertical: 10,
-										width: 300,
-										marginBottom: 30,
-									}}>
+									<View
+										style={{
+											borderWidth: 1,
+											borderColor: COLORS.black,
+											borderRadius: 10,
+											paddingHorizontal: 10,
+											paddingVertical: 10,
+											width: 300,
+											marginBottom: 30,
+										}}
+									>
 										<Text style={styles.label}>User Feedback:</Text>
-										<Text style={{
-											fontSize: 14,
-										}}>Thank you for your prompt response!</Text>
+										<Text
+											style={{
+												fontSize: 14,
+											}}
+										>
+											Thank you for your prompt response!
+										</Text>
 									</View>
 								</TouchableOpacity>
 							</View>
 						</View>
 					</View>
-					
-					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30 }}>
+
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							marginTop: 30,
+						}}
+					>
 						<Text
 							style={{
 								marginLeft: 20,
@@ -255,14 +288,22 @@ const VenueOwnerHome = ({ navigation }) => {
 						>
 							Profile
 						</Text>
-						<View style={{
-							flex: 1,
-							borderBottomWidth: 1, // Adjust the thickness as desired
-							borderBottomColor: COLORS.black,
-							marginLeft: -240, // Adjust the value to prevent overlapping
-						}} />
+						<View
+							style={{
+								flex: 1,
+								borderBottomWidth: 1, // Adjust the thickness as desired
+								borderBottomColor: COLORS.black,
+								marginLeft: -240, // Adjust the value to prevent overlapping
+							}}
+						/>
 					</View>
-					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							marginTop: 10,
+						}}
+					>
 						<TouchableOpacity
 							onPress={navigateToVenueProfile}
 							style={{
@@ -274,7 +315,11 @@ const VenueOwnerHome = ({ navigation }) => {
 								borderRadius: 20,
 							}}
 						>
-							<Text style={{ color: 'black', fontSize: 13, fontWeight: 'bold' }}>Venue Profile</Text>
+							<Text
+								style={{ color: "black", fontSize: 13, fontWeight: "bold" }}
+							>
+								Venue Profile
+							</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={navigateToManageInventory}
@@ -287,10 +332,20 @@ const VenueOwnerHome = ({ navigation }) => {
 								borderRadius: 20,
 							}}
 						>
-							<Text style={{ color: 'black', fontSize: 13, fontWeight: 'bold' }}>Manage Inventory</Text>
+							<Text
+								style={{ color: "black", fontSize: 13, fontWeight: "bold" }}
+							>
+								Manage Inventory
+							</Text>
 						</TouchableOpacity>
 					</View>
-					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							marginTop: 10,
+						}}
+					>
 						<Text
 							style={{
 								marginLeft: 20,
@@ -303,15 +358,23 @@ const VenueOwnerHome = ({ navigation }) => {
 						>
 							Social
 						</Text>
-						<View style={{
-							flex: 1,
-							borderBottomWidth: 1, // Adjust the thickness as desired
-							borderBottomColor: COLORS.black,
-							marginLeft: -240, // Adjust the value to prevent overlapping
-						}} />
+						<View
+							style={{
+								flex: 1,
+								borderBottomWidth: 1, // Adjust the thickness as desired
+								borderBottomColor: COLORS.black,
+								marginLeft: -240, // Adjust the value to prevent overlapping
+							}}
+						/>
 					</View>
 					<View style={{ flex: 1, padding: 16 }}></View>
-					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							marginTop: 10,
+						}}
+					>
 						<TouchableOpacity
 							onPress={navigateToManageSocialInformation}
 							style={{
@@ -323,7 +386,15 @@ const VenueOwnerHome = ({ navigation }) => {
 								borderRadius: 20,
 							}}
 						>
-							<Text style={{ color: COLORS.black, fontSize: 13, fontWeight: 'bold' }}>Manage Social</Text>
+							<Text
+								style={{
+									color: COLORS.black,
+									fontSize: 13,
+									fontWeight: "bold",
+								}}
+							>
+								Manage Social
+							</Text>
 						</TouchableOpacity>
 						<TouchableOpacity
 							onPress={navigateToManagePromotion}
@@ -336,23 +407,45 @@ const VenueOwnerHome = ({ navigation }) => {
 								borderRadius: 20,
 							}}
 						>
-							<View style={{ alignItems: 'center' }}>
-								<Text style={{ color: 'black', fontSize: 13, fontWeight: 'bold' }}>Manage</Text>
-								<Text style={{ color: 'black', fontSize: 13, fontWeight: 'bold' }}>Promotion</Text>
+							<View style={{ alignItems: "center" }}>
+								<Text
+									style={{ color: "black", fontSize: 13, fontWeight: "bold" }}
+								>
+									Manage
+								</Text>
+								<Text
+									style={{ color: "black", fontSize: 13, fontWeight: "bold" }}
+								>
+									Promotion
+								</Text>
 							</View>
 						</TouchableOpacity>
 					</View>
-					<View style={{
-						flex: 1,
-						borderBottomWidth: 1,
-						borderBottomColor: COLORS.black,
-						marginTop: 30,
-					}} />
+					<View
+						style={{
+							flex: 1,
+							borderBottomWidth: 1,
+							borderBottomColor: COLORS.black,
+							marginTop: 30,
+						}}
+					/>
 
-					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-						<View style={{ flex: 1, alignItems: 'center', width: '98%' }}>
-							<View style={{ flex: 1, padding: 20, borderWidth: 1, borderColor: COLORS.black, marginTop: 50, borderRadius: 20, width: '98%' }}>
-								<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+					<View
+						style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+					>
+						<View style={{ flex: 1, alignItems: "center", width: "98%" }}>
+							<View
+								style={{
+									flex: 1,
+									padding: 20,
+									borderWidth: 1,
+									borderColor: COLORS.black,
+									marginTop: 50,
+									borderRadius: 20,
+									width: "98%",
+								}}
+							>
+								<View style={{ flexDirection: "row", alignItems: "center" }}>
 									<Text
 										style={{
 											marginLeft: 10,
@@ -376,32 +469,44 @@ const VenueOwnerHome = ({ navigation }) => {
 											borderRadius: 20,
 										}}
 									>
-										<Text style={{ color: 'black', fontSize: 15 }}>See More</Text>
+										<Text style={{ color: "black", fontSize: 15 }}>
+											See More
+										</Text>
 									</TouchableOpacity>
 								</View>
 								<View style={{ flex: 1, padding: 16 }}>
 									<View style={{ padding: 16 }}>
-										<Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>
+										<Text
+											style={{
+												fontSize: 18,
+												fontWeight: "bold",
+												marginBottom: 16,
+											}}
+										>
 											Beer Popularity this week
 										</Text>
-										<View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+										<View
+											style={{ flexDirection: "row", alignItems: "flex-end" }}
+										>
 											{data.map((value, index) => (
 												<View
 													key={index}
 													style={{
 														width: 30,
 														marginLeft: 10,
-														alignItems: 'center',
+														alignItems: "center",
 													}}
 												>
 													<View
 														style={{
 															height: value * scaleY,
 															width: 4,
-															backgroundColor: 'blue',
+															backgroundColor: "blue",
 														}}
 													/>
-													<Text style={{ fontSize: 12, marginTop: 5 }}>{labels[index]}</Text>
+													<Text style={{ fontSize: 12, marginTop: 5 }}>
+														{labels[index]}
+													</Text>
 												</View>
 											))}
 										</View>
@@ -411,10 +516,22 @@ const VenueOwnerHome = ({ navigation }) => {
 						</View>
 					</View>
 
-					<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-						<View style={{ flex: 1, alignItems: 'center', width: '98%' }}>
-							<View style={{ flex: 1, padding: 16, borderWidth: 1, borderColor: COLORS.black, marginTop: 20, borderRadius: 20, width: '98%' }}>
-								<View style={{ flexDirection: 'row', alignItems: 'center' }}>
+					<View
+						style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+					>
+						<View style={{ flex: 1, alignItems: "center", width: "98%" }}>
+							<View
+								style={{
+									flex: 1,
+									padding: 16,
+									borderWidth: 1,
+									borderColor: COLORS.black,
+									marginTop: 20,
+									borderRadius: 20,
+									width: "98%",
+								}}
+							>
+								<View style={{ flexDirection: "row", alignItems: "center" }}>
 									<Text
 										style={{
 											marginLeft: 10,
@@ -438,32 +555,44 @@ const VenueOwnerHome = ({ navigation }) => {
 											borderRadius: 20,
 										}}
 									>
-										<Text style={{ color: 'black', fontSize: 15 }}>See More</Text>
+										<Text style={{ color: "black", fontSize: 15 }}>
+											See More
+										</Text>
 									</TouchableOpacity>
 								</View>
 								<View style={{ flex: 1, padding: 16 }}>
 									<View style={{ padding: 16 }}>
-										<Text style={{ fontSize: 18, fontWeight: 'bold', marginBottom: 16 }}>
+										<Text
+											style={{
+												fontSize: 18,
+												fontWeight: "bold",
+												marginBottom: 16,
+											}}
+										>
 											Venue Popularity this week
 										</Text>
-										<View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
+										<View
+											style={{ flexDirection: "row", alignItems: "flex-end" }}
+										>
 											{data.map((value, index) => (
 												<View
 													key={index}
 													style={{
 														width: 30,
 														marginLeft: 10,
-														alignItems: 'center',
+														alignItems: "center",
 													}}
 												>
 													<View
 														style={{
 															height: value * scaleY,
 															width: 4,
-															backgroundColor: 'blue',
+															backgroundColor: "blue",
 														}}
 													/>
-													<Text style={{ fontSize: 12, marginTop: 5 }}>{labels[index]}</Text>
+													<Text style={{ fontSize: 12, marginTop: 5 }}>
+														{labels[index]}
+													</Text>
 												</View>
 											))}
 										</View>
@@ -472,7 +601,6 @@ const VenueOwnerHome = ({ navigation }) => {
 							</View>
 						</View>
 					</View>
-
 				</View>
 			</ScrollView>
 		</SafeAreaView>
@@ -491,7 +619,7 @@ const styles = StyleSheet.create({
 	},
 	label: {
 		marginBottom: 5,
-		fontWeight: 'bold',
+		fontWeight: "bold",
 		fontSize: 16,
 	},
 });
