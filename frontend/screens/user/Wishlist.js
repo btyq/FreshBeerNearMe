@@ -794,7 +794,7 @@ const Wishlist = ({ navigation }) => {
 				/>
 
 				<SafeAreaView style={{ flex: 1 }}>
-					<ScrollView>
+					<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
 						<View style={{ marginHorizontal: 22 }}>
 							<Text
 								style={{
