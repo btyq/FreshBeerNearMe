@@ -481,6 +481,12 @@ app.get("/getStatistics", async (req, res) => {
 	const userID = req.query.userID;
 	globalUser.getStatistics(client, res, userID)
 })
+
+//Route to retrieve user's peronsalised reccomendation
+app.get("/getPersonalisedRecommendation", async (req, res) => {
+	const userID = req.query.userID;
+	globalUser.getPersonalisedRecommendation(client, res, userID)
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;

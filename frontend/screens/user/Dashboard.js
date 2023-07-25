@@ -8,12 +8,14 @@ import {
 	Text,
 	TouchableOpacity,
 	View,
+	ActivityIndicator,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -43,6 +45,8 @@ const Dashboard = ({ navigation }) => {
 	const [index, setIndex] = React.useState(0);
 	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
+	const [personalisedData, setPersonalisedData] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const sessionToken = cookies.sessionToken;
@@ -50,6 +54,24 @@ const Dashboard = ({ navigation }) => {
 		setUsername(cookies.username);
 	}, []);
 
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getPersonalisedRecommendation",{
+				params: {
+					userID: cookies.userID
+				}
+			})
+			.then((response) => {
+				setPersonalisedData(response.data);
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving personalised reccommendation", error)
+				setIsLoading(false);
+			})
+			
+	}, []);
+	
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -460,45 +482,41 @@ const Dashboard = ({ navigation }) => {
 						backgroundColor: "transparent",
 						borderColor: "transparent",
 					}}
-				>
-					<Card.Title>Recommended Specially For You</Card.Title>
-					<Card.Divider />
-					<ThemeProvider
+					>
+					{isLoading ? ( 
+						<View style={{ alignItems: "center", marginTop: 20 }}>
+						<ActivityIndicator size="large" color={COLORS.primary} />
+						<Text>Loading...</Text>
+						</View>
+					) : (
+						<ThemeProvider
 						theme={{
 							Tab: {
-								primary: {
-									backgroundColor: COLORS.grey, // Change the background color here
-								},
+							primary: {
+								backgroundColor: COLORS.grey,
+							},
 							},
 						}}
-					>
+						>
+						<Card.Title>Since you like {personalisedData.mostFrequentCategory}...</Card.Title>
+						<Card.Divider />
 						<TabView value={index1} onChange={setIndex1} animationType="spring">
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+							{personalisedData.recommendedBeers.map((beer, index) => (
+							<TabView.Item key={index} style={{ width: "100%", marginTop: -30 }}>
 								<Card containerStyle={styles.cardContainer}>
+								<TouchableOpacity onPress={() => console.log(beer)}>
 									<ImageBackground
-										source={require("../../assets/beer1.png")}
-										style={styles.cardImage}
-									/>
+									source={{ uri: beer.beerImage }}
+									style={styles.cardImage}
+									>
+									</ImageBackground>
+								</TouchableOpacity>
 								</Card>
 							</TabView.Item>
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-									<ImageBackground
-										source={require("../../assets/beer2.png")}
-										style={styles.cardImage}
-									/>
-								</Card>
-							</TabView.Item>
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-									<ImageBackground
-										source={require("../../assets/beer3.png")}
-										style={styles.cardImage}
-									/>
-								</Card>
-							</TabView.Item>
+							))}
 						</TabView>
 					</ThemeProvider>
+					)}
 				</Card>
 			</SafeAreaView>
 		</ScrollView>

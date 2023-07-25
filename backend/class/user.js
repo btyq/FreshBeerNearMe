@@ -857,7 +857,59 @@ class User {
       console.error('Error getting user data:', error);
       res.json({ success: false, message: 'Internal server error' });
     }
-}
+  }
+
+  async getPersonalisedRecommendation(client, res, userID) {
+    try {
+      const db = client.db('FreshBearNearMe'); 
+      const reviewsCollection = db.collection('Reviews');
+      const beerCollection = db.collection('Beer');
+  
+      const beerReviews = await reviewsCollection.find({
+        reviewUser: parseInt(userID),
+        reviewType: 'Beer'
+      }).toArray();
+  
+      const categoryCount = {};
+      for (const review of beerReviews) {
+        const beerID = review.reviewItem;
+        const beer = await beerCollection.findOne({ beerID: beerID });
+        if (beer) {
+          const beerCategory = beer.beerCategory;
+          if (!categoryCount[beerCategory]) {
+            categoryCount[beerCategory] = 1;
+          } else {
+            categoryCount[beerCategory]++;
+          }
+        }
+      }
+  
+      let highestCount = 0;
+      let mostFrequentCategory;
+      for (const category in categoryCount) {
+        if (categoryCount[category] > highestCount) {
+          highestCount = categoryCount[category];
+          mostFrequentCategory = category;
+        }
+      }
+
+      const randomBeers = await beerCollection.aggregate([
+        { $match: { beerCategory: mostFrequentCategory } },
+        { $sample: { size: 3 } }
+      ]).toArray();
+  
+      const recommendations = {
+        mostFrequentCategory: mostFrequentCategory,
+        recommendedBeers: randomBeers
+      };
+  
+      res.send(recommendations);
+  
+    } catch (error) {
+      console.error('Error getting personalized recommendation:', error);
+      res.status(500).json({ error: 'Error getting personalized recommendation' });
+    }
+  }
 
   logout() {
     console.log("User logged out");
