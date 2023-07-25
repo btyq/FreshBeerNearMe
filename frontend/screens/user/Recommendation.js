@@ -1,5 +1,13 @@
-import { Feather, Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import {
+	Entypo,
+	Feather,
+	FontAwesome,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
 	Image,
 	Modal,
@@ -10,13 +18,13 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import { SelectList } from "react-native-dropdown-select-list";
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import { useCookies } from "../../CookieContext";
-import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -54,101 +62,484 @@ const CustomText = (props) => {
 	);
 };
 
-// Modal component
-const ModalWindow = (props) => {
-	return (
-		<Modal visible={props.visible} transparent={true} animationType="fade">
-			<View style={styles.modalContainer}>
-				<View style={styles.modalContent}>
-					<Text style={styles.modalText}>{props.text}</Text>
-					<TouchableOpacity style={styles.modalButton} onPress={props.onPress}>
-						<Text style={styles.modalButtonText}>Close</Text>
-					</TouchableOpacity>
-				</View>
+const RecommendationItem = ({ data }) => {
+	// console.log("Data prop in RecommendationItem:", data);
+
+	const [popupVisible, setPopupVisible] = useState(false); // venue names popup
+	const [popupVisible2, setPopupVisible2] = useState(false); // beer names popup
+
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible); // venue names popup
+	};
+
+	const handlePopup2 = () => {
+		setPopupVisible2(!popupVisible2); // beer names popup
+	};
+
+	// venue names
+	if (data.venueID) {
+		return (
+			<View>
+				<TouchableOpacity
+					style={{
+						backgroundColor: COLORS.grey,
+						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
+						marginTop: 5,
+						borderRadius: 20,
+						padding: 15,
+						borderWidth: 1,
+						borderColor: 0,
+					}}
+					onPress={handlePopup}
+				>
+					<CustomText
+						style={{
+							flex: 1,
+							marginLeft: 10,
+							flexWrap: "wrap",
+							maxWidth: "80%",
+						}}
+					>
+						Venue Name: {data.venueName}
+					</CustomText>
+					<AirbnbRating
+						count={5}
+						defaultRating={data.venueRating}
+						showRating={false}
+						size={14}
+						isDisabled={true}
+					/>
+				</TouchableOpacity>
+
+				{/* venue popup */}
+				<Modal visible={popupVisible} transparent animationType="fade">
+					<View style={styles.modalContainer}>
+						<View
+							style={{
+								width: "100%",
+								height: "100%",
+								backgroundColor: COLORS.secondary,
+								borderRadius: 10,
+								paddingHorizontal: 20,
+								elevation: 5,
+							}}
+						>
+							<ScrollView
+								contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
+								showsVerticalScrollIndicator={false}
+							>
+								<Image
+									source={{ uri: data.venueImage }}
+									style={styles.venueImage}
+								/>
+								<CustomText
+									style={{
+										fontSize: 18,
+										textAlign: "center",
+										marginBottom: 12,
+									}}
+								>
+									{data.venueName}
+								</CustomText>
+								<View style={{ marginHorizontal: 12 }}>
+									<View
+										style={{
+											flexDirection: "row",
+											alignItems: "center",
+											marginBottom: 12,
+										}}
+									>
+										<View
+											style={{ flexDirection: "row", alignItems: "center" }}
+										>
+											<Entypo
+												name="location-pin"
+												size={24}
+												color={COLORS.black}
+											/>
+											<CustomText
+												style={{
+													flexWrap: "wrap",
+													marginLeft: 4,
+													maxWidth: "65%",
+												}}
+											>
+												{data.venueAddress}
+											</CustomText>
+										</View>
+										<View
+											style={{
+												flexDirection: "row",
+												alignItems: "center",
+												marginHorizontal: 12,
+											}}
+										>
+											<FontAwesome
+												name="phone"
+												size={24}
+												color={COLORS.black}
+												style={{ marginRight: 4 }}
+											/>
+											<CustomText
+												style={{
+													flexWrap: "wrap",
+													maxWidth: "80%",
+												}}
+											>
+												{data.venueContact}
+											</CustomText>
+										</View>
+									</View>
+
+									<View
+										style={{
+											width: "100%",
+											borderColor: 0,
+											paddingHorizontal: 20,
+											paddingVertical: 10,
+											borderRadius: 30,
+											marginBottom: 25,
+											backgroundColor: COLORS.grey,
+											elevation: 2,
+										}}
+									>
+										<CustomText
+											style={{
+												fontSize: 18,
+											}}
+										>
+											Operating Hours{" "}
+										</CustomText>
+										<View>
+											{data.venueOperatingHours
+												.split("\n")
+												.map((line, index) => (
+													<View
+														key={index}
+														style={{
+															flexDirection: "row",
+															justifyContent: "space-between",
+														}}
+													>
+														<Text
+															style={{
+																...GlobalStyle.headerFont,
+																fontSize: 14,
+																flex: 1,
+															}}
+														>
+															{line.split(" ")[0]}
+														</Text>
+														<CustomText style={{ justifyContent: "flex-end" }}>
+															{line.substring(line.indexOf(" ") + 1)}
+														</CustomText>
+													</View>
+												))}
+										</View>
+									</View>
+									<CustomText>
+										Average Beer Freshness: {data.venueFreshness}
+									</CustomText>
+									<CustomText>
+										Average Beer Temperature: {data.venueTemperature}
+									</CustomText>
+									<View
+										style={{
+											borderTopColor: "black",
+											borderBottomWidth: 1,
+											marginTop: 5,
+										}}
+									></View>
+									<View
+										style={{
+											flexDirection: "row",
+											justifyContent: "space-between",
+											alignItems: "center",
+											marginTop: 12,
+											marginBottom: 12,
+										}}
+									>
+										<CustomText style={{ fontSize: 16 }}>Ratings: </CustomText>
+										<View
+											style={{
+												flexDirection: "row",
+												paddingTop: 6,
+											}}
+										>
+											{[1, 2, 3, 4, 5].map((star) => (
+												<Ionicons
+													key={star}
+													name="star"
+													size={16}
+													color={
+														star <= data.venueRating ? COLORS.foam : COLORS.grey
+													}
+													style={{ marginBottom: 9 }}
+												/>
+											))}
+										</View>
+									</View>
+									<View
+										style={{
+											borderTopColor: "black",
+											borderTopWidth: 1,
+										}}
+									></View>
+									<CustomText
+										style={{ fontSize: 16, marginTop: 12, marginBottom: 12 }}
+									>
+										Menu
+									</CustomText>
+
+									<View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+										{data.venueMenu.map((data) => (
+											<View
+												key={data.beerID}
+												style={{
+													width: "45%",
+													marginHorizontal: 8,
+													marginBottom: 20,
+													borderRadius: 15,
+													backgroundColor: COLORS.secondary,
+													elevation: 5,
+												}}
+											>
+												<View
+													style={{
+														marginTop: 12,
+														alignItems: "center",
+														justifyContent: "center",
+													}}
+												>
+													<Image
+														source={{ uri: data.beerImage }}
+														style={{
+															borderRadius: 12,
+															height: 120,
+															width: 120,
+														}}
+													/>
+												</View>
+												<View style={{ marginTop: 12, paddingHorizontal: 10 }}>
+													<Text
+														style={{
+															...GlobalStyle.headerFont,
+															fontSize: 13,
+															marginBottom: 6,
+														}}
+													>
+														{data.beerName}
+													</Text>
+													<View
+														style={{
+															flexDirection: "row",
+															justifyContent: "space-between",
+															marginBottom: 6,
+														}}
+													>
+														<CustomText style={{ marginRight: 5 }}>
+															ABV: {data.abv}
+														</CustomText>
+														<CustomText style={{ marginRight: 5 }}>
+															IBU: {data.ibu}
+														</CustomText>
+													</View>
+													<Text
+														style={{
+															...GlobalStyle.headerFont,
+															fontSize: 14,
+															marginBottom: 12,
+														}}
+													>
+														${data.price}
+													</Text>
+												</View>
+											</View>
+										))}
+									</View>
+									<Button
+										title="Close"
+										onPress={handlePopup}
+										filled
+										style={{
+											elevation: 2,
+											borderColor: 0,
+										}}
+									/>
+								</View>
+							</ScrollView>
+						</View>
+					</View>
+				</Modal>
 			</View>
-		</Modal>
-	);
+		);
+
+		// beer names
+	} else if (data.beerID) {
+		return (
+			<View>
+				<TouchableOpacity
+					style={{
+						backgroundColor: COLORS.grey,
+						flexDirection: "row",
+						justifyContent: "space-between",
+						alignItems: "center",
+						marginTop: 5,
+						borderRadius: 20,
+						padding: 15,
+						borderWidth: 1,
+						borderColor: 0,
+					}}
+					onPress={handlePopup2}
+				>
+					<CustomText
+						style={{
+							flex: 1,
+							marginLeft: 10,
+							flexWrap: "wrap",
+							maxWidth: "80%",
+						}}
+					>
+						Beer Name: {data.beerName}
+					</CustomText>
+					<AirbnbRating
+						count={5}
+						defaultRating={data.rating}
+						showRating={false}
+						size={14}
+						isDisabled={true}
+					/>
+				</TouchableOpacity>
+
+				{/* beer popup */}
+				<Modal visible={popupVisible2} transparent animationType="fade">
+					<View
+						style={{
+							width: "100%",
+							height: "100%",
+							backgroundColor: COLORS.secondary,
+							borderRadius: 10,
+							paddingHorizontal: 20,
+							elevation: 5,
+						}}
+					>
+						<ScrollView showsVerticalScrollIndicator={false}>
+							<Image
+								source={{ uri: data.beerImage }}
+								style={styles.beerImage}
+							/>
+							<CustomText
+								style={{
+									fontSize: 18,
+									textAlign: "center",
+								}}
+							>
+								{data.beerName} -- ${data.price}
+							</CustomText>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+								}}
+							>
+								<View
+									style={{
+										flex: 1,
+										flexDirection: "row",
+										justifyContent: "flex-end",
+										paddingTop: 16,
+										marginBottom: 15,
+									}}
+								>
+									{[1, 2, 3, 4, 5].map((star) => (
+										<Ionicons
+											key={star}
+											name="star"
+											size={16}
+											color={star <= data.rating ? COLORS.foam : COLORS.grey}
+											style={{ marginBottom: 4 }}
+										/>
+									))}
+								</View>
+							</View>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+									elevation: 5,
+								}}
+							>
+								<CustomText style={{ marginBottom: 12 }}>
+									Alcohol%: {data.ABV}
+								</CustomText>
+								<CustomText style={{ marginBottom: 12 }}>
+									Bitter Units: {data.IBU}
+								</CustomText>
+							</View>
+							<CustomText style={{ fontSize: 17 }}>Description</CustomText>
+							<CustomText>{data.beerDescription}</CustomText>
+							<Text
+								style={{
+									...GlobalStyle.headerFont,
+									fontSize: 17,
+									marginBottom: 10,
+									marginTop: 10,
+								}}
+							>
+								Locations
+							</Text>
+							{data.beerLocation.map((location) => (
+								<View key={location.venueID}>
+									<CustomText>{location.venueName}</CustomText>
+								</View>
+							))}
+							<Button
+								title="Close"
+								onPress={handlePopup2}
+								filled
+								style={{
+									marginTop: 12,
+									marginBottom: 12,
+									borderColor: 0,
+									elevation: 2,
+									borderRadius: 12,
+								}}
+							/>
+						</ScrollView>
+					</View>
+				</Modal>
+			</View>
+		);
+	}
 };
 
-const RecommendationItem = ({ data }) => {
-	if (data.venueID) {
-	  return (
-		<TouchableOpacity
-		  style={{
-			backgroundColor: COLORS.grey,
-			flexDirection: "row",
-			justifyContent: "space-between",
-			alignItems: "center",
-			marginTop: 5,
-			borderRadius: 20,
-			padding: 10,
-			borderWidth: 1,
-			borderColor: 0,
-		  }}
-		  //onPress={}
-		>
-		  <CustomText style={{ marginLeft: 10 }}>Venue Name: {data.venueName}</CustomText>
-		  <AirbnbRating
-			count={5}
-			defaultRating={data.venueRating}
-			showRating={false}
-			size={16}
-			isDisabled={true}
-		  />
-		</TouchableOpacity>
-	  );
-	} else if (data.beerID) {
-	  return (
-		<TouchableOpacity
-		  style={{
-			backgroundColor: COLORS.grey,
-			flexDirection: "row",
-			justifyContent: "space-between",
-			alignItems: "center",
-			marginTop: 5,
-			borderRadius: 20,
-			padding: 10,
-			borderWidth: 1,
-			borderColor: 0,
-		  }}
-		  //onPress={}
-		>
-		  <CustomText style={{ marginLeft: 10 }}>Beer Name: {data.beerName}</CustomText>
-		  <AirbnbRating
-			count={5}
-			defaultRating={data.rating}
-			showRating={false}
-			size={16}
-			isDisabled={true}
-		  />
-		</TouchableOpacity>
-	  );
-	}
-  };
-
-
 const Recommendation = ({ navigation }) => {
-	const [modalVisible1, setModalVisible1] = useState(false);
-	const [modalVisible2, setModalVisible2] = useState(false);
 	const { cookies } = useCookies();
-	const [userID, setUserID] = useState(""); 
+	const [userID, setUserID] = useState("");
 	const [recommendationData, setRecommendationData] = useState({});
-	const [searchData, setSearchData] = useState([]);
+	const [searchData, setSearchData] = useState([]); //
+	const [selectedData, setSelectedData] = useState(null);
+	const [isModalVisible, setModalVisible] = useState(false);
+	const [recommendOption, setRecommendOption] = useState(null);
 
 	useEffect(() => {
 		setUserID(cookies.userID);
 		axios
 			.get("http://10.0.2.2:3000/getRecommendation", {
 				params: {
-					userID : cookies.userID
-				}
+					userID: cookies.userID,
+				},
 			})
 			.then((response) => {
 				setRecommendationData(response.data);
 			})
 			.catch((error) => {
 				console.error("Error retrieving recommendation:", error);
-			})
+			});
 	}, []);
 
 	useEffect(() => {
@@ -160,31 +551,50 @@ const Recommendation = ({ navigation }) => {
 			})
 			.catch((error) => {
 				console.error("Error retrieving search results:", error);
-			})
+			});
 	}, []);
 
-	const handleComment = () => {
-		setComments([...comments, comment]);
-		setComment("");
+	// for extracting data from recommendation data
+	const getNames = () => {
+		const combinedRecommendations = [];
+
+		Object.values(recommendationData).forEach((dataArray) => {
+			dataArray.forEach((item) => {
+				if (item.venueName) {
+					combinedRecommendations.push({
+						id: item._id,
+						name: item.venueName,
+						// rating: item.venueRating,
+					});
+				}
+
+				if (item.beerName) {
+					combinedRecommendations.push({
+						id: item._id,
+						name: item.beerName,
+						// rating: item.rating,
+					});
+				}
+			});
+		});
+
+		return combinedRecommendations;
 	};
 
-	const showModal1 = () => {
-		setModalVisible1(true);
-		console.log(recommendationData);
+	const searchResults = getNames();
+
+	const handleRecommend = () => {
+		setModalVisible(!isModalVisible);
 	};
 
-	const showModal2 = () => {
-		setModalVisible2(true);
-	};
+	// console.log("selectedData.rating:", selectedData.rating);
+	// console.log("selectedData:", selectedData);
 
-	const closeModal = () => {
-		setModalVisible1(false);
-		setModalVisible2(false);
-	};
-
-	const searchButton = () => {
-		
-	};
+	// const showModal1 = () => {
+	// 	setModalVisible1(true);
+	// 	console.log(recommendationData);
+	// };
+	// const searchButton = () => {};
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -278,100 +688,57 @@ const Recommendation = ({ navigation }) => {
 						/>
 					</View>
 
-					<View style={{ marginHorizontal: 20, marginVertical: 20 }}>
-						
-						<ScrollView>
-							<Text
-								style={{
-									...GlobalStyle.headerFont,
-									marginVertical: 12,
-									marginLeft: 15,
-								}}
-							>
+					<ScrollView
+						showsVerticalScrollIndicator={false}
+						contentContainerStyle={{ paddingBottom: 50 }}
+					>
+						<View style={{ marginHorizontal: 20, marginVertical: 20 }}>
+							<Text style={{ ...GlobalStyle.headerFont, marginBottom: 5 }}>
 								Your friends' recommendations
 							</Text>
 							{Object.keys(recommendationData).length === 0 ? (
-								<View style={{alignItems: "center"}}>
-									<Text style={{ ...GlobalStyle.bodyFont, textAlign: "center" }}>
-									Start following someone!
+								<View style={{ alignItems: "center" }}>
+									<Text
+										style={{ ...GlobalStyle.bodyFont, textAlign: "center" }}
+									>
+										Start following someone!
 									</Text>
-									<Image source={require("../../assets/beer.png")} style={{width: 100, height: 100 }}/>
+									<Image
+										source={require("../../assets/beer.png")}
+										style={{ width: 100, height: 100 }}
+									/>
 								</View>
 							) : (
 								Object.keys(recommendationData).map((username) => (
-								<View key={username}>
-									<Text>Username: {username}</Text>
-									{recommendationData[username].map((item, index) => (
-									<RecommendationItem key={index} data={item} />
-									))}
-								</View>
+									<View key={username} style={{ marginBottom: 12 }}>
+										<CustomText>{username} recommends:</CustomText>
+										{recommendationData[username].map((item, index) => (
+											<RecommendationItem key={index} data={item} />
+										))}
+									</View>
 								))
 							)}
-							<Text
-							style={{
-								...GlobalStyle.headerFont,
-								marginTop: 22,
-								marginLeft: 15,
-								marginBottom: 12,
-							}}
-							>
-								Your turn to recommend!
-							</Text>
-							<View style={{ flexDirection: "row" }}>
-								<View
-									style={{
-										height: 45,
-										width: "70%",
-										backgroundColor: COLORS.grey,
-										borderRadius: 20,
-										flexDirection: "row",
-										paddingHorizontal: 20,
-										alignItems: "center",
-										marginBottom: 12,
-										marginRight: 5,
-									}}
-								>
-									<Feather name="search" size={24} />
-									<TextInput
-										placeholder="Search"
-										style={{ flex: 1, marginLeft: 12, ...GlobalStyle.bodyFont }}
-									/>
-								</View>
-								<Button
-									title="Search"
-									color={COLORS.foam}
-									filled
-									style={{
-										width: "30%",
-										height: 45,
-										borderRadius: 30,
-										borderColor: 0,
-									}}
-									onPress={searchButton}
-								/>
-							</View>
 
+							<Text style={{ ...GlobalStyle.headerFont, marginVertical: 12 }}>
+								What do you recommend?
+							</Text>
 							<TouchableOpacity
 								style={{
 									backgroundColor: COLORS.grey,
 									flexDirection: "row",
 									justifyContent: "space-between",
 									alignItems: "center",
-									marginTop: 5,
+									marginBottom: 10,
 									borderRadius: 20,
 									padding: 10,
 									borderWidth: 1,
 									borderColor: 0,
 								}}
-								onPress={showModal1}
 							>
-								<CustomText
-									style={{
-										marginLeft: 10,
-									}}
-								>
-									Beer Name
+								<CustomText style={{ marginLeft: 10 }}>
+									{selectedData}
 								</CustomText>
+
 								<AirbnbRating
 									count={5}
 									defaultRating={4}
@@ -380,32 +747,124 @@ const Recommendation = ({ navigation }) => {
 									isDisabled={true}
 								/>
 							</TouchableOpacity>
-							<View style={{ marginTop: 12 }}>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+								}}
+							>
+								<View style={{ flex: 1 }}>
+									<SelectList
+										data={searchResults.map((result) => ({
+											label: result.name,
+											value: result.name,
+										}))}
+										value={selectedData}
+										setSelected={(value) => setSelectedData(value)}
+										boxStyles={{
+											borderColor: 0,
+											backgroundColor: COLORS.grey,
+											opacity: 1,
+										}}
+										dropdownStyles={{
+											right: 0,
+											borderColor: 0,
+											backgroundColor: COLORS.grey,
+											opacity: 1,
+										}}
+										defaultOption={selectedData}
+										search={true}
+									/>
+								</View>
 								<Button
 									title="Recommend!"
 									color={COLORS.foam}
 									filled
 									style={{
-										//	width: "30%",
 										height: 45,
-										borderRadius: 30,
+										marginLeft: 5,
+										borderRadius: 10,
 										borderColor: 0,
+										padding: 5,
 									}}
+									onPress={handleRecommend}
 								/>
+								{/* for recommend button */}
+								<Modal
+									visible={isModalVisible}
+									transparent
+									animationType="fade"
+								>
+									<View
+										style={{
+											flex: 1,
+											backgroundColor: "rgba(0, 0, 0, 0.5)",
+											justifyContent: "center",
+											alignItems: "center",
+										}}
+									>
+										<View
+											style={{
+												width: "80%",
+												backgroundColor: COLORS.white,
+												borderRadius: 40,
+												padding: 30,
+												justifyContent: "center",
+												alignItems: "center",
+											}}
+										>
+											<CustomText>What are you recommending?</CustomText>
+											<View style={{ flexDirection: "row" }}>
+												<Button
+													title="Beer"
+													filled
+													style={{
+														width: "40%",
+														borderRadius: 10,
+														marginTop: 15,
+														borderColor: 0,
+														elevation: 2,
+														marginRight: 12,
+													}}
+													onPress={() => {
+														setRecommendOption("beer");
+														handleRecommend();
+													}}
+												/>
+												<Button
+													title="Venue"
+													filled
+													style={{
+														width: "40%",
+														borderRadius: 10,
+														marginTop: 15,
+														borderColor: 0,
+														elevation: 2,
+													}}
+													onPress={() => {
+														setRecommendOption("venue");
+														handleRecommend();
+													}}
+												/>
+											</View>
+											<Button
+												title="Cancel"
+												onPress={handleRecommend}
+												style={{
+													width: "40%",
+													borderRadius: 10,
+													marginTop: 15,
+													borderColor: 0,
+													elevation: 2,
+												}}
+											/>
+										</View>
+									</View>
+								</Modal>
 							</View>
-						</ScrollView>
-					</View>
+						</View>
+					</ScrollView>
 				</SafeAreaView>
-				<ModalWindow
-					visible={modalVisible1}
-					text="Modal 1 Content"
-					onPress={closeModal}
-				/>
-				<ModalWindow
-					visible={modalVisible2}
-					text="Modal 2 Content"
-					onPress={closeModal}
-				/>
 			</SafeAreaView>
 		</View>
 	);
@@ -440,59 +899,6 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
-	},
-	inputContainer: {
-		height: 60,
-		width: "100%",
-		backgroundColor: COLORS.white,
-		borderRadius: 10,
-		position: "absolute",
-		top: 90,
-		flexDirection: "row",
-		paddingHorizontal: 20,
-		alignItems: "center",
-		elevation: 12,
-	},
-	beerName: {
-		marginBottom: 5,
-	},
-	starContainer: {
-		flexDirection: "row",
-		alignItems: "center",
-	},
-	modalContainer: {
-		flex: 1,
-		backgroundColor: "rgba(0, 0, 0, 0.5)",
-		justifyContent: "center",
-		alignItems: "center",
-	},
-	modalContent: {
-		backgroundColor: COLORS.white,
-		padding: 20,
-		borderRadius: 10,
-		width: "80%",
-	},
-	modalText: {
-		fontSize: 16,
-		marginBottom: 20,
-	},
-	modalButton: {
-		backgroundColor: COLORS.primary,
-		padding: 10,
-		borderRadius: 10,
-		alignItems: "center",
-	},
-	modalButtonText: {
-		color: COLORS.white,
-		fontSize: 14,
-		fontWeight: "bold",
-	},
-	ratingStarContainer: {
-		marginLeft: -8,
-		marginTop: -15,
-	},
-	ratingStyle: {
-		marginRight: 2,
 	},
 });
 
