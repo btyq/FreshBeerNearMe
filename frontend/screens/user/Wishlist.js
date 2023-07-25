@@ -64,7 +64,7 @@ const CustomText = (props) => {
 	);
 };
 
-// custom alert for follow and unfollow
+// custom alert for wishist removal
 const CustomWishlistAlert = ({ visible, onClose, title, message }) => {
 	return (
 		<Modal visible={visible} transparent animationType="fade">
@@ -681,6 +681,13 @@ const Wishlist = ({ navigation }) => {
 	const [wishlistData, setWishlistData] = useState([]);
 	const [removedWishlistState, setRemovedWishlistState] = useState(false);
 	const { cookies } = useCookies();
+	const [isWishlistVisible, setIsWishlistVisible] = useState(false);
+	const [WishlistTitle, setWishlistTitle] = useState("");
+	const [WishlistMessage, setWishlistMessage] = useState("");
+
+	// const showAlert = () => {
+	// 	setModalVisible(!isModalVisible);
+	// };
 
 	useEffect(() => {
 		axios
@@ -710,12 +717,15 @@ const Wishlist = ({ navigation }) => {
 			.post("http://10.0.2.2:3000/removeWishlist", data)
 			.then((response) => {
 				if (response.data.success) {
-					Alert.alert("Removed from Wishlist!");
+					setWishlistTitle("Success");
+					setWishlistMessage("Removed from wishlist!");
 					setRemovedWishlistState(true);
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
+					setWishlistTitle("Error");
+					setWishlistMessage(message);
 				}
+				setIsWishlistVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -832,6 +842,12 @@ const Wishlist = ({ navigation }) => {
 								}
 								return null;
 							})}
+							<CustomWishlistAlert
+								visible={isWishlistVisible}
+								onClose={() => setIsWishlistVisible(false)}
+								title={WishlistTitle}
+								message={WishlistMessage}
+							/>
 						</View>
 					</ScrollView>
 				</SafeAreaView>

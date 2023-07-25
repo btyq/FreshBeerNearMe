@@ -70,11 +70,11 @@ const DashboardStack = () => {
 				component={Journal}
 				options={{ headerShown: false }}
 			/>
-			<Stack.Screen
+			{/* <Stack.Screen
 				name="Wishlist"
 				component={Wishlist}
 				options={{ headerShown: false }}
-			/>
+			/> */}
 		</Stack.Navigator>
 	);
 };
@@ -171,22 +171,22 @@ const BottomTabNavigation = () => {
 						);
 					},
 				}}
-			/>
+			/> */}
 			<Tab.Screen
-				name="Journal"
-				component={Journal}
+				name="Wishlist"
+				component={Wishlist}
 				options={{
 					tabBarIcon: ({ focused }) => {
 						return (
 							<Ionicons
-								name="journal"
-								size={24}
+								name="list-circle"
+								size={32}
 								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},
 				}}
-			/> */}
+			/>
 			<Tab.Screen
 				name="Welcome"
 				component={Welcome}
