@@ -12,13 +12,13 @@ import {
 	Easing,
 	Image,
 	Modal,
+	PanResponder,
 	ScrollView,
 	StyleSheet,
 	Text,
 	TextInput,
 	TouchableOpacity,
 	View,
-	PanResponder,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
@@ -60,6 +60,69 @@ const CustomText = (props) => {
 		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
 			{props.children}
 		</Text>
+	);
+};
+
+// custom alert for adding wishist
+const CustomWishlistAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
 	);
 };
 
@@ -118,20 +181,20 @@ const BeerItem = ({
 
 	const panResponder = useRef(
 		PanResponder.create({
-		onStartShouldSetPanResponder: () => true,
-		onPanResponderMove: (_, gestureState) => {
-			slideAnim.setValue(gestureState.dx);
-		},
-		onPanResponderRelease: (_, gestureState) => {
-			if (gestureState.dx > 50) {
-			onSlide(beerID);
-			}
-	
-			Animated.spring(slideAnim, {
-			toValue: 0,
-			useNativeDriver: false,
-			}).start();
-		},
+			onStartShouldSetPanResponder: () => true,
+			onPanResponderMove: (_, gestureState) => {
+				slideAnim.setValue(gestureState.dx);
+			},
+			onPanResponderRelease: (_, gestureState) => {
+				if (gestureState.dx > 50) {
+					onSlide(beerID);
+				}
+
+				Animated.spring(slideAnim, {
+					toValue: 0,
+					useNativeDriver: false,
+				}).start();
+			},
 		})
 	).current;
 
@@ -299,96 +362,73 @@ const BeerItem = ({
 						</View>
 					</View>
 				</TouchableOpacity>
-			{/* 1st popup */}
-			<Modal visible={popupVisible} transparent animationType="fade">
-				<View style={styles.modalContainer}>
-					<View
-						style={{
-							width: "100%",
-							height: "100%",
-							backgroundColor: COLORS.secondary,
-							borderRadius: 10,
-							paddingHorizontal: 20,
-							elevation: 5,
-						}}
-					>
-						<ScrollView showsVerticalScrollIndicator={false}>
-							<Image source={{ uri: beerImage }} style={styles.beerImage} />
-							<CustomText
-								style={{
-									fontSize: 18,
-									textAlign: "center",
-								}}
-							>
-								{beerName} -- ${price}
-							</CustomText>
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "space-between",
-									alignItems: "center",
-								}}
-							>
-								<View
+				{/* 1st popup */}
+				<Modal visible={popupVisible} transparent animationType="fade">
+					<View style={styles.modalContainer}>
+						<View
+							style={{
+								width: "100%",
+								height: "100%",
+								backgroundColor: COLORS.secondary,
+								borderRadius: 10,
+								paddingHorizontal: 20,
+								elevation: 5,
+							}}
+						>
+							<ScrollView showsVerticalScrollIndicator={false}>
+								<Image source={{ uri: beerImage }} style={styles.beerImage} />
+								<CustomText
 									style={{
-										flex: 1,
-										flexDirection: "row",
-										justifyContent: "flex-end",
-										paddingTop: 16,
-										marginBottom: 15,
+										fontSize: 18,
+										textAlign: "center",
 									}}
 								>
-									{[1, 2, 3, 4, 5].map((star) => (
-										<Ionicons
-											key={star}
-											name="star"
-											size={16}
-											color={star <= rating ? COLORS.foam : COLORS.grey}
-											style={{ marginBottom: 4 }}
-										/>
-									))}
-								</View>
-							</View>
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "space-between",
-									alignItems: "center",
-									elevation: 5,
-								}}
-							>
-								<CustomText style={{ marginBottom: 12 }}>
-									Alcohol%: {ABV}
+									{beerName} -- ${price}
 								</CustomText>
-								<CustomText style={{ marginBottom: 12 }}>
-									Bitter Units: {IBU}
-								</CustomText>
-							</View>
-							<CustomText style={{ fontSize: 17 }}>Description</CustomText>
-							<CustomText>{beerDescription}</CustomText>
-							<Text
-								style={{
-									...GlobalStyle.headerFont,
-									fontSize: 17,
-									marginBottom: 10,
-									marginTop: 10,
-								}}
-							>
-								Locations
-							</Text>
-							{beerLocation.map((location) => (
-								<View key={location.venueID}>
-									<CustomText>{location.venueName}</CustomText>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											flex: 1,
+											flexDirection: "row",
+											justifyContent: "flex-end",
+											paddingTop: 16,
+											marginBottom: 15,
+										}}
+									>
+										{[1, 2, 3, 4, 5].map((star) => (
+											<Ionicons
+												key={star}
+												name="star"
+												size={16}
+												color={star <= rating ? COLORS.foam : COLORS.grey}
+												style={{ marginBottom: 4 }}
+											/>
+										))}
+									</View>
 								</View>
-							))}
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "space-between",
-									alignItems: "center",
-									elevation: 5,
-								}}
-							>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
+										elevation: 5,
+									}}
+								>
+									<CustomText style={{ marginBottom: 12 }}>
+										Alcohol%: {ABV}
+									</CustomText>
+									<CustomText style={{ marginBottom: 12 }}>
+										Bitter Units: {IBU}
+									</CustomText>
+								</View>
+								<CustomText style={{ fontSize: 17 }}>Description</CustomText>
+								<CustomText>{beerDescription}</CustomText>
 								<Text
 									style={{
 										...GlobalStyle.headerFont,
@@ -397,160 +437,266 @@ const BeerItem = ({
 										marginTop: 10,
 									}}
 								>
-									Community Reviews
+									Locations
 								</Text>
-								<Button
-									title="View Reviews"
-									filled
+								{beerLocation.map((location) => (
+									<View key={location.venueID}>
+										<CustomText>{location.venueName}</CustomText>
+									</View>
+								))}
+								<View
 									style={{
-										width: "40%",
-										borderRadius: 10,
-										borderColor: 0,
-										elevation: 2,
+										flexDirection: "row",
+										justifyContent: "space-between",
+										alignItems: "center",
+										elevation: 5,
 									}}
-									onPress={handlePopUp2}
-								/>
-							</View>
-							<Button
-								title="Close"
-								onPress={handlePopup}
-								filled
-								style={{
-									marginTop: 12,
-									marginBottom: 12,
-									borderColor: 0,
-									elevation: 2,
-									borderRadius: 12,
-								}}
-							/>
-
-							{/* 2nd popup */}
-							<Modal visible={popupVisible2} transparent animationType="slide">
-								<View style={styles.modalContainer}>
-									<View
+								>
+									<Text
 										style={{
-											width: "100%",
-											height: "100%",
-											backgroundColor: COLORS.secondary,
-											borderRadius: 10,
-											paddingHorizontal: 20,
-											elevation: 5,
+											...GlobalStyle.headerFont,
+											fontSize: 17,
+											marginBottom: 10,
+											marginTop: 10,
 										}}
 									>
-										<ScrollView
-											style={{ marginTop: 12 }}
-											showsVerticalScrollIndicator={false}
+										Community Reviews
+									</Text>
+									<Button
+										title="View Reviews"
+										filled
+										style={{
+											width: "40%",
+											borderRadius: 10,
+											borderColor: 0,
+											elevation: 2,
+										}}
+										onPress={handlePopUp2}
+									/>
+								</View>
+								<Button
+									title="Close"
+									onPress={handlePopup}
+									filled
+									style={{
+										marginTop: 12,
+										marginBottom: 12,
+										borderColor: 0,
+										elevation: 2,
+										borderRadius: 12,
+									}}
+								/>
+
+								{/* 2nd popup */}
+								<Modal
+									visible={popupVisible2}
+									transparent
+									animationType="slide"
+								>
+									<View style={styles.modalContainer}>
+										<View
+											style={{
+												width: "100%",
+												height: "100%",
+												backgroundColor: COLORS.secondary,
+												borderRadius: 10,
+												paddingHorizontal: 20,
+												elevation: 5,
+											}}
 										>
-											<TouchableOpacity onPress={handlePopUp2}>
-												<Ionicons
-													name="arrow-back"
-													size={24}
-													color={COLORS.black}
-												/>
-											</TouchableOpacity>
-											<View
-												style={{
-													justifyContent: "center",
-													alignItems: "center",
-													marginHorizontal: 32,
-													marginTop: 5,
-													marginBottom: 12,
-												}}
+											<ScrollView
+												style={{ marginTop: 12 }}
+												showsVerticalScrollIndicator={false}
 											>
-												<Image
-													source={{ uri: beerImage }}
-													style={styles.beerImage}
-												/>
-											</View>
-											<View
-												style={{ flexDirection: "row", alignItems: "center" }}
-											>
+												<TouchableOpacity onPress={handlePopUp2}>
+													<Ionicons
+														name="arrow-back"
+														size={24}
+														color={COLORS.black}
+													/>
+												</TouchableOpacity>
 												<View
 													style={{
-														flex: 1,
-														marginHorizontal: 12,
+														justifyContent: "center",
+														alignItems: "center",
+														marginHorizontal: 32,
+														marginTop: 5,
 														marginBottom: 12,
 													}}
 												>
-													<Text
-														style={{ fontSize: 15, ...GlobalStyle.headerFont }}
-													>
-														{beerName}
-													</Text>
+													<Image
+														source={{ uri: beerImage }}
+														style={styles.beerImage}
+													/>
 												</View>
-												<Button
-													title="Write Reviews"
-													filled
-													style={{
-														width: "40%",
-														borderRadius: 10,
-														marginBottom: 15,
-														borderColor: 0,
-														elevation: 2,
-													}}
-													onPress={handlePopUp3}
-												/>
-
-												{/* 3rd popup */}
-												<Modal
-													visible={popupVisible3}
-													transparent
-													animationType="slide"
+												<View
+													style={{ flexDirection: "row", alignItems: "center" }}
 												>
-													<View style={styles.modalContainer}>
-														<View
+													<View
+														style={{
+															flex: 1,
+															marginHorizontal: 12,
+															marginBottom: 12,
+														}}
+													>
+														<Text
 															style={{
-																width: "100%",
-																height: "100%",
-																backgroundColor: COLORS.secondary,
-																borderRadius: 10,
-																paddingHorizontal: 20,
-																elevation: 5,
+																fontSize: 15,
+																...GlobalStyle.headerFont,
 															}}
 														>
-															<View style={{ marginTop: 12 }}>
-																<TouchableOpacity onPress={handlePopUp3}>
-																	<Ionicons
-																		name="arrow-back"
-																		size={24}
-																		color={COLORS.black}
-																	/>
-																</TouchableOpacity>
-															</View>
-															<View
-																style={{
-																	marginHorizontal: 22,
-																	flexDirection: "row",
-																	justifyContent: "space-between",
-																	marginTop: 32,
-																}}
-															></View>
+															{beerName}
+														</Text>
+													</View>
+													<Button
+														title="Write Reviews"
+														filled
+														style={{
+															width: "40%",
+															borderRadius: 10,
+															marginBottom: 15,
+															borderColor: 0,
+															elevation: 2,
+														}}
+														onPress={handlePopUp3}
+													/>
+
+													{/* 3rd popup */}
+													<Modal
+														visible={popupVisible3}
+														transparent
+														animationType="slide"
+													>
+														<View style={styles.modalContainer}>
 															<View
 																style={{
 																	width: "100%",
-																	borderColor: 0,
+																	height: "100%",
+																	backgroundColor: COLORS.secondary,
+																	borderRadius: 10,
 																	paddingHorizontal: 20,
-																	paddingVertical: 10,
-																	borderRadius: 30,
-																	marginBottom: 25,
-																	backgroundColor: COLORS.grey,
-																	elevation: 2,
+																	elevation: 5,
 																}}
 															>
+																<View style={{ marginTop: 12 }}>
+																	<TouchableOpacity onPress={handlePopUp3}>
+																		<Ionicons
+																			name="arrow-back"
+																			size={24}
+																			color={COLORS.black}
+																		/>
+																	</TouchableOpacity>
+																</View>
 																<View
 																	style={{
+																		marginHorizontal: 22,
 																		flexDirection: "row",
-																		alignItems: "center",
+																		justifyContent: "space-between",
+																		marginTop: 32,
+																	}}
+																></View>
+																<View
+																	style={{
+																		width: "100%",
+																		borderColor: 0,
+																		paddingHorizontal: 20,
+																		paddingVertical: 10,
+																		borderRadius: 30,
+																		marginBottom: 25,
+																		backgroundColor: COLORS.grey,
+																		elevation: 2,
+																	}}
+																>
+																	<View
+																		style={{
+																			flexDirection: "row",
+																			alignItems: "center",
+																		}}
+																	>
+																		<Text
+																			style={{
+																				flex: 1,
+																				fontSize: 15,
+																				...GlobalStyle.headerFont,
+																			}}
+																		>
+																			{beerName}
+																		</Text>
+																		<View
+																			style={{
+																				flex: 1,
+																				alignItems: "flex-end",
+																			}}
+																		>
+																			<AirbnbRating
+																				count={5}
+																				defaultRating={4}
+																				size={18}
+																				showRating={false}
+																				isDisabled={true}
+																			/>
+																		</View>
+																	</View>
+																</View>
+																<View
+																	style={{
+																		flexDirection: "column",
+																		height: 300,
+																		width: "100%",
+																		elevation: 2,
+																		backgroundColor: COLORS.grey,
+																		marginTop: 10,
+																		borderRadius: 15,
+																		borderColor: 0,
+																		marginBottom: 10,
+																		paddingHorizontal: 12,
 																	}}
 																>
 																	<Text
 																		style={{
-																			flex: 1,
 																			fontSize: 15,
 																			...GlobalStyle.headerFont,
+																			marginTop: 20,
+																			marginLeft: 12,
 																		}}
 																	>
-																		{beerName}
+																		Review:
+																	</Text>
+																	<View
+																		style={{
+																			flex: 1,
+																			borderColor: 0,
+																			borderWidth: 1,
+																			borderRadius: 12,
+																			resizeMode: "contain",
+																			paddingLeft: 12,
+																			marginTop: 10,
+																			backgroundColor: COLORS.grey,
+																		}}
+																	>
+																		<TextInput
+																			placeholder="Write your reviews here"
+																			style={{ ...GlobalStyle.bodyFont }}
+																			value={reviewText}
+																			onChangeText={handleReviewTextChange}
+																		></TextInput>
+																	</View>
+																</View>
+																<View
+																	style={{
+																		marginBottom: 25,
+																		flexDirection: "row",
+																		alignItems: "center",
+																		justifyContent: "space-between",
+																	}}
+																>
+																	<Text
+																		style={{
+																			...GlobalStyle.headerFont,
+																			marginLeft: 10,
+																		}}
+																	>
+																		Your rating:
 																	</Text>
 																	<View
 																		style={{
@@ -560,163 +706,87 @@ const BeerItem = ({
 																	>
 																		<AirbnbRating
 																			count={5}
-																			defaultRating={rating}
+																			defaultRating={reviewRating}
 																			size={18}
 																			showRating={false}
-																			isDisabled={true}
+																			onFinishRating={handleRatingChange}
 																		/>
 																	</View>
 																</View>
-															</View>
-															<View
-																style={{
-																	flexDirection: "column",
-																	height: 300,
-																	width: "100%",
-																	elevation: 2,
-																	backgroundColor: COLORS.grey,
-																	marginTop: 10,
-																	borderRadius: 15,
-																	borderColor: 0,
-																	marginBottom: 10,
-																	paddingHorizontal: 12,
-																}}
-															>
-																<Text
+																<Button
+																	title="Submit"
+																	onPress={handleSubmit}
+																	filled
 																	style={{
-																		fontSize: 15,
-																		...GlobalStyle.headerFont,
-																		marginTop: 20,
-																		marginLeft: 12,
-																	}}
-																>
-																	Review:
-																</Text>
-																<View
-																	style={{
-																		flex: 1,
+																		elevation: 2,
 																		borderColor: 0,
-																		borderWidth: 1,
-																		borderRadius: 12,
-																		resizeMode: "contain",
-																		paddingLeft: 12,
-																		marginTop: 10,
-																		backgroundColor: COLORS.grey,
 																	}}
-																>
-																	<TextInput
-																		placeholder="Write your reviews here"
-																		style={{ ...GlobalStyle.bodyFont }}
-																		value={reviewText}
-																		onChangeText={handleReviewTextChange}
-																	></TextInput>
-																</View>
+																/>
 															</View>
+														</View>
+													</Modal>
+												</View>
+												<View
+													style={{
+														borderTopColor: "black",
+														borderTopWidth: 1,
+														marginBottom: 12,
+													}}
+												></View>
+												<View
+													style={{
+														flex: 1,
+														marginHorizontal: 12,
+														marginBottom: 12,
+													}}
+												>
+													<CustomText style={{ marginBottom: 12 }}>
+														Review Summary
+													</CustomText>
+													<HorizontalBarChart ratingCounter={ratingCounter} />
+													<View>
+														{beerReview.map((reviews) => (
 															<View
+																key={reviews.reviewID}
 																style={{
-																	marginBottom: 25,
-																	flexDirection: "row",
-																	alignItems: "center",
-																	justifyContent: "space-between",
+																	flex: 1,
+																	width: "95%",
+																	alignSelf: "center",
+																	marginTop: 10,
+																	borderWidth: 1,
+																	borderColor: 0,
+																	borderRadius: 10,
+																	padding: 10,
+																	backgroundColor: COLORS.grey,
+																	elevation: 5,
 																}}
 															>
-																<Text
-																	style={{
-																		...GlobalStyle.headerFont,
-																		marginLeft: 10,
-																	}}
-																>
-																	Your rating:
-																</Text>
-																<View
-																	style={{
-																		flex: 1,
-																		alignItems: "flex-end",
-																	}}
-																>
-																	<AirbnbRating
-																		count={5}
-																		defaultRating={reviewRating}
-																		size={18}
-																		showRating={false}
-																		onFinishRating={handleRatingChange}
-																	/>
-																</View>
+																<CustomText>
+																	Posted By: {reviews.reviewUser}
+																</CustomText>
+																<CustomText>
+																	Date: {reviews.reviewDate}
+																</CustomText>
+																<CustomText>
+																	Review: {reviews.reviewDescription}
+																</CustomText>
+																<CustomText>
+																	Ratings: {reviews.reviewRating}
+																</CustomText>
 															</View>
-															<Button
-																title="Submit"
-																onPress={handleSubmit}
-																filled
-																style={{
-																	elevation: 2,
-																	borderColor: 0,
-																}}
-															/>
-														</View>
+														))}
 													</View>
-												</Modal>
-											</View>
-											<View
-												style={{
-													borderTopColor: "black",
-													borderTopWidth: 1,
-													marginBottom: 12,
-												}}
-											></View>
-											<View
-												style={{
-													flex: 1,
-													marginHorizontal: 12,
-													marginBottom: 12,
-												}}
-											>
-												<CustomText style={{ marginBottom: 12 }}>
-													Review Summary
-												</CustomText>
-												<HorizontalBarChart ratingCounter={ratingCounter} />
-												<View>
-													{beerReview.map((reviews) => (
-														<View
-															key={reviews.reviewID}
-															style={{
-																flex: 1,
-																width: "95%",
-																alignSelf: "center",
-																marginTop: 10,
-																borderWidth: 1,
-																borderColor: 0,
-																borderRadius: 10,
-																padding: 10,
-																backgroundColor: COLORS.grey,
-																elevation: 5,
-															}}
-														>
-															<CustomText>
-																Posted By: {reviews.reviewUser}
-															</CustomText>
-															<CustomText>
-																Date: {reviews.reviewDate}
-															</CustomText>
-															<CustomText>
-																Review: {reviews.reviewDescription}
-															</CustomText>
-															<CustomText>
-																Ratings: {reviews.reviewRating}
-															</CustomText>
-														</View>
-													))}
 												</View>
-											</View>
-										</ScrollView>
+											</ScrollView>
+										</View>
 									</View>
-								</View>
-							</Modal>
-						</ScrollView>
+								</Modal>
+							</ScrollView>
+						</View>
 					</View>
-				</View>
-			</Modal>
-		</View>
-	</Animated.View>
+				</Modal>
+			</View>
+		</Animated.View>
 	);
 };
 
@@ -729,6 +799,9 @@ const FindABeer = ({ navigation }) => {
 	const rotateValue = useRef(new Animated.Value(0)).current;
 	const [isDataLoading, setIsDataLoading] = useState(true);
 	const { cookies } = useCookies();
+	const [isWishlistVisible, setIsWishlistVisible] = useState(false);
+	const [WishlistTitle, setWishlistTitle] = useState("");
+	const [WishlistMessage, setWishlistMessage] = useState("");
 
 	useEffect(() => {
 		const fetchBeerData = async () => {
@@ -818,23 +891,28 @@ const FindABeer = ({ navigation }) => {
 
 	const handleSlide = (beerID) => {
 		console.log("BeerItem with ID", beerID, "was slided.");
-		const data = { 
+		const data = {
 			beerID: beerID,
-			userID: cookies.userID
-		}
+			userID: cookies.userID,
+		};
 		axios
 			.post("http://10.0.2.2:3000/addToWishlist", data)
 			.then((response) => {
 				if (response.data.success) {
-					Alert.alert("Added to Wishlist!")
+					setWishlistTitle("Success!");
+					setWishlistMessage("Added to wishlist!");
+					// Alert.alert("Added to Wishlist!")
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
+					setWishlistTitle("Error");
+					setWishlistMessage(message);
+					// Alert.alert("Error!", message);
 				}
+				setIsWishlistVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
-			})
+			});
 	};
 
 	return (
@@ -1004,6 +1082,12 @@ const FindABeer = ({ navigation }) => {
 									onSlide={handleSlide}
 								/>
 							))}
+							<CustomWishlistAlert
+								visible={isWishlistVisible}
+								onClose={() => setIsWishlistVisible(false)}
+								title={WishlistTitle}
+								message={WishlistMessage}
+							/>
 						</ScrollView>
 					</View>
 				</SafeAreaView>

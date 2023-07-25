@@ -13,13 +13,13 @@ import {
 	Easing,
 	Image,
 	Modal,
+	PanResponder,
 	ScrollView,
 	StyleSheet,
 	Text,
 	TextInput,
 	TouchableOpacity,
 	View,
-	PanResponder,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { AirbnbRating } from "react-native-ratings";
@@ -61,6 +61,69 @@ const CustomText = (props) => {
 		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
 			{props.children}
 		</Text>
+	);
+};
+
+// custom alert for adding wishist
+const CustomWishlistAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
 	);
 };
 
@@ -121,20 +184,20 @@ const VenueItem = ({
 
 	const panResponder = useRef(
 		PanResponder.create({
-		onStartShouldSetPanResponder: () => true,
-		onPanResponderMove: (_, gestureState) => {
-			slideAnim.setValue(gestureState.dx);
-		},
-		onPanResponderRelease: (_, gestureState) => {
-			if (gestureState.dx > 50) {
-			onSlide(venueID);
-			}
-	
-			Animated.spring(slideAnim, {
-			toValue: 0,
-			useNativeDriver: false,
-			}).start();
-		},
+			onStartShouldSetPanResponder: () => true,
+			onPanResponderMove: (_, gestureState) => {
+				slideAnim.setValue(gestureState.dx);
+			},
+			onPanResponderRelease: (_, gestureState) => {
+				if (gestureState.dx > 50) {
+					onSlide(venueID);
+				}
+
+				Animated.spring(slideAnim, {
+					toValue: 0,
+					useNativeDriver: false,
+				}).start();
+			},
 		})
 	).current;
 
@@ -333,13 +396,13 @@ const VenueItem = ({
 									<View
 										style={{
 											flexDirection: "row",
-											//marginRight: 1,
-											// justifyContent: "space-between",
 											alignItems: "center",
 											marginBottom: 12,
 										}}
 									>
-										<View style={{ flexDirection: "row", alignItems: "center" }}>
+										<View
+											style={{ flexDirection: "row", alignItems: "center" }}
+										>
 											<Entypo
 												name="location-pin"
 												size={24}
@@ -457,7 +520,9 @@ const VenueItem = ({
 													key={star}
 													name="star"
 													size={16}
-													color={star <= venueRating ? COLORS.foam : COLORS.grey}
+													color={
+														star <= venueRating ? COLORS.foam : COLORS.grey
+													}
 													style={{ marginBottom: 9 }}
 												/>
 											))}
@@ -881,6 +946,9 @@ const BeersVenue = ({ navigation }) => {
 	const rotateValue = useRef(new Animated.Value(0)).current;
 	const [isDataLoading, setIsDataLoading] = useState(true);
 	const { cookies } = useCookies();
+	const [isWishlistVisible, setIsWishlistVisible] = useState(false);
+	const [WishlistTitle, setWishlistTitle] = useState("");
+	const [WishlistMessage, setWishlistMessage] = useState("");
 
 	useEffect(() => {
 		const fetchVenueData = async () => {
@@ -967,21 +1035,24 @@ const BeersVenue = ({ navigation }) => {
 		console.log("VenueItem with ID", venueID, "was slided.");
 		const data = {
 			venueID: venueID,
-			userID: cookies.userID
-		}
+			userID: cookies.userID,
+		};
 		axios
 			.post("http://10.0.2.2:3000/addToWishlist", data)
 			.then((response) => {
 				if (response.data.success) {
-					Alert.alert("Added to Wishlist!")
+					setWishlistTitle("Success!");
+					setWishlistMessage("Added to wishlist!");
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
+					setWishlistTitle("Error");
+					setWishlistMessage(message);
 				}
+				setIsWishlistVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
-			})
+			});
 	};
 
 	return (
@@ -1150,6 +1221,12 @@ const BeersVenue = ({ navigation }) => {
 									onSlide={handleSlide}
 								/>
 							))}
+							<CustomWishlistAlert
+								visible={isWishlistVisible}
+								onClose={() => setIsWishlistVisible(false)}
+								title={WishlistTitle}
+								message={WishlistMessage}
+							/>
 						</ScrollView>
 					</View>
 				</SafeAreaView>

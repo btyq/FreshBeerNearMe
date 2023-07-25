@@ -11,9 +11,9 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCookies } from "../CookieContext";
-import COLORS from "../constants/colors";
-import GlobalStyle from "../utils/GlobalStyle";
+import { useCookies } from "../../CookieContext";
+import COLORS from "../../constants/colors";
+import GlobalStyle from "../../utils/GlobalStyle";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -51,13 +51,13 @@ const InquiriesNFeedback = ({ navigation }) => {
 	}, []);
 
 	const data = [30, 40, 25, 50, 45, 20];
-	const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+	const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
 
 	const maxDataValue = Math.max(...data);
 	const scaleY = 150 / maxDataValue;
 
 	const navigateToRespond = () => {
-		navigation.navigate('Respond');
+		navigation.navigate("Respond");
 	};
 
 	// ================================== Functions for different button ==================================
@@ -112,11 +112,15 @@ const InquiriesNFeedback = ({ navigation }) => {
 						}
 					/>
 
-
-					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 30 }}>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							marginTop: 30,
+						}}
+					>
 						<Text
 							style={{
-
 								marginLeft: 20,
 								marginBottom: 10,
 								fontSize: 15,
@@ -127,12 +131,14 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							Profile
 						</Text>
-						<View style={{
-							flex: 1,
-							borderBottomWidth: 1, // Adjust the thickness as desired
-							borderBottomColor: COLORS.black,
-							marginLeft: -290, // Adjust the value to prevent overlapping
-						}} />
+						<View
+							style={{
+								flex: 1,
+								borderBottomWidth: 1, // Adjust the thickness as desired
+								borderBottomColor: COLORS.black,
+								marginLeft: -290, // Adjust the value to prevent overlapping
+							}}
+						/>
 					</View>
 					{/* Container with sub-containers */}
 					<View
@@ -149,8 +155,8 @@ const InquiriesNFeedback = ({ navigation }) => {
 						{/* Sub-container 1 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -167,19 +173,21 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 
 						{/* Sub-container 2 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -196,19 +204,21 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 
 						{/* Sub-container 3 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -225,19 +235,21 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 
 						{/* Sub-container 4 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -254,19 +266,21 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 
 						{/* Sub-container 5 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -283,18 +297,25 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 					</View>
-					<View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 10 }}>
+					<View
+						style={{
+							flexDirection: "row",
+							alignItems: "center",
+							marginTop: 10,
+						}}
+					>
 						<Text
 							style={{
-
 								marginLeft: 20,
 								marginBottom: 10,
 								fontSize: 15,
@@ -305,12 +326,14 @@ const InquiriesNFeedback = ({ navigation }) => {
 						>
 							Feedback
 						</Text>
-						<View style={{
-							flex: 1,
-							borderBottomWidth: 1, // Adjust the thickness as desired
-							borderBottomColor: COLORS.black,
-							marginLeft: -240, // Adjust the value to prevent overlapping
-						}} />
+						<View
+							style={{
+								flex: 1,
+								borderBottomWidth: 1, // Adjust the thickness as desired
+								borderBottomColor: COLORS.black,
+								marginLeft: -240, // Adjust the value to prevent overlapping
+							}}
+						/>
 					</View>
 					{/* Container with sub-containers */}
 					<View
@@ -327,8 +350,8 @@ const InquiriesNFeedback = ({ navigation }) => {
 						{/* Sub-container 1 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -345,19 +368,21 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 
 						{/* Sub-container 2 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -374,19 +399,21 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 
 						{/* Sub-container 3 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -403,19 +430,21 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 
 						{/* Sub-container 4 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -432,19 +461,21 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 
 						{/* Sub-container 5 */}
 						<View
 							style={{
-								flexDirection: 'row',
-								alignItems: 'center',
+								flexDirection: "row",
+								alignItems: "center",
 								borderWidth: 1,
 								borderColor: COLORS.black,
 								padding: 10,
@@ -461,11 +492,13 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderRadius: 50,
 									borderWidth: 1,
 									borderColor: COLORS.black,
-									alignItems: 'center',
-									justifyContent: 'center',
+									alignItems: "center",
+									justifyContent: "center",
 								}}
 							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>Respond</Text>
+								<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									Respond
+								</Text>
 							</TouchableOpacity>
 						</View>
 					</View>
@@ -487,7 +520,7 @@ const styles = StyleSheet.create({
 	},
 	label: {
 		marginBottom: 5,
-		fontWeight: 'bold',
+		fontWeight: "bold",
 		fontSize: 16,
 	},
 });
