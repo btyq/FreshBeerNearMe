@@ -199,50 +199,52 @@ const PostItem = ({
 								{postTitle}
 							</Text>
 							<CustomText>{postDescription}</CustomText>
-							{comments && comments.length > 0 && (
-								<View>
-									<View
-										style={{
-											borderBottomWidth: 1,
-											borderBottomColor: COLORS.black,
-											marginVertical: 10,
-										}}
-									></View>
-									<Button
-										title="+ Add a comment"
-										onPress={handlePopUp2}
-										filled
-										style={{
-											width: "50%",
-											elevation: 2,
-											borderColor: 0,
-											marginVertical: 10,
-										}}
-									/>
-									{comments.map((comment) => (
-										<View key={comment.commentID}>
-											<View
-												style={{
-													flexDirection: "row",
-													justifyContent: "space-between",
-												}}
-											>
-												<Text
+							<View>
+								<View
+									style={{
+										borderBottomWidth: 1,
+										borderBottomColor: COLORS.black,
+										marginVertical: 10,
+									}}
+								></View>
+								<Button
+									title="+ Add a comment"
+									onPress={handlePopUp2}
+									filled
+									style={{
+										width: "50%",
+										elevation: 2,
+										borderColor: 0,
+										marginVertical: 10,
+									}}
+								/>
+								{comments && comments.length > 0 && (
+									<View>
+										{comments.map((comment) => (
+											<View key={comment.commentID}>
+												<View
 													style={{
-														...GlobalStyle.headerFont,
+														flexDirection: "row",
+														justifyContent: "space-between",
 													}}
 												>
-													{comment.username}
-												</Text>
-												<CustomText>{comment.commentDate}</CustomText>
+													<Text
+														style={{
+															...GlobalStyle.headerFont,
+														}}
+													>
+														{comment.username}
+													</Text>
+													<CustomText>{comment.commentDate}</CustomText>
+												</View>
+												<CustomText style={{ marginBottom: 12 }}>
+													{comment.commentDescription}
+												</CustomText>
 											</View>
-											<CustomText style={{ marginBottom: 12 }}>
-												{comment.commentDescription}
-											</CustomText>
-										</View>
-									))}
-								</View>
-							)}
+										))}
+									</View>
+								)}
+							</View>
 						</ScrollView>
 					</SafeAreaView>
 
