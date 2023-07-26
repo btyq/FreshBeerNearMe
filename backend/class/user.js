@@ -856,17 +856,22 @@ class User {
       const journals = await journalCollection.find({ journalID: { $in: journalIDs } }).toArray();
   
       const allJournalNotes = journals.map((journal) => journal.journalNotes);
-      const frequencyCount = {};
-      allJournalNotes.forEach((note) => {
-        frequencyCount[note] = (frequencyCount[note] || 0) + 1;
-      });
-  
-      for (const note in frequencyCount) {
-        if (frequencyCount[note] > maxFrequency) {
-          maxFrequency = frequencyCount[note];
-          favoriteTastingNote = note;
-        }
-      }
+
+      const frequencyCount = allJournalNotes.reduce((countMap, note) => {
+        countMap[note] = (countMap[note] || 0) + 1;
+        return countMap;
+      }, {});
+
+      [favoriteTastingNote, maxFrequency] = Object.entries(frequencyCount).reduce(
+        ([favNote, maxFreq], [note, freq]) => {
+          if (freq > maxFreq) {
+            return [note, freq];
+          } else {
+            return [favNote, maxFreq];
+          }
+        },
+        [null, 0]
+      );
   
       let favoriteVenueName = null;
       let numberOfTimes = 0;
