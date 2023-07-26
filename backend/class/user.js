@@ -258,6 +258,54 @@ class User {
     res.send(userRecommendations);
   }
 
+  async submitRecommendation(client, res, recommendationType, recommendationUser, recommendationName) {
+    try {
+        const db = client.db('FreshBearNearMe'); 
+        const recommendationCollection = db.collection('Recommendation');
+        const beerCollection = db.collection('Beer');
+        const venueCollection = db.collection('Venue');
+
+        let recommendationID;
+        const highestRecommendation = await recommendationCollection.find().sort({ recommendationID: -1 }).limit(1).toArray();
+        if (highestRecommendation.length === 0) {
+            recommendationID = 1;
+        } else {
+            recommendationID = highestRecommendation[0].recommendationID + 1;
+        }
+
+        let recommendationItemID;
+        if (recommendationType === 'Beer') {
+            const beer = await beerCollection.findOne({ beerName: recommendationName });
+            if (!beer) {
+                return res.status(404).json({ success: false, message: 'Beer not found' });
+            }
+            recommendationItemID = beer.beerID;
+        } else if (recommendationType === 'Venue') {
+            const venue = await venueCollection.findOne({ venueName: recommendationName });
+            if (!venue) {
+                return res.status(404).json({ success: false, message: 'Venue not found' });
+            }
+            recommendationItemID = venue.venueID;
+        } else {
+            return res.status(400).json({ success: false, message: 'Invalid recommendationType' });
+        }
+
+        const newRecommendation = {
+            recommendationID,
+            recommendationType,
+            recommendationUser,
+            recommendationItem: recommendationItemID,
+        };
+
+        await recommendationCollection.insertOne(newRecommendation);
+
+        return res.json({ success: true, message: 'Recommendation submitted successfully' });
+    } catch (error) {
+        console.error('Error submitting recommendation:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+  }
+
   async getSearch(client, res) {
     try {
       const db = client.db("FreshBearNearMe");
@@ -850,9 +898,8 @@ class User {
         mostRecentBeer,
         mostRecentVenue,
       };
-
-      console.log(statisticsObject);
       res.send(statisticsObject);
+      console.log(statisticsObject);
     } catch (error) {
       console.error('Error getting user data:', error);
       res.json({ success: false, message: 'Internal server error' });

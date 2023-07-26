@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+	Alert,
 	Image,
 	Modal,
 	ScrollView,
@@ -1031,7 +1032,6 @@ const Recommendation = ({ navigation }) => {
 	const [searchData, setSearchData] = useState([]); //
 	const [selectedData, setSelectedData] = useState(null);
 	const [isModalVisible, setModalVisible] = useState(false);
-	const [recommendOption, setRecommendOption] = useState(null);
 
 	useEffect(() => {
 		setUserID(cookies.userID);
@@ -1061,6 +1061,8 @@ const Recommendation = ({ navigation }) => {
 			});
 	}, []);
 
+
+
 	// for extracting data from both venue and beer data
 	const getNames = () => {
 		const beerAndVenue = [];
@@ -1089,9 +1091,53 @@ const Recommendation = ({ navigation }) => {
 
 	const searchResults = getNames();
 
-	const handleRecommend = () => {
-		setModalVisible(!isModalVisible);
+	const handleRecommendBeer = () => {
+		const data = {
+			recommendationType: "Beer",
+			recommendationUser: cookies.userID,
+			recommendationName: selectedData
+		}
+
+		axios
+			.post("http://10.0.2.2:3000/submitRecommendation", data)
+			.then((response) => {
+				if (response.data.success) {
+					setModalVisible(!isModalVisible);
+					Alert.alert("Recommendation submitted!")
+				} else {
+					const { message } = response.data;
+					setModalVisible(!isModalVisible);
+					Alert.alert("Error!", message)
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});		
 	};
+
+	const handleRecommendVenue = () => {
+		const data = {
+			recommendationType: "Venue",
+			recommendationUser: cookies.userID,
+			recommendationName: selectedData
+		}
+
+		axios
+			.post("http://10.0.2.2:3000/submitRecommendation", data)
+			.then((response) => {
+				if (response.data.success) {
+					setModalVisible(!isModalVisible);
+					Alert.alert("Recommendation submitted!")
+				} else {
+					const { message } = response.data;
+					setModalVisible(!isModalVisible);
+					Alert.alert("Error!", message)
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
 
 	// console.log("selectedData.rating:", selectedData.rating);
 	// console.log("selectedData:", selectedData);
@@ -1288,14 +1334,6 @@ const Recommendation = ({ navigation }) => {
 								<CustomText style={{ marginLeft: 10 }}>
 									{selectedData}
 								</CustomText>
-
-								<AirbnbRating
-									count={5}
-									defaultRating={4}
-									showRating={false}
-									size={16}
-									isDisabled={true}
-								/>
 							</TouchableOpacity>
 							<View
 								style={{
@@ -1337,7 +1375,7 @@ const Recommendation = ({ navigation }) => {
 										borderColor: 0,
 										padding: 5,
 									}}
-									onPress={handleRecommend}
+									onPress={() => setModalVisible(!isModalVisible)}
 								/>
 								{/* for recommend button */}
 								<Modal
@@ -1376,10 +1414,7 @@ const Recommendation = ({ navigation }) => {
 														elevation: 2,
 														marginRight: 12,
 													}}
-													onPress={() => {
-														setRecommendOption("beer");
-														handleRecommend();
-													}}
+													onPress={handleRecommendBeer}
 												/>
 												<Button
 													title="Venue"
@@ -1391,15 +1426,12 @@ const Recommendation = ({ navigation }) => {
 														borderColor: 0,
 														elevation: 2,
 													}}
-													onPress={() => {
-														setRecommendOption("venue");
-														handleRecommend();
-													}}
+													onPress={handleRecommendVenue}
 												/>
 											</View>
 											<Button
 												title="Cancel"
-												onPress={handleRecommend}
+												onPress={() => setModalVisible(!isModalVisible)}
 												style={{
 													width: "40%",
 													borderRadius: 10,

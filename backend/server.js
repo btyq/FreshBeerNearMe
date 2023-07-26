@@ -383,6 +383,12 @@ app.get("/getRecommendation", async (req, res) => {
 	globalUser.getRecommendation(client, res, userID)	
 })
 
+//Route for user to submit recommendation
+app.post("/submitRecommendation", async (req, res) => {
+	const { recommendationType, recommendationUser, recommendationName } = req.body;
+	globalUser.submitRecommendation(client, res, recommendationType, recommendationUser, recommendationName)
+})
+
 //Route to get user's search recommendation
 app.get("/getSearch", async (req, res) => {
 	globalUser.getSearch(client, res)
