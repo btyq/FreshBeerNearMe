@@ -9,13 +9,10 @@ import BottomTabNavigation from "./frontend/navigation/BottomTabNavigation";
 import {
 	Analytics,
 	CreatePromotion,
-	Forums,
 	InquiriesNFeedback,
 	ManageInventory,
 	ManagePromotion,
 	ManageSocialInformation,
-	Recommendation,
-	ReferAFriend,
 	Respond,
 	Signup,
 	VenueComparison,
@@ -71,21 +68,6 @@ export default function App() {
 					<Stack.Screen
 						name="ManageUsers"
 						component={ManageUsers}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="Forums"
-						component={Forums}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="ReferAFriend"
-						component={ReferAFriend}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="Recommendation"
-						component={Recommendation}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

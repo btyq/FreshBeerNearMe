@@ -191,29 +191,31 @@ const FeedItem = ({
 						<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
 							{reviewUsername}
 						</Text>
-						{isFollowing ? (
-							<Button
-								title="Unfollow"
-								filled
-								style={{
-									width: "50%",
-									borderRadius: 30,
-									borderColor: 0,
-								}}
-								onPress={handleUnfollow}
-							/>
-						) : (
-							<Button
-								title="Follow"
-								filled
-								style={{
-									width: "50%",
-									borderRadius: 30,
-									borderColor: 0,
-								}}
-								onPress={handleFollow}
-							/>
-						)}
+						{reviewUser !== userID ? (
+							isFollowing ? (
+								<Button
+									title="Unfollow"
+									filled
+									style={{
+										width: "50%",
+										borderRadius: 30,
+										borderColor: 0,
+									}}
+									onPress={handleUnfollow}
+								/>
+							) : (
+								<Button
+									title="Follow"
+									filled
+									style={{
+										width: "50%",
+										borderRadius: 30,
+										borderColor: 0,
+									}}
+									onPress={handleFollow}
+								/>
+							)
+						) : null}
 						<CustomFollowAlert
 							visible={isFollowVisible}
 							onClose={() => setIsFollowVisible(false)}

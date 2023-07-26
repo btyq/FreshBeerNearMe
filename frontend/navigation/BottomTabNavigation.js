@@ -16,9 +16,12 @@ import {
 	Dashboard,
 	Feedback,
 	FindABeer,
+	Forums,
 	Journal,
 	NearbyVenues,
 	Profile,
+	Recommendation,
+	ReferAFriend,
 	Social,
 	Welcome,
 	Wishlist,
@@ -61,6 +64,21 @@ const DashboardStack = () => {
 				options={{ headerShown: false }}
 			/>
 			<Stack.Screen
+				name="Forums"
+				component={Forums}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="ReferAFriend"
+				component={ReferAFriend}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
+				name="Recommendation"
+				component={Recommendation}
+				options={{ headerShown: false }}
+			/>
+			<Stack.Screen
 				name="Feedback"
 				component={Feedback}
 				options={{ headerShown: false }}
@@ -70,11 +88,6 @@ const DashboardStack = () => {
 				component={Journal}
 				options={{ headerShown: false }}
 			/>
-			{/* <Stack.Screen
-				name="Wishlist"
-				component={Wishlist}
-				options={{ headerShown: false }}
-			/> */}
 		</Stack.Navigator>
 	);
 };
