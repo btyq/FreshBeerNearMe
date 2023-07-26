@@ -1,21 +1,21 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+	ActivityIndicator,
 	ImageBackground,
 	ScrollView,
 	StyleSheet,
 	Text,
 	TouchableOpacity,
 	View,
-	ActivityIndicator,
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import axios from "axios";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -56,22 +56,21 @@ const Dashboard = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getPersonalisedRecommendation",{
+			.get("http://10.0.2.2:3000/getPersonalisedRecommendation", {
 				params: {
-					userID: cookies.userID
-				}
+					userID: cookies.userID,
+				},
 			})
 			.then((response) => {
 				setPersonalisedData(response.data);
 				setIsLoading(false);
 			})
 			.catch((error) => {
-				console.error("Error retrieving personalised reccommendation", error)
+				console.error("Error retrieving personalised reccommendation", error);
 				setIsLoading(false);
-			})
-			
+			});
 	}, []);
-	
+
 	// ================================== Functions for different button ==================================
 	const handleUpcomingEventsClick = () => {
 		// Handle click for "Upcoming Events" here
@@ -373,8 +372,8 @@ const Dashboard = ({ navigation }) => {
 								</Text>
 							</View>
 							<Ionicons
-								name="md-people-circle"
-								size={44}
+								name="journal"
+								size={40}
 								color={COLORS.foam}
 								style={{
 									paddingLeft: 35,
@@ -482,40 +481,48 @@ const Dashboard = ({ navigation }) => {
 						backgroundColor: "transparent",
 						borderColor: "transparent",
 					}}
-					>
-					{isLoading ? ( 
+				>
+					{isLoading ? (
 						<View style={{ alignItems: "center", marginTop: 20 }}>
-						<ActivityIndicator size="large" color={COLORS.primary} />
-						<Text>Loading...</Text>
+							<ActivityIndicator size="large" color={COLORS.primary} />
+							<Text>Loading...</Text>
 						</View>
 					) : (
 						<ThemeProvider
-						theme={{
-							Tab: {
-							primary: {
-								backgroundColor: COLORS.grey,
-							},
-							},
-						}}
+							theme={{
+								Tab: {
+									primary: {
+										backgroundColor: COLORS.grey,
+									},
+								},
+							}}
 						>
-						<Card.Title>Since you like {personalisedData.mostFrequentCategory}...</Card.Title>
-						<Card.Divider />
-						<TabView value={index1} onChange={setIndex1} animationType="spring">
-							{personalisedData.recommendedBeers.map((beer, index) => (
-							<TabView.Item key={index} style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-								<TouchableOpacity onPress={() => console.log(beer)}>
-									<ImageBackground
-									source={{ uri: beer.beerImage }}
-									style={styles.cardImage}
+							<Card.Title>
+								Since you like {personalisedData.mostFrequentCategory}...
+							</Card.Title>
+							<Card.Divider />
+							<TabView
+								value={index1}
+								onChange={setIndex1}
+								animationType="spring"
+							>
+								{personalisedData.recommendedBeers.map((beer, index) => (
+									<TabView.Item
+										key={index}
+										style={{ width: "100%", marginTop: -30 }}
 									>
-									</ImageBackground>
-								</TouchableOpacity>
-								</Card>
-							</TabView.Item>
-							))}
-						</TabView>
-					</ThemeProvider>
+										<Card containerStyle={styles.cardContainer}>
+											<TouchableOpacity onPress={() => console.log(beer)}>
+												<ImageBackground
+													source={{ uri: beer.beerImage }}
+													style={styles.cardImage}
+												></ImageBackground>
+											</TouchableOpacity>
+										</Card>
+									</TabView.Item>
+								))}
+							</TabView>
+						</ThemeProvider>
 					)}
 				</Card>
 			</SafeAreaView>

@@ -83,11 +83,6 @@ const DashboardStack = () => {
 				component={Feedback}
 				options={{ headerShown: false }}
 			/>
-			<Stack.Screen
-				name="Journal"
-				component={Journal}
-				options={{ headerShown: false }}
-			/>
 		</Stack.Navigator>
 	);
 };
@@ -169,22 +164,22 @@ const BottomTabNavigation = () => {
 						);
 					},
 				}}
-			/>
+			/> */}
 			<Tab.Screen
-				name="Feedback"
-				component={Feedback}
+				name="Journal"
+				component={Journal}
 				options={{
 					tabBarIcon: ({ focused }) => {
 						return (
-							<MaterialIcons
-								name="feedback"
+							<Ionicons
+								name="journal"
 								size={24}
 								color={focused ? COLORS.foam : COLORS.black}
 							/>
 						);
 					},
 				}}
-			/> */}
+			/>
 			<Tab.Screen
 				name="Wishlist"
 				component={Wishlist}
