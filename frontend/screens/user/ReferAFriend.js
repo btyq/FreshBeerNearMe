@@ -449,10 +449,18 @@ const ReferAFriend = ({ navigation }) => {
 							onPress={() => navigation.navigate("ReferAFriend")}
 						/>
 						<Button
-							title="Recommendation"
+							title="Recommendations"
 							color={COLORS.white}
 							filled
-							style={styles.longButton}
+							style={{
+								width: "35%",
+								height: 55,
+								marginVertical: 0,
+								borderRadius: 20,
+								marginRight: 10,
+								borderColor: 0,
+								elevation: 2,
+							}}
 							onPress={() => navigation.navigate("Recommendation")}
 						/>
 					</View>
@@ -615,11 +623,11 @@ const styles = StyleSheet.create({
 		marginHorizontal: 20,
 	},
 	longButton: {
-		width: "20%",
+		width: "18%",
 		height: 55,
 		marginVertical: 0,
 		borderRadius: 20,
-		marginRight: 15,
+		marginRight: 10,
 		borderColor: 0,
 		elevation: 2,
 	},
