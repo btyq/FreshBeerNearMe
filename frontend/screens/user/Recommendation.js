@@ -62,6 +62,513 @@ const CustomText = (props) => {
 	);
 };
 
+// beer data
+const BeerItem = ({
+	beerID,
+	beerName,
+	price,
+	rating,
+	beerDescription,
+	beerImage,
+	ABV,
+	IBU,
+}) => {
+	const [popupVisible, setPopupVisible] = useState(false); // beer names popup
+	const [beerLocation, setBeerLocation] = useState([]);
+	const [userID, setUserID] = useState("");
+	const { cookies } = useCookies();
+
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible); // created 1st modal
+	};
+
+	// for beer locations
+	useEffect(() => {
+		setUserID(cookies.userID);
+
+		const fetchBeerLocations = async () => {
+			try {
+				const response = await axios.get(
+					"http://10.0.2.2:3000/getBeerLocation",
+					{
+						params: { beerID },
+					}
+				);
+				const { success, venues } = response.data;
+
+				if (success) {
+					setBeerLocation(venues);
+				}
+			} catch (error) {
+				console.error("Error fetching beer location:", error);
+			}
+		};
+
+		if (popupVisible) {
+			fetchBeerLocations();
+		}
+	}, [popupVisible]);
+
+	return (
+		<View style={styles.subContainer}>
+			<TouchableOpacity
+				style={{
+					backgroundColor: COLORS.grey,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					marginTop: 5,
+					borderRadius: 20,
+					padding: 15,
+					borderWidth: 1,
+					borderColor: 0,
+				}}
+				onPress={handlePopup}
+			>
+				<CustomText
+					style={{
+						flex: 1,
+						marginLeft: 10,
+						flexWrap: "wrap",
+						maxWidth: "80%",
+					}}
+				>
+					Beer Name: {beerName}
+				</CustomText>
+				<AirbnbRating
+					count={5}
+					defaultRating={rating}
+					showRating={false}
+					size={14}
+					isDisabled={true}
+				/>
+			</TouchableOpacity>
+
+			{/* beer popup */}
+			<Modal visible={popupVisible} transparent animationType="fade">
+				<View
+					style={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: COLORS.secondary,
+						borderRadius: 10,
+						paddingHorizontal: 20,
+						elevation: 5,
+					}}
+				>
+					<ScrollView showsVerticalScrollIndicator={false}>
+						<Image source={{ uri: beerImage }} style={styles.beerImage} />
+						<CustomText
+							style={{
+								fontSize: 18,
+								textAlign: "center",
+							}}
+						>
+							{beerName} -- ${price}
+						</CustomText>
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "space-between",
+								alignItems: "center",
+							}}
+						>
+							<View
+								style={{
+									flex: 1,
+									flexDirection: "row",
+									justifyContent: "flex-end",
+									paddingTop: 16,
+									marginBottom: 15,
+								}}
+							>
+								{[1, 2, 3, 4, 5].map((star) => (
+									<Ionicons
+										key={star}
+										name="star"
+										size={16}
+										color={star <= rating ? COLORS.foam : COLORS.grey}
+										style={{ marginBottom: 4 }}
+									/>
+								))}
+							</View>
+						</View>
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "space-between",
+								alignItems: "center",
+								elevation: 5,
+							}}
+						>
+							<CustomText style={{ marginBottom: 12 }}>
+								Alcohol%: {ABV}
+							</CustomText>
+							<CustomText style={{ marginBottom: 12 }}>
+								Bitter Units: {IBU}
+							</CustomText>
+						</View>
+						<CustomText style={{ fontSize: 17 }}>Description</CustomText>
+						<CustomText>{beerDescription}</CustomText>
+						<Text
+							style={{
+								...GlobalStyle.headerFont,
+								fontSize: 17,
+								marginBottom: 10,
+								marginTop: 10,
+							}}
+						>
+							Locations
+						</Text>
+						{beerLocation.map((location) => (
+							<View key={location.venueID}>
+								<CustomText>{location.venueName}</CustomText>
+							</View>
+						))}
+						<Button
+							title="Close"
+							onPress={handlePopup}
+							filled
+							style={{
+								marginTop: 12,
+								marginBottom: 12,
+								borderColor: 0,
+								elevation: 2,
+								borderRadius: 12,
+							}}
+						/>
+					</ScrollView>
+				</View>
+			</Modal>
+		</View>
+	);
+};
+
+// venue data
+const VenueItem = ({
+	venueID,
+	venueName,
+	venueAddress,
+	venueContact,
+	venueRating,
+	venueImage,
+	venueOperatingHours,
+	venueFreshness,
+	venueTemperature,
+}) => {
+	const [popupVisible, setPopupVisible] = useState(false);
+	const [venueMenu, setVenueMenu] = useState([]);
+	const [userID, setUserID] = useState("");
+	const { cookies } = useCookies();
+
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible);
+	};
+
+	useEffect(() => {
+		setUserID(cookies.userID);
+		const fetchVenueMenu = async () => {
+			try {
+				const response = await axios.get("http://10.0.2.2:3000/getVenueMenu", {
+					params: { venueID },
+				});
+				const { success, beers } = response.data;
+
+				if (success) {
+					setVenueMenu(beers);
+				}
+			} catch (error) {
+				console.error("Error fetching venue menu:", error);
+			}
+		};
+
+		if (popupVisible) {
+			fetchVenueMenu();
+		}
+	}, [popupVisible]);
+
+	return (
+		<View style={styles.subContainer}>
+			<TouchableOpacity
+				style={{
+					backgroundColor: COLORS.grey,
+					flexDirection: "row",
+					justifyContent: "space-between",
+					alignItems: "center",
+					marginTop: 5,
+					borderRadius: 20,
+					padding: 15,
+					borderWidth: 1,
+					borderColor: 0,
+				}}
+				onPress={handlePopup}
+			>
+				<CustomText
+					style={{
+						flex: 1,
+						marginLeft: 10,
+						flexWrap: "wrap",
+						maxWidth: "80%",
+					}}
+				>
+					Venue Name: {venueName}
+				</CustomText>
+				<AirbnbRating
+					count={5}
+					defaultRating={venueRating}
+					showRating={false}
+					size={14}
+					isDisabled={true}
+				/>
+			</TouchableOpacity>
+
+			{/* venue popup  */}
+			<Modal visible={popupVisible} transparent animationType="fade">
+				<View
+					style={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: COLORS.secondary,
+						borderRadius: 10,
+						paddingHorizontal: 20,
+						elevation: 5,
+					}}
+				>
+					<ScrollView
+						contentContainerStyle={{ flexGrow: 1, paddingBottom: 30 }}
+						showsVerticalScrollIndicator={false}
+					>
+						<Image source={{ uri: venueImage }} style={styles.venueImage} />
+						<CustomText
+							style={{
+								fontSize: 18,
+								textAlign: "center",
+								marginBottom: 12,
+							}}
+						>
+							{venueName}
+						</CustomText>
+						<View style={{ marginHorizontal: 12 }}>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									marginBottom: 12,
+								}}
+							>
+								<View style={{ flexDirection: "row", alignItems: "center" }}>
+									<Entypo name="location-pin" size={24} color={COLORS.black} />
+									<CustomText
+										style={{
+											flexWrap: "wrap",
+											marginLeft: 4,
+											maxWidth: "65%",
+										}}
+									>
+										{venueAddress}
+									</CustomText>
+								</View>
+								<View
+									style={{
+										flexDirection: "row",
+										alignItems: "center",
+										marginHorizontal: 12,
+									}}
+								>
+									<FontAwesome
+										name="phone"
+										size={24}
+										color={COLORS.black}
+										style={{ marginRight: 4 }}
+									/>
+									<CustomText
+										style={{
+											flexWrap: "wrap",
+											maxWidth: "80%",
+										}}
+									>
+										{venueContact}
+									</CustomText>
+								</View>
+							</View>
+
+							<View
+								style={{
+									width: "100%",
+									borderColor: 0,
+									paddingHorizontal: 20,
+									paddingVertical: 10,
+									borderRadius: 30,
+									marginBottom: 25,
+									backgroundColor: COLORS.grey,
+									elevation: 2,
+								}}
+							>
+								<CustomText
+									style={{
+										fontSize: 18,
+									}}
+								>
+									Operating Hours{" "}
+								</CustomText>
+								<View>
+									{venueOperatingHours.split("\n").map((line, index) => (
+										<View
+											key={index}
+											style={{
+												flexDirection: "row",
+												justifyContent: "space-between",
+											}}
+										>
+											<Text
+												style={{
+													...GlobalStyle.headerFont,
+													fontSize: 14,
+													flex: 1,
+												}}
+											>
+												{line.split(" ")[0]}
+											</Text>
+											<CustomText style={{ justifyContent: "flex-end" }}>
+												{line.substring(line.indexOf(" ") + 1)}
+											</CustomText>
+										</View>
+									))}
+								</View>
+							</View>
+							<CustomText>Average Beer Freshness: {venueFreshness}</CustomText>
+							<CustomText>
+								Average Beer Temperature: {venueTemperature}
+							</CustomText>
+							<View
+								style={{
+									borderTopColor: "black",
+									borderBottomWidth: 1,
+									marginTop: 5,
+								}}
+							></View>
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+									marginTop: 12,
+									marginBottom: 12,
+								}}
+							>
+								<CustomText style={{ fontSize: 16 }}>Ratings: </CustomText>
+								<View
+									style={{
+										flexDirection: "row",
+										paddingTop: 6,
+									}}
+								>
+									{[1, 2, 3, 4, 5].map((star) => (
+										<Ionicons
+											key={star}
+											name="star"
+											size={16}
+											color={star <= venueRating ? COLORS.foam : COLORS.grey}
+											style={{ marginBottom: 9 }}
+										/>
+									))}
+								</View>
+							</View>
+							<View
+								style={{
+									borderTopColor: "black",
+									borderTopWidth: 1,
+								}}
+							></View>
+							<CustomText
+								style={{ fontSize: 16, marginTop: 12, marginBottom: 12 }}
+							>
+								Menu
+							</CustomText>
+
+							<View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+								{venueMenu.map((beer) => (
+									<View
+										key={beer.beerID}
+										style={{
+											width: "45%",
+											marginHorizontal: 8,
+											marginBottom: 20,
+											borderRadius: 15,
+											backgroundColor: COLORS.secondary,
+											elevation: 5,
+										}}
+									>
+										<View
+											style={{
+												marginTop: 12,
+												alignItems: "center",
+												justifyContent: "center",
+											}}
+										>
+											<Image
+												source={{ uri: beer.beerImage }}
+												style={{
+													borderRadius: 12,
+													height: 120,
+													width: 120,
+												}}
+											/>
+										</View>
+										<View style={{ marginTop: 12, paddingHorizontal: 10 }}>
+											<Text
+												style={{
+													...GlobalStyle.headerFont,
+													fontSize: 13,
+													marginBottom: 6,
+												}}
+											>
+												{beer.beerName}
+											</Text>
+											<View
+												style={{
+													flexDirection: "row",
+													justifyContent: "space-between",
+													marginBottom: 6,
+												}}
+											>
+												<CustomText style={{ marginRight: 5 }}>
+													ABV: {beer.abv}
+												</CustomText>
+												<CustomText style={{ marginRight: 5 }}>
+													IBU: {beer.ibu}
+												</CustomText>
+											</View>
+											<Text
+												style={{
+													...GlobalStyle.headerFont,
+													fontSize: 14,
+													marginBottom: 12,
+												}}
+											>
+												${beer.price}
+											</Text>
+										</View>
+									</View>
+								))}
+							</View>
+							<Button
+								title="Close"
+								onPress={handlePopup}
+								filled
+								style={{
+									elevation: 2,
+									borderColor: 0,
+								}}
+							/>
+						</View>
+					</ScrollView>
+				</View>
+			</Modal>
+		</View>
+	);
+};
+
 const RecommendationItem = ({ data }) => {
 	// console.log("Data prop in RecommendationItem:", data);
 
@@ -554,31 +1061,30 @@ const Recommendation = ({ navigation }) => {
 			});
 	}, []);
 
-	// for extracting data from recommendation data
+	// for extracting data from both venue and beer data
 	const getNames = () => {
-		const combinedRecommendations = [];
+		const beerAndVenue = [];
 
-		Object.values(recommendationData).forEach((dataArray) => {
+		Object.values(searchData).forEach((dataArray) => {
 			dataArray.forEach((item) => {
 				if (item.venueName) {
-					combinedRecommendations.push({
+					beerAndVenue.push({
 						id: item._id,
 						name: item.venueName,
-						// rating: item.venueRating,
+						rating: item.venueRating,
 					});
 				}
 
 				if (item.beerName) {
-					combinedRecommendations.push({
+					beerAndVenue.push({
 						id: item._id,
 						name: item.beerName,
-						// rating: item.rating,
+						rating: item.rating,
 					});
 				}
 			});
 		});
-
-		return combinedRecommendations;
+		return beerAndVenue;
 	};
 
 	const searchResults = getNames();
@@ -712,9 +1218,45 @@ const Recommendation = ({ navigation }) => {
 								Object.keys(recommendationData).map((username) => (
 									<View key={username} style={{ marginBottom: 12 }}>
 										<CustomText>{username} recommends:</CustomText>
-										{recommendationData[username].map((item, index) => (
+										{recommendationData[username].map((item) => {
+											if (item.beerID) {
+												return (
+													<BeerItem
+														key={item.beerID}
+														beerID={item.beerID}
+														beerName={item.beerName}
+														price={item.price}
+														rating={item.rating}
+														beerDescription={item.beerDescription}
+														beerImage={item.beerImage}
+														ABV={item.abv}
+														IBU={item.ibu}
+														communityReviews={item.communityReviews}
+														venueAvailability={item.venueAvailability}
+													/>
+												);
+											} else if (item.venueID) {
+												return (
+													<VenueItem
+														key={item.venueID}
+														venueID={item.venueID}
+														venueName={item.venueName}
+														venueAddress={item.venueAddress}
+														venueContact={item.venueContact}
+														venueRating={item.venueRating}
+														venueImage={item.venueImage}
+														venueOperatingHours={item.venueOperatingHours}
+														venueFreshness={item.venueFreshness}
+														venueTemperature={item.venueTemperature}
+													/>
+												);
+											}
+											return null;
+										})}
+
+										{/* {recommendationData[username].map((item, index) => (
 											<RecommendationItem key={index} data={item} />
-										))}
+										))} */}
 									</View>
 								))
 							)}
@@ -899,6 +1441,34 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	beerImage: {
+		height: 230,
+		width: 250,
+		borderRadius: 15,
+		borderWidth: 5,
+		borderColor: 0,
+		marginTop: 20,
+		marginLeft: "auto",
+		marginRight: "auto",
+		justifyContent: "center",
+		alignContent: "center",
+		marginBottom: 10,
+		alignSelf: "center",
+	},
+	venueImage: {
+		height: 200,
+		width: 320,
+		borderRadius: 15,
+		borderWidth: 5,
+		borderColor: 0,
+		marginTop: 20,
+		marginLeft: "auto",
+		marginRight: "auto",
+		justifyContent: "center",
+		alignContent: "center",
+		marginBottom: 10,
+		alignSelf: "center",
 	},
 });
 

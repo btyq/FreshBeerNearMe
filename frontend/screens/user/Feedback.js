@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import {
 	Alert,
 	Image,
+	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -56,6 +57,69 @@ const CustomText = (props) => {
 	);
 };
 
+// custom alert for feedback removal
+const CustomFeedbackAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
 const Feedback = ({ navigation }) => {
 	const [activeButton, setActiveButton] = useState("issues"); // selected button
 	const [issueDescription, setIssueDescription] = useState("");
@@ -63,6 +127,9 @@ const Feedback = ({ navigation }) => {
 	const [venueData, setVenueData] = useState([]);
 	const [selectedVenue, setSelectedVenue] = useState(null);
 	const { cookies } = useCookies();
+	const [isFeedbackVisible, setIsFeedbackVisible] = useState(false);
+	const [FeedbackTitle, setFeedbackTitle] = useState("");
+	const [FeedbackMessage, setFeedbackMessage] = useState("");
 
 	const handleButton = (title) => {
 		setActiveButton(title);
@@ -85,12 +152,15 @@ const Feedback = ({ navigation }) => {
 			.post("http://10.0.2.2:3000/submitIssue", data)
 			.then((response) => {
 				if (response.data.success) {
-					Alert.alert("Issue submitted!");
+					setFeedbackTitle("Success");
+					setFeedbackMessage("Issue submitted!");
 					setIssueDescription("");
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
+					setFeedbackTitle("Error");
+					setFeedbackMessage(message);
 				}
+				setIsFeedbackVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -115,12 +185,15 @@ const Feedback = ({ navigation }) => {
 			.post("http://10.0.2.2:3000/submitFeedback", data)
 			.then((response) => {
 				if (response.data.success) {
-					Alert.alert("Feedback submitted!");
+					setFeedbackTitle("Success");
+					setFeedbackMessage("Feedback submitted!");
 					setFeedbackDescription("");
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
+					setFeedbackTitle("Error");
+					setFeedbackMessage(message);
 				}
+				setIsFeedbackVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -369,6 +442,12 @@ const Feedback = ({ navigation }) => {
 								</SafeAreaView>
 							)
 						)}
+						<CustomFeedbackAlert
+							visible={isFeedbackVisible}
+							onClose={() => setIsFeedbackVisible(false)}
+							title={FeedbackTitle}
+							message={FeedbackMessage}
+						/>
 					</View>
 				</ScrollView>
 			</SafeAreaView>
