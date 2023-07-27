@@ -949,6 +949,7 @@ const BeersVenue = ({ navigation }) => {
 	const [isWishlistVisible, setIsWishlistVisible] = useState(false);
 	const [WishlistTitle, setWishlistTitle] = useState("");
 	const [WishlistMessage, setWishlistMessage] = useState("");
+	const [showInstructions, setShowInstructions] = useState(true);
 
 	useEffect(() => {
 		const fetchVenueData = async () => {
@@ -1055,9 +1056,76 @@ const BeersVenue = ({ navigation }) => {
 			});
 	};
 
+	const hideInstructions = () => {
+		setShowInstructions(false);
+	};
+
 	return (
 		<View style={{ flex: 1 }}>
 			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
+				{/* Walkthrough instructions */}
+				{showInstructions && (
+					<View
+						style={{
+							backgroundColor: "rgba(0, 0, 0, 0.5)",
+							position: "absolute",
+							height: "100%",
+							width: "100%",
+							justifyContent: "center",
+							alignItems: "center",
+							zIndex: 1,
+						}}
+					>
+						<View
+							style={{
+								width: "80%",
+								backgroundColor: COLORS.white,
+								borderRadius: 20,
+								padding: 30,
+							}}
+						>
+							<Ionicons
+								name="md-beer"
+								size={34}
+								color={COLORS.foam}
+								style={{ alignSelf: "center" }}
+							/>
+							<Text
+								style={{
+									fontSize: 18,
+									...GlobalStyle.headerFont,
+									alignSelf: "center",
+									marginBottom: 20,
+								}}
+							>
+								Welcome
+							</Text>
+							<CustomText
+								style={{
+									alignSelf: "center",
+									fontSize: 16,
+									marginBottom: 20,
+								}}
+							>
+								Slide the venue and beer names to add to your wishlist!
+							</CustomText>
+							<TouchableOpacity
+								style={{
+									backgroundColor: COLORS.foam,
+									padding: 10,
+									borderRadius: 8,
+									alignItems: "center",
+									marginTop: 20,
+								}}
+								onPress={hideInstructions}
+							>
+								<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>
+									OK
+								</Text>
+							</TouchableOpacity>
+						</View>
+					</View>
+				)}
 				<Header
 					placement="left"
 					backgroundColor={COLORS.primary}
@@ -1114,7 +1182,6 @@ const BeersVenue = ({ navigation }) => {
 						</View>
 					}
 				/>
-
 				<SafeAreaView style={{ flex: 1 }}>
 					<View style={styles.grid}>
 						<Button

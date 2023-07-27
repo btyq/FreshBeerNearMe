@@ -354,7 +354,7 @@ const JournalItem = ({
 	);
 };
 
-const Journal = ({ navigation, venueID, beerID }) => {
+const Journal = ({ navigation }) => {
 	const [activeButton, setActiveButton] = useState("journal"); // selected button
 	const [tastingNotes, setTastingNotes] = useState("");
 
@@ -390,6 +390,13 @@ const Journal = ({ navigation, venueID, beerID }) => {
 
 	const handlePopUp2 = () => {
 		setPopupVisible2(!popupVisible2);
+	};
+
+	const generateRandomNumber = () => {
+		const min = 1000000;
+		const max = 10000000;
+		const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+		return randomNumber;
 	};
 
 	const submitJournal = () => {
@@ -479,7 +486,7 @@ const Journal = ({ navigation, venueID, beerID }) => {
 		const fetchVenueMenu = async () => {
 			try {
 				const response = await axios.get("http://10.0.2.2:3000/getVenueMenu", {
-					params: { venueID },
+					params: { venueID: statisticsData.mostRecentVenue?.venueID },
 				});
 				const { success, beers } = response.data;
 
@@ -502,7 +509,7 @@ const Journal = ({ navigation, venueID, beerID }) => {
 				const response = await axios.get(
 					"http://10.0.2.2:3000/getBeerLocation",
 					{
-						params: { beerID },
+						params: { beerID: statisticsData.mostRecentBeer?.beerID },
 					}
 				);
 				const { success, venues } = response.data;
@@ -792,10 +799,6 @@ const Journal = ({ navigation, venueID, beerID }) => {
 											{statisticsData.numberOfTimes} times!)
 										</CustomText>
 									</View>
-
-									{/* Additional Container */}
-									{/* <ScrollView style={{ paddingBottom: 100 }}> */}
-									{/* <View style={{ backgroundColor: COLORS.secondary }}> */}
 
 									{/* most recently visited  */}
 									<TouchableOpacity
@@ -1315,21 +1318,6 @@ const Journal = ({ navigation, venueID, beerID }) => {
 						</View>
 					)
 				)}
-
-				{/* to view details of the statistics */}
-				{/* <Modal visible={showPopup} animationType="slide" transparent>
-					<View style={styles.modalContainer}>
-						<View style={styles.popupContainer}>
-							<Text style={styles.popupText}>Container Clicked!</Text>
-							<TouchableOpacity
-								style={styles.closeButton}
-								onPress={() => setShowPopup(false)}
-							>
-								<Text style={styles.closeButtonText}>Close</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</Modal> */}
 			</SafeAreaView>
 		</View>
 	);
