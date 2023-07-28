@@ -392,13 +392,6 @@ const Journal = ({ navigation }) => {
 		setPopupVisible2(!popupVisible2);
 	};
 
-	const generateRandomNumber = () => {
-		const min = 1000000;
-		const max = 10000000;
-		const randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-		return randomNumber;
-	};
-
 	const submitJournal = () => {
 		const currentDate = new Date();
 		const day = currentDate.getDate();
@@ -854,6 +847,40 @@ const Journal = ({ navigation }) => {
 									</TouchableOpacity>
 
 									{/* popup for most recently visited */}
+									{/* <Modal animationType="slide" visible={popupVisible}>
+										<View style={styles.modalContent}>
+											<Text style={styles.modalHeader}>
+												Most Recently Visited
+											</Text>
+											<Image
+												source={{
+													uri: statisticsData.mostRecentVenue?.venueImage,
+												}}
+												style={styles.venueImage}
+											/>
+											<Text style={styles.venueName}>
+												{statisticsData.mostRecentVenue?.venueName}
+											</Text>
+											<View style={styles.ratingContainer}>
+												<AirbnbRating
+													count={5}
+													defaultRating={
+														statisticsData.mostRecentVenue?.venueRating
+													}
+													size={18}
+													showRating={false}
+													isDisabled={true}
+												/>
+											</View>
+
+											<TouchableOpacity
+												style={styles.closeButton}
+												onPress={handlePopup}
+											>
+												<Text style={styles.closeButtonText}>Close</Text>
+											</TouchableOpacity>
+										</View>
+									</Modal> */}
 									<Modal
 										visible={popupVisible}
 										transparent
@@ -1061,75 +1088,80 @@ const Journal = ({ navigation }) => {
 														style={{ flexDirection: "row", flexWrap: "wrap" }}
 													>
 														{statisticsData.mostRecentVenue?.venueMenu.map(
-															(beer) => (
-																<View
-																	key={beer.beerID}
-																	style={{
-																		width: "45%",
-																		marginHorizontal: 8,
-																		marginBottom: 20,
-																		borderRadius: 15,
-																		backgroundColor: COLORS.secondary,
-																		elevation: 5,
-																	}}
-																>
+															(beer) => {
+																if (beer.beerID === undefined) {
+																	return null;
+																}
+																return (
 																	<View
+																		key={`${statisticsData.mostRecentVenue?.venueID}-${beer.beerID}`}
 																		style={{
-																			marginTop: 12,
-																			alignItems: "center",
-																			justifyContent: "center",
+																			width: "45%",
+																			marginHorizontal: 8,
+																			marginBottom: 20,
+																			borderRadius: 15,
+																			backgroundColor: COLORS.secondary,
+																			elevation: 5,
 																		}}
 																	>
-																		<Image
-																			source={{ uri: beer.beerImage }}
-																			style={{
-																				borderRadius: 12,
-																				height: 120,
-																				width: 120,
-																			}}
-																		/>
-																	</View>
-																	<View
-																		style={{
-																			marginTop: 12,
-																			paddingHorizontal: 10,
-																		}}
-																	>
-																		<Text
-																			style={{
-																				...GlobalStyle.headerFont,
-																				fontSize: 13,
-																				marginBottom: 6,
-																			}}
-																		>
-																			{beer.beerName}
-																		</Text>
 																		<View
 																			style={{
-																				flexDirection: "row",
-																				justifyContent: "space-between",
-																				marginBottom: 6,
+																				marginTop: 12,
+																				alignItems: "center",
+																				justifyContent: "center",
 																			}}
 																		>
-																			<CustomText style={{ marginRight: 5 }}>
-																				ABV: {beer.abv}
-																			</CustomText>
-																			<CustomText style={{ marginRight: 5 }}>
-																				IBU: {beer.ibu}
-																			</CustomText>
+																			<Image
+																				source={{ uri: beer.beerImage }}
+																				style={{
+																					borderRadius: 12,
+																					height: 120,
+																					width: 120,
+																				}}
+																			/>
 																		</View>
-																		<Text
+																		<View
 																			style={{
-																				...GlobalStyle.headerFont,
-																				fontSize: 14,
-																				marginBottom: 12,
+																				marginTop: 12,
+																				paddingHorizontal: 10,
 																			}}
 																		>
-																			${beer.price}
-																		</Text>
+																			<Text
+																				style={{
+																					...GlobalStyle.headerFont,
+																					fontSize: 13,
+																					marginBottom: 6,
+																				}}
+																			>
+																				{beer.beerName}
+																			</Text>
+																			<View
+																				style={{
+																					flexDirection: "row",
+																					justifyContent: "space-between",
+																					marginBottom: 6,
+																				}}
+																			>
+																				<CustomText style={{ marginRight: 5 }}>
+																					ABV: {beer.abv}
+																				</CustomText>
+																				<CustomText style={{ marginRight: 5 }}>
+																					IBU: {beer.ibu}
+																				</CustomText>
+																			</View>
+																			<Text
+																				style={{
+																					...GlobalStyle.headerFont,
+																					fontSize: 14,
+																					marginBottom: 12,
+																				}}
+																			>
+																				${beer.price}
+																			</Text>
+																		</View>
 																	</View>
-																</View>
-															)
+																);
+															}
 														)}
 													</View>
 													<Button
@@ -1292,11 +1324,18 @@ const Journal = ({ navigation }) => {
 													Locations
 												</Text>
 												{statisticsData.mostRecentBeer?.beerLocation.map(
-													(location) => (
-														<View key={location.venueID}>
-															<CustomText>{location.venueName}</CustomText>
-														</View>
-													)
+													(location) => {
+														if (!location.venueID || !location.beerID) {
+															return null;
+														}
+														return (
+															<View
+																key={`${location.venueID}-${location.beerID}`}
+															>
+																<CustomText>{location.venueName}</CustomText>
+															</View>
+														);
+													}
 												)}
 												<Button
 													title="Close"
