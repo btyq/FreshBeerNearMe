@@ -265,6 +265,16 @@ class User {
         const beerCollection = db.collection('Beer');
         const venueCollection = db.collection('Venue');
 
+        const existingRecommendation = await recommendationCollection.findOne({
+            recommendationUser,
+            recommendationType,
+            recommendationItem: { $exists: true }
+        });
+
+        if (existingRecommendation) {
+            return res.json({ success: false, message: 'Recommendation already exists' });
+        }
+
         let recommendationID;
         const highestRecommendation = await recommendationCollection.find().sort({ recommendationID: -1 }).limit(1).toArray();
         if (highestRecommendation.length === 0) {
@@ -277,17 +287,17 @@ class User {
         if (recommendationType === 'Beer') {
             const beer = await beerCollection.findOne({ beerName: recommendationName });
             if (!beer) {
-                return res.status(404).json({ success: false, message: 'Beer not found' });
+                return res.json({ success: false, message: 'Beer not found' });
             }
             recommendationItemID = beer.beerID;
         } else if (recommendationType === 'Venue') {
             const venue = await venueCollection.findOne({ venueName: recommendationName });
             if (!venue) {
-                return res.status(404).json({ success: false, message: 'Venue not found' });
+                return res.json({ success: false, message: 'Venue not found' });
             }
             recommendationItemID = venue.venueID;
         } else {
-            return res.status(400).json({ success: false, message: 'Invalid recommendationType' });
+            return res.json({ success: false, message: 'Invalid recommendationType' });
         }
 
         const newRecommendation = {
@@ -302,7 +312,7 @@ class User {
         return res.json({ success: true, message: 'Recommendation submitted successfully' });
     } catch (error) {
         console.error('Error submitting recommendation:', error);
-        return res.status(500).json({ success: false, message: 'Internal server error' });
+        return res.json({ success: false, message: 'Internal server error' });
     }
   }
 
@@ -904,7 +914,6 @@ class User {
         mostRecentVenue,
       };
       res.send(statisticsObject);
-      console.log(statisticsObject);
     } catch (error) {
       console.error('Error getting user data:', error);
       res.json({ success: false, message: 'Internal server error' });
