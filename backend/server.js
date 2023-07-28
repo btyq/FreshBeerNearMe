@@ -523,6 +523,18 @@ app.post("/venueOwnerLogin", async (req, res) => {
 	await globalVenueOwner.login(res, username, password);
 });
 
+//Route for venue owner to retrieve inquiries and feedback on homepage
+app.get("/getFeedback", async (req, res) => {
+	const venueOwnerID = req.query.venueOwnerID
+	globalVenueOwner.getFeedback(client, res, venueOwnerID);
+})
+
+//Route for venue owner to reply feedback
+
+app.post("/replyFeedback", async (req, res) => {
+	const { feedbackID, feedbackResponse } = req.body;
+	globalVenueOwner.replyFeedback(client, res, feedbackID, feedbackResponse)
+})
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
 //Route to retrieve beer data

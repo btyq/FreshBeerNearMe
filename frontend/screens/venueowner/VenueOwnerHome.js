@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -45,10 +46,40 @@ const VenueOwnerHome = ({ navigation }) => {
 	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
 
+	const [feedbackData, setFeedbackData] = useState([]);
+	const [newFeedbackData, setNewFeedbackData] = useState([]);
+	const [loading, setLoading] = useState(true);
+
+	function parseDate(dateString) {
+		const [day, month, year] = dateString.split("/");
+		return new Date(`${year}-${month}-${day}`);
+	}
+	
 	useEffect(() => {
-		const sessionToken = cookies.sessionToken;
-		const venueOwnerID = cookies.venueOwnerID;
 		setUsername(cookies.username);
+		axios
+			.get("http://10.0.2.2:3000/getFeedback", {
+				params: {
+					venueOwnerID: cookies.venueOwnerID,
+				},
+			})
+			.then((response) => {
+				const { feedbacks } = response.data;
+
+				let latestFeedback = null;
+				for (const feedback of feedbacks) {
+					const feedbackDate = parseDate(feedback.feedback.feedbackDate);
+					if (!latestFeedback || feedbackDate > parseDate(latestFeedback.feedback.feedbackDate)) {
+						latestFeedback = feedback;
+					}
+				}
+				setNewFeedbackData(latestFeedback)
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving data", error);
+				setLoading(false);
+			});
 	}, []);
 
 	const data = [30, 40, 25, 50, 45, 20];
@@ -62,8 +93,8 @@ const VenueOwnerHome = ({ navigation }) => {
 	};
 
 	const navigateToRespond = () => {
-		navigation.navigate("Respond");
-	};
+		navigation.navigate("Respond", {feedbackData: newFeedbackData})
+	}
 
 	const navigateToVenueProfile = () => {
 		navigation.navigate("VenueProfile");
@@ -122,7 +153,7 @@ const VenueOwnerHome = ({ navigation }) => {
 						}}
 						rightComponent={
 							<View style={{ flexDirection: "row" }}>
-								<TouchableOpacity>
+								<TouchableOpacity onPress={() => console.log(newFeedbackData)}>
 									<Octicons
 										name="bookmark"
 										size={24}
@@ -130,7 +161,7 @@ const VenueOwnerHome = ({ navigation }) => {
 										style={{ marginRight: 10 }}
 									/>
 								</TouchableOpacity>
-								<TouchableOpacity>
+								<TouchableOpacity onPress={() => console.log(feedbackData)}>
 									<Ionicons
 										name="notifications-outline"
 										size={24}
@@ -203,7 +234,7 @@ const VenueOwnerHome = ({ navigation }) => {
 										marginBottom: 5,
 									}}
 								>
-									New inquiries & Feedback
+									Latest Feedback
 								</Text>
 								<TouchableOpacity
 									onPress={navigateToInquiriesNFeedback}
@@ -220,51 +251,37 @@ const VenueOwnerHome = ({ navigation }) => {
 								</TouchableOpacity>
 							</View>
 							<View style={{ marginTop: 10, alignItems: "center" }}>
+								{loading ? ( // Show a loading message or spinner while loading
+								<Text>Loading latest feedback...</Text>
+								) : (
+								// Render the feedback data when available
 								<TouchableOpacity onPress={navigateToRespond}>
 									<View
-										style={{
-											borderWidth: 1,
-											borderColor: COLORS.black,
-											borderRadius: 10,
-											paddingHorizontal: 10,
-											paddingVertical: 10,
-											width: 300,
-										}}
+									style={{
+										borderWidth: 1,
+										borderColor: COLORS.black,
+										borderRadius: 10,
+										paddingHorizontal: 10,
+										paddingVertical: 10,
+										width: 300,
+										marginBottom: 30,
+									}}
 									>
-										<Text style={styles.label}>User Ask:</Text>
-										<Text
-											style={{
-												fontSize: 14,
-											}}
-										>
-											What is the status of my inquiry?
-										</Text>
+									<Text style={styles.label}>Location:</Text>
+									<Text style={{ fontSize: 14 }}>{newFeedbackData.venueName}</Text>
+									<Text style={styles.label}>Date:</Text>
+									<Text style={{ fontSize: 14 }}>
+										{newFeedbackData.feedback.feedbackDate}
+									</Text>
+									<Text style={styles.label}>
+										{newFeedbackData.feedback.username} send a feedback:
+									</Text>
+									<Text style={{ fontSize: 14 }}>
+										{newFeedbackData.feedback.feedbackDescription}
+									</Text>
 									</View>
 								</TouchableOpacity>
-							</View>
-							<View style={{ marginTop: 10, alignItems: "center" }}>
-								<TouchableOpacity onPress={navigateToRespond}>
-									<View
-										style={{
-											borderWidth: 1,
-											borderColor: COLORS.black,
-											borderRadius: 10,
-											paddingHorizontal: 10,
-											paddingVertical: 10,
-											width: 300,
-											marginBottom: 30,
-										}}
-									>
-										<Text style={styles.label}>User Feedback:</Text>
-										<Text
-											style={{
-												fontSize: 14,
-											}}
-										>
-											Thank you for your prompt response!
-										</Text>
-									</View>
-								</TouchableOpacity>
+								)}
 							</View>
 						</View>
 					</View>

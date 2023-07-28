@@ -2,6 +2,7 @@ import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import {
+	Alert,
 	ImageBackground,
 	ScrollView,
 	StyleSheet,
@@ -15,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -39,11 +41,14 @@ const Button = (props) => {
 	);
 };
 
-const Respond = ({ navigation }) => {
+const Respond = ({ navigation, route }) => {
 	const { cookies } = useCookies();
+	const { feedbackData } = route.params;
 	const [index, setIndex] = React.useState(0);
 	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
+
+	const [feedbackResponse, setFeedbackResponse] = useState("");
 
 	useEffect(() => {
 		const sessionToken = cookies.sessionToken;
@@ -72,6 +77,27 @@ const Respond = ({ navigation }) => {
 
 	const handleRecommendedSpecialtyClick = () => {
 		// Handle click for "Recommended Specialty for You" here
+	};
+
+	const replyFeedback = () => {
+		const data = {
+			feedbackID : feedbackData.feedback.feedbackID,
+			feedbackResponse: feedbackResponse
+		}
+
+		axios
+			.post("http://10.0.2.2:3000/replyFeedback", data)
+			.then((response) => {
+				if(response.data.success) {
+					Alert.alert("Replied Feedback!")
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message)
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
 	};
 
 	//=====================================================================================================
@@ -153,7 +179,7 @@ const Respond = ({ navigation }) => {
 							alignSelf: "center",
 						}}
 					>
-						<Text>User description</Text>
+						<Text>{feedbackData.feedback.feedbackDescription}</Text>
 					</View>
 					{/* Text Input */}
 					<View
@@ -175,6 +201,8 @@ const Respond = ({ navigation }) => {
 								textAlignVertical: "top",
 							}}
 							placeholder="Enter Respond..."
+							value={feedbackResponse}
+							onChangeText={setFeedbackResponse}
 						/>
 					</View>
 					{/* Submit Button */}
@@ -182,7 +210,7 @@ const Respond = ({ navigation }) => {
 						style={{ alignSelf: "flex-end", marginTop: 10, marginRight: 10 }}
 					>
 						<TouchableOpacity
-							onPress={() => {}}
+							onPress={replyFeedback}
 							style={{
 								backgroundColor: COLORS.grey,
 								borderRadius: 20,

@@ -43,6 +43,80 @@ class VenueOwner {
             res.status(500).json({ success: false, message: 'An error occurred during login'});
         }    
     }
+
+    async getFeedback(client, res, venueOwnerID) {
+        try {
+            const db = client.db('FreshBearNearMe');
+            const venueOwnersCollection = db.collection('VenueOwners');
+            const venueCollection = db.collection('Venue');
+            const feedbackCollection = db.collection('Feedback');
+            const userCollection = db.collection('User');
+    
+            const venueOwnerDocument = await venueOwnersCollection.findOne({ venueOwnerID: parseInt(venueOwnerID) });
+    
+            if (!venueOwnerDocument) {
+                return res.status(404).json({ success: false, message: 'Venue owner not found' });
+            }
+    
+            const ownedVenueIDs = venueOwnerDocument.venueID || [];
+            if (ownedVenueIDs.length === 0) {
+                return res.json({ success: true, message: 'No venues found for the venue owner' });
+            }
+    
+            const feedbacks = [];
+            for (const venueID of ownedVenueIDs) {
+                const venueDocument = await venueCollection.findOne({ venueID: venueID });
+                if (venueDocument && venueDocument.venueFeedback) {
+                    const feedbackIDs = venueDocument.venueFeedback;
+                    for (const feedbackID of feedbackIDs) {
+                        const feedbackDocument = await feedbackCollection.findOne({ feedbackID: feedbackID });
+                        if (feedbackDocument) {
+                            const feedbackUserID = feedbackDocument.feedbackUser;
+                            const userDocument = await userCollection.findOne({ userID: feedbackUserID });
+                            if (userDocument) {
+                                feedbacks.push({
+                                    venueID: venueDocument.venueID,
+                                    venueName: venueDocument.venueName,
+                                    feedback: {
+                                        ...feedbackDocument,
+                                        username: userDocument.username
+                                    }                                   
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+    
+            return res.json({ success: true, feedbacks });
+        } catch (error) {
+            console.error('Error fetching feedback:', error);
+            return res.status(500).json({ success: false, message: 'Internal server error' });
+        }
+    }
+
+    async replyFeedback(client, res, feedbackID, feedbackResponse) {
+        try {
+          const db = client.db("FreshBearNearMe");
+          const feedbackCollection = db.collection("Feedback");
+      
+          const feedbackToUpdate = await feedbackCollection.findOne({feedbackID: feedbackID});
+      
+          if (!feedbackToUpdate) {
+            return res.json({ success: false, message: "Feedback not found." });
+          }
+      
+          await feedbackCollection.updateOne(
+            { feedbackID: feedbackID},
+            { $set: { feedbackResponse: feedbackResponse } }
+          );
+          res.json({ success: true, message: "Feedback response updated successfully." });
+        } catch (error) {
+          console.error("Error updating feedback:", error);
+          res.json({ success: false, error: "An error occurred while updating the feedback." });
+        }
+    }
+    
 }
 
 module.exports = VenueOwner;

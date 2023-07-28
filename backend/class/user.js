@@ -705,6 +705,7 @@ class User {
         feedbackUser: userID,
         feedbackDate: feedbackDate,
         feedbackDescription: feedbackDescription,
+        feedbackResponse: "",
       };
   
       await feedbackCollection.insertOne(newFeedback);
