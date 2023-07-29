@@ -100,20 +100,81 @@ class VenueOwner {
           const db = client.db("FreshBearNearMe");
           const feedbackCollection = db.collection("Feedback");
       
-          const feedbackToUpdate = await feedbackCollection.findOne({feedbackID: feedbackID});
+          const feedbackToUpdate = await feedbackCollection.findOne({ feedbackID: feedbackID });
       
           if (!feedbackToUpdate) {
             return res.json({ success: false, message: "Feedback not found." });
           }
       
+          if (feedbackToUpdate.feedbackResponseBool) {
+            return res.json({ success: false, message: "Feedback has already been responded!" });
+          }
+      
           await feedbackCollection.updateOne(
-            { feedbackID: feedbackID},
-            { $set: { feedbackResponse: feedbackResponse } }
+            { feedbackID: feedbackID },
+            { $set: { feedbackResponse: feedbackResponse, feedbackResponseBool: true } }
           );
           res.json({ success: true, message: "Feedback response updated successfully." });
         } catch (error) {
           console.error("Error updating feedback:", error);
           res.json({ success: false, error: "An error occurred while updating the feedback." });
+        }
+    }
+
+    async getVenueProfile(client, res, venueOwnerID) {
+        try {
+          const db = client.db("FreshBearNearMe");
+      
+          const venueOwnersCollection = db.collection("VenueOwners");
+          const venueOwner = await venueOwnersCollection.findOne({
+            venueOwnerID: parseInt(venueOwnerID),
+          });
+      
+          if (!venueOwner) {
+            return res.json({ success: false, message: "Venue owner not found." });
+          }
+      
+          
+          const venuesCollection = db.collection("Venue");
+          const venueIDs = venueOwner.venueID; 
+      
+          const venues = await venuesCollection.find({
+            venueID: { $in: venueIDs },
+          }).toArray();
+      
+          res.send(venues);
+        } catch (error) {
+          console.error("Error getting venue profile:", error);
+          res.json({
+            success: false,
+            error: "An error occurred while retrieving venue profile.",
+          });
+        }
+    }
+
+    async updateVenue(client, res, venueID, venueName, venueContact, venueAddress, venueOperatingHours) {
+        try {
+            const venueCollection = client.db("FreshBearNearMe").collection("Venue");
+            const updateResult = await venueCollection.updateOne(
+                { venueID: venueID },
+                {
+                $set: {
+                    venueName: venueName,
+                    venueContact: venueContact,
+                    venueAddress: venueAddress,
+                    venueOperatingHours: venueOperatingHours,
+                },
+                }
+            );
+        
+            if (updateResult.modifiedCount === 1) {
+                res.json({ success: true });
+            } else {
+                res.json({ success: false, message: "Venue not found" });
+            }
+            } catch (error) {
+            console.error("Error updating venue:", error);
+            res.status(500).json({ success: false, message: "Internal server error" });
         }
     }
     

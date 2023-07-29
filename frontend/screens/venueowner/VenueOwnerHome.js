@@ -251,10 +251,9 @@ const VenueOwnerHome = ({ navigation }) => {
 								</TouchableOpacity>
 							</View>
 							<View style={{ marginTop: 10, alignItems: "center" }}>
-								{loading ? ( // Show a loading message or spinner while loading
+								{loading ? ( 
 								<Text>Loading latest feedback...</Text>
 								) : (
-								// Render the feedback data when available
 								<TouchableOpacity onPress={navigateToRespond}>
 									<View
 									style={{

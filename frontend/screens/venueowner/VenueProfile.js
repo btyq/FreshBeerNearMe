@@ -2,6 +2,7 @@ import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import {
+	Alert,
 	Image,
 	ImageBackground,
 	ScrollView,
@@ -16,6 +17,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
+import { SelectList } from "react-native-dropdown-select-list";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -46,12 +49,58 @@ const InquiriesNFeedback = ({ navigation }) => {
 	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
 
+	const [venueProfile, setVenueProfile] = useState([])
+	const [selectedVenue, setSelectedVenue] = useState(null);
+	const [selectedVenueData, setSelectedVenueData] = useState([]);
+
 	useEffect(() => {
-		const sessionToken = cookies.sessionToken;
-		const venueOwnerID = cookies.venueOwnerID;
 		setUsername(cookies.username);
+		axios
+			.get("http://10.0.2.2:3000/getVenueProfile", {
+				params: {
+					venueOwnerID: cookies.venueOwnerID,
+				}
+			})
+			.then((response) => {
+				setVenueProfile(response.data);
+			})
+			.catch((error) => {
+				console.error("Error retrieving Venue Profile", error);
+			})
 	}, []);
 
+	useEffect(() => {
+		const selectedVenueObject = venueProfile.find((venue) => venue.venueName === selectedVenue);
+		if (selectedVenueObject) {
+			setSelectedVenueData({ ...selectedVenueObject });
+		} else {
+			setSelectedVenueData(null);
+		}
+	}, [selectedVenue]);
+	
+	const handleUpdate = () => {
+		const updateData = {
+		  venueID: selectedVenueData.venueID,
+		  venueName: selectedVenueData.venueName,
+		  venueContact: selectedVenueData.venueContact,
+		  venueAddress: selectedVenueData.venueAddress,
+		  venueOperatingHours: selectedVenueData.venueOperatingHours,
+		};
+	  
+		axios
+		  .post("http://10.0.2.2:3000/updateVenue", updateData)
+		  .then((response) => {
+			if (response.data.success) {
+			  Alert.alert("Successfully updated venue!");
+			} else {
+			  const { message } = response.data;
+			  Alert.alert("Error!", message);
+			}
+		  })
+		  .catch((error) => {
+			console.error(error);
+		  });
+	};
 	//=====================================================================================================
 	return (
 		<View style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -74,7 +123,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 				}}
 				rightComponent={
 					<View style={{ flexDirection: "row" }}>
-						<TouchableOpacity>
+						<TouchableOpacity onPress={()=>console.log(selectedVenueData)}>
 							<Octicons
 								name="bookmark"
 								size={24}
@@ -97,127 +146,161 @@ const InquiriesNFeedback = ({ navigation }) => {
 					<Text style={{ fontSize: 25, fontWeight: "bold", marginLeft: 20 }}>
 						Venue Profile
 					</Text>
-					<Image
-						source={require("../../assets/brewlander.jpg")}
-						style={{ width: 200, height: 200, marginTop: 10 }}
-					/>
 					<View
 						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 50,
+							position: "relative",
+							zIndex: 1,
+							marginBottom: 12,
 						}}
 					>
-						<Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 5 }}>
-							Website:
-						</Text>
-						<TextInput
-							style={{
-								marginLeft: 10,
-								borderWidth: 1,
-								borderRadius: 10,
-								borderColor: COLORS.black,
-								padding: 5,
-								width: 310,
+						<SelectList
+							data={venueProfile.map((venue) => ({
+								label: venue.venueName,
+								value: venue.venueName,
+							}))}
+							value={selectedVenue}
+							setSelected={(value) => setSelectedVenue(value)}
+							boxStyles={{
+								borderRadius: 12,
+								borderColor: 0,
+								backgroundColor: COLORS.grey,
+								opacity: 1,
 							}}
+							dropdownStyles={{
+								right: 0,
+								borderColor: 0,
+								backgroundColor: COLORS.grey,
+								opacity: 1,
+							}}
+							defaultOption={selectedVenue}
+							search={true}
 						/>
 					</View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 30,
-						}}
-					>
-						<Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 5 }}>
-							Contact:
+					{selectedVenueData ? (
+						<View>
+							<Image
+								source={{ uri: selectedVenueData.venueImage }}
+								style={{ width: 200, height: 200, marginTop: 10 }}
+							/>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									marginTop: 50,
+								}}
+							>
+								<Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 5 }}>
+									Name:
+								</Text>
+								<TextInput
+									style={{
+										marginLeft: 10,
+										borderWidth: 1,
+										borderRadius: 10,
+										borderColor: COLORS.black,
+										padding: 5,
+										width: 310,
+									}}
+									value={selectedVenueData.venueName}
+									onChangeText={(value) =>
+										setSelectedVenueData({ ...selectedVenueData, venueName: value })
+									}
+								/>
+							</View>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									marginTop: 30,
+								}}
+							>
+								<Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 5 }}>
+									Contact:
+								</Text>
+								<TextInput
+									style={{
+										marginLeft: 10,
+										borderWidth: 1,
+										borderRadius: 10,
+										borderColor: COLORS.black,
+										padding: 5,
+										width: 310,
+									}}
+									value={selectedVenueData.venueContact}
+									onChangeText={(value) =>
+										setSelectedVenueData({ ...selectedVenueData, venueContact: value })
+									}
+								/>
+							</View>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									marginTop: 30,
+								}}
+							>
+								<Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 5 }}>
+									Address:
+								</Text>
+								<TextInput
+									style={{
+										marginLeft: 10,
+										borderWidth: 1,
+										borderRadius: 10,
+										borderColor: COLORS.black,
+										padding: 5,
+										width: 310,
+									}}
+									value={selectedVenueData.venueAddress}
+									onChangeText={(value) =>
+										setSelectedVenueData({ ...selectedVenueData, venueAddress: value })
+									}
+								/>
+							</View>
+							<View
+								style={{
+									flexDirection: "row",
+									alignItems: "center",
+									marginTop: 30,
+								}}
+							>
+								<Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 5 }}>
+									Operating Hours:
+								</Text>
+								<TextInput
+									style={{
+										marginLeft: 10,
+										borderWidth: 1,
+										borderRadius: 10,
+										borderColor: COLORS.black,
+										padding: 5,
+										width: 310,
+									}}
+									value={selectedVenueData.venueOperatingHours}
+									onChangeText={(value) =>
+										setSelectedVenueData({ ...selectedVenueData, venueOperatingHours: value })
+									}
+								/>
+							</View>
+							<TouchableOpacity
+									onPress={handleUpdate}
+									style={{
+										marginRight: 40,
+										marginBottom: 10,
+										backgroundColor: COLORS.grey,
+										paddingHorizontal: 10,
+										paddingVertical: 5,
+										borderRadius: 20,
+									}}
+								>
+									<Text style={{ color: "black", fontSize: 15 }}>Update</Text>
+							</TouchableOpacity>					
+						</View>
+					) : (
+						<Text style={{ fontSize: 18, fontWeight: "bold", marginTop: 50 }}>
+							Select a venue!
 						</Text>
-						<TextInput
-							style={{
-								marginLeft: 10,
-								borderWidth: 1,
-								borderRadius: 10,
-								borderColor: COLORS.black,
-								padding: 5,
-								width: 310,
-							}}
-						/>
-					</View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 30,
-						}}
-					>
-						<Text style={{ fontSize: 18, fontWeight: "bold", marginLeft: 5 }}>
-							Address:
-						</Text>
-						<TextInput
-							style={{
-								marginLeft: 10,
-								borderWidth: 1,
-								borderRadius: 10,
-								borderColor: COLORS.black,
-								padding: 5,
-								width: 310,
-							}}
-						/>
-					</View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 30,
-						}}
-					>
-						<Text
-							style={{
-								fontSize: 18,
-								fontWeight: "bold",
-								marginLeft: 10,
-								flex: 1,
-							}}
-						>
-							Working hours:
-						</Text>
-					</View>
-				</View>
-				<View>
-					<TextInput
-						style={{
-							marginTop: 20,
-							marginLeft: 10,
-							borderWidth: 1,
-							borderRadius: 10,
-							borderColor: COLORS.black,
-							textAlignVertical: "top",
-							padding: 5,
-							width: "96%",
-							height: 200,
-						}}
-					/>
-				</View>
-				<View
-					style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-				>
-					<TouchableOpacity
-						onPress={() => {}}
-						style={{
-							marginTop: 30,
-							marginBottom: 50,
-							backgroundColor: COLORS.grey,
-							borderRadius: 20,
-							paddingHorizontal: 10,
-							paddingVertical: 5,
-							borderWidth: 1,
-							borderColor: COLORS.black,
-						}}
-					>
-						<Text style={{ color: "black", fontSize: 18, fontWeight: "bold" }}>
-							Save Changes
-						</Text>
-					</TouchableOpacity>
+					)}	
 				</View>
 			</ScrollView>
 		</View>

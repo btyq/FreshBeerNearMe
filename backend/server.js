@@ -530,10 +530,21 @@ app.get("/getFeedback", async (req, res) => {
 })
 
 //Route for venue owner to reply feedback
-
 app.post("/replyFeedback", async (req, res) => {
 	const { feedbackID, feedbackResponse } = req.body;
 	globalVenueOwner.replyFeedback(client, res, feedbackID, feedbackResponse)
+})
+
+//Route for venue owner to get profile data
+app.get("/getVenueProfile", async (req, res) => {
+	const venueOwnerID = req.query.venueOwnerID
+	globalVenueOwner.getVenueProfile(client, res, venueOwnerID)
+})
+
+//Route for venue owner to edit venue details
+app.post("/updateVenue", async (req, res) => {
+	const { venueID, venueName, venueContact, venueAddress, venueOperatingHours } = req.body;
+	globalVenueOwner.updateVenue(client, res, venueID, venueName, venueContact, venueAddress, venueOperatingHours)
 })
 //===================================================================================================================
 //=================================================All Beer Routes===================================================

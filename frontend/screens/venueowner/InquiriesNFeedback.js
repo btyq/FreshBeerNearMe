@@ -2,6 +2,7 @@ import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import {
+	Alert,
 	ImageBackground,
 	ScrollView,
 	StyleSheet,
@@ -14,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -44,10 +46,26 @@ const InquiriesNFeedback = ({ navigation }) => {
 	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
 
+	const [feedbackData, setFeedbackData] = useState([]);
+	const [loading, setLoading] = useState(true);
+
 	useEffect(() => {
-		const sessionToken = cookies.sessionToken;
-		const venueOwnerID = cookies.venueOwnerID;
 		setUsername(cookies.username);
+		axios
+			.get("http://10.0.2.2:3000/getFeedback", {
+				params: {
+					venueOwnerID: cookies.venueOwnerID,
+				},
+			})
+			.then((response) => {
+				const { feedbacks } = response.data;
+				setFeedbackData(feedbacks)
+				setLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving data", error);
+				setLoading(false);
+			});
 	}, []);
 
 	const data = [30, 40, 25, 50, 45, 20];
@@ -56,8 +74,8 @@ const InquiriesNFeedback = ({ navigation }) => {
 	const maxDataValue = Math.max(...data);
 	const scaleY = 150 / maxDataValue;
 
-	const navigateToRespond = () => {
-		navigation.navigate("Respond");
+	const navigateToRespond = (feedbackItem) => {
+		navigation.navigate("Respond", {feedbackData: feedbackItem})
 	};
 
 	// ================================== Functions for different button ==================================
@@ -93,7 +111,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 						}}
 						rightComponent={
 							<View style={{ flexDirection: "row" }}>
-								<TouchableOpacity>
+								<TouchableOpacity onPress={()=>console.log(feedbackData)}>
 									<Octicons
 										name="bookmark"
 										size={24}
@@ -111,202 +129,6 @@ const InquiriesNFeedback = ({ navigation }) => {
 							</View>
 						}
 					/>
-
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 30,
-						}}
-					>
-						<Text
-							style={{
-								marginLeft: 20,
-								marginBottom: 10,
-								fontSize: 15,
-								// Add any additional styles from GlobalStyle.headerFont
-								marginBottom: 5,
-								flex: 1, // Take up remaining space
-							}}
-						>
-							Profile
-						</Text>
-						<View
-							style={{
-								flex: 1,
-								borderBottomWidth: 1, // Adjust the thickness as desired
-								borderBottomColor: COLORS.black,
-								marginLeft: -290, // Adjust the value to prevent overlapping
-							}}
-						/>
-					</View>
-					{/* Container with sub-containers */}
-					<View
-						style={{
-							marginTop: 10,
-							borderWidth: 1,
-							borderColor: COLORS.black,
-							borderRadius: 5,
-							padding: 10,
-							margin: 20,
-							borderRadius: 10,
-						}}
-					>
-						{/* Sub-container 1 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Sub-container 2 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Sub-container 3 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Sub-container 4 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Sub-container 5 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
 					<View
 						style={{
 							flexDirection: "row",
@@ -347,22 +169,45 @@ const InquiriesNFeedback = ({ navigation }) => {
 							borderRadius: 10,
 						}}
 					>
-						{/* Sub-container 1 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
+						{loading ? (
+							<View style={{ alignItems: "center" }}>
+								<Text>Loading...</Text>
+							</View>
+							) : (
+							// Map through feedbackData and display each feedback item
+							feedbackData.map((feedbackItem, index) => (
+								<View
+								key={index}
 								style={{
+									borderWidth: 1,
+									borderColor: COLORS.black,
+									borderRadius: 10,
+									paddingHorizontal: 10,
+									paddingVertical: 10,
+									width: 300,
+									marginBottom: 30,
+								}}
+								>
+								{/* Display the description of the feedback item */}
+								<Text style={styles.label}>Location:</Text>
+								<Text style={{ fontSize: 14 }}>{feedbackItem.venueName}</Text>
+								<Text style={styles.label}>Date:</Text>
+								<Text style={{ fontSize: 14 }}>
+									{feedbackItem.feedback.feedbackDate}
+								</Text>
+								<Text style={styles.label}>
+									{feedbackItem.feedback.username} sent a feedback:
+								</Text>
+								<Text style={{ fontSize: 14 }}>
+									{feedbackItem.feedback.feedbackDescription}
+								</Text>
+								<TouchableOpacity
+									onPress={
+									feedbackItem.feedback.feedbackResponseBool
+										? null // If feedbackResponseBool is true, make the button unclickable
+										: () => navigateToRespond(feedbackItem)
+									}
+									style={{
 									backgroundColor: COLORS.grey,
 									padding: 10,
 									borderRadius: 50,
@@ -370,141 +215,22 @@ const InquiriesNFeedback = ({ navigation }) => {
 									borderColor: COLORS.black,
 									alignItems: "center",
 									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Sub-container 2 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Sub-container 3 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Sub-container 4 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
-
-						{/* Sub-container 5 */}
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								padding: 10,
-								marginBottom: 10,
-								borderRadius: 10,
-							}}
-						>
-							<Text style={{ flex: 1 }}>Description</Text>
-							<TouchableOpacity
-								onPress={navigateToRespond}
-								style={{
-									backgroundColor: COLORS.grey,
-									padding: 10,
-									borderRadius: 50,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									alignItems: "center",
-									justifyContent: "center",
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 12 }}>
-									Respond
-								</Text>
-							</TouchableOpacity>
-						</View>
+									}}
+									disabled={feedbackItem.feedback.feedbackResponseBool}
+								>
+									<Text style={{ color: COLORS.black, fontSize: 12 }}>
+									{feedbackItem.feedback.feedbackResponseBool
+										? "Responded"
+										: "Respond"}
+									</Text>
+								</TouchableOpacity>
+							</View>
+							))
+						)}
 					</View>
 				</View>
 			</ScrollView>
-		</SafeAreaView>
+		</SafeAreaView>					
 	);
 };
 
