@@ -1,9 +1,8 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
-	Alert,
-	ImageBackground,
+	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -16,14 +15,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import axios from "axios";
 
-// CODES TO STYLE BUTTON
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.black : COLORS.primary;
+	const textColor = props.filled ? COLORS.black : COLORS.white;
 
 	return (
 		<TouchableOpacity
@@ -34,21 +31,92 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 14, ...{ color: textColor } }}>
+			<Text style={{ fontSize: 15, ...GlobalStyle.bodyFont, color: textColor }}>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
 	);
 };
 
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
+	);
+};
+
+// custom alert for submitting response
+const CustomResponseAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
 const Respond = ({ navigation, route }) => {
 	const { cookies } = useCookies();
 	const { feedbackData } = route.params;
-	const [index, setIndex] = React.useState(0);
-	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
-
 	const [feedbackResponse, setFeedbackResponse] = useState("");
+	const [isResponseVisible, setIsResponseVisible] = useState(false);
+	const [ResponseTitle, setResponseTitle] = useState("");
+	const [ResponseMessage, setResponseMessage] = useState("");
 
 	useEffect(() => {
 		const sessionToken = cookies.sessionToken;
@@ -56,195 +124,178 @@ const Respond = ({ navigation, route }) => {
 		setUsername(cookies.username);
 	}, []);
 
-	const data = [30, 40, 25, 50, 45, 20];
-	const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-
-	const maxDataValue = Math.max(...data);
-	const scaleY = 150 / maxDataValue;
-
-	const navigateToInquiriesNFeedback = () => {
-		navigation.navigate("InquiriesNFeedback");
-	};
-
-	const navigateToVenueProfile = () => {
-		navigation.navigate("VenueProfile");
-	};
-
-	// ================================== Functions for different button ==================================
-	const handleUpcomingEventsClick = () => {
-		// Handle click for "Upcoming Events" here
-	};
-
-	const handleRecommendedSpecialtyClick = () => {
-		// Handle click for "Recommended Specialty for You" here
-	};
-
 	const replyFeedback = () => {
 		const data = {
-			feedbackID : feedbackData.feedback.feedbackID,
-			feedbackResponse: feedbackResponse
-		}
+			feedbackID: feedbackData.feedback.feedbackID,
+			feedbackResponse: feedbackResponse,
+		};
 
 		axios
 			.post("http://10.0.2.2:3000/replyFeedback", data)
 			.then((response) => {
-				if(response.data.success) {
-					Alert.alert("Replied Feedback!")
+				if (response.data.success) {
+					setResponseTitle("Success");
+					setResponseMessage("Feedback responded!");
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message)
+					setResponseTitle("Error");
+					setResponseMessage(message);
 				}
+				setIsResponseVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
-			})
+			});
 	};
-
-	//=====================================================================================================
 	return (
-		<SafeAreaView backgroundColor={COLORS.secondary} style={{ flex: 1 }}>
-			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-				<View style={{ flex: 1 }}>
-					<Header
-						placement="left"
-						backgroundColor={COLORS.primary}
-						containerStyle={{
-							height: 100,
-							borderBottomLeftRadius: 40,
-							borderBottomRightRadius: 40,
-						}}
-						centerComponent={{
-							text: "FreshBeer",
-							style: {
-								fontSize: 20,
-								...GlobalStyle.headerFont,
-								flexDirection: "row",
-								justifyContent: "flex-start",
-							},
-						}}
-						rightComponent={
-							<View style={{ flexDirection: "row" }}>
-								<TouchableOpacity>
-									<Octicons
-										name="bookmark"
-										size={24}
-										color={COLORS.black}
-										style={{ marginRight: 10 }}
-									/>
-								</TouchableOpacity>
-								<TouchableOpacity>
-									<Ionicons
-										name="notifications-outline"
-										size={24}
-										color={COLORS.black}
-									/>
-								</TouchableOpacity>
+		<View style={{ flex: 1 }}>
+			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
+				<Header
+					placement="left"
+					backgroundColor={COLORS.primary}
+					containerStyle={{
+						height: 100,
+						borderBottomLeftRadius: 40,
+						borderBottomRightRadius: 40,
+					}}
+					leftComponent={
+						<View style={{ flexDirection: "row" }}>
+							<TouchableOpacity onPress={() => navigation.goBack()}>
+								<MaterialIcons
+									name="keyboard-arrow-left"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
+					centerComponent={{
+						text: "FreshBeer",
+						style: {
+							fontSize: 20,
+							...GlobalStyle.headerFont,
+							flexDirection: "row",
+							justifyContent: "flex-start",
+						},
+					}}
+					rightComponent={
+						<View style={{ flexDirection: "row" }}>
+							<TouchableOpacity>
+								<Ionicons
+									name="notifications-outline"
+									size={24}
+									color={COLORS.black}
+									style={{ marginRight: 10 }}
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+								<MaterialIcons name="logout" size={24} color={COLORS.black} />
+							</TouchableOpacity>
+						</View>
+					}
+				/>
+
+				<SafeAreaView style={{ flex: 1 }}>
+					<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+						<View style={{ marginHorizontal: 22 }}>
+							<Text style={{ fontSize: 18, ...GlobalStyle.headerFont }}>
+								Users' Feedback
+							</Text>
+							<View
+								style={{
+									marginVertical: 10,
+									backgroundColor: COLORS.secondary,
+									padding: 10,
+									borderRadius: 12,
+									borderWidth: 1,
+									elevation: 2,
+									borderColor: 0,
+								}}
+							>
+								<CustomText>
+									{feedbackData.feedback.feedbackDescription}
+								</CustomText>
 							</View>
-						}
-					/>
-					{/* "User asks:" Text */}
-					<View style={{ marginTop: 20, marginLeft: 10 }}>
-						<TouchableOpacity
-							onPress={() => {
-								navigation.goBack(); // Go back to the previous screen
-							}}
-							style={{
-								backgroundColor: COLORS.grey,
-								borderRadius: 10,
-								paddingHorizontal: 8,
-								paddingVertical: 5,
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								alignSelf: "flex-start",
-							}}
-						>
-							<Text style={{ color: "black", fontSize: 15 }}>Back</Text>
-						</TouchableOpacity>
-					</View>
-					<View>
-						<Text style={{ fontSize: 18, marginTop: 25, marginLeft: 20 }}>
-							User asks:
-						</Text>
-					</View>
-					{/* User Description */}
-					<View
-						style={{
-							marginTop: 5,
-							borderWidth: 1,
-							borderColor: COLORS.black,
-							borderRadius: 10,
-							padding: 10,
-							width: "95%",
-							height: 50,
-							alignSelf: "center",
-						}}
-					>
-						<Text>{feedbackData.feedback.feedbackDescription}</Text>
-					</View>
-					{/* Text Input */}
-					<View
-						style={{
-							marginTop: 30,
-							borderWidth: 1,
-							borderColor: COLORS.black,
-							borderRadius: 10,
-							padding: 10,
-							width: "95%",
-							height: 240,
-							alignSelf: "center",
-						}}
-					>
-						<TextInput
-							style={{
-								width: "100%",
-								height: 100,
-								textAlignVertical: "top",
-							}}
-							placeholder="Enter Respond..."
-							value={feedbackResponse}
-							onChangeText={setFeedbackResponse}
-						/>
-					</View>
-					{/* Submit Button */}
-					<View
-						style={{ alignSelf: "flex-end", marginTop: 10, marginRight: 10 }}
-					>
-						<TouchableOpacity
-							onPress={replyFeedback}
-							style={{
-								backgroundColor: COLORS.grey,
-								borderRadius: 20,
-								paddingHorizontal: 10,
-								paddingVertical: 5,
-								padding: 30,
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								alignSelf: "flex-start",
-							}}
-						>
-							<Text style={{ color: "black", fontSize: 18 }}>Submit</Text>
-						</TouchableOpacity>
-					</View>
-				</View>
-			</ScrollView>
-		</SafeAreaView>
+
+							<View
+								style={{
+									flexDirection: "column",
+									height: 200,
+									width: "100%",
+									elevation: 2,
+									backgroundColor: COLORS.grey,
+									marginTop: 10,
+									borderRadius: 15,
+									borderColor: 0,
+									marginBottom: 10,
+									paddingHorizontal: 12,
+								}}
+							>
+								<Text
+									style={{
+										fontSize: 15,
+										...GlobalStyle.headerFont,
+										marginTop: 20,
+										marginLeft: 12,
+									}}
+								>
+									Respond:
+								</Text>
+								<View
+									style={{
+										flex: 1,
+										borderColor: 0,
+										borderWidth: 1,
+										borderRadius: 12,
+										resizeMode: "contain",
+										paddingLeft: 12,
+										marginTop: 10,
+										backgroundColor: COLORS.grey,
+									}}
+								>
+									<TextInput
+										placeholder="Write your responses here"
+										style={{ ...GlobalStyle.bodyFont }}
+										value={feedbackResponse}
+										onChangeText={setFeedbackResponse}
+										multiline
+									></TextInput>
+								</View>
+							</View>
+
+							<View style={{ marginTop: 5 }}>
+								<Button
+									title="Submit response"
+									onPress={replyFeedback}
+									filled
+									style={{
+										elevation: 2,
+										borderColor: 0,
+									}}
+								/>
+							</View>
+							<CustomResponseAlert
+								visible={isResponseVisible}
+								onClose={() => setIsResponseVisible(false)}
+								title={ResponseTitle}
+								message={ResponseMessage}
+							/>
+						</View>
+					</ScrollView>
+				</SafeAreaView>
+			</SafeAreaView>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	button: {
-		paddingVertical: 3, // increased padding
+		paddingVertical: 10,
 		borderColor: COLORS.black,
 		borderWidth: 1,
-		borderRadius: 30,
+		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
-		elevation: 20,
-	},
-	label: {
-		marginBottom: 5,
-		fontWeight: "bold",
-		fontSize: 16,
 	},
 });
 

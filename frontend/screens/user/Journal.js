@@ -847,40 +847,6 @@ const Journal = ({ navigation }) => {
 									</TouchableOpacity>
 
 									{/* popup for most recently visited */}
-									{/* <Modal animationType="slide" visible={popupVisible}>
-										<View style={styles.modalContent}>
-											<Text style={styles.modalHeader}>
-												Most Recently Visited
-											</Text>
-											<Image
-												source={{
-													uri: statisticsData.mostRecentVenue?.venueImage,
-												}}
-												style={styles.venueImage}
-											/>
-											<Text style={styles.venueName}>
-												{statisticsData.mostRecentVenue?.venueName}
-											</Text>
-											<View style={styles.ratingContainer}>
-												<AirbnbRating
-													count={5}
-													defaultRating={
-														statisticsData.mostRecentVenue?.venueRating
-													}
-													size={18}
-													showRating={false}
-													isDisabled={true}
-												/>
-											</View>
-
-											<TouchableOpacity
-												style={styles.closeButton}
-												onPress={handlePopup}
-											>
-												<Text style={styles.closeButtonText}>Close</Text>
-											</TouchableOpacity>
-										</View>
-									</Modal> */}
 									<Modal
 										visible={popupVisible}
 										transparent

@@ -826,8 +826,7 @@ const Wishlist = ({ navigation }) => {
 						text: "FreshBeer",
 						style: {
 							fontSize: 20,
-							color: COLORS.black,
-							fontWeight: "bold",
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
 							justifyContent: "flex-start",
 						},
@@ -856,7 +855,6 @@ const Wishlist = ({ navigation }) => {
 						</View>
 					}
 				/>
-
 				<SafeAreaView style={{ flex: 1 }}>
 					<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
 						<View style={{ marginHorizontal: 22 }}>
