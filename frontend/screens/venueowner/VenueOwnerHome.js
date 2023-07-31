@@ -1,6 +1,12 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
+import {
+	FontAwesome5,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
 	ImageBackground,
@@ -15,14 +21,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import axios from "axios";
 
-// CODES TO STYLE BUTTON
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.black : COLORS.primary;
+	const textColor = COLORS.black;
 
 	return (
 		<TouchableOpacity
@@ -33,10 +37,24 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 14, ...{ color: textColor } }}>
+			<Text
+				style={{
+					fontSize: 12,
+					...GlobalStyle.bodyFont,
+					...{ color: textColor },
+				}}
+			>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
+	);
+};
+
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
 	);
 };
 
@@ -54,7 +72,7 @@ const VenueOwnerHome = ({ navigation }) => {
 		const [day, month, year] = dateString.split("/");
 		return new Date(`${year}-${month}-${day}`);
 	}
-	
+
 	useEffect(() => {
 		setUsername(cookies.username);
 		axios
@@ -69,11 +87,14 @@ const VenueOwnerHome = ({ navigation }) => {
 				let latestFeedback = null;
 				for (const feedback of feedbacks) {
 					const feedbackDate = parseDate(feedback.feedback.feedbackDate);
-					if (!latestFeedback || feedbackDate > parseDate(latestFeedback.feedback.feedbackDate)) {
+					if (
+						!latestFeedback ||
+						feedbackDate > parseDate(latestFeedback.feedback.feedbackDate)
+					) {
 						latestFeedback = feedback;
 					}
 				}
-				setNewFeedbackData(latestFeedback)
+				setNewFeedbackData(latestFeedback);
 				setLoading(false);
 			})
 			.catch((error) => {
@@ -88,33 +109,33 @@ const VenueOwnerHome = ({ navigation }) => {
 	const maxDataValue = Math.max(...data);
 	const scaleY = 150 / maxDataValue;
 
-	const navigateToInquiriesNFeedback = () => {
-		navigation.navigate("InquiriesNFeedback");
-	};
+	// const navigateToInquiriesNFeedback = () => {
+	// 	navigation.navigate("InquiriesNFeedback");
+	// };
 
 	const navigateToRespond = () => {
-		navigation.navigate("Respond", {feedbackData: newFeedbackData})
-	}
-
-	const navigateToVenueProfile = () => {
-		navigation.navigate("VenueProfile");
+		navigation.navigate("Respond", { feedbackData: newFeedbackData });
 	};
 
-	const navigateToManageInventory = () => {
-		navigation.navigate("ManageInventory");
-	};
+	// const navigateToVenueProfile = () => {
+	// 	navigation.navigate("VenueProfile");
+	// };
 
-	const navigateToManageSocialInformation = () => {
-		navigation.navigate("ManageSocialInformation");
-	};
+	// const navigateToManageInventory = () => {
+	// 	navigation.navigate("ManageInventory");
+	// };
 
-	const navigateToManagePromotion = () => {
-		navigation.navigate("ManagePromotion");
-	};
+	// const navigateToManageSocialInformation = () => {
+	// 	navigation.navigate("ManageSocialInformation");
+	// };
 
-	const navigateToAnalytics = () => {
-		navigation.navigate("Analytics");
-	};
+	// const navigateToManagePromotion = () => {
+	// 	navigation.navigate("ManagePromotion");
+	// };
+
+	// const navigateToAnalytics = () => {
+	// 	navigation.navigate("Analytics");
+	// };
 
 	const navigateToVenueComparison = () => {
 		navigation.navigate("VenueComparison");
@@ -129,514 +150,438 @@ const VenueOwnerHome = ({ navigation }) => {
 		// Handle click for "Recommended Specialty for You" here
 	};
 
-	//=====================================================================================================
 	return (
-		<SafeAreaView backgroundColor={COLORS.secondary} style={{ flex: 1 }}>
-			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-				<View style={{ flex: 1 }}>
-					<Header
-						placement="left"
-						backgroundColor={COLORS.primary}
-						containerStyle={{
-							height: 100,
-							borderBottomLeftRadius: 40,
-							borderBottomRightRadius: 40,
-						}}
-						centerComponent={{
-							text: "FreshBeer",
-							style: {
-								fontSize: 20,
-								...GlobalStyle.headerFont,
-								flexDirection: "row",
-								justifyContent: "flex-start",
-							},
-						}}
-						rightComponent={
-							<View style={{ flexDirection: "row" }}>
-								<TouchableOpacity onPress={() => console.log(newFeedbackData)}>
-									<Octicons
-										name="bookmark"
-										size={24}
-										color={COLORS.black}
-										style={{ marginRight: 10 }}
-									/>
-								</TouchableOpacity>
-								<TouchableOpacity onPress={() => console.log(feedbackData)}>
-									<Ionicons
-										name="notifications-outline"
-										size={24}
-										color={COLORS.black}
-									/>
-								</TouchableOpacity>
-							</View>
-						}
-					/>
+		<View style={{ flex: 1 }}>
+			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
+				<Header
+					placement="left"
+					backgroundColor={COLORS.primary}
+					containerStyle={{
+						height: 100,
+						borderBottomLeftRadius: 40,
+						borderBottomRightRadius: 40,
+					}}
+					centerComponent={{
+						text: "FreshBeer",
+						style: {
+							fontSize: 20,
+							...GlobalStyle.headerFont,
+							flexDirection: "row",
+							justifyContent: "flex-start",
+						},
+					}}
+					rightComponent={
+						<View style={{ flexDirection: "row" }}>
+							<TouchableOpacity onPress={() => console.log(newFeedbackData)}>
+								<Octicons
+									name="bookmark"
+									size={24}
+									color={COLORS.black}
+									style={{ marginRight: 10 }}
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => console.log(feedbackData)}>
+								<Ionicons
+									name="notifications-outline"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
+				/>
 
-					<View
-						style={{
-							justifyContent: "center",
-							alignItems: "center",
-							marginTop: 5,
-						}}
-					>
-						<Text
+				<SafeAreaView style={{ flex: 1 }}>
+					<ScrollView>
+						<View
 							style={{
-								fontSize: 26,
-								color: COLORS.black,
-								marginTop: 10,
-								marginBottom: 0,
-								...GlobalStyle.headerFont,
-							}}
-						>
-							Welcome Back!,
-						</Text>
-						<Text
-							style={{
-								fontSize: 26,
-								color: COLORS.black,
-								marginTop: -20,
-
-								...GlobalStyle.headerFont,
-							}}
-						>
-							{username}
-						</Text>
-						<Text
-							style={{
-								fontSize: 15,
-								...GlobalStyle.headerFont,
-								marginBottom: 5,
+								justifyContent: "center",
+								alignItems: "center",
 								marginTop: 5,
 							}}
 						>
-							What would you like to do?
-						</Text>
-					</View>
-					<View
-						style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-					>
-						<View style={{ marginTop: 20, width: "100%", borderRadius: 20 }}>
+							<Text
+								style={{
+									fontSize: 26,
+									color: COLORS.black,
+									marginTop: 20,
+									marginBottom: 12,
+									...GlobalStyle.headerFont,
+								}}
+							>
+								Welcome, {username}
+							</Text>
+							<Text style={{ ...GlobalStyle.headerFont, marginBottom: 25 }}>
+								What would you like to do?
+							</Text>
+						</View>
+
+						<View style={{ marginHorizontal: 22 }}>
 							<View
 								style={{
 									flexDirection: "row",
+									justifyContent: "space-between",
 									alignItems: "center",
-									paddingHorizontal: 16,
-									paddingVertical: 10,
 								}}
 							>
 								<Text
 									style={{
-										flex: 1, // Take up remaining space
-										marginLeft: 40,
-										marginBottom: 10,
-										fontSize: 17,
-										// Add any additional styles from GlobalStyle.headerFont
-										marginBottom: 5,
+										fontSize: 18,
+										...GlobalStyle.headerFont,
+										marginBottom: 12,
 									}}
 								>
 									Latest Feedback
 								</Text>
-								<TouchableOpacity
-									onPress={navigateToInquiriesNFeedback}
+								<Button
+									title="View all"
+									onPress={() => navigation.navigate("InquiriesNFeedback")}
+									filled
 									style={{
-										marginRight: 40,
-										marginBottom: 10,
-										backgroundColor: COLORS.grey,
-										paddingHorizontal: 10,
-										paddingVertical: 5,
-										borderRadius: 20,
+										width: "30%",
+										alignContent: "center",
+										borderColor: 0,
+										elevation: 2,
+										borderRadius: 12,
 									}}
-								>
-									<Text style={{ color: "black", fontSize: 15 }}>See All</Text>
-								</TouchableOpacity>
+								/>
 							</View>
-							<View style={{ marginTop: 10, alignItems: "center" }}>
-								{loading ? ( 
-								<Text>Loading latest feedback...</Text>
+
+							<View
+								style={{
+									flexDirection: "row",
+									flexWrap: "wrap",
+									marginBottom: 10,
+									alignContent: "center",
+									justifyContent: "center",
+								}}
+							>
+								{loading ? (
+									<Text>Loading latest feedback...</Text>
 								) : (
-								<TouchableOpacity onPress={navigateToRespond}>
-									<View
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										paddingHorizontal: 10,
-										paddingVertical: 10,
-										width: 300,
-										marginBottom: 30,
-									}}
+									<TouchableOpacity
+										onPress={navigateToRespond}
+										style={{
+											height: 200,
+											elevation: 2,
+											backgroundColor: COLORS.grey,
+											marginTop: 10,
+											borderRadius: 15,
+											marginBottom: 10,
+											width: "100%",
+											padding: 20,
+										}}
 									>
-									<Text style={styles.label}>Location:</Text>
-									<Text style={{ fontSize: 14 }}>{newFeedbackData.venueName}</Text>
-									<Text style={styles.label}>Date:</Text>
-									<Text style={{ fontSize: 14 }}>
-										{newFeedbackData.feedback.feedbackDate}
-									</Text>
-									<Text style={styles.label}>
-										{newFeedbackData.feedback.username} send a feedback:
-									</Text>
-									<Text style={{ fontSize: 14 }}>
-										{newFeedbackData.feedback.feedbackDescription}
-									</Text>
-									</View>
-								</TouchableOpacity>
+										<Text style={{ ...GlobalStyle.headerFont }}>Location:</Text>
+										<CustomText>{newFeedbackData.venueName}</CustomText>
+										<Text style={{ ...GlobalStyle.headerFont }}>Date:</Text>
+										<CustomText>
+											{newFeedbackData.feedback.feedbackDate}
+										</CustomText>
+										<View style={{ flexDirection: "row" }}>
+											<Text style={{ fontStyle: "italic" }}>
+												{newFeedbackData.feedback.username}
+											</Text>
+											<Text style={{ ...GlobalStyle.headerFont }}>
+												{"  "} sent a feedback:
+											</Text>
+										</View>
+										<CustomText>
+											{newFeedbackData.feedback.feedbackDescription}
+										</CustomText>
+									</TouchableOpacity>
 								)}
 							</View>
-						</View>
-					</View>
 
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 30,
-						}}
-					>
-						<Text
-							style={{
-								marginLeft: 20,
-								marginBottom: 10,
-								fontSize: 18,
-								// Add any additional styles from GlobalStyle.headerFont
-								marginBottom: 5,
-								flex: 1, // Take up remaining space
-							}}
-						>
-							Profile
-						</Text>
-						<View
-							style={{
-								flex: 1,
-								borderBottomWidth: 1, // Adjust the thickness as desired
-								borderBottomColor: COLORS.black,
-								marginLeft: -240, // Adjust the value to prevent overlapping
-							}}
-						/>
-					</View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-					>
-						<TouchableOpacity
-							onPress={navigateToVenueProfile}
-							style={{
-								marginLeft: 40,
-								marginBottom: 10,
-								backgroundColor: COLORS.grey,
-								paddingHorizontal: 30,
-								paddingVertical: 10,
-								borderRadius: 20,
-							}}
-						>
-							<Text
-								style={{ color: "black", fontSize: 13, fontWeight: "bold" }}
-							>
-								Venue Profile
-							</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={navigateToManageInventory}
-							style={{
-								marginLeft: 70,
-								marginBottom: 10,
-								backgroundColor: COLORS.grey,
-								paddingHorizontal: 10,
-								paddingVertical: 10,
-								borderRadius: 20,
-							}}
-						>
-							<Text
-								style={{ color: "black", fontSize: 13, fontWeight: "bold" }}
-							>
-								Manage Inventory
-							</Text>
-						</TouchableOpacity>
-					</View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-					>
-						<Text
-							style={{
-								marginLeft: 20,
-								marginBottom: 10,
-								fontSize: 18,
-								// Add any additional styles from GlobalStyle.headerFont
-								marginBottom: 5,
-								flex: 1, // Take up remaining space
-							}}
-						>
-							Social
-						</Text>
-						<View
-							style={{
-								flex: 1,
-								borderBottomWidth: 1, // Adjust the thickness as desired
-								borderBottomColor: COLORS.black,
-								marginLeft: -240, // Adjust the value to prevent overlapping
-							}}
-						/>
-					</View>
-					<View style={{ flex: 1, padding: 16 }}></View>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-					>
-						<TouchableOpacity
-							onPress={navigateToManageSocialInformation}
-							style={{
-								marginLeft: 40,
-								marginBottom: 10,
-								backgroundColor: COLORS.grey,
-								paddingHorizontal: 30,
-								paddingVertical: 10,
-								borderRadius: 20,
-							}}
-						>
 							<Text
 								style={{
-									color: COLORS.black,
-									fontSize: 13,
-									fontWeight: "bold",
+									fontSize: 18,
+									...GlobalStyle.headerFont,
+									marginVertical: 12,
 								}}
 							>
-								Manage Social
+								Profile
 							</Text>
-						</TouchableOpacity>
-						<TouchableOpacity
-							onPress={navigateToManagePromotion}
-							style={{
-								marginLeft: 90,
-								marginBottom: 10,
-								backgroundColor: COLORS.grey,
-								paddingHorizontal: 10,
-								paddingVertical: 10,
-								borderRadius: 20,
-							}}
-						>
-							<View style={{ alignItems: "center" }}>
-								<Text
-									style={{ color: "black", fontSize: 13, fontWeight: "bold" }}
-								>
-									Manage
-								</Text>
-								<Text
-									style={{ color: "black", fontSize: 13, fontWeight: "bold" }}
-								>
-									Promotion
-								</Text>
-							</View>
-						</TouchableOpacity>
-					</View>
-					<View
-						style={{
-							flex: 1,
-							borderBottomWidth: 1,
-							borderBottomColor: COLORS.black,
-							marginTop: 30,
-						}}
-					/>
-
-					<View
-						style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-					>
-						<View style={{ flex: 1, alignItems: "center", width: "98%" }}>
 							<View
 								style={{
-									flex: 1,
+									flexDirection: "row",
+									flexWrap: "wrap",
+									marginBottom: 10,
+								}}
+							>
+								{/* venue profile */}
+								<TouchableOpacity
+									onPress={() => navigation.navigate("VenueProfile")}
+									style={styles.container}
+								>
+									<CustomText>Venue Profile</CustomText>
+									<View
+										style={{ alignItems: "center", justifyContent: "center" }}
+									>
+										<FontAwesome5
+											name="house-user"
+											size={34}
+											color={COLORS.foam}
+										/>
+									</View>
+								</TouchableOpacity>
+
+								{/* manage inventory */}
+								<TouchableOpacity
+									onPress={() => navigation.navigate("ManageInventory")}
+									style={styles.container}
+								>
+									<CustomText>Manage Inventory</CustomText>
+									<View
+										style={{ alignItems: "center", justifyContent: "center" }}
+									>
+										<FontAwesome5
+											name="warehouse"
+											size={34}
+											color={COLORS.foam}
+										/>
+									</View>
+								</TouchableOpacity>
+							</View>
+
+							{/* social */}
+							<Text
+								style={{
+									fontSize: 18,
+									...GlobalStyle.headerFont,
+									marginVertical: 12,
+								}}
+							>
+								Social
+							</Text>
+							<View
+								style={{
+									flexDirection: "row",
+									flexWrap: "wrap",
+									marginBottom: 10,
+								}}
+							>
+								{/* manage social */}
+								<TouchableOpacity
+									onPress={() => navigation.navigate("ManageSocialInformation")}
+									style={styles.container}
+								>
+									<CustomText> Manage Social</CustomText>
+									<View
+										style={{ alignItems: "center", justifyContent: "center" }}
+									>
+										<Ionicons
+											name="md-people-circle"
+											size={44}
+											color={COLORS.foam}
+										/>
+									</View>
+								</TouchableOpacity>
+
+								{/* manage promotion */}
+								<TouchableOpacity
+									onPress={() => navigation.navigate("ManagePromotion")}
+									style={styles.container}
+								>
+									<CustomText>Manage Promotion</CustomText>
+									<View
+										style={{ alignItems: "center", justifyContent: "center" }}
+									>
+										<FontAwesome5
+											name="speakap"
+											size={44}
+											color={COLORS.foam}
+										/>
+									</View>
+								</TouchableOpacity>
+							</View>
+
+							{/* analytics */}
+							<View
+								style={{
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+									marginTop: 12,
+								}}
+							>
+								<Text
+									style={{
+										fontSize: 18,
+										...GlobalStyle.headerFont,
+										marginVertical: 12,
+									}}
+								>
+									Analytics
+								</Text>
+								<Button
+									title="See more"
+									onPress={() => navigation.navigate("Analytics")}
+									filled
+									style={{
+										width: "30%",
+										alignContent: "center",
+										borderColor: 0,
+										elevation: 2,
+										borderRadius: 12,
+									}}
+								/>
+							</View>
+							<View
+								style={{
+									height: 250,
+									elevation: 2,
+									backgroundColor: COLORS.grey,
+									marginTop: 10,
+									borderRadius: 15,
+									marginBottom: 10,
+									width: "100%",
 									padding: 20,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									marginTop: 50,
-									borderRadius: 20,
-									width: "98%",
 								}}
 							>
-								<View style={{ flexDirection: "row", alignItems: "center" }}>
-									<Text
-										style={{
-											marginLeft: 10,
-											marginBottom: 10,
-											fontSize: 15,
-											// Add any additional styles from GlobalStyle.headerFont
-											marginBottom: 5,
-											flex: 1, // Take up remaining space
-										}}
-									>
-										Analytics
-									</Text>
-									<TouchableOpacity
-										onPress={navigateToAnalytics}
-										style={{
-											marginLeft: 40,
-											marginBottom: 10,
-											backgroundColor: COLORS.grey,
-											paddingHorizontal: 10,
-											paddingVertical: 5,
-											borderRadius: 20,
-										}}
-									>
-										<Text style={{ color: "black", fontSize: 15 }}>
-											See More
-										</Text>
-									</TouchableOpacity>
-								</View>
-								<View style={{ flex: 1, padding: 16 }}>
-									<View style={{ padding: 16 }}>
-										<Text
+								<Text
+									style={{
+										...GlobalStyle.headerFont,
+										fontSize: 16,
+										marginBottom: 16,
+									}}
+								>
+									Beer Popularity this week
+								</Text>
+								<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+									{data.map((value, index) => (
+										<View
+											key={index}
 											style={{
-												fontSize: 18,
-												fontWeight: "bold",
-												marginBottom: 16,
+												flex: 1,
+												marginLeft: 10,
+												alignItems: "center",
 											}}
 										>
-											Beer Popularity this week
-										</Text>
-										<View
-											style={{ flexDirection: "row", alignItems: "flex-end" }}
-										>
-											{data.map((value, index) => (
-												<View
-													key={index}
-													style={{
-														width: 30,
-														marginLeft: 10,
-														alignItems: "center",
-													}}
-												>
-													<View
-														style={{
-															height: value * scaleY,
-															width: 4,
-															backgroundColor: "blue",
-														}}
-													/>
-													<Text style={{ fontSize: 12, marginTop: 5 }}>
-														{labels[index]}
-													</Text>
-												</View>
-											))}
+											<View
+												style={{
+													height: value * scaleY,
+													width: 10,
+													backgroundColor: COLORS.foam,
+												}}
+											/>
+											<Text style={{ fontSize: 12, marginTop: 5 }}>
+												{labels[index]}
+											</Text>
 										</View>
-									</View>
+									))}
 								</View>
 							</View>
-						</View>
-					</View>
 
-					<View
-						style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-					>
-						<View style={{ flex: 1, alignItems: "center", width: "98%" }}>
+							{/* venue comparison  */}
 							<View
 								style={{
-									flex: 1,
-									padding: 16,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									marginTop: 20,
-									borderRadius: 20,
-									width: "98%",
+									flexDirection: "row",
+									justifyContent: "space-between",
+									alignItems: "center",
+									marginTop: 12,
 								}}
 							>
-								<View style={{ flexDirection: "row", alignItems: "center" }}>
-									<Text
-										style={{
-											marginLeft: 10,
-											marginBottom: 10,
-											fontSize: 15,
-											// Add any additional styles from GlobalStyle.headerFont
-											marginBottom: 5,
-											flex: 1, // Take up remaining space
-										}}
-									>
-										Venue Comparison
-									</Text>
-									<TouchableOpacity
-										onPress={navigateToVenueComparison}
-										style={{
-											marginLeft: 40,
-											marginBottom: 10,
-											backgroundColor: COLORS.grey,
-											paddingHorizontal: 10,
-											paddingVertical: 5,
-											borderRadius: 20,
-										}}
-									>
-										<Text style={{ color: "black", fontSize: 15 }}>
-											See More
-										</Text>
-									</TouchableOpacity>
-								</View>
-								<View style={{ flex: 1, padding: 16 }}>
-									<View style={{ padding: 16 }}>
-										<Text
+								<Text
+									style={{
+										fontSize: 18,
+										...GlobalStyle.headerFont,
+										marginVertical: 12,
+									}}
+								>
+									Venue Comparison
+								</Text>
+								<Button
+									title="See more"
+									onPress={() => navigation.navigate("VenueComparison")}
+									filled
+									style={{
+										width: "30%",
+										alignContent: "center",
+										borderColor: 0,
+										elevation: 2,
+										borderRadius: 12,
+									}}
+								/>
+							</View>
+							<View
+								style={{
+									height: 250,
+									elevation: 2,
+									backgroundColor: COLORS.grey,
+									marginTop: 10,
+									borderRadius: 15,
+									marginBottom: 10,
+									width: "100%",
+									padding: 20,
+								}}
+							>
+								<Text
+									style={{
+										...GlobalStyle.headerFont,
+										fontSize: 16,
+										marginBottom: 16,
+									}}
+								>
+									Venue Popularity this week
+								</Text>
+								<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+									{data.map((value, index) => (
+										<View
+											key={index}
 											style={{
-												fontSize: 18,
-												fontWeight: "bold",
-												marginBottom: 16,
+												flex: 1,
+												marginLeft: 10,
+												alignItems: "center",
 											}}
 										>
-											Venue Popularity this week
-										</Text>
-										<View
-											style={{ flexDirection: "row", alignItems: "flex-end" }}
-										>
-											{data.map((value, index) => (
-												<View
-													key={index}
-													style={{
-														width: 30,
-														marginLeft: 10,
-														alignItems: "center",
-													}}
-												>
-													<View
-														style={{
-															height: value * scaleY,
-															width: 4,
-															backgroundColor: "blue",
-														}}
-													/>
-													<Text style={{ fontSize: 12, marginTop: 5 }}>
-														{labels[index]}
-													</Text>
-												</View>
-											))}
+											<View
+												style={{
+													height: value * scaleY,
+													width: 10,
+													backgroundColor: COLORS.foam,
+												}}
+											/>
+											<Text style={{ fontSize: 12, marginTop: 5 }}>
+												{labels[index]}
+											</Text>
 										</View>
-									</View>
+									))}
 								</View>
 							</View>
 						</View>
-					</View>
-				</View>
-			</ScrollView>
-		</SafeAreaView>
+					</ScrollView>
+				</SafeAreaView>
+			</SafeAreaView>
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
 	button: {
-		paddingVertical: 3, // increased padding
+		paddingVertical: 10,
 		borderColor: COLORS.black,
 		borderWidth: 1,
-		borderRadius: 30,
+		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
-		elevation: 20,
 	},
 	label: {
 		marginBottom: 5,
 		fontWeight: "bold",
 		fontSize: 16,
+	},
+	container: {
+		height: 100,
+		elevation: 2,
+		backgroundColor: COLORS.grey,
+		marginLeft: 10,
+		marginTop: 10,
+		borderRadius: 15,
+		marginBottom: 3,
+		width: "45%",
+		alignItems: "center",
+		justifyContent: "center",
 	},
 });
 

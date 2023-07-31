@@ -82,8 +82,8 @@ const Dashboard = ({ navigation }) => {
 
 	//=====================================================================================================
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1, height: 1110 }}>
-			<SafeAreaView backgroundColor={COLORS.secondary}>
+		<View style={{ flex: 1 }}>
+			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
 				<Header
 					placement="left"
 					backgroundColor={COLORS.primary}
@@ -126,407 +126,415 @@ const Dashboard = ({ navigation }) => {
 					}
 				/>
 
-				<View
-					style={{
-						justifyContent: "center",
-						alignItems: "center",
-						marginTop: 5,
-					}}
-				>
-					<Text
-						style={{
-							fontSize: 26,
-							color: COLORS.black,
-							marginTop: 20,
-							marginBottom: 12,
-							...GlobalStyle.headerFont,
-						}}
-					>
-						{username}, Welcome Back!
-					</Text>
-					<Text
-						style={{
-							fontSize: 15,
-							...GlobalStyle.headerFont,
-							marginBottom: 5,
-						}}
-					>
-						What would you like to do?
-					</Text>
-
-					<View
-						style={{
-							flexDirection: "row",
-							flexWrap: "wrap",
-							marginBottom: 10,
-							alignContent: "center",
-							justifyContent: "center",
-							marginHorizontal: 22,
-						}}
-					>
-						<TouchableOpacity
-							onPress={() => navigation.navigate("Profile")}
+				<SafeAreaView style={{ flex: 1 }}>
+					<ScrollView contentContainerStyle={{ paddingBottom: 70 }}>
+						<View
 							style={{
-								height: 100,
-								elevation: 2,
-								backgroundColor: COLORS.grey,
-								marginTop: 10,
-								borderRadius: 15,
-								marginBottom: 10,
-								width: 100,
-								alignItems: "center",
-							}}
-						>
-							<View
-								style={{
-									flexDirection: "row",
-									paddingTop: 10,
-									paddingHorizontal: 10,
-									marginVertical: 8,
-								}}
-							>
-								<Text
-									style={{
-										fontSize: 14,
-										...GlobalStyle.bodyFont,
-									}}
-								>
-									My Profile
-								</Text>
-							</View>
-							<MaterialIcons
-								name="face"
-								size={44}
-								color={COLORS.foam}
-								style={{
-									paddingLeft: 35,
-									alignItems: "flex-end",
-								}}
-							/>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => navigation.navigate("BeersVenue")}
-							style={{
-								height: 100,
-								elevation: 2,
-								backgroundColor: COLORS.grey,
-								marginLeft: 10,
-								marginTop: 10,
-								borderRadius: 15,
-								marginBottom: 3,
-								width: 100,
-								alignItems: "center",
-							}}
-						>
-							<View
-								style={{
-									flexDirection: "row",
-									paddingTop: 10,
-									paddingHorizontal: 10,
-								}}
-							>
-								<Text
-									style={{
-										fontSize: 13,
-										...GlobalStyle.bodyFont,
-									}}
-								>
-									Beers & Venues
-								</Text>
-							</View>
-							<Ionicons
-								name="beer"
-								size={44}
-								color={COLORS.foam}
-								style={{
-									paddingLeft: 35,
-									alignItems: "flex-end",
-								}}
-							/>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => navigation.navigate("Social")}
-							style={{
-								height: 100,
-								elevation: 2,
-								backgroundColor: COLORS.grey,
-								marginLeft: 10,
-								marginTop: 10,
-								borderRadius: 15,
-								marginBottom: 10,
-								width: 100,
-								alignItems: "center",
-							}}
-						>
-							<View
-								style={{
-									flexDirection: "row",
-									paddingTop: 10,
-									paddingHorizontal: 8,
-								}}
-							>
-								<Text
-									style={{
-										fontSize: 13,
-										...GlobalStyle.bodyFont,
-									}}
-								>
-									Social & Community
-								</Text>
-							</View>
-							<Ionicons
-								name="md-people-circle"
-								size={44}
-								color={COLORS.foam}
-								style={{
-									paddingLeft: 35,
-									alignItems: "flex-end",
-								}}
-							/>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => navigation.navigate("Feedback")}
-							style={{
-								height: 100,
-								elevation: 2,
-								backgroundColor: COLORS.grey,
-								marginTop: 10,
-								borderRadius: 15,
-								marginBottom: 10,
-								width: 100,
 								justifyContent: "center",
 								alignItems: "center",
+								marginTop: 5,
 							}}
 						>
+							<Text
+								style={{
+									fontSize: 26,
+									color: COLORS.black,
+									marginTop: 20,
+									marginBottom: 12,
+									...GlobalStyle.headerFont,
+								}}
+							>
+								{username}, Welcome Back!
+							</Text>
+							<Text
+								style={{
+									fontSize: 15,
+									...GlobalStyle.headerFont,
+									marginBottom: 5,
+								}}
+							>
+								What would you like to do?
+							</Text>
+
 							<View
 								style={{
 									flexDirection: "row",
-									paddingTop: 10,
-									paddingHorizontal: 10,
+									flexWrap: "wrap",
+									marginBottom: 10,
+									alignContent: "center",
+									justifyContent: "center",
+									marginHorizontal: 22,
 								}}
 							>
-								<Text
+								<TouchableOpacity
+									onPress={() => navigation.navigate("Profile")}
 									style={{
-										fontSize: 13,
-										...GlobalStyle.bodyFont,
-									}}
-								>
-									Feedback & Requests
-								</Text>
-							</View>
-							<MaterialIcons
-								name="feedback"
-								size={44}
-								color={COLORS.foam}
-								style={{
-									paddingLeft: 35,
-									alignItems: "flex-end",
-								}}
-							/>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => navigation.navigate("Journal")}
-							style={{
-								height: 100,
-								elevation: 2,
-								backgroundColor: COLORS.grey,
-								marginLeft: 10,
-								marginTop: 10,
-								borderRadius: 15,
-								marginBottom: 10,
-								width: 100,
-								alignItems: "center",
-							}}
-						>
-							<View
-								style={{
-									flexDirection: "column",
-									paddingTop: 10,
-									paddingHorizontal: 4,
-									alignItems: "center",
-								}}
-							>
-								<Text
-									style={{
-										fontSize: 13,
-										...GlobalStyle.bodyFont,
-										textAlign: "center",
-										width: 100,
-									}}
-								>
-									My Journal &
-								</Text>
-								<Text
-									style={{
-										fontSize: 13,
-										...GlobalStyle.bodyFont,
-										textAlign: "center",
-										width: 100,
-									}}
-								>
-									Achievements
-								</Text>
-							</View>
-							<Ionicons
-								name="journal"
-								size={40}
-								color={COLORS.foam}
-								style={{
-									paddingLeft: 35,
-									alignItems: "flex-end",
-								}}
-							/>
-						</TouchableOpacity>
-
-						<TouchableOpacity
-							onPress={() => navigation.navigate("Wishlist")}
-							style={{
-								height: 100,
-								elevation: 2,
-								backgroundColor: COLORS.grey,
-								marginLeft: 10,
-								marginTop: 10,
-								borderRadius: 15,
-								marginBottom: 10,
-								width: 100,
-								alignItems: "center",
-							}}
-						>
-							<View
-								style={{
-									flexDirection: "row",
-									paddingTop: 10,
-									paddingHorizontal: 8,
-									marginVertical: 10,
-								}}
-							>
-								<Text
-									style={{
-										fontSize: 14,
-										...GlobalStyle.bodyFont,
-									}}
-								>
-									My Wishlist
-								</Text>
-							</View>
-							<Ionicons
-								name="list-circle"
-								size={44}
-								color={COLORS.foam}
-								style={{
-									paddingLeft: 35,
-									alignItems: "flex-end",
-								}}
-							/>
-						</TouchableOpacity>
-					</View>
-				</View>
-
-				<Card
-					containerStyle={{
-						marginTop: 5,
-						height: 280,
-						backgroundColor: "transparent",
-						borderColor: "transparent",
-					}}
-				>
-					<Card.Title>Upcoming Events</Card.Title>
-					<Card.Divider />
-					<ThemeProvider
-						theme={{
-							Tab: {
-								primary: {
-									backgroundColor: COLORS.grey,
-								},
-							},
-						}}
-					>
-						<TabView value={index} onChange={setIndex} animationType="spring">
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-									<ImageBackground
-										source={require("../../assets/event1.png")}
-										style={styles.cardImage}
-									/>
-								</Card>
-							</TabView.Item>
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-									<ImageBackground
-										source={require("../../assets/event2.png")}
-										style={styles.cardImage}
-									/>
-								</Card>
-							</TabView.Item>
-							<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-								<Card containerStyle={styles.cardContainer}>
-									<ImageBackground
-										source={require("../../assets/event3.png")}
-										style={styles.cardImage}
-									/>
-								</Card>
-							</TabView.Item>
-						</TabView>
-					</ThemeProvider>
-				</Card>
-
-				<Card
-					containerStyle={{
-						marginTop: 5,
-						height: 280,
-						backgroundColor: "transparent",
-						borderColor: "transparent",
-					}}
-				>
-					{isLoading ? (
-						<View style={{ alignItems: "center", marginTop: 20 }}>
-							<ActivityIndicator size="large" color={COLORS.primary} />
-							<Text>Loading...</Text>
-						</View>
-					) : (
-						<ThemeProvider
-							theme={{
-								Tab: {
-									primary: {
+										height: 100,
+										elevation: 2,
 										backgroundColor: COLORS.grey,
-									},
-								},
+										marginTop: 10,
+										borderRadius: 15,
+										marginBottom: 10,
+										width: 100,
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											flexDirection: "row",
+											paddingTop: 10,
+											paddingHorizontal: 10,
+											marginVertical: 8,
+										}}
+									>
+										<Text
+											style={{
+												fontSize: 14,
+												...GlobalStyle.bodyFont,
+											}}
+										>
+											My Profile
+										</Text>
+									</View>
+									<MaterialIcons
+										name="face"
+										size={44}
+										color={COLORS.foam}
+										style={{
+											paddingLeft: 35,
+											alignItems: "flex-end",
+										}}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									onPress={() => navigation.navigate("BeersVenue")}
+									style={{
+										height: 100,
+										elevation: 2,
+										backgroundColor: COLORS.grey,
+										marginLeft: 10,
+										marginTop: 10,
+										borderRadius: 15,
+										marginBottom: 3,
+										width: 100,
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											flexDirection: "row",
+											paddingTop: 10,
+											paddingHorizontal: 10,
+										}}
+									>
+										<Text
+											style={{
+												fontSize: 13,
+												...GlobalStyle.bodyFont,
+											}}
+										>
+											Beers & Venues
+										</Text>
+									</View>
+									<Ionicons
+										name="beer"
+										size={44}
+										color={COLORS.foam}
+										style={{
+											paddingLeft: 35,
+											alignItems: "flex-end",
+										}}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									onPress={() => navigation.navigate("Social")}
+									style={{
+										height: 100,
+										elevation: 2,
+										backgroundColor: COLORS.grey,
+										marginLeft: 10,
+										marginTop: 10,
+										borderRadius: 15,
+										marginBottom: 10,
+										width: 100,
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											flexDirection: "row",
+											paddingTop: 10,
+											paddingHorizontal: 8,
+										}}
+									>
+										<Text
+											style={{
+												fontSize: 13,
+												...GlobalStyle.bodyFont,
+											}}
+										>
+											Social & Community
+										</Text>
+									</View>
+									<Ionicons
+										name="md-people-circle"
+										size={44}
+										color={COLORS.foam}
+										style={{
+											paddingLeft: 35,
+											alignItems: "flex-end",
+										}}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									onPress={() => navigation.navigate("Feedback")}
+									style={{
+										height: 100,
+										elevation: 2,
+										backgroundColor: COLORS.grey,
+										marginTop: 10,
+										borderRadius: 15,
+										marginBottom: 10,
+										width: 100,
+										justifyContent: "center",
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											flexDirection: "row",
+											paddingTop: 10,
+											paddingHorizontal: 10,
+										}}
+									>
+										<Text
+											style={{
+												fontSize: 13,
+												...GlobalStyle.bodyFont,
+											}}
+										>
+											Feedback & Requests
+										</Text>
+									</View>
+									<MaterialIcons
+										name="feedback"
+										size={44}
+										color={COLORS.foam}
+										style={{
+											paddingLeft: 35,
+											alignItems: "flex-end",
+										}}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									onPress={() => navigation.navigate("Journal")}
+									style={{
+										height: 100,
+										elevation: 2,
+										backgroundColor: COLORS.grey,
+										marginLeft: 10,
+										marginTop: 10,
+										borderRadius: 15,
+										marginBottom: 10,
+										width: 100,
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											flexDirection: "column",
+											paddingTop: 10,
+											paddingHorizontal: 4,
+											alignItems: "center",
+										}}
+									>
+										<Text
+											style={{
+												fontSize: 13,
+												...GlobalStyle.bodyFont,
+												textAlign: "center",
+												width: 100,
+											}}
+										>
+											My Journal &
+										</Text>
+										<Text
+											style={{
+												fontSize: 13,
+												...GlobalStyle.bodyFont,
+												textAlign: "center",
+												width: 100,
+											}}
+										>
+											Achievements
+										</Text>
+									</View>
+									<Ionicons
+										name="journal"
+										size={40}
+										color={COLORS.foam}
+										style={{
+											paddingLeft: 35,
+											alignItems: "flex-end",
+										}}
+									/>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									onPress={() => navigation.navigate("Wishlist")}
+									style={{
+										height: 100,
+										elevation: 2,
+										backgroundColor: COLORS.grey,
+										marginLeft: 10,
+										marginTop: 10,
+										borderRadius: 15,
+										marginBottom: 10,
+										width: 100,
+										alignItems: "center",
+									}}
+								>
+									<View
+										style={{
+											flexDirection: "row",
+											paddingTop: 10,
+											paddingHorizontal: 8,
+											marginVertical: 10,
+										}}
+									>
+										<Text
+											style={{
+												fontSize: 14,
+												...GlobalStyle.bodyFont,
+											}}
+										>
+											My Wishlist
+										</Text>
+									</View>
+									<Ionicons
+										name="list-circle"
+										size={44}
+										color={COLORS.foam}
+										style={{
+											paddingLeft: 35,
+											alignItems: "flex-end",
+										}}
+									/>
+								</TouchableOpacity>
+							</View>
+						</View>
+
+						<Card
+							containerStyle={{
+								marginTop: 5,
+								height: 280,
+								backgroundColor: "transparent",
+								borderColor: "transparent",
 							}}
 						>
-							<Card.Title>
-								Since you like {personalisedData.mostFrequentCategory}...
-							</Card.Title>
+							<Card.Title>Upcoming Events</Card.Title>
 							<Card.Divider />
-							<TabView
-								value={index1}
-								onChange={setIndex1}
-								animationType="spring"
+							<ThemeProvider
+								theme={{
+									Tab: {
+										primary: {
+											backgroundColor: COLORS.grey,
+										},
+									},
+								}}
 							>
-								{personalisedData.recommendedBeers.map((beer, index) => (
-									<TabView.Item
-										key={index}
-										style={{ width: "100%", marginTop: -30 }}
-									>
+								<TabView
+									value={index}
+									onChange={setIndex}
+									animationType="spring"
+								>
+									<TabView.Item style={{ width: "100%", marginTop: -30 }}>
 										<Card containerStyle={styles.cardContainer}>
-											<TouchableOpacity onPress={() => console.log(beer)}>
-												<ImageBackground
-													source={{ uri: beer.beerImage }}
-													style={styles.cardImage}
-												></ImageBackground>
-											</TouchableOpacity>
+											<ImageBackground
+												source={require("../../assets/event1.png")}
+												style={styles.cardImage}
+											/>
 										</Card>
 									</TabView.Item>
-								))}
-							</TabView>
-						</ThemeProvider>
-					)}
-				</Card>
+									<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+										<Card containerStyle={styles.cardContainer}>
+											<ImageBackground
+												source={require("../../assets/event2.png")}
+												style={styles.cardImage}
+											/>
+										</Card>
+									</TabView.Item>
+									<TabView.Item style={{ width: "100%", marginTop: -30 }}>
+										<Card containerStyle={styles.cardContainer}>
+											<ImageBackground
+												source={require("../../assets/event3.png")}
+												style={styles.cardImage}
+											/>
+										</Card>
+									</TabView.Item>
+								</TabView>
+							</ThemeProvider>
+						</Card>
+
+						<Card
+							containerStyle={{
+								marginTop: 5,
+								height: 280,
+								backgroundColor: "transparent",
+								borderColor: "transparent",
+							}}
+						>
+							{isLoading ? (
+								<View style={{ alignItems: "center", marginTop: 20 }}>
+									<ActivityIndicator size="large" color={COLORS.primary} />
+									<Text>Loading...</Text>
+								</View>
+							) : (
+								<ThemeProvider
+									theme={{
+										Tab: {
+											primary: {
+												backgroundColor: COLORS.grey,
+											},
+										},
+									}}
+								>
+									<Card.Title>
+										Since you like {personalisedData.mostFrequentCategory}...
+									</Card.Title>
+									<Card.Divider />
+									<TabView
+										value={index1}
+										onChange={setIndex1}
+										animationType="spring"
+									>
+										{personalisedData.recommendedBeers.map((beer, index) => (
+											<TabView.Item
+												key={index}
+												style={{ width: "100%", marginTop: -30 }}
+											>
+												<Card containerStyle={styles.cardContainer}>
+													<TouchableOpacity onPress={() => console.log(beer)}>
+														<ImageBackground
+															source={{ uri: beer.beerImage }}
+															style={styles.cardImage}
+														></ImageBackground>
+													</TouchableOpacity>
+												</Card>
+											</TabView.Item>
+										))}
+									</TabView>
+								</ThemeProvider>
+							)}
+						</Card>
+					</ScrollView>
+				</SafeAreaView>
 			</SafeAreaView>
-		</ScrollView>
+		</View>
 	);
 };
 
