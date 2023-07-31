@@ -2,6 +2,7 @@ import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import {
+	Alert,
 	Image,
 	ImageBackground,
 	ScrollView,
@@ -16,6 +17,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
+import { SelectList } from "react-native-dropdown-select-list";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -46,11 +49,53 @@ const ManageInventory = ({ navigation }) => {
 	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
 
+	const [venueProfile, setVenueProfile] = useState([]);
+	const [selectedVenue, setSelectedVenue] = useState(null);
+	const [selectedVenueData, setSelectedVenueData] = useState([]);
+	const [selectedVenueMenu, setSelectedVenueMenu] = useState([]);
 	useEffect(() => {
-		const sessionToken = cookies.sessionToken;
-		const venueOwnerID = cookies.venueOwnerID;
 		setUsername(cookies.username);
+		axios
+			.get("http://10.0.2.2:3000/getVenueProfile", {
+				params: {
+					venueOwnerID: cookies.venueOwnerID,
+				},
+			})
+			.then((response) => {
+				setVenueProfile(response.data);
+			})
+			.catch((error) => {
+				console.error("Error retrieving Venue Profile", error);
+			});
 	}, []);
+
+	useEffect(() => {
+		const selectedVenueObject = venueProfile.find(
+			(venue) => venue.venueName === selectedVenue
+		);
+		if (selectedVenueObject) {
+			setSelectedVenueData({ ...selectedVenueObject });
+		} else {
+			setSelectedVenueData(null);
+		}
+	}, [selectedVenue]);
+
+	useEffect(() => {
+		if (selectedVenueData && selectedVenueData.venueMenu) {
+			axios
+				.get("http://10.0.2.2:3000/getVenueMenu", {
+				params: {
+					venueMenu: selectedVenueData.venueMenu,
+					},
+				})
+				.then((response) => {
+					setSelectedVenueMenu(response.data);
+				})
+				.catch((error) => {
+					console.error("Error retrieving Venue Menu", error);
+				});
+		}
+	}, [selectedVenueData]);
 
 	//=====================================================================================================
 	return (
@@ -74,7 +119,7 @@ const ManageInventory = ({ navigation }) => {
 				}}
 				rightComponent={
 					<View style={{ flexDirection: "row" }}>
-						<TouchableOpacity>
+						<TouchableOpacity onPress={()=>console.log(selectedVenueMenu)}>
 							<Octicons
 								name="bookmark"
 								size={24}
@@ -98,456 +143,201 @@ const ManageInventory = ({ navigation }) => {
 						Manage Inventory
 					</Text>
 				</View>
-				<View style={{ alignItems: "center", marginTop: 20, marginBottom: 20 }}>
-					<TouchableOpacity
-						onPress={() => {}}
-						style={{
-							borderWidth: 1,
-							borderColor: COLORS.black,
-							backgroundColor: COLORS.grey,
-							borderRadius: 20,
-							padding: 5,
-							alignItems: "center",
-						}}
-					>
-						<Text style={{ fontSize: 18 }}>Sync Data</Text>
-					</TouchableOpacity>
-				</View>
-				<View
-					style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
-				>
-					<Text
-						style={{
-							marginLeft: 20,
-							marginBottom: 10,
-							fontSize: 18,
-							// Add any additional styles from GlobalStyle.headerFont
-							marginBottom: 5,
-							flex: 1, // Take up remaining space
-						}}
-					>
-						Current Inventory
-					</Text>
-					<View
-						style={{
-							flex: 1,
-							borderBottomWidth: 1, // Adjust the thickness as desired
-							borderBottomColor: COLORS.black,
-							marginLeft: -80, // Adjust the value to prevent overlapping
-						}}
-					/>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						marginTop: 5,
-						marginBottom: 10,
+				<SelectList
+					data={venueProfile.map((venue) => ({
+						label: venue.venueName,
+						value: venue.venueName,
+					}))}
+					value={selectedVenue}
+					setSelected={(value) => setSelectedVenue(value)}
+					boxStyles={{
+						borderRadius: 12,
+						borderColor: 0,
+						backgroundColor: COLORS.grey,
+						opacity: 1,
 					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-					>
-						<Image
-							source={require("../../assets/beer1.png")}
-							style={{
-								width: 140,
-								height: 140,
-								marginLeft: 20,
-								borderRadius: 10,
-							}}
-						/>
-
+					dropdownStyles={{
+						right: 0,
+						borderColor: 0,
+						backgroundColor: COLORS.grey,
+						opacity: 1,
+					}}
+					defaultOption={selectedVenue}
+					search={true}
+				/>
+				{selectedVenueData ? (
+					selectedVenueMenu.map((menuItem) => (						
 						<View
+							key={menuItem.beerID}
 							style={{
-								marginLeft: 10,
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								borderRadius: 10,
-								padding: 10,
-								width: 240,
+								flexDirection: "row",
+								alignItems: "center",
+								marginTop: 5,
+								marginBottom: 10,
 							}}
 						>
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Name:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "76%",
-									}}
-								>
-									Beer Name
-								</Text>
-							</View>
-
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Current Stock:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "50%",
-									}}
-								>
-									10
-								</Text>
-							</View>
-
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Sold:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "80%",
-									}}
-								>
-									20
-								</Text>
-							</View>
-							<TouchableOpacity
+							<View
 								style={{
+									flexDirection: "row",
 									alignItems: "center",
-									backgroundColor: COLORS.grey,
-									paddingHorizontal: 5,
-									paddingVertical: 3,
-									borderRadius: 10,
 									marginTop: 10,
-									borderWidth: 1,
-									borderColor: COLORS.black,
 								}}
 							>
-								<Text
+								<Image
+									source={{uri: menuItem.beerImage}}
 									style={{
-										color: COLORS.black,
-										fontWeight: "bold",
-										fontSize: 16,
+										width: 140,
+										height: 140,
+										marginLeft: 20,
+										borderRadius: 10,
+									}}
+								/>
+
+								<View
+									style={{
+										marginLeft: 10,
+										borderWidth: 1,
+										borderColor: COLORS.black,
+										borderRadius: 10,
+										padding: 10,
+										width: 240,
 									}}
 								>
-									Edit Inventory
-								</Text>
-							</TouchableOpacity>
+									<View style={{ flexDirection: "row", alignItems: "center" }}>
+										<Text
+											style={{
+												fontSize: 16,
+												fontWeight: "bold",
+												marginBottom: 5,
+											}}
+										>
+											Name:
+										</Text>
+										<TextInput
+											style={{
+												borderWidth: 1,
+												borderColor: COLORS.black,
+												borderRadius: 10,
+												padding: 5,
+												marginBottom: 10,
+												marginTop: 5,
+												marginLeft: 5,
+												width: "76%",
+											}}
+										>
+											{menuItem.beerName}
+										</TextInput>
+									</View>
+
+									<View style={{ flexDirection: "row", alignItems: "center" }}>
+										<Text
+											style={{
+												fontSize: 16,
+												fontWeight: "bold",
+												marginBottom: 5,
+											}}
+										>
+											ABV:
+										</Text>
+										<TextInput
+											style={{
+												borderWidth: 1,
+												borderColor: COLORS.black,
+												borderRadius: 10,
+												padding: 5,
+												marginBottom: 10,
+												marginTop: 5,
+												marginLeft: 5,
+												width: "50%",
+											}}
+										>
+											{menuItem.abv}
+										</TextInput>
+									</View>
+
+									<View style={{ flexDirection: "row", alignItems: "center" }}>
+										<Text
+											style={{
+												fontSize: 16,
+												fontWeight: "bold",
+												marginBottom: 5,
+											}}
+										>
+											IBU
+										</Text>
+										<TextInput
+											style={{
+												borderWidth: 1,
+												borderColor: COLORS.black,
+												borderRadius: 10,
+												padding: 5,
+												marginBottom: 10,
+												marginTop: 5,
+												marginLeft: 5,
+												width: "80%",
+											}}
+										>
+											{menuItem.ibu}
+										</TextInput>
+									</View>
+									<View style={{ flexDirection: "row", alignItems: "center" }}>
+										<Text
+											style={{
+												fontSize: 16,
+												fontWeight: "bold",
+												marginBottom: 5,
+											}}
+										>
+											Price
+										</Text>
+										<TextInput
+											style={{
+												borderWidth: 1,
+												borderColor: COLORS.black,
+												borderRadius: 10,
+												padding: 5,
+												marginBottom: 10,
+												marginTop: 5,
+												marginLeft: 5,
+												width: "80%",
+											}}
+										>
+											{menuItem.price}
+										</TextInput>
+									</View>
+									<TouchableOpacity
+										style={{
+											alignItems: "center",
+											backgroundColor: COLORS.grey,
+											paddingHorizontal: 5,
+											paddingVertical: 3,
+											borderRadius: 10,
+											marginTop: 10,
+											borderWidth: 1,
+											borderColor: COLORS.black,
+										}}
+									>
+										<Text
+											style={{
+												color: COLORS.black,
+												fontWeight: "bold",
+												fontSize: 16,
+											}}
+										>
+											Edit
+										</Text>
+									</TouchableOpacity>
+								</View>
+							</View>
 						</View>
+					))
+					) : (
+					<View>
+						<Text style={{ fontSize: 18, fontWeight: "bold", textAlign: "center" }}>
+						Select a venue!
+						</Text>
 					</View>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						marginTop: 5,
-						marginBottom: 10,
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-					>
-						<Image
-							source={require("../../assets/beer1.png")}
-							style={{
-								width: 140,
-								height: 140,
-								marginLeft: 20,
-								borderRadius: 10,
-							}}
-						/>
-
-						<View
-							style={{
-								marginLeft: 10,
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								borderRadius: 10,
-								padding: 10,
-								width: 240,
-							}}
-						>
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Name:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "76%",
-									}}
-								>
-									Beer Name
-								</Text>
-							</View>
-
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Current Stock:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "50%",
-									}}
-								>
-									10
-								</Text>
-							</View>
-
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Sold:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "80%",
-									}}
-								>
-									20
-								</Text>
-							</View>
-							<TouchableOpacity
-								style={{
-									alignItems: "center",
-									backgroundColor: COLORS.grey,
-									paddingHorizontal: 5,
-									paddingVertical: 3,
-									borderRadius: 10,
-									marginTop: 10,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-								}}
-							>
-								<Text
-									style={{
-										color: COLORS.black,
-										fontWeight: "bold",
-										fontSize: 16,
-									}}
-								>
-									Edit Inventory
-								</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
-						alignItems: "center",
-						marginTop: 5,
-						marginBottom: 10,
-					}}
-				>
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 10,
-						}}
-					>
-						<Image
-							source={require("../../assets/beer1.png")}
-							style={{
-								width: 140,
-								height: 140,
-								marginLeft: 20,
-								borderRadius: 10,
-							}}
-						/>
-
-						<View
-							style={{
-								marginLeft: 10,
-								borderWidth: 1,
-								borderColor: COLORS.black,
-								borderRadius: 10,
-								padding: 10,
-								width: 240,
-							}}
-						>
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Name:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "76%",
-									}}
-								>
-									Beer Name
-								</Text>
-							</View>
-
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Current Stock:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "50%",
-									}}
-								>
-									10
-								</Text>
-							</View>
-
-							<View style={{ flexDirection: "row", alignItems: "center" }}>
-								<Text
-									style={{
-										fontSize: 16,
-										fontWeight: "bold",
-										marginBottom: 5,
-									}}
-								>
-									Sold:
-								</Text>
-								<Text
-									style={{
-										borderWidth: 1,
-										borderColor: COLORS.black,
-										borderRadius: 10,
-										padding: 5,
-										marginBottom: 10,
-										marginTop: 5,
-										marginLeft: 5,
-										width: "80%",
-									}}
-								>
-									20
-								</Text>
-							</View>
-							<TouchableOpacity
-								style={{
-									alignItems: "center",
-									backgroundColor: COLORS.grey,
-									paddingHorizontal: 5,
-									paddingVertical: 3,
-									borderRadius: 10,
-									marginTop: 10,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-								}}
-							>
-								<Text
-									style={{
-										color: COLORS.black,
-										fontWeight: "bold",
-										fontSize: 16,
-									}}
-								>
-									Edit Inventory
-								</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</View>
+					)}									
 			</ScrollView>
 		</View>
 	);

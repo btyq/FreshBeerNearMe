@@ -546,6 +546,12 @@ app.post("/updateVenue", async (req, res) => {
 	const { venueID, venueName, venueContact, venueAddress, venueOperatingHours } = req.body;
 	globalVenueOwner.updateVenue(client, res, venueID, venueName, venueContact, venueAddress, venueOperatingHours)
 })
+
+//Route for venue owner to retrieve venue menu
+app.get("/getVenueMenu", async (req, res) => {
+	const venueMenu = req.query.venueMenu
+	globalVenueOwner.getVenueMenu(client, res, venueMenu)
+})
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
 //Route to retrieve beer data

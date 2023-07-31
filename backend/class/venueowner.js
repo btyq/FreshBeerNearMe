@@ -177,6 +177,20 @@ class VenueOwner {
             res.status(500).json({ success: false, message: "Internal server error" });
         }
     }
+
+    async getVenueMenu(client, res, venueMenu) {
+        try {
+            const db = client.db("FreshBearNearMe");
+            const beersCollection = db.collection("Beer");
+            const beerIDs = venueMenu.map(Number);
+            const venueMenuData = await beersCollection.find({ beerID: { $in: beerIDs } }).toArray();
+            
+            res.send(venueMenuData);
+        } catch (error) {
+            console.error("Error retrieving venue menu:", error);
+            res.status(500).json({ error: "Failed to retrieve venue menu" });
+        }
+      }
     
 }
 
