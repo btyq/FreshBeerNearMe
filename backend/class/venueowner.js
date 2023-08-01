@@ -190,8 +190,82 @@ class VenueOwner {
             console.error("Error retrieving venue menu:", error);
             res.status(500).json({ error: "Failed to retrieve venue menu" });
         }
-      }
+    }
+
+    async editVenueMenu(client, res, beerID, beerName, abv, ibu, price) {
+        try {
+            const db = client.db("FreshBearNearMe");
+            const beerCollection = db.collection("Beer");
+        
+            const parsedAbv = parseFloat(abv);
+            const parsedIbu = parseInt(ibu);
+            const parsedPrice = parseInt(price);
+            
+            const updateResult = await beerCollection.updateOne(
+                { beerID: parseInt(beerID) }, 
+                {
+                $set: {
+                    beerName: beerName,
+                    abv: parsedAbv,
+                    ibu: parsedIbu,
+                    price: parsedPrice,
+                },
+                } 
+            );
+        
+            if (updateResult.matchedCount === 0) {
+                res.json({ success: false, message: "Beer not found" });
+            } else {
+                res.json({ success: true });
+            }
+        } catch (error) {
+            console.error("Error editing beer:", error);
+            res.json({ success: false, message: "Internal server error" });
+        }
+    }
+
+    async addVenueMenu(client, res, beerName, beerLocation, beerDescription, beerImage, beerCategory, abv, ibu, price) {
+        try {
+            const db = client.db("FreshBearNearMe");
+            const beerCollection = db.collection("Beer");
+            const venueCollection = db.collection("Venue");
     
+            const latestBeer = await beerCollection.findOne({}, { sort: { beerID: -1 } });
+            let newBeerID = 1;
+            if (latestBeer) {
+                newBeerID = latestBeer.beerID + 1;
+            }
+    
+            const newBeer = {
+                beerID: newBeerID,
+                beerName: beerName,
+                beerLocation: Array.isArray(beerLocation) ? beerLocation : [beerLocation],
+                beerDescription: beerDescription,
+                beerImage: beerImage,
+                beerCategory: beerCategory,
+                communityReview: [], 
+                abv: parseFloat(abv),
+                ibu: parseInt(ibu),
+                price: parseInt(price),
+                rating: 0 
+            };
+    
+            const result = await beerCollection.insertOne(newBeer);    
+            const venue = await venueCollection.findOne({ venueID: beerLocation });
+                if (venue) {
+                    await venueCollection.updateOne(
+                        { venueID: beerLocation },
+                        { $push: { venueMenu: newBeerID } }
+                    );
+                    res.json({success: true})
+                } else {
+                    res.json({ success: false, message: "Failed to add new beer to collection." });
+                }
+        } catch (error) {
+            console.error(error);
+            res.json({ success: false, message: "An error occurred while adding new beer." });
+        }
+    }
 }
 
 module.exports = VenueOwner;

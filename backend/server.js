@@ -552,6 +552,18 @@ app.get("/getVenueMenu", async (req, res) => {
 	const venueMenu = req.query.venueMenu
 	globalVenueOwner.getVenueMenu(client, res, venueMenu)
 })
+
+//Route for venue owner to edit venue menu
+app.post("/editVenueMenu", async (req, res) => {
+	const {beerID, beerName, abv, ibu, price} = req.body;
+	globalVenueOwner.editVenueMenu(client, res, beerID, beerName, abv, ibu, price)
+})
+
+//Route for venue owner to add new venue menu
+app.post("/addVenueMenu", async (req, res) => {
+	const { beerName, beerLocation, beerDescription, beerImage, beerCategory, abv, ibu, price } = req.body;
+	globalVenueOwner.addVenueMenu(client, res, beerName, beerLocation, beerDescription, beerImage, beerCategory, abv, ibu, price )
+})
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
 //Route to retrieve beer data

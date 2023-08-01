@@ -2,6 +2,7 @@ import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
 import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import {
+	Modal,
 	Alert,
 	Image,
 	ImageBackground,
@@ -53,6 +54,16 @@ const ManageInventory = ({ navigation }) => {
 	const [selectedVenue, setSelectedVenue] = useState(null);
 	const [selectedVenueData, setSelectedVenueData] = useState([]);
 	const [selectedVenueMenu, setSelectedVenueMenu] = useState([]);
+	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [beerName, setBeerName] = useState("");
+	const [beerDescription, setBeerDescription] = useState("");
+	const [beerImage, setBeerImage] = useState("");
+	const [beerCategory, setBeerCategory] = useState("");
+	const beerCategories = ["Lager", "Stout", "Porter", "IPA", "Pale Ale"];
+	const [abv, setAbv] = useState("");
+	const [ibu, setIbu] = useState("");
+	const [price, setPrice] = useState("");
+
 	useEffect(() => {
 		setUsername(cookies.username);
 		axios
@@ -96,6 +107,61 @@ const ManageInventory = ({ navigation }) => {
 				});
 		}
 	}, [selectedVenueData]);
+
+	const handleEdit = (beerID, beerName, abv, ibu, price) => {
+		const data = {
+			beerID: beerID,
+			beerName: beerName,
+			abv: abv,
+			ibu: ibu,
+			price: price
+		}
+
+		axios
+			.post("http://10.0.2.2:3000/editVenueMenu", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Successfully editted item!")
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message)
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	};
+
+	const toggleModal = () => {
+		setIsModalVisible(!isModalVisible);
+	};
+
+	const addProduct = (beerName, beerLocation, beerDescription, beerImage, beerCategory, abv, ibu, price) => {
+		const data = {
+			beerName: beerName,
+			beerLocation: beerLocation,
+			beerDescription: beerDescription,
+			beerImage: beerImage,
+			beerCategory: beerCategory,
+			abv: abv,
+			ibu: ibu,
+			price: price
+		}
+
+		axios
+			.post("http://10.0.2.2:3000/addVenueMenu", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Success!")
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message)
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	}
 
 	//=====================================================================================================
 	return (
@@ -224,8 +290,15 @@ const ManageInventory = ({ navigation }) => {
 												marginLeft: 5,
 												width: "76%",
 											}}
-										>
-											{menuItem.beerName}
+											value={menuItem.beerName}
+											onChangeText={(text) => {
+												setSelectedVenueMenu((prevMenu) =>
+												  prevMenu.map((item) =>
+													item.beerID === menuItem.beerID ? { ...item, beerName: text } : item
+												  )
+												);
+											}}
+										> 
 										</TextInput>
 									</View>
 
@@ -250,8 +323,15 @@ const ManageInventory = ({ navigation }) => {
 												marginLeft: 5,
 												width: "50%",
 											}}
+											value={menuItem.abv.toString()}
+											onChangeText={(text) => {
+												setSelectedVenueMenu((prevMenu) =>
+												  prevMenu.map((item) =>
+													item.beerID === menuItem.beerID ? { ...item, abv: text } : item
+												  )
+												);
+											}}
 										>
-											{menuItem.abv}
 										</TextInput>
 									</View>
 
@@ -276,8 +356,15 @@ const ManageInventory = ({ navigation }) => {
 												marginLeft: 5,
 												width: "80%",
 											}}
+											value={menuItem.ibu.toString()}
+											onChangeText={(text) => {
+												setSelectedVenueMenu((prevMenu) =>
+												  prevMenu.map((item) =>
+													item.beerID === menuItem.beerID ? { ...item, ibu: text } : item
+												  )
+												);
+											}}
 										>
-											{menuItem.ibu}
 										</TextInput>
 									</View>
 									<View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -301,8 +388,15 @@ const ManageInventory = ({ navigation }) => {
 												marginLeft: 5,
 												width: "80%",
 											}}
-										>
-											{menuItem.price}
+											value={menuItem.price.toString()}
+											onChangeText={(text) => {
+												setSelectedVenueMenu((prevMenu) =>
+												  prevMenu.map((item) =>
+													item.beerID === menuItem.beerID ? { ...item, price: text } : item
+												  )
+												);
+											}}
+										>											
 										</TextInput>
 									</View>
 									<TouchableOpacity
@@ -316,6 +410,7 @@ const ManageInventory = ({ navigation }) => {
 											borderWidth: 1,
 											borderColor: COLORS.black,
 										}}
+										onPress={() => handleEdit(menuItem.beerID, menuItem.beerName, menuItem.abv, menuItem.ibu, menuItem.price)}
 									>
 										<Text
 											style={{
@@ -337,7 +432,151 @@ const ManageInventory = ({ navigation }) => {
 						Select a venue!
 						</Text>
 					</View>
-					)}									
+					)}
+				{selectedVenueData && (
+					<TouchableOpacity
+						style={{
+							alignItems: "center",
+							backgroundColor: COLORS.grey,
+							paddingHorizontal: 5,
+							paddingVertical: 3,
+							borderRadius: 10,
+							marginTop: 10,
+							borderWidth: 1,
+							borderColor: COLORS.black,
+						}}
+						onPress={toggleModal}
+					>
+						<Text
+							style={{
+							color: COLORS.black,
+							fontWeight: "bold",
+							fontSize: 16,
+							}}
+						>
+							Add New Product
+						</Text>
+					</TouchableOpacity>
+				)}
+				<Modal
+					animationType="slide"
+					transparent={true}
+					visible={isModalVisible}
+					>
+					<View
+						style={{
+						width: "100%",
+						height: "100%",
+						backgroundColor: COLORS.secondary,
+						borderRadius: 10,
+						paddingHorizontal: 20,
+						elevation: 5,
+						}}
+					>
+						<TextInput
+							style={styles.textInput}
+							placeholder="Beer Name"
+							value={beerName}
+							onChangeText={setBeerName}
+						/>
+						<TextInput
+							style={styles.textInput}
+							placeholder="Beer Description"
+							value={beerDescription}
+							onChangeText={setBeerDescription}
+						/>
+						<TextInput
+							style={styles.textInput}
+							placeholder="Beer Image URL"
+							value={beerImage}
+							onChangeText={setBeerImage}
+						/>
+						<SelectList
+							data={beerCategories.map((category) => ({
+								label: category,
+								value: category,
+							}))}
+							value={beerCategory}
+							setSelected={setBeerCategory}
+							boxStyles={{
+								borderWidth: 1,
+								borderColor: COLORS.black,
+								borderRadius: 10,
+								padding: 5,
+								marginBottom: 10,
+							}}
+							dropdownStyles={{
+								borderColor: COLORS.black,
+								borderRadius: 10,
+								padding: 5,
+							}}
+						/>
+						<TextInput
+							style={styles.textInput}
+							placeholder="ABV"
+							value={abv}
+							onChangeText={setAbv}
+						/>
+						<TextInput
+							style={styles.textInput}
+							placeholder="IBU"
+							value={ibu}
+							onChangeText={setIbu}
+						/>
+						<TextInput
+							style={styles.textInput}
+							placeholder="Price"
+							value={price}
+							onChangeText={setPrice}
+						/>
+						<TouchableOpacity
+						style={{
+							alignItems: "center",
+							backgroundColor: COLORS.grey,
+							paddingHorizontal: 5,
+							paddingVertical: 3,
+							borderRadius: 10,
+							marginTop: 10,
+							borderWidth: 1,
+							borderColor: COLORS.black,
+						}}
+						onPress={() => addProduct(beerName, selectedVenueData.venueID, beerDescription, beerImage, beerCategory, abv, ibu, price)}
+						>
+						<Text
+							style={{
+							color: COLORS.black,
+							fontWeight: "bold",
+							fontSize: 16,
+							}}
+						>
+							Add Product
+						</Text>
+						</TouchableOpacity>
+						<TouchableOpacity
+						style={{
+							alignItems: "center",
+							backgroundColor: COLORS.grey,
+							paddingHorizontal: 5,
+							paddingVertical: 3,
+							borderRadius: 10,
+							marginTop: 10,
+							borderWidth: 1,
+							borderColor: COLORS.black,
+						}}
+						onPress={toggleModal}
+						>
+						<Text
+							style={{
+							color: COLORS.black,
+							fontWeight: "bold",
+							fontSize: 16,
+							}}
+						>
+							Close
+						</Text>
+						</TouchableOpacity>
+					</View>
+				</Modal>								
 			</ScrollView>
 		</View>
 	);
