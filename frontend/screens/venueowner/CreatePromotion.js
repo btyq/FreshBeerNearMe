@@ -19,56 +19,16 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
 
 const CreatePromotion = ({ navigation }) => {
 	const { cookies } = useCookies();
-	const [index, setIndex] = React.useState(0);
-	const [index1, setIndex1] = React.useState(0);
-	const [username, setUsername] = useState("");
-	const [selectedImage, setSelectedImage] = useState(null);
 	const [title, setTitle] = useState("");
 	const [date, setDate] = useState(new Date());
 	const [description, setDescription] = useState("");
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
-	const [hasGalleryPermission, setHasGalleryPermission] = useState(false); // Add this line
-
-	useEffect(() => {
-		(async () => {
-			const galleryStatus =
-				await ImagePicker.requestMediaLibraryPermissionsAsync();
-			setHasGalleryPermission(galleryStatus.status == "granted");
-		})();
-		setUsername(cookies.username);
-	}, []);
-
-	const [isFacebookPressed, setIsFacebookPressed] = useState(false);
-	const [isGooglePressed, setIsGooglePressed] = useState(false);
-	const [isInstagramPressed, setIsInstagramPressed] = useState(false);
-
-	const handleFacebookPress = () => {
-		setIsFacebookPressed(!isFacebookPressed);
-	};
-
-	const handleGooglePress = () => {
-		setIsGooglePressed(!isGooglePressed);
-	};
-
-	const handleInstagramPress = () => {
-		setIsInstagramPressed(!isInstagramPressed);
-	};
-
-	const selectImage = async () => {
-		try {
-			const result = await ImagePicker.launchImageLibraryAsync();
-			if (!result.cancelled) {
-				setSelectedImage(result);
-			}
-		} catch (error) {
-			console.log("Error selecting image:", error);
-		}
-	};
-
+	
 	const handleClearButton = () => {
 		setTitle("");
 		setDate(new Date());
@@ -84,10 +44,8 @@ const CreatePromotion = ({ navigation }) => {
 		if (currentDate < today) {
 			setDate(new Date());
 			setErrorMessage("Date cannot be set earlier than today");
-		} else if (currentDate > today) {
-			setDate(new Date());
-			setErrorMessage("Date cannot be set beyond today");
-		} else {
+		} 
+		 else {
 			setDate(currentDate);
 			setErrorMessage("");
 		}
@@ -99,30 +57,33 @@ const CreatePromotion = ({ navigation }) => {
 
 	const formatDate = (date) => {
 		const day = date.getDate();
-		const month = date.toLocaleString("default", { month: "short" });
+		const month = date.getMonth() + 1;
 		const year = date.getFullYear();
 
 		return `${day}/${month}/${year}`;
 	};
 
-	const pickImage = async () => {
-		let result = await ImagePicker.launchImageLibraryAsync({
-			mediaTypes: ImagePicker.MediaTypeOptions.image,
-			allowsEditing: true,
-			aspect: [4, 3],
-			quality: 1,
-		});
-
-		if (!result.cancelled) {
-			setSelectedImage(result.assets[0]);
-		} else {
-			Alert.alert(
-				"Selection Cancelled",
-				"Please choose an image to proceed.",
-				[{ text: "OK", onPress: () => console.log("OK pressed") }],
-				{ cancelable: false }
-			);
+	const handleSubmit = () => {
+		const data = {
+			eventTitle: title,
+			eventDate: formatDate(date),
+			eventDescription: description,
+			eventCreator: cookies.venueOwnerID,
 		}
+
+		axios
+			.post("http://10.0.2.2:3000/addEvent", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Successfully created event!")
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message)
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
 	};
 
 	return (
@@ -309,42 +270,6 @@ const CreatePromotion = ({ navigation }) => {
 				<View
 					style={{
 						flexDirection: "row",
-						justifyContent: "center",
-						marginTop: 20,
-					}}
-				>
-					<TouchableOpacity
-						style={{
-							borderWidth: 1,
-							borderColor: COLORS.grey,
-							borderRadius: 10,
-							paddingHorizontal: 149,
-							paddingVertical: 5,
-							alignItems: "center",
-							justifyContent: "center",
-							backgroundColor: COLORS.grey,
-						}}
-						onPress={() => pickImage()}
-					>
-						{selectedImage ? (
-							<>
-								<Image
-									source={{ uri: selectedImage.uri }}
-									style={{ width: 100, height: 100, borderRadius: 10 }}
-									resizeMode="cover"
-								/>
-								<Text style={{ fontSize: 16, marginTop: 10 }}>
-									Change Image
-								</Text>
-							</>
-						) : (
-							<Text style={{ fontSize: 16 }}>Select Image</Text>
-						)}
-					</TouchableOpacity>
-				</View>
-				<View
-					style={{
-						flexDirection: "row",
 						justifyContent: "space-between",
 						marginTop: 10,
 						marginBottom: 10,
@@ -377,9 +302,7 @@ const CreatePromotion = ({ navigation }) => {
 							borderWidth: 1,
 							borderRadius: 20,
 						}}
-						onPress={() => {
-							// Handle remove button press
-						}}
+						onPress={handleSubmit}
 					>
 						<Text style={{ color: COLORS.black, fontSize: 16 }}>Submit</Text>
 					</TouchableOpacity>

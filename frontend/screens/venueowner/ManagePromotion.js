@@ -17,6 +17,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
 
 // CODES TO STYLE BUTTON
 const Button = (props) => {
@@ -43,48 +44,26 @@ const Button = (props) => {
 
 const ManagePromotion = ({ navigation }) => {
 	const { cookies } = useCookies();
-	const [index, setIndex] = React.useState(0);
-	const [index1, setIndex1] = React.useState(0);
-	const [username, setUsername] = useState("");
-	const [selectedImage, setSelectedImage] = useState(null);
-
-	useEffect(() => {
-		const sessionToken = cookies.sessionToken;
-		const venueOwnerID = cookies.venueOwnerID;
-		setUsername(cookies.username);
-	}, []);
-
-	const [isFacebookPressed, setIsFacebookPressed] = useState(false);
-	const [isGooglePressed, setIsGooglePressed] = useState(false);
-	const [isInstagramPressed, setIsInstagramPressed] = useState(false);
-
-	const handleFacebookPress = () => {
-		setIsFacebookPressed(!isFacebookPressed);
-	};
-
-	const handleGooglePress = () => {
-		setIsGooglePressed(!isGooglePressed);
-	};
-
-	const handleInstagramPress = () => {
-		setIsInstagramPressed(!isInstagramPressed);
-	};
-
+	const [eventData, setEventData] = useState([]);
+	
 	const navigateToCreatePromotion = () => {
 		navigation.navigate("CreatePromotion");
 	};
 
-	const selectImage = async () => {
-		try {
-			const result = await ImagePicker.launchImageLibraryAsync();
-			if (!result.cancelled) {
-				setSelectedImage(result);
-			}
-		} catch (error) {
-			console.log("Error selecting image:", error);
-		}
-	};
-
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getEvent", {
+				params: {
+					venueOwnerID: cookies.venueOwnerID,
+				}
+			})
+			.then((response) => {
+				setEventData(response.data);
+			})
+			.catch((error) => {
+				console.error("Error retrieving Event", error);
+			})
+	})
 	//=====================================================================================================
 	return (
 		<View style={{ flex: 1, backgroundColor: COLORS.white }}>
@@ -128,28 +107,6 @@ const ManagePromotion = ({ navigation }) => {
 			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 				{/* Remove button */}
 				<View
-					style={{
-						flexDirection: "row",
-						justifyContent: "flex-end",
-						marginTop: 30,
-						marginRight: 10,
-					}}
-				>
-					<TouchableOpacity
-						style={{
-							backgroundColor: COLORS.grey,
-							paddingHorizontal: 15,
-							paddingVertical: 5,
-							borderRadius: 10,
-						}}
-						onPress={() => {
-							// Handle remove button press
-						}}
-					>
-						<Text style={{ color: COLORS.black, fontSize: 16 }}>Sort</Text>
-					</TouchableOpacity>
-				</View>
-				<View
 					style={{ flexDirection: "row", alignItems: "center", marginTop: 5 }}
 				>
 					<Text
@@ -162,7 +119,7 @@ const ManagePromotion = ({ navigation }) => {
 							flex: 1, // Take up remaining space
 						}}
 					>
-						Previous Post
+						Created Events
 					</Text>
 					<View
 						style={{
@@ -172,318 +129,6 @@ const ManagePromotion = ({ navigation }) => {
 							marginLeft: -150, // Adjust the value to prevent overlapping
 						}}
 					/>
-				</View>
-				<View
-					style={{
-						width: "95%",
-						alignSelf: "center",
-						marginTop: 10,
-						borderWidth: 1,
-						borderColor: COLORS.black,
-						borderRadius: 10,
-						padding: 10,
-					}}
-				>
-					{/* First Subcontainer */}
-					<View style={{ flexDirection: "row", alignItems: "center" }}>
-						<View
-							style={{
-								flex: 1,
-								borderRightWidth: 1,
-								borderColor: COLORS.black,
-								paddingRight: 10,
-							}}
-						>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>Title</Text>
-							{/* Add your input field or component for the title here */}
-						</View>
-
-						<View style={{ flex: 1, paddingLeft: 10 }}>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>Date</Text>
-							{/* Add your input field or component for the date here */}
-						</View>
-					</View>
-
-					{/* Black Line */}
-					<View
-						style={{
-							borderBottomWidth: 1,
-							borderBottomColor: COLORS.black,
-							marginVertical: 10,
-							width: "100%",
-						}}
-					/>
-
-					{/* Description Subcontainer */}
-					<View style={{ height: 100 }}>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "flex-end",
-								alignItems: "center",
-							}}
-						>
-							<TouchableOpacity
-								style={{
-									backgroundColor: COLORS.grey,
-									paddingHorizontal: 10,
-									paddingVertical: 5,
-									borderRadius: 20,
-								}}
-								onPress={() => {
-									// Handle edit button press
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 14 }}>Edit</Text>
-							</TouchableOpacity>
-						</View>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								position: "absolute",
-								top: 0,
-								left: 0,
-							}}
-						>
-							Description
-						</Text>
-						{/* Add your input field or component for the description here */}
-					</View>
-				</View>
-				<View
-					style={{
-						width: "95%",
-						alignSelf: "center",
-						marginTop: 10,
-						borderWidth: 1,
-						borderColor: COLORS.black,
-						borderRadius: 10,
-						padding: 10,
-					}}
-				>
-					{/* First Subcontainer */}
-					<View style={{ flexDirection: "row", alignItems: "center" }}>
-						<View
-							style={{
-								flex: 1,
-								borderRightWidth: 1,
-								borderColor: COLORS.black,
-								paddingRight: 10,
-							}}
-						>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>Title</Text>
-							{/* Add your input field or component for the title here */}
-						</View>
-
-						<View style={{ flex: 1, paddingLeft: 10 }}>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>Date</Text>
-							{/* Add your input field or component for the date here */}
-						</View>
-					</View>
-
-					{/* Black Line */}
-					<View
-						style={{
-							borderBottomWidth: 1,
-							borderBottomColor: COLORS.black,
-							marginVertical: 10,
-							width: "100%",
-						}}
-					/>
-
-					{/* Description Subcontainer */}
-					<View style={{ height: 100 }}>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "flex-end",
-								alignItems: "center",
-							}}
-						>
-							<TouchableOpacity
-								style={{
-									backgroundColor: COLORS.grey,
-									paddingHorizontal: 10,
-									paddingVertical: 5,
-									borderRadius: 20,
-								}}
-								onPress={() => {
-									// Handle edit button press
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 14 }}>Edit</Text>
-							</TouchableOpacity>
-						</View>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								position: "absolute",
-								top: 0,
-								left: 0,
-							}}
-						>
-							Description
-						</Text>
-						{/* Add your input field or component for the description here */}
-					</View>
-				</View>
-				<View
-					style={{
-						width: "95%",
-						alignSelf: "center",
-						marginTop: 10,
-						borderWidth: 1,
-						borderColor: COLORS.black,
-						borderRadius: 10,
-						padding: 10,
-					}}
-				>
-					{/* First Subcontainer */}
-					<View style={{ flexDirection: "row", alignItems: "center" }}>
-						<View
-							style={{
-								flex: 1,
-								borderRightWidth: 1,
-								borderColor: COLORS.black,
-								paddingRight: 10,
-							}}
-						>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>Title</Text>
-							{/* Add your input field or component for the title here */}
-						</View>
-
-						<View style={{ flex: 1, paddingLeft: 10 }}>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>Date</Text>
-							{/* Add your input field or component for the date here */}
-						</View>
-					</View>
-
-					{/* Black Line */}
-					<View
-						style={{
-							borderBottomWidth: 1,
-							borderBottomColor: COLORS.black,
-							marginVertical: 10,
-							width: "100%",
-						}}
-					/>
-
-					{/* Description Subcontainer */}
-					<View style={{ height: 100 }}>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "flex-end",
-								alignItems: "center",
-							}}
-						>
-							<TouchableOpacity
-								style={{
-									backgroundColor: COLORS.grey,
-									paddingHorizontal: 10,
-									paddingVertical: 5,
-									borderRadius: 20,
-								}}
-								onPress={() => {
-									// Handle edit button press
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 14 }}>Edit</Text>
-							</TouchableOpacity>
-						</View>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								position: "absolute",
-								top: 0,
-								left: 0,
-							}}
-						>
-							Description
-						</Text>
-						{/* Add your input field or component for the description here */}
-					</View>
-				</View>
-				<View
-					style={{
-						width: "95%",
-						alignSelf: "center",
-						marginTop: 10,
-						borderWidth: 1,
-						borderColor: COLORS.black,
-						borderRadius: 10,
-						padding: 10,
-					}}
-				>
-					{/* First Subcontainer */}
-					<View style={{ flexDirection: "row", alignItems: "center" }}>
-						<View
-							style={{
-								flex: 1,
-								borderRightWidth: 1,
-								borderColor: COLORS.black,
-								paddingRight: 10,
-							}}
-						>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>Title</Text>
-							{/* Add your input field or component for the title here */}
-						</View>
-
-						<View style={{ flex: 1, paddingLeft: 10 }}>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>Date</Text>
-							{/* Add your input field or component for the date here */}
-						</View>
-					</View>
-
-					{/* Black Line */}
-					<View
-						style={{
-							borderBottomWidth: 1,
-							borderBottomColor: COLORS.black,
-							marginVertical: 10,
-							width: "100%",
-						}}
-					/>
-
-					{/* Description Subcontainer */}
-					<View style={{ height: 100 }}>
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "flex-end",
-								alignItems: "center",
-							}}
-						>
-							<TouchableOpacity
-								style={{
-									backgroundColor: COLORS.grey,
-									paddingHorizontal: 10,
-									paddingVertical: 5,
-									borderRadius: 20,
-								}}
-								onPress={() => {
-									// Handle edit button press
-								}}
-							>
-								<Text style={{ color: COLORS.black, fontSize: 14 }}>Edit</Text>
-							</TouchableOpacity>
-						</View>
-						<Text
-							style={{
-								fontSize: 16,
-								fontWeight: "bold",
-								position: "absolute",
-								top: 0,
-								left: 0,
-							}}
-						>
-							Description
-						</Text>
-						{/* Add your input field or component for the description here */}
-					</View>
 				</View>
 				<View
 					style={{

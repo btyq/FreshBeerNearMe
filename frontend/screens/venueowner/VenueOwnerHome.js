@@ -383,7 +383,7 @@ const VenueOwnerHome = ({ navigation }) => {
 									onPress={() => navigation.navigate("ManagePromotion")}
 									style={styles.container}
 								>
-									<CustomText>Manage Promotion</CustomText>
+									<CustomText>Create Events</CustomText>
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>

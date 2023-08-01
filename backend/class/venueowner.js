@@ -266,6 +266,43 @@ class VenueOwner {
             res.json({ success: false, message: "An error occurred while adding new beer." });
         }
     }
+
+    async addEvent(client, res, eventTitle, eventDate, eventDescription, eventCreator) {
+        try {
+            const eventsCollection = client.db("FreshBearNearMe").collection("Event");
+    
+            const latestEvent = await eventsCollection.findOne({}, { sort: { eventID: -1 } });
+            const latestEventID = latestEvent ? latestEvent.eventID : 0;
+            const newEventID = latestEventID + 1;
+    
+            const newEvent = {
+                eventID: newEventID,
+                eventTitle,
+                eventDate,
+                eventDescription,
+                eventCreator,
+            };
+            const result = await eventsCollection.insertOne(newEvent);
+    
+            if (result) {
+                res.json({ success: true, message: "Event added successfully.", event: newEvent });
+            } else {
+                console.log("Failed to add the event.");
+                res.json({ success: false, message: "Failed to add the event." });
+            }
+        } catch (error) {
+            console.error("Error adding event:", error);
+            res.json({ success: false, message: "An error occurred while adding the event." });
+        }
+    }
+
+    async getEvent(client, res, venueOwnerID) {
+        try {
+            
+        } catch {
+            
+        }
+    }
 }
 
 module.exports = VenueOwner;
