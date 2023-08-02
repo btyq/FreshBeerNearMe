@@ -576,6 +576,12 @@ app.get("/getEvent", async (req, res) => {
 	const venueOwnerID = req.query.venueOwnerID;
 	globalVenueOwner.getEvent(client, res, venueOwnerID)
 })
+
+//Route for venue owner to remove events
+app.post("/removeEvent", async (req, res) => {
+	const { eventID } = req.body;
+	globalVenueOwner.removeEvent(client, res, eventID)
+})
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
 //Route to retrieve beer data

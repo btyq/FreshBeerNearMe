@@ -298,9 +298,33 @@ class VenueOwner {
 
     async getEvent(client, res, venueOwnerID) {
         try {
-            
-        } catch {
-            
+            const db = client.db('FreshBearNearMe'); 
+            const eventsCollection = db.collection('Event'); 
+
+            const events = await eventsCollection.find({ eventCreator: parseInt(venueOwnerID) }).toArray();
+            res.send(events);
+        } catch (error) {
+            console.error('Error retrieving events:', error);
+            res.status(500).json({ error: 'An error occurred while retrieving events.' });
+        }
+    }
+
+    async removeEvent(client, res, eventID) {
+        try {
+            const db = client.db('FreshBearNearMe');
+            const eventsCollection = db.collection('Event');
+    
+            const result = await eventsCollection.deleteOne({ eventID: eventID });
+    
+            if (result.deletedCount === 1) {
+                res.json({ success: true, message: 'Event removed successfully' });
+            } else {
+                console.log(`No event found with eventID: ${eventID}`);
+                res.json({ success: false, message: 'Event not found' });
+            }
+        } catch (error) {
+            console.error('Error removing event:', error);
+            res.json({ success: false, message: 'Internal server error' });
         }
     }
 }
