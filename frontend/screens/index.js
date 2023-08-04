@@ -14,10 +14,10 @@ import ReferAFriend from "./user/ReferAFriend";
 import Social from "./user/Social";
 import Wishlist from "./user/Wishlist";
 import Analytics from "./venueowner/Analytics";
+import CreateEvents from "./venueowner/CreateEvents";
 import CreatePromotion from "./venueowner/CreatePromotion";
 import InquiriesNFeedback from "./venueowner/InquiriesNFeedback";
 import ManageInventory from "./venueowner/ManageInventory";
-import ManagePromotion from "./venueowner/ManagePromotion";
 import ManageSocialInformation from "./venueowner/ManageSocialInformation";
 import Respond from "./venueowner/Respond";
 import VenueComparison from "./venueowner/VenueComparison";
@@ -28,6 +28,7 @@ export {
 	Analytics,
 	BeersVenue,
 	Breweries,
+	CreateEvents,
 	CreatePromotion,
 	Dashboard,
 	Feedback,
@@ -36,7 +37,6 @@ export {
 	InquiriesNFeedback,
 	Journal,
 	ManageInventory,
-	ManagePromotion,
 	ManageSocialInformation,
 	NearbyVenues,
 	Profile,

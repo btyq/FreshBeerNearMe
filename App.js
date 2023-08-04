@@ -8,10 +8,10 @@ import { AdminDashboard, ManageUsers } from "./frontend/components";
 import BottomTabNavigation from "./frontend/navigation/BottomTabNavigation";
 import {
 	Analytics,
+	CreateEvents,
 	CreatePromotion,
 	InquiriesNFeedback,
 	ManageInventory,
-	ManagePromotion,
 	ManageSocialInformation,
 	Respond,
 	Signup,
@@ -101,8 +101,8 @@ export default function App() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="ManagePromotion"
-						component={ManagePromotion}
+						name="CreateEvents"
+						component={CreateEvents}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

@@ -170,10 +170,8 @@ const InquiriesNFeedback = ({ navigation }) => {
 				if (response.data.success) {
 					setProfileTitle("Success");
 					setProfileMessage("Venue successfully updated!");
-					// Alert.alert("Successfully updated venue!");
 				} else {
 					const { message } = response.data;
-					// Alert.alert("Error!", message);
 					setProfileTitle("Error");
 					setProfileMessage(message);
 				}
@@ -233,7 +231,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 				/>
 
 				<SafeAreaView style={{ flex: 1 }}>
-					<ScrollView contentContainerStyle={{}}>
+					<ScrollView>
 						<View style={{ marginHorizontal: 22 }}>
 							<Text
 								style={{

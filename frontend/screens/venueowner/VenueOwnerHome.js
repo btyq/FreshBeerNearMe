@@ -109,36 +109,8 @@ const VenueOwnerHome = ({ navigation }) => {
 	const maxDataValue = Math.max(...data);
 	const scaleY = 150 / maxDataValue;
 
-	// const navigateToInquiriesNFeedback = () => {
-	// 	navigation.navigate("InquiriesNFeedback");
-	// };
-
 	const navigateToRespond = () => {
 		navigation.navigate("Respond", { feedbackData: newFeedbackData });
-	};
-
-	// const navigateToVenueProfile = () => {
-	// 	navigation.navigate("VenueProfile");
-	// };
-
-	// const navigateToManageInventory = () => {
-	// 	navigation.navigate("ManageInventory");
-	// };
-
-	// const navigateToManageSocialInformation = () => {
-	// 	navigation.navigate("ManageSocialInformation");
-	// };
-
-	// const navigateToManagePromotion = () => {
-	// 	navigation.navigate("ManagePromotion");
-	// };
-
-	// const navigateToAnalytics = () => {
-	// 	navigation.navigate("Analytics");
-	// };
-
-	const navigateToVenueComparison = () => {
-		navigation.navigate("VenueComparison");
 	};
 
 	// ================================== Functions for different button ==================================
@@ -362,7 +334,7 @@ const VenueOwnerHome = ({ navigation }) => {
 								}}
 							>
 								{/* manage social */}
-								<TouchableOpacity
+								{/* <TouchableOpacity
 									onPress={() => navigation.navigate("ManageSocialInformation")}
 									style={styles.container}
 								>
@@ -376,11 +348,11 @@ const VenueOwnerHome = ({ navigation }) => {
 											color={COLORS.foam}
 										/>
 									</View>
-								</TouchableOpacity>
+								</TouchableOpacity> */}
 
-								{/* manage promotion */}
+								{/* create events */}
 								<TouchableOpacity
-									onPress={() => navigation.navigate("ManagePromotion")}
+									onPress={() => navigation.navigate("CreateEvents")}
 									style={styles.container}
 								>
 									<CustomText>Create Events</CustomText>
