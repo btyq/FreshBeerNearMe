@@ -12,7 +12,6 @@ import {
 	CreatePromotion,
 	InquiriesNFeedback,
 	ManageInventory,
-	ManageSocialInformation,
 	Respond,
 	Signup,
 	VenueComparison,
@@ -93,11 +92,6 @@ export default function App() {
 					<Stack.Screen
 						name="ManageInventory"
 						component={ManageInventory}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="ManageSocialInformation"
-						component={ManageSocialInformation}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

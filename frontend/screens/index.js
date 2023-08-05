@@ -18,7 +18,6 @@ import CreateEvents from "./venueowner/CreateEvents";
 import CreatePromotion from "./venueowner/CreatePromotion";
 import InquiriesNFeedback from "./venueowner/InquiriesNFeedback";
 import ManageInventory from "./venueowner/ManageInventory";
-import ManageSocialInformation from "./venueowner/ManageSocialInformation";
 import Respond from "./venueowner/Respond";
 import VenueComparison from "./venueowner/VenueComparison";
 import VenueOwnerHome from "./venueowner/VenueOwnerHome";
@@ -37,7 +36,6 @@ export {
 	InquiriesNFeedback,
 	Journal,
 	ManageInventory,
-	ManageSocialInformation,
 	NearbyVenues,
 	Profile,
 	Recommendation,

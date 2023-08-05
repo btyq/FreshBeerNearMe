@@ -1,32 +1,31 @@
-import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
-import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
+import {
+	AntDesign,
+	Ionicons,
+	MaterialIcons,
+	Octicons,
+} from "@expo/vector-icons";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
 	Alert,
 	Modal,
-	Image,
-	ImageBackground,
 	ScrollView,
 	StyleSheet,
 	Text,
-	TextInput,
 	TouchableOpacity,
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
-import ImagePicker from "react-native-image-picker";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import axios from "axios";
 
-// CODES TO STYLE BUTTON
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.black : COLORS.primary;
+	const textColor = props.filled ? COLORS.black : COLORS.white;
 
 	return (
 		<TouchableOpacity
@@ -37,22 +36,92 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text style={{ fontSize: 14, ...{ color: textColor } }}>
+			<Text style={{ fontSize: 15, ...GlobalStyle.bodyFont, color: textColor }}>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
 	);
 };
 
-const ManagePromotion = ({ navigation }) => {
+const CustomText = (props) => {
+	return (
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
+	);
+};
+
+// custom alert for removing event posts
+const CustomEventAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
+const CreateEvents = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [eventData, setEventData] = useState([]);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [selectedEvent, setSelectedEvent] = useState(null);
-	
-	const navigateToCreatePromotion = () => {
-		navigation.navigate("CreatePromotion");
-	};
+	const [isEventVisible, setIsEventVisible] = useState(false);
+	const [EventTitle, setEventTitle] = useState("");
+	const [EventMessage, setEventMessage] = useState("");
 
 	const toggleModal = () => {
 		setIsModalVisible(!isModalVisible);
@@ -61,22 +130,25 @@ const ManagePromotion = ({ navigation }) => {
 	const handleRemove = (eventID) => {
 		const data = {
 			eventID: eventID,
-		}
+		};
 		axios
 			.post("http://10.0.2.2:3000/removeEvent", data)
 			.then((response) => {
 				if (response.data.success) {
-					Alert.alert("Successfully removed event!")
+					setEventTitle("Success");
+					setEventMessage("Event successfully removed!");
 					toggleModal();
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
 					toggleModal();
+					setEventTitle("Error");
+					setEventMessage(message);
 				}
+				setIsEventVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
-			})
+			});
 	};
 
 	useEffect(() => {
@@ -84,156 +156,257 @@ const ManagePromotion = ({ navigation }) => {
 			.get("http://10.0.2.2:3000/getEvent", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
-				}
+				},
 			})
 			.then((response) => {
 				setEventData(response.data);
 			})
 			.catch((error) => {
 				console.error("Error retrieving Event", error);
-			})
-	}, [handleRemove])
-	//=====================================================================================================
+			});
+	}, [handleRemove]);
+
 	return (
-		<View style={{ flex: 1, backgroundColor: COLORS.white }}>
-			<Header
-				placement="left"
-				backgroundColor={COLORS.primary}
-				containerStyle={{
-				height: 100,
-				borderBottomLeftRadius: 40,
-				borderBottomRightRadius: 40,
-				}}
-				centerComponent={{
-				text: "FreshBeer",
-				style: {
-					fontSize: 20,
-					...GlobalStyle.headerFont,
-					flexDirection: "row",
-					justifyContent: "flex-start",
-				},
-				}}
-				rightComponent={
-				<View style={{ flexDirection: "row" }}>
-					<TouchableOpacity onPress={() => console.log(eventData)}>
-					<Octicons
-						name="bookmark"
-						size={24}
-						color={COLORS.black}
-						style={{ marginRight: 10 }}
-					/>
-					</TouchableOpacity>
-					<TouchableOpacity>
-					<Ionicons
-						name="notifications-outline"
-						size={24}
-						color={COLORS.black}
-					/>
-					</TouchableOpacity>
-				</View>
-				}
-			/>
-			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-				<View style={styles.container}>
-					{eventData.map((event, index) => (
-						<View key={index} style={styles.eventCard}>
-						<Text>Title: {event.eventTitle}</Text>
-						<Text>Date: {event.eventDate}</Text>
-						<Text>
-							Description: {event.eventDescription}
-						</Text>
-						<TouchableOpacity
-							style={styles.button}
-							onPress={() => {
-								setSelectedEvent(event); // Set the selected event for removal
-								toggleModal(); // Open the modal
+		<View style={{ flex: 1 }}>
+			<SafeAreaView style={{ flex: 1, backgroundColor: COLORS.secondary }}>
+				<Header
+					placement="left"
+					backgroundColor={COLORS.primary}
+					containerStyle={{
+						height: 100,
+						borderBottomLeftRadius: 40,
+						borderBottomRightRadius: 40,
+					}}
+					leftComponent={
+						<View style={{ flexDirection: "row" }}>
+							<TouchableOpacity onPress={() => navigation.goBack()}>
+								<MaterialIcons
+									name="keyboard-arrow-left"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
+					centerComponent={{
+						text: "FreshBeer",
+						style: {
+							fontSize: 20,
+							...GlobalStyle.headerFont,
+							flexDirection: "row",
+							justifyContent: "flex-start",
+						},
+					}}
+					rightComponent={
+						<View style={{ flexDirection: "row" }}>
+							<TouchableOpacity onPress={() => console.log(eventData)}>
+								<Ionicons
+									name="notifications-outline"
+									size={24}
+									color={COLORS.black}
+									style={{ marginRight: 10 }}
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+								<MaterialIcons name="logout" size={24} color={COLORS.black} />
+							</TouchableOpacity>
+						</View>
+					}
+				/>
+
+				<SafeAreaView style={{ flex: 1 }}>
+					<ScrollView>
+						<View
+							style={{
+								flexDirection: "row",
+								justifyContent: "flex-end",
+								alignItems: "center",
+								marginHorizontal: 20,
 							}}
 						>
-							<Text style={styles.buttonText}>Remove</Text>
-						</TouchableOpacity>
-						</View>						
-					))}
-					<TouchableOpacity
-						style={styles.button}
-						onPress={navigateToCreatePromotion}
-					>
-						<Text style={styles.buttonText}>Create</Text>
-					</TouchableOpacity>
-				</View>
-			</ScrollView>
-			<Modal
-				visible={isModalVisible}
-				animationType="slide"
-				transparent={true}
-				onRequestClose={toggleModal}
-			>
-				<View style={styles.modalContainer}>
-					<Card style={{ padding: 20, width: "80%" }}>
-						<Text style={{ fontSize: 18, fontWeight: "bold" }}>
-							Confirm Removal
-						</Text>
-						<Text>Title: {selectedEvent?.eventTitle}</Text>
-						<Text>Date: {selectedEvent?.eventDate}</Text>
-						<Text>Description: {selectedEvent?.eventDescription}</Text>
-						<View style={{ flexDirection: "row", justifyContent: "space-between", marginTop: 20 }}>
-							<Button title="Cancel" onPress={toggleModal} />
 							<Button
-								title="Remove"
-								color={COLORS.danger}
-								onPress={() => {
-									handleRemove(selectedEvent.eventID)
+								title="Create events"
+								color={COLORS.foam}
+								filled
+								style={{
+									width: "40%",
+									height: 50,
+									borderRadius: 10,
+									marginLeft: 10,
 								}}
+								onPress={() => navigation.navigate("CreatePromotion")}
 							/>
 						</View>
-					</Card>
-				</View>
-			</Modal>
+						<View style={{ marginHorizontal: 20 }}>
+							{eventData.map((event, index) => (
+								<View key={index} style={styles.container}>
+									<View style={{ marginHorizontal: 12 }}>
+										<View
+											style={{
+												flexDirection: "row",
+												justifyContent: "space-between",
+												alignItems: "center",
+												backgroundColor: COLORS.grey,
+												marginTop: 5,
+											}}
+										>
+											<Text style={{ ...GlobalStyle.headerFont, fontSize: 18 }}>
+												{event.eventTitle}
+											</Text>
+
+											<TouchableOpacity
+												onPress={() => {
+													setSelectedEvent(event);
+													toggleModal();
+												}}
+											>
+												<AntDesign name="delete" size={24} color="red" />
+											</TouchableOpacity>
+										</View>
+										<Text
+											style={{
+												...GlobalStyle.headerFont,
+												fontSize: 14,
+											}}
+										>
+											{event.eventDate}
+										</Text>
+										<Text style={{ marginTop: 10, ...GlobalStyle.headerFont }}>
+											Description:
+										</Text>
+										<CustomText>{event.eventDescription}</CustomText>
+									</View>
+								</View>
+							))}
+						</View>
+					</ScrollView>
+
+					<Modal visible={isModalVisible} transparent animationType="fade">
+						<View
+							style={{
+								flex: 1,
+								backgroundColor: "rgba(0, 0, 0, 0.5)",
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<View
+								style={{
+									width: "80%",
+									backgroundColor: COLORS.white,
+									borderRadius: 20,
+									padding: 30,
+								}}
+							>
+								<Ionicons
+									name="md-beer"
+									size={34}
+									color={COLORS.foam}
+									style={{ alignSelf: "center" }}
+								/>
+								<Text
+									style={{
+										fontSize: 18,
+										...GlobalStyle.headerFont,
+										alignSelf: "center",
+										marginBottom: 20,
+									}}
+								>
+									Are you sure you want to remove?
+								</Text>
+								<CustomText
+									style={{
+										alignSelf: "center",
+										marginBottom: 20,
+									}}
+								>
+									Title: {selectedEvent?.eventTitle}
+								</CustomText>
+								<CustomText
+									style={{
+										alignSelf: "center",
+										marginBottom: 20,
+									}}
+								>
+									Date: {selectedEvent?.eventDate}
+								</CustomText>
+								<CustomText
+									style={{
+										alignSelf: "center",
+										marginBottom: 20,
+									}}
+								>
+									Description: {selectedEvent?.eventDescription}
+								</CustomText>
+								<View
+									style={{
+										flexDirection: "row",
+										justifyContent: "space-between",
+									}}
+								>
+									<Button
+										title="Cancel"
+										onPress={toggleModal}
+										color={COLORS.foam}
+										filled
+										style={{
+											width: "40%",
+											borderRadius: 10,
+											marginTop: 15,
+											borderColor: 0,
+											elevation: 2,
+										}}
+									/>
+									<Button
+										title="Remove"
+										color={COLORS.foam}
+										filled
+										style={{
+											width: "40%",
+											borderRadius: 10,
+											marginTop: 15,
+											borderColor: 0,
+											elevation: 2,
+										}}
+										onPress={() => {
+											handleRemove(selectedEvent.eventID);
+										}}
+									/>
+									<CustomEventAlert
+										visible={isEventVisible}
+										onClose={() => setIsEventVisible(false)}
+										title={EventTitle}
+										message={EventMessage}
+									/>
+								</View>
+							</View>
+						</View>
+					</Modal>
+				</SafeAreaView>
+			</SafeAreaView>
 		</View>
 	);
 };
-	
+
 const styles = StyleSheet.create({
 	container: {
-	width: "95%",
-	alignSelf: "center",
-	marginTop: 10,
-	},
-	eventCard: {
-	borderWidth: 1,
-	borderColor: COLORS.black,
-	borderRadius: 10,
-	padding: 10,
-	marginBottom: 10,
-	},
-	eventTitle: {
-	fontSize: 16,
-	fontWeight: "bold",
-	},
-	eventDate: {
-	fontSize: 16,
-	fontWeight: "bold",
-	},
-	eventDescription: {
-	fontSize: 16,
+		backgroundColor: COLORS.grey,
+		flexDirection: "column",
+		width: "100%",
+		borderRadius: 26,
+		padding: 10,
+		borderWidth: 1,
+		borderColor: 0,
+		marginVertical: 12,
 	},
 	button: {
-	backgroundColor: COLORS.grey,
-	paddingHorizontal: 20,
-	paddingVertical: 10,
-	borderRadius: 20,
-	alignSelf: "center",
-	marginVertical: 10,
-	},
-	buttonText: {
-	color: COLORS.black,
-	fontSize: 16,
-	},
-	modalContainer: {
-		flex: 1,
-		backgroundColor: COLORS.overlay,
-		justifyContent: "center",
+		paddingVertical: 10,
+		borderColor: COLORS.grey,
+		borderWidth: 1,
+		borderRadius: 12,
 		alignItems: "center",
+		justifyContent: "center",
 	},
 });
 
-export default ManagePromotion;
+export default CreateEvents;
