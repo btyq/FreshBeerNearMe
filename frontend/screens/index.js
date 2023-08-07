@@ -21,6 +21,7 @@ import CreatePromotion from "./venueowner/CreatePromotion";
 import InquiriesNFeedback from "./venueowner/InquiriesNFeedback";
 import ManageInventory from "./venueowner/ManageInventory";
 import Respond from "./venueowner/Respond";
+import ReportedBugs from "./admin/ReportedBugs";
 import VenueComparison from "./venueowner/VenueComparison";
 import VenueOwnerHome from "./venueowner/VenueOwnerHome";
 import VenueProfile from "./venueowner/VenueProfile";
@@ -45,6 +46,7 @@ export {
 	Recommendation,
 	ReferAFriend,
 	Respond,
+	ReportedBugs,
 	Signup,
 	Social,
 	VenueComparison,

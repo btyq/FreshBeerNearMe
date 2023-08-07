@@ -14,6 +14,7 @@ import {
 	ManageInventory,
 	ManageUsers,
 	Respond,
+	ReportedBugs,
 	Signup,
 	VenueComparison,
 	VenueOwnerHome,
@@ -83,6 +84,11 @@ export default function App() {
 					<Stack.Screen
 						name="Respond"
 						component={Respond}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="ReportedBugs"
+						component={ReportedBugs}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

@@ -785,6 +785,7 @@ app.use((req, res, next) => {
 	next();
 });
 
+//Route for admin to login
 app.post("/adminLogin", async (req, res) => {
 	const { username, password } = req.body;
 
@@ -796,3 +797,14 @@ app.post("/adminLogin", async (req, res) => {
 	}
 	await globalAdmin.login(res, username, password);
 });
+
+//Route to get Bugs for admin
+app.get("/getBugs", async(req, res) => {
+	globalAdmin.getBugs(client, res)
+})
+
+//Route for admin to resolve bugs
+app.post("/resolveBugs", async(req, res) => {
+	const { issueID } = req.body;
+	globalAdmin.resolveBugs(client, res, issueID)
+})

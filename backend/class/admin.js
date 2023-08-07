@@ -47,6 +47,44 @@ class Admin {
 				.json({ success: false, message: "An error occurred during login" });
 		}
 	}
+
+	async getBugs(client, res) {
+		try {
+			const db = client.db('FreshBearNearMe');
+			const issuesCollection = db.collection('Issue');
+	
+			const issues = await issuesCollection.find({}).toArray();
+	
+			if (issues.length > 0) {
+				res.send(issues);
+			} else {
+				res.status(500).json({ error: "Error getting bugs" });
+			}
+		} catch (error) {
+			res.status(500).json({ error: "Error getting bugs" });
+		}
+	}
+
+	async resolveBugs(client, res, issueID) {
+		try {
+			const db = client.db("FreshBearNearMe");
+			const collection = db.collection("Issue");
+	
+			const query = { issueID: issueID };
+			const update = { $set: { issueStatus: true } };
+	
+			const result = await collection.updateOne(query, update);
+	
+			if (result.modifiedCount > 0) {
+				res.json({ success: true, message: "Bug resolved successfully." });
+			} else {
+				res.json({ success: false, message: "Bug not found or not updated." });
+			}
+		} catch (error) {
+			console.error("Error resolving bug:", error);
+			res.json({ success: false, message: "An error occurred while resolving the bug." });
+		}
+	}
 }
 
 module.exports = Admin;

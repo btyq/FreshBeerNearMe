@@ -171,7 +171,7 @@ const AdminLogin = ({ navigation }) => {
 								}}
 							>
 								<TouchableOpacity
-									// onPress={() => navigation.navigate("VenueProfile")}
+									onPress={() => navigation.navigate("ReportedBugs")}
 									style={styles.subContainer}
 								>
 									<CustomText>Reported Bugs</CustomText>
@@ -266,52 +266,8 @@ const AdminLogin = ({ navigation }) => {
 										/>
 									</View>
 								</TouchableOpacity>
-							</View>
-
-							<Text
-								style={{
-									fontSize: 16,
-									...GlobalStyle.headerFont,
-									marginTop: 10,
-								}}
-							>
-								New bug reports: 3
-							</Text>
-
-							<View style={{ flex: 1, padding: 5, justifyContent: "center" }}>
-								<Table
-									borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
-								>
-									<Row
-										data={data1.tableHead}
-										style={styles.head}
-										textStyle={styles.headText}
-									/>
-									<Rows data={data1.tableData} textStyle={styles.text} />
-								</Table>
-								<View
-									style={{
-										flex: 1,
-										alignItems: "flex-end",
-										justifyContent: "flex-end",
-										marginTop: 10,
-									}}
-								>
-									<Button
-										title="See All"
-										// onPress={handlePopup}
-										filled
-										style={{
-											width: "30%",
-											alignContent: "center",
-											borderColor: 0,
-											elevation: 2,
-											borderRadius: 12,
-										}}
-									/>
-								</View>
-							</View>
-
+							</View>	
+													
 							<Text style={{ fontSize: 16, ...GlobalStyle.headerFont }}>
 								New feature requests: 3
 							</Text>

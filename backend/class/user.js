@@ -679,6 +679,7 @@ class User {
         issueUser: userID,
         issueDate: issueDate,
         issueDescription: issueDescription,
+        issueStatus: false,
       };
   
       await issueCollection.insertOne(newIssue);
