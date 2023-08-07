@@ -131,18 +131,20 @@ const Welcome = ({ navigation }) => {
 		{ key: "3", value: "Admin" },
 	];
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
-	
+
 	useEffect(() => {
 		const fetchData = async () => {
-		  try {
-			const freshnessResponse = await axios.post("http://10.0.2.2:3000/readCSV");
-		  } catch (error) {
-			console.log('An error occurred:', error.message);
-		  }
+			try {
+				const freshnessResponse = await axios.post(
+					"http://10.0.2.2:3000/readCSV"
+				);
+			} catch (error) {
+				console.log("An error occurred:", error.message);
+			}
 		};
-	
-		fetchData(); 
-	  }, []);
+
+		fetchData();
+	}, []);
 
 	const handleUserLogin = async () => {
 		try {
@@ -199,10 +201,10 @@ const Welcome = ({ navigation }) => {
 			});
 
 			if (response.data.success) {
-				const { userID, password } = response.data;
+				const { adminID, username } = response.data;
 				const sessionToken = "testtoken123";
-				setCookies({ sessionToken, userID });
-				navigation.navigate("BottomTabNavigation", { screen: "Dashboard" });
+				setCookies({ sessionToken, adminID, username });
+				navigation.navigate("AdminDashboard");
 			} else {
 				const { message } = response.data;
 				console.log("Login failed:", message);
@@ -234,7 +236,6 @@ const Welcome = ({ navigation }) => {
 					<Image
 						source={require("../assets/freshbeer.png")}
 						style={{
-							//marginTop: 20,
 							height: 250,
 							width: 270,
 							alignSelf: "center",

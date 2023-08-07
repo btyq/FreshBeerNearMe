@@ -43,18 +43,18 @@ const Button = (props) => {
 const tableData = {
 	tableHead: ["Case Number", "Description", "Status"],
 	tableData: [
-		["4", "Swag", "Pending"],
-		["2", "Swaggy", "Active"],
-		["1", "Not Swag", "Inactive"],
+		["4", "Hi", "Pending"],
+		["2", "Hihi", "Active"],
+		["1", "Hihihi", "Inactive"],
 	],
 };
 
 const tableData1 = {
 	tableHead1: ["Request Number", "Requests", "Status"],
 	tableData1: [
-		["3", "Pleasee", "Pending"],
-		["1", "Pleaser", "Pending"],
-		["2", "Pleasee", "Done"],
+		["3", "Yes", "Pending"],
+		["1", "Yes", "Pending"],
+		["2", "Yes", "Done"],
 	],
 };
 

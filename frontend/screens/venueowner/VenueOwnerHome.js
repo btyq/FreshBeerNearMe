@@ -567,31 +567,11 @@ const VenueOwnerHome = ({ navigation }) => {
 										marginBottom: 16,
 									}}
 								>
-									Venue Popularity this week
+									Most Popular Venue
 								</Text>
-								<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-									{data.map((value, index) => (
-										<View
-											key={index}
-											style={{
-												flex: 1,
-												marginLeft: 10,
-												alignItems: "center",
-											}}
-										>
-											<View
-												style={{
-													height: value * scaleY,
-													width: 10,
-													backgroundColor: COLORS.foam,
-												}}
-											/>
-											<Text style={{ fontSize: 12, marginTop: 5 }}>
-												{labels[index]}
-											</Text>
-										</View>
-									))}
-								</View>
+								<View
+									style={{ flexDirection: "row", alignItems: "flex-end" }}
+								></View>
 							</View>
 						</View>
 					</ScrollView>

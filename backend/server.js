@@ -4,6 +4,7 @@ const Venue = require("./class/venue");
 const VenueOwner = require("./class/venueowner");
 const Review = require("./class/review");
 const Brewery = require("./class/brewery");
+const Admin = require("./class/admin");
 
 const venueArray = [];
 const beerArray = [];
@@ -772,4 +773,26 @@ app.get("/getBreweryCoordinates", async (req, res) => {
 			message: "An error occurred while retrieving breweries",
 		});
 	}
+});
+
+//===================================================================================================================
+//=================================================All Admin Routes=============================================
+let globalAdmin = null;
+app.use((req, res, next) => {
+	if (req.url === "/adminLogin") {
+		globalAdmin = new Admin(client, "", "", "", "", "", "");
+	}
+	next();
+});
+
+app.post("/adminLogin", async (req, res) => {
+	const { username, password } = req.body;
+
+	if (!globalAdmin) {
+		globalAdmin = new Admin(client, "", username, password, "", "", "");
+	} else {
+		globalAdmin.username = username;
+		globalAdmin.password = password;
+	}
+	await globalAdmin.login(res, username, password);
 });
