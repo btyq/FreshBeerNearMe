@@ -463,11 +463,15 @@ class VenueOwner {
 				}
 			}
 
-			// retrieve information about the most popular beer from the Beer collection
-			const mostPopularBeer = {
-				mostPopularBeerID: mostPopularBeerID,
-			};
-			res.send(mostPopularBeer);
+			const mostPopularBeer = await beerCollection.findOne({
+				beerID: parseInt(mostPopularBeerID),
+			});
+
+			if (!mostPopularBeer) {
+				return res.status(404).json({ error: "Most popular beer not found." });
+			}
+
+			res.json(mostPopularBeer);
 		} catch (error) {
 			console.error("Error getting most popular beer:", error);
 			res.status(500).json({ error: "Error getting most popular beer" });

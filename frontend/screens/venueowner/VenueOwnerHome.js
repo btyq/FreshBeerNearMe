@@ -9,7 +9,8 @@ import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
-	ImageBackground,
+	Image,
+	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -70,11 +71,16 @@ const VenueOwnerHome = ({ navigation }) => {
 
 	const [popularData, setPopularData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [popupVisible, setPopupVisible] = useState(false);
 
 	function parseDate(dateString) {
 		const [day, month, year] = dateString.split("/");
 		return new Date(`${year}-${month}-${day}`);
 	}
+
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible); // created 1st modal
+	};
 
 	useEffect(() => {
 		setUsername(cookies.username);
@@ -115,7 +121,6 @@ const VenueOwnerHome = ({ navigation }) => {
 				},
 			})
 			.then((response) => {
-				console.log("API response:", response.data);
 				setPopularData(response.data);
 				setIsLoading(false);
 			})
@@ -405,9 +410,9 @@ const VenueOwnerHome = ({ navigation }) => {
 								/>
 							</View>
 							<TouchableOpacity
-								onPress={() => console.log("popularData:", popularData)}
+								onPress={handlePopup}
 								style={{
-									height: 250,
+									height: 350,
 									elevation: 2,
 									backgroundColor: COLORS.grey,
 									marginTop: 10,
@@ -417,31 +422,99 @@ const VenueOwnerHome = ({ navigation }) => {
 									padding: 20,
 								}}
 							>
-								<Text
-									style={{
-										...GlobalStyle.headerFont,
-										fontSize: 16,
-										marginBottom: 16,
-									}}
-								>
+								<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>
 									Most Popular Beer
 								</Text>
-								<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-									{isLoading ? (
-										<Text>Loading...</Text>
-									) : popularData ? (
-										<View>
-											<Text style={{ ...GlobalStyle.bodyFont }}>
-												Beer Name: {popularData.mostPopularBeerID}
-											</Text>
+
+								{isLoading ? (
+									<Text>Loading...</Text>
+								) : popularData ? (
+									<View>
+										<Image
+											source={{ uri: popularData.beerImage }}
+											style={styles.beerImage}
+										/>
+										<Text
+											style={{
+												...GlobalStyle.headerFont,
+												justifyContent: "center",
+												alignContent: "center",
+												alignSelf: "center",
+											}}
+										>
+											{popularData.beerName}
+										</Text>
+										<Modal
+											visible={popupVisible}
+											transparent
+											animationType="fade"
+										>
 											<View
-												style={{ borderBottomWidth: 1, marginVertical: 10 }}
-											/>
-										</View>
-									) : (
-										<Text>No most popular beer data found.</Text>
-									)}
-								</View>
+												style={{
+													width: "100%",
+													height: "100%",
+													backgroundColor: COLORS.secondary,
+													borderRadius: 10,
+													paddingHorizontal: 20,
+													elevation: 5,
+												}}
+											>
+												<Image
+													source={{ uri: popularData.beerImage }}
+													style={styles.beerImage}
+												/>
+												<CustomText
+													style={{
+														fontSize: 18,
+														textAlign: "center",
+													}}
+												>
+													{popularData.beerName} -- ${popularData.price}
+												</CustomText>
+												<View
+													style={{
+														flexDirection: "row",
+														justifyContent: "space-between",
+														alignItems: "center",
+													}}
+												></View>
+												<View
+													style={{
+														flexDirection: "row",
+														justifyContent: "space-between",
+														alignItems: "center",
+														elevation: 5,
+													}}
+												>
+													<CustomText style={{ marginBottom: 12 }}>
+														Alcohol%: {popularData.abv}
+													</CustomText>
+													<CustomText style={{ marginBottom: 12 }}>
+														Bitter Units: {popularData.ibu}
+													</CustomText>
+												</View>
+												<CustomText style={{ fontSize: 17 }}>
+													Description
+												</CustomText>
+												<CustomText>{popularData.beerDescription}</CustomText>
+												<Button
+													title="Close"
+													onPress={handlePopup}
+													filled
+													style={{
+														marginTop: 12,
+														marginBottom: 12,
+														borderColor: 0,
+														elevation: 2,
+														borderRadius: 12,
+													}}
+												/>
+											</View>
+										</Modal>
+									</View>
+								) : (
+									<Text>No most popular beer data found.</Text>
+								)}
 							</TouchableOpacity>
 
 							{/* venue comparison  */}
@@ -537,11 +610,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	label: {
-		marginBottom: 5,
-		fontWeight: "bold",
-		fontSize: 16,
-	},
 	container: {
 		height: 100,
 		elevation: 2,
@@ -553,6 +621,20 @@ const styles = StyleSheet.create({
 		width: "45%",
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	beerImage: {
+		height: 230,
+		width: 250,
+		borderRadius: 15,
+		borderWidth: 5,
+		borderColor: 0,
+		marginTop: 20,
+		marginLeft: "auto",
+		marginRight: "auto",
+		justifyContent: "center",
+		alignContent: "center",
+		marginBottom: 10,
+		alignSelf: "center",
 	},
 });
 

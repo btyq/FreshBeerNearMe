@@ -1,3 +1,5 @@
+import AdminDashboard from "./AdminDashboard";
+import ManageUsers from "./ManageUsers";
 import Signup from "./Signup";
 import Welcome from "./Welcome";
 import BeersVenue from "./user/BeersVenue";
@@ -24,6 +26,7 @@ import VenueOwnerHome from "./venueowner/VenueOwnerHome";
 import VenueProfile from "./venueowner/VenueProfile";
 
 export {
+	AdminDashboard,
 	Analytics,
 	BeersVenue,
 	Breweries,
@@ -36,6 +39,7 @@ export {
 	InquiriesNFeedback,
 	Journal,
 	ManageInventory,
+	ManageUsers,
 	NearbyVenues,
 	Profile,
 	Recommendation,

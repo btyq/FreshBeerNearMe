@@ -4,14 +4,15 @@ import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { CookieProvider } from "./frontend/CookieContext";
-import { AdminDashboard, ManageUsers } from "./frontend/components";
 import BottomTabNavigation from "./frontend/navigation/BottomTabNavigation";
 import {
+	AdminDashboard,
 	Analytics,
 	CreateEvents,
 	CreatePromotion,
 	InquiriesNFeedback,
 	ManageInventory,
+	ManageUsers,
 	Respond,
 	Signup,
 	VenueComparison,
