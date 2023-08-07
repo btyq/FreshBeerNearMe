@@ -47,6 +47,8 @@ const Dashboard = ({ navigation }) => {
 	const [username, setUsername] = useState("");
 	const [personalisedData, setPersonalisedData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [selectedBeerName, setSelectedBeerName] = useState("");
+	const [popupVisible, setPopupVisible] = useState(false);
 
 	useEffect(() => {
 		const sessionToken = cookies.sessionToken;
@@ -62,6 +64,7 @@ const Dashboard = ({ navigation }) => {
 				},
 			})
 			.then((response) => {
+				console.log("API response:", response.data);
 				setPersonalisedData(response.data);
 				setIsLoading(false);
 			})
@@ -71,13 +74,9 @@ const Dashboard = ({ navigation }) => {
 			});
 	}, []);
 
-	// ================================== Functions for different button ==================================
-	const handleUpcomingEventsClick = () => {
-		// Handle click for "Upcoming Events" here
-	};
-
-	const handleRecommendedSpecialtyClick = () => {
-		// Handle click for "Recommended Specialty for You" here
+	// for personalised recommendations
+	const handlePopup = () => {
+		setPopupVisible(!popupVisible);
 	};
 
 	//=====================================================================================================
@@ -483,7 +482,7 @@ const Dashboard = ({ navigation }) => {
 						<Card
 							containerStyle={{
 								marginTop: 5,
-								height: 280,
+								height: 320,
 								backgroundColor: "transparent",
 								borderColor: "transparent",
 							}}
@@ -518,11 +517,49 @@ const Dashboard = ({ navigation }) => {
 												style={{ width: "100%", marginTop: -30 }}
 											>
 												<Card containerStyle={styles.cardContainer}>
-													<TouchableOpacity onPress={() => console.log(beer)}>
+													<TouchableOpacity
+														onPress={() => setSelectedBeerName(beer.beerName)}
+													>
 														<ImageBackground
 															source={{ uri: beer.beerImage }}
-															style={styles.cardImage}
-														></ImageBackground>
+															style={{
+																width: "100%",
+																height: 250,
+																resizeMode: "cover",
+																borderRadius: 10,
+																overflow: "hidden",
+															}}
+														>
+															{selectedBeerName === beer.beerName && (
+																<View
+																	style={{
+																		position: "absolute",
+																		marginTop: -30,
+																		left: 0,
+																		right: 0,
+																		bottom: 0,
+																		justifyContent: "center",
+																		alignItems: "center",
+																	}}
+																>
+																	<View
+																		style={{
+																			backgroundColor: "rgba(0, 0, 0, 1.0)",
+																			padding: 10,
+																		}}
+																	>
+																		<Text
+																			style={{
+																				...GlobalStyle.headerFont,
+																				color: COLORS.secondary,
+																			}}
+																		>
+																			{beer.beerName}
+																		</Text>
+																	</View>
+																</View>
+															)}
+														</ImageBackground>
 													</TouchableOpacity>
 												</Card>
 											</TabView.Item>
@@ -576,10 +613,6 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		overflow: "hidden",
 	},
-	tabContent: {
-		width: "100%",
-		height: 50, // Adjust the height as per your requirement
-	},
 	tabView: {
 		flex: 1,
 		flexDirection: "row",
@@ -590,10 +623,6 @@ const styles = StyleSheet.create({
 		position: "absolute",
 		top: 0,
 		left: 0,
-	},
-	tabViewItem: {
-		width: "100%",
-		height: "100%",
 	},
 });
 

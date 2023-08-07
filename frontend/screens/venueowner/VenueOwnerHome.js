@@ -68,6 +68,9 @@ const VenueOwnerHome = ({ navigation }) => {
 	const [newFeedbackData, setNewFeedbackData] = useState([]);
 	const [loading, setLoading] = useState(true);
 
+	const [popularData, setPopularData] = useState([]);
+	const [isLoading, setIsLoading] = useState(true);
+
 	function parseDate(dateString) {
 		const [day, month, year] = dateString.split("/");
 		return new Date(`${year}-${month}-${day}`);
@@ -100,6 +103,25 @@ const VenueOwnerHome = ({ navigation }) => {
 			.catch((error) => {
 				console.error("Error retrieving data", error);
 				setLoading(false);
+			});
+	}, []);
+
+	// for most popular beer
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getMostPopularBeer", {
+				params: {
+					venueOwnerID: cookies.venueOwnerID,
+				},
+			})
+			.then((response) => {
+				console.log("API response:", response.data);
+				setPopularData(response.data);
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving POPULAR BEER", error);
+				setIsLoading(false);
 			});
 	}, []);
 
@@ -152,7 +174,7 @@ const VenueOwnerHome = ({ navigation }) => {
 									style={{ marginRight: 10 }}
 								/>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={() => console.log(feedbackData)}>
+							<TouchableOpacity onPress={() => console.log(popularData)}>
 								<Ionicons
 									name="notifications-outline"
 									size={24}
@@ -333,23 +355,6 @@ const VenueOwnerHome = ({ navigation }) => {
 									marginBottom: 10,
 								}}
 							>
-								{/* manage social */}
-								{/* <TouchableOpacity
-									onPress={() => navigation.navigate("ManageSocialInformation")}
-									style={styles.container}
-								>
-									<CustomText> Manage Social</CustomText>
-									<View
-										style={{ alignItems: "center", justifyContent: "center" }}
-									>
-										<Ionicons
-											name="md-people-circle"
-											size={44}
-											color={COLORS.foam}
-										/>
-									</View>
-								</TouchableOpacity> */}
-
 								{/* create events */}
 								<TouchableOpacity
 									onPress={() => navigation.navigate("CreateEvents")}
@@ -399,7 +404,8 @@ const VenueOwnerHome = ({ navigation }) => {
 									}}
 								/>
 							</View>
-							<View
+							<TouchableOpacity
+								onPress={() => console.log("popularData:", popularData)}
 								style={{
 									height: 250,
 									elevation: 2,
@@ -418,32 +424,25 @@ const VenueOwnerHome = ({ navigation }) => {
 										marginBottom: 16,
 									}}
 								>
-									Beer Popularity this week
+									Most Popular Beer
 								</Text>
 								<View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-									{data.map((value, index) => (
-										<View
-											key={index}
-											style={{
-												flex: 1,
-												marginLeft: 10,
-												alignItems: "center",
-											}}
-										>
-											<View
-												style={{
-													height: value * scaleY,
-													width: 10,
-													backgroundColor: COLORS.foam,
-												}}
-											/>
-											<Text style={{ fontSize: 12, marginTop: 5 }}>
-												{labels[index]}
+									{isLoading ? (
+										<Text>Loading...</Text>
+									) : popularData ? (
+										<View>
+											<Text style={{ ...GlobalStyle.bodyFont }}>
+												Beer Name: {popularData.mostPopularBeerID}
 											</Text>
+											<View
+												style={{ borderBottomWidth: 1, marginVertical: 10 }}
+											/>
 										</View>
-									))}
+									) : (
+										<Text>No most popular beer data found.</Text>
+									)}
 								</View>
-							</View>
+							</TouchableOpacity>
 
 							{/* venue comparison  */}
 							<View

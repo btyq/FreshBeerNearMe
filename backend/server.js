@@ -55,8 +55,9 @@ app.post("/signup", async (req, res) => {
 		req.body;
 
 	function generateRandomString(length) {
-		const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		let randomString = '';
+		const characters =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		let randomString = "";
 		for (let i = 0; i < length; i++) {
 			const randomIndex = Math.floor(Math.random() * characters.length);
 			randomString += characters[randomIndex];
@@ -363,136 +364,173 @@ app.post("/editProfile", async (req, res) => {
 app.get("/getFeed", async (req, res) => {
 	const userID = req.query.userID;
 	globalUser.getFeed(client, res, userID);
-})
+});
 
 //Route for user's follow button
 app.post("/followUser", async (req, res) => {
 	const { userID, reviewUserID } = req.body;
-	globalUser.followUser(client, res, userID, reviewUserID)
-})
+	globalUser.followUser(client, res, userID, reviewUserID);
+});
 
 //Route for user's unfollow button
 app.post("/unfollowUser", async (req, res) => {
 	const { userID, reviewUserID } = req.body;
-	globalUser.unfollowUser(client, res, userID, reviewUserID)
-})
+	globalUser.unfollowUser(client, res, userID, reviewUserID);
+});
 
 //Route to get user's Recommendation
 app.get("/getRecommendation", async (req, res) => {
 	const userID = req.query.userID;
-	globalUser.getRecommendation(client, res, userID)	
-})
+	globalUser.getRecommendation(client, res, userID);
+});
 
 //Route for user to submit recommendation
 app.post("/submitRecommendation", async (req, res) => {
-	const { recommendationType, recommendationUser, recommendationName } = req.body;
-	globalUser.submitRecommendation(client, res, recommendationType, recommendationUser, recommendationName)
-})
+	const { recommendationType, recommendationUser, recommendationName } =
+		req.body;
+	globalUser.submitRecommendation(
+		client,
+		res,
+		recommendationType,
+		recommendationUser,
+		recommendationName
+	);
+});
 
 //Route to get user's search recommendation
 app.get("/getSearch", async (req, res) => {
-	globalUser.getSearch(client, res)
-})
+	globalUser.getSearch(client, res);
+});
 
 //Route to get user's referral Code
 app.get("/getReferralCode", async (req, res) => {
 	const userID = req.query.userID;
-	globalUser.getReferralCode(client, res, userID)
-})
+	globalUser.getReferralCode(client, res, userID);
+});
 
 //Route to submit user's inputted referral Code
 app.post("/submitReferralCode", async (req, res) => {
 	const { userID, referralCode } = req.body;
-	globalUser.submitReferralCode(client, res, userID, referralCode)
-})
+	globalUser.submitReferralCode(client, res, userID, referralCode);
+});
 
 //Route to retrieve user's reward selection
-app.get("/getRewards", async(req, res) => {
-	globalUser.getRewards(client, res)
-})
+app.get("/getRewards", async (req, res) => {
+	globalUser.getRewards(client, res);
+});
 
 //Route for user to claim reward
-app.post("/redeemRewards", async(req, res) => {
+app.post("/redeemRewards", async (req, res) => {
 	const { userID, rewardID, rewardPrice } = req.body;
-	globalUser.redeemRewards(client, res, userID, rewardID, rewardPrice)
-})
+	globalUser.redeemRewards(client, res, userID, rewardID, rewardPrice);
+});
 
 //Route for user to retrieve forum's post
-app.get("/getPosts", async(req, res) => { 
-	globalUser.getPosts(client, res)
-})
+app.get("/getPosts", async (req, res) => {
+	globalUser.getPosts(client, res);
+});
 
 //Route to submit comment for a forum's post
-app.post("/submitComment", async(req, res) => {
+app.post("/submitComment", async (req, res) => {
 	const { userID, postID, commentDescription, commentDate } = req.body;
-	globalUser.submitComment(client, res, userID, postID, commentDescription, commentDate)
-})
+	globalUser.submitComment(
+		client,
+		res,
+		userID,
+		postID,
+		commentDescription,
+		commentDate
+	);
+});
 
 //Route to submit new psot for forum
-app.post("/submitPost", async(req, res) => {
+app.post("/submitPost", async (req, res) => {
 	const { userID, postTitle, postDate, postDescription } = req.body;
-	globalUser.submitPost(client, res, userID, postTitle, postDate, postDescription)
-})
+	globalUser.submitPost(
+		client,
+		res,
+		userID,
+		postTitle,
+		postDate,
+		postDescription
+	);
+});
 
 //Route to add item to wishlist for user
-app.post("/addToWishlist", async(req, res) => {
+app.post("/addToWishlist", async (req, res) => {
 	const { beerID, venueID, userID } = req.body;
-	globalUser.addToWishlist(client, res, beerID, venueID, userID)
-})
+	globalUser.addToWishlist(client, res, beerID, venueID, userID);
+});
 
 //Route to retrieve wishlist for user
 app.get("/getWishlist", async (req, res) => {
 	const userID = req.query.userID;
-	globalUser.getWishlist(client, res, userID)
-})
+	globalUser.getWishlist(client, res, userID);
+});
 
 //Route for user to remove item from wishlist
-app.post("/removeWishlist", async(req, res) => {
+app.post("/removeWishlist", async (req, res) => {
 	const { beerID, venueID, userID } = req.body;
-	globalUser.removeWishlist(client, res, beerID, venueID, userID)
-})
+	globalUser.removeWishlist(client, res, beerID, venueID, userID);
+});
 
 //Route for user to submit issue
 app.post("/submitIssue", async (req, res) => {
 	const { userID, issueDate, issueDescription } = req.body;
-	globalUser.submitIssue(client, res, userID, issueDate, issueDescription)
-})
+	globalUser.submitIssue(client, res, userID, issueDate, issueDescription);
+});
 
 //Route for user to submit feedback
 app.post("/submitFeedback", async (req, res) => {
 	const { userID, venueName, feedbackDate, feedbackDescription } = req.body;
-	globalUser.submitFeedback(client, res, userID, venueName, feedbackDate, feedbackDescription);
-})
+	globalUser.submitFeedback(
+		client,
+		res,
+		userID,
+		venueName,
+		feedbackDate,
+		feedbackDescription
+	);
+});
 
 //Route for user to submit journal
 app.post("/submitJournal", async (req, res) => {
-	const { userID, journalDate, journalBeer, journalNotes, journalRating} = req.body;
-	globalUser.submitJournal(client, res, userID, journalDate, journalBeer, journalNotes, journalRating);
-})
+	const { userID, journalDate, journalBeer, journalNotes, journalRating } =
+		req.body;
+	globalUser.submitJournal(
+		client,
+		res,
+		userID,
+		journalDate,
+		journalBeer,
+		journalNotes,
+		journalRating
+	);
+});
 
 //Route for user to retrieve Journal
 app.get("/getJournal", async (req, res) => {
 	const userID = req.query.userID;
-	globalUser.getJournal(client, res, userID)
-})
+	globalUser.getJournal(client, res, userID);
+});
 
 //Route for user to edit Journal
 app.post("/editJournal", async (req, res) => {
 	const { journalID, journalNotes, journalRating } = req.body;
-	globalUser.editJournal(client, res, journalID, journalNotes, journalRating)
-})
+	globalUser.editJournal(client, res, journalID, journalNotes, journalRating);
+});
 
 //Route to retrieve user's statistics
 app.get("/getStatistics", async (req, res) => {
 	const userID = req.query.userID;
-	globalUser.getStatistics(client, res, userID)
-})
+	globalUser.getStatistics(client, res, userID);
+});
 
 //Route to retrieve user's peronsalised reccomendation
 app.get("/getPersonalisedRecommendation", async (req, res) => {
 	const userID = req.query.userID;
-	globalUser.getPersonalisedRecommendation(client, res, userID)
-})
+	globalUser.getPersonalisedRecommendation(client, res, userID);
+});
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;
@@ -525,63 +563,118 @@ app.post("/venueOwnerLogin", async (req, res) => {
 
 //Route for venue owner to retrieve inquiries and feedback on homepage
 app.get("/getFeedback", async (req, res) => {
-	const venueOwnerID = req.query.venueOwnerID
+	const venueOwnerID = req.query.venueOwnerID;
 	globalVenueOwner.getFeedback(client, res, venueOwnerID);
-})
+});
 
 //Route for venue owner to reply feedback
 app.post("/replyFeedback", async (req, res) => {
 	const { feedbackID, feedbackResponse } = req.body;
-	globalVenueOwner.replyFeedback(client, res, feedbackID, feedbackResponse)
-})
+	globalVenueOwner.replyFeedback(client, res, feedbackID, feedbackResponse);
+});
 
 //Route for venue owner to get profile data
 app.get("/getVenueProfile", async (req, res) => {
-	const venueOwnerID = req.query.venueOwnerID
-	globalVenueOwner.getVenueProfile(client, res, venueOwnerID)
-})
+	const venueOwnerID = req.query.venueOwnerID;
+	globalVenueOwner.getVenueProfile(client, res, venueOwnerID);
+});
 
 //Route for venue owner to edit venue details
 app.post("/updateVenue", async (req, res) => {
-	const { venueID, venueName, venueContact, venueAddress, venueOperatingHours } = req.body;
-	globalVenueOwner.updateVenue(client, res, venueID, venueName, venueContact, venueAddress, venueOperatingHours)
-})
+	const {
+		venueID,
+		venueName,
+		venueContact,
+		venueAddress,
+		venueOperatingHours,
+	} = req.body;
+	globalVenueOwner.updateVenue(
+		client,
+		res,
+		venueID,
+		venueName,
+		venueContact,
+		venueAddress,
+		venueOperatingHours
+	);
+});
 
 //Route for venue owner to retrieve venue menu
 app.get("/getVenueMenu", async (req, res) => {
-	const venueMenu = req.query.venueMenu
-	globalVenueOwner.getVenueMenu(client, res, venueMenu)
-})
+	const venueMenu = req.query.venueMenu;
+	globalVenueOwner.getVenueMenu(client, res, venueMenu);
+});
 
 //Route for venue owner to edit venue menu
 app.post("/editVenueMenu", async (req, res) => {
-	const {beerID, beerName, abv, ibu, price} = req.body;
-	globalVenueOwner.editVenueMenu(client, res, beerID, beerName, abv, ibu, price)
-})
+	const { beerID, beerName, abv, ibu, price } = req.body;
+	globalVenueOwner.editVenueMenu(
+		client,
+		res,
+		beerID,
+		beerName,
+		abv,
+		ibu,
+		price
+	);
+});
 
 //Route for venue owner to add new venue menu
 app.post("/addVenueMenu", async (req, res) => {
-	const { beerName, beerLocation, beerDescription, beerImage, beerCategory, abv, ibu, price } = req.body;
-	globalVenueOwner.addVenueMenu(client, res, beerName, beerLocation, beerDescription, beerImage, beerCategory, abv, ibu, price )
-})
+	const {
+		beerName,
+		beerLocation,
+		beerDescription,
+		beerImage,
+		beerCategory,
+		abv,
+		ibu,
+		price,
+	} = req.body;
+	globalVenueOwner.addVenueMenu(
+		client,
+		res,
+		beerName,
+		beerLocation,
+		beerDescription,
+		beerImage,
+		beerCategory,
+		abv,
+		ibu,
+		price
+	);
+});
 
 //Route for venue owner to add events
 app.post("/addEvent", async (req, res) => {
 	const { eventTitle, eventDate, eventDescription, eventCreator } = req.body;
-	globalVenueOwner.addEvent(client, res, eventTitle, eventDate, eventDescription, eventCreator)
-})
+	globalVenueOwner.addEvent(
+		client,
+		res,
+		eventTitle,
+		eventDate,
+		eventDescription,
+		eventCreator
+	);
+});
 
 //Route for venue owner to get events
 app.get("/getEvent", async (req, res) => {
 	const venueOwnerID = req.query.venueOwnerID;
-	globalVenueOwner.getEvent(client, res, venueOwnerID)
-})
+	globalVenueOwner.getEvent(client, res, venueOwnerID);
+});
 
 //Route for venue owner to remove events
 app.post("/removeEvent", async (req, res) => {
 	const { eventID } = req.body;
-	globalVenueOwner.removeEvent(client, res, eventID)
-})
+	globalVenueOwner.removeEvent(client, res, eventID);
+});
+
+//Route to venueowner to get the most popular beer
+app.get("/getMostPopularBeer", async (req, res) => {
+	const venueOwnerID = req.query.venueOwnerID;
+	globalVenueOwner.getMostPopularBeer(client, res, venueOwnerID);
+});
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
 //Route to retrieve beer data
@@ -622,7 +715,7 @@ app.get("/getVenueReview", async (req, res) => {
 //Route to retrieve venue coordinates
 app.get("/getVenueCoordinates", async (req, res) => {
 	Venue.getVenueCoordinates(client, venueArray, res);
-})
+});
 //===================================================================================================================
 //=================================================All Review Routes=================================================
 app.post("/addVenueReview", async (req, res) => {
@@ -675,8 +768,8 @@ app.get("/getBreweryCoordinates", async (req, res) => {
 	} catch (error) {
 		console.error("Error retrieving breweries:", error);
 		res.status(500).json({
-		success: false,
-		message: "An error occurred while retrieving breweries",
-	  });
+			success: false,
+			message: "An error occurred while retrieving breweries",
+		});
 	}
-  });
+});
