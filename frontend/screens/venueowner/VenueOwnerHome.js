@@ -1,4 +1,6 @@
 import {
+	Entypo,
+	FontAwesome,
 	FontAwesome5,
 	Ionicons,
 	MaterialIcons,
@@ -59,8 +61,6 @@ const CustomText = (props) => {
 
 const VenueOwnerHome = ({ navigation }) => {
 	const { cookies } = useCookies();
-	const [index, setIndex] = React.useState(0);
-	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
 
 	const [feedbackData, setFeedbackData] = useState([]);
@@ -69,7 +69,10 @@ const VenueOwnerHome = ({ navigation }) => {
 
 	const [popularData, setPopularData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
+	const [popularVenueData, setPopularVenueData] = useState([]);
+
 	const [popupVisible, setPopupVisible] = useState(false);
+	const [popupVisible2, setPopupVisible2] = useState(false);
 
 	function parseDate(dateString) {
 		const [day, month, year] = dateString.split("/");
@@ -77,7 +80,11 @@ const VenueOwnerHome = ({ navigation }) => {
 	}
 
 	const handlePopup = () => {
-		setPopupVisible(!popupVisible); // created 1st modal
+		setPopupVisible(!popupVisible);
+	};
+
+	const handlePopUp2 = () => {
+		setPopupVisible2(!popupVisible2);
 	};
 
 	useEffect(() => {
@@ -128,23 +135,26 @@ const VenueOwnerHome = ({ navigation }) => {
 			});
 	}, []);
 
-	const data = [30, 40, 25, 50, 45, 20];
-	const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
-
-	const maxDataValue = Math.max(...data);
-	const scaleY = 150 / maxDataValue;
+	// for most popular venue
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getMostPopularVenue", {
+				params: {
+					venueOwnerID: cookies.venueOwnerID,
+				},
+			})
+			.then((response) => {
+				setPopularVenueData(response.data);
+				setIsLoading(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving POPULAR VENUE", error);
+				setIsLoading(false);
+			});
+	}, []);
 
 	const navigateToRespond = () => {
 		navigation.navigate("Respond", { feedbackData: newFeedbackData });
-	};
-
-	// ================================== Functions for different button ==================================
-	const handleUpcomingEventsClick = () => {
-		// Handle click for "Upcoming Events" here
-	};
-
-	const handleRecommendedSpecialtyClick = () => {
-		// Handle click for "Recommended Specialty for You" here
 	};
 
 	return (
@@ -189,7 +199,7 @@ const VenueOwnerHome = ({ navigation }) => {
 				/>
 
 				<SafeAreaView style={{ flex: 1 }}>
-					<ScrollView>
+					<ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
 						<View
 							style={{
 								justifyContent: "center",
@@ -546,9 +556,10 @@ const VenueOwnerHome = ({ navigation }) => {
 									}}
 								/>
 							</View>
-							<View
+							<TouchableOpacity
+								onPress={handlePopUp2}
 								style={{
-									height: 250,
+									height: 320,
 									elevation: 2,
 									backgroundColor: COLORS.grey,
 									marginTop: 10,
@@ -558,19 +569,231 @@ const VenueOwnerHome = ({ navigation }) => {
 									padding: 20,
 								}}
 							>
-								<Text
-									style={{
-										...GlobalStyle.headerFont,
-										fontSize: 16,
-										marginBottom: 16,
-									}}
-								>
+								<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>
 									Most Popular Venue
 								</Text>
-								<View
-									style={{ flexDirection: "row", alignItems: "flex-end" }}
-								></View>
-							</View>
+								{isLoading ? (
+									<Text>Loading...</Text>
+								) : popularData ? (
+									<View>
+										<Image
+											source={{ uri: popularVenueData.venueImage }}
+											style={styles.venueImage}
+										/>
+										<Text
+											style={{
+												...GlobalStyle.headerFont,
+												justifyContent: "center",
+												alignItems: "center",
+												alignSelf: "center",
+											}}
+										>
+											{popularVenueData.venueName}
+										</Text>
+										<Modal
+											visible={popupVisible2}
+											transparent
+											animationType="fade"
+										>
+											<View
+												style={{
+													width: "100%",
+													height: "100%",
+													backgroundColor: COLORS.secondary,
+													borderRadius: 10,
+													paddingHorizontal: 20,
+													elevation: 5,
+												}}
+											>
+												<ScrollView
+													contentContainerStyle={{
+														flexGrow: 1,
+														paddingBottom: 30,
+													}}
+													showsVerticalScrollIndicator={false}
+												>
+													<Image
+														source={{ uri: popularVenueData.venueImage }}
+														style={styles.venueImage}
+													/>
+													<CustomText
+														style={{
+															fontSize: 18,
+															textAlign: "center",
+															marginBottom: 12,
+														}}
+													>
+														{popularVenueData.venueName}
+													</CustomText>
+													<View style={{ marginHorizontal: 12 }}>
+														<View
+															style={{
+																flexDirection: "row",
+																alignItems: "center",
+																marginBottom: 12,
+															}}
+														>
+															<View
+																style={{
+																	flexDirection: "row",
+																	alignItems: "center",
+																}}
+															>
+																<Entypo
+																	name="location-pin"
+																	size={24}
+																	color={COLORS.black}
+																/>
+																<CustomText
+																	style={{
+																		flexWrap: "wrap",
+																		marginLeft: 4,
+																		maxWidth: "65%",
+																	}}
+																>
+																	{popularVenueData.venueAddress}
+																</CustomText>
+															</View>
+															<View
+																style={{
+																	flexDirection: "row",
+																	alignItems: "center",
+																	marginHorizontal: 12,
+																}}
+															>
+																<FontAwesome
+																	name="phone"
+																	size={24}
+																	color={COLORS.black}
+																	style={{ marginRight: 4 }}
+																/>
+																<CustomText
+																	style={{
+																		flexWrap: "wrap",
+																		maxWidth: "80%",
+																	}}
+																>
+																	{popularVenueData.venueContact}
+																</CustomText>
+															</View>
+														</View>
+														<View
+															style={{
+																width: "100%",
+																borderColor: 0,
+																paddingHorizontal: 20,
+																paddingVertical: 10,
+																borderRadius: 30,
+																marginBottom: 25,
+																backgroundColor: COLORS.grey,
+																elevation: 2,
+															}}
+														>
+															<CustomText
+																style={{
+																	fontSize: 18,
+																}}
+															>
+																Operating Hours{" "}
+															</CustomText>
+															<View>
+																{popularVenueData.venueOperatingHours
+																	.split("\n")
+																	.map((line, index) => (
+																		<View
+																			key={index}
+																			style={{
+																				flexDirection: "row",
+																				justifyContent: "space-between",
+																			}}
+																		>
+																			<Text
+																				style={{
+																					...GlobalStyle.headerFont,
+																					fontSize: 14,
+																					flex: 1,
+																				}}
+																			>
+																				{line.split(" ")[0]}
+																			</Text>
+																			<CustomText
+																				style={{ justifyContent: "flex-end" }}
+																			>
+																				{line.substring(line.indexOf(" ") + 1)}
+																			</CustomText>
+																		</View>
+																	))}
+															</View>
+														</View>
+														<CustomText>
+															Average Beer Freshness:{" "}
+															{popularVenueData.venueFreshness}
+														</CustomText>
+														<CustomText>
+															Average Beer Temperature:{" "}
+															{popularVenueData.venueTemperature}
+														</CustomText>
+														<View
+															style={{
+																borderTopColor: "black",
+																borderBottomWidth: 1,
+																marginTop: 5,
+															}}
+														></View>
+														<View
+															style={{
+																flexDirection: "row",
+																justifyContent: "space-between",
+																alignItems: "center",
+																marginTop: 12,
+																marginBottom: 12,
+															}}
+														>
+															<CustomText style={{ fontSize: 16 }}>
+																Ratings:{" "}
+															</CustomText>
+															<View
+																style={{
+																	flexDirection: "row",
+																	paddingTop: 6,
+																}}
+															>
+																{[1, 2, 3, 4, 5].map((star) => (
+																	<Ionicons
+																		key={star}
+																		name="star"
+																		size={16}
+																		color={
+																			star <= popularVenueData.venueRating
+																				? COLORS.foam
+																				: COLORS.grey
+																		}
+																		style={{ marginBottom: 9 }}
+																	/>
+																))}
+															</View>
+														</View>
+													</View>
+													<Button
+														title="Close"
+														onPress={handlePopUp2}
+														filled
+														style={{
+															marginTop: 12,
+															marginBottom: 12,
+															borderColor: 0,
+															elevation: 2,
+															borderRadius: 12,
+														}}
+													/>
+												</ScrollView>
+											</View>
+										</Modal>
+									</View>
+								) : (
+									<Text>No most popular venue data found.</Text>
+								)}
+							</TouchableOpacity>
 						</View>
 					</ScrollView>
 				</SafeAreaView>
@@ -603,6 +826,20 @@ const styles = StyleSheet.create({
 	beerImage: {
 		height: 230,
 		width: 250,
+		borderRadius: 15,
+		borderWidth: 5,
+		borderColor: 0,
+		marginTop: 20,
+		marginLeft: "auto",
+		marginRight: "auto",
+		justifyContent: "center",
+		alignContent: "center",
+		marginBottom: 10,
+		alignSelf: "center",
+	},
+	venueImage: {
+		height: 200,
+		width: 310,
 		borderRadius: 15,
 		borderWidth: 5,
 		borderColor: 0,

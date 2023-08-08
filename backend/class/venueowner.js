@@ -477,6 +477,55 @@ class VenueOwner {
 			res.status(500).json({ error: "Error getting most popular beer" });
 		}
 	}
+
+	// get most popular venue
+	async getMostPopularVenue(client, res, venueOwnerID) {
+		try {
+			const db = client.db("FreshBearNearMe");
+			const reviewsCollection = db.collection("Reviews");
+			const venueCollection = db.collection("Venue");
+
+			const venueReviews = await reviewsCollection
+				.find({ reviewType: "Venue" })
+				.toArray();
+
+			const venuePopularityCount = {};
+			for (const review of venueReviews) {
+				const venueID = review.reviewItem;
+				const venue = await venueCollection.findOne({ venueID: venueID });
+				if (venue) {
+					if (!venuePopularityCount[venueID]) {
+						venuePopularityCount[venueID] = 1;
+					} else {
+						venuePopularityCount[venueID]++;
+					}
+				}
+			}
+
+			// find the venue with the highest number of positive reviews
+			let mostPopularVenueID;
+			let highestPopularity = 0;
+			for (const venueID in venuePopularityCount) {
+				if (venuePopularityCount[venueID] > highestPopularity) {
+					highestPopularity = venuePopularityCount[venueID];
+					mostPopularVenueID = venueID;
+				}
+			}
+
+			const mostPopularVenue = await venueCollection.findOne({
+				venueID: parseInt(mostPopularVenueID),
+			});
+
+			if (!mostPopularVenue) {
+				return res.status(404).json({ error: "Most popular venue not found." });
+			}
+
+			res.json(mostPopularVenue);
+		} catch (error) {
+			console.error("Error getting most popular venue:", error);
+			res.status(500).json({ error: "Error getting most popular venue" });
+		}
+	}
 }
 
 module.exports = VenueOwner;

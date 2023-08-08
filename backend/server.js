@@ -671,10 +671,16 @@ app.post("/removeEvent", async (req, res) => {
 	globalVenueOwner.removeEvent(client, res, eventID);
 });
 
-//Route to venueowner to get the most popular beer
+//Route to venue owner to get the most popular beer
 app.get("/getMostPopularBeer", async (req, res) => {
 	const venueOwnerID = req.query.venueOwnerID;
 	globalVenueOwner.getMostPopularBeer(client, res, venueOwnerID);
+});
+
+//Route to venue owner to get the most popular venue
+app.get("/getMostPopularVenue", async (req, res) => {
+	const venueOwnerID = req.query.venueOwnerID;
+	globalVenueOwner.getMostPopularVenue(client, res, venueOwnerID);
 });
 //===================================================================================================================
 //=================================================All Beer Routes===================================================
@@ -799,12 +805,12 @@ app.post("/adminLogin", async (req, res) => {
 });
 
 //Route to get Bugs for admin
-app.get("/getBugs", async(req, res) => {
-	globalAdmin.getBugs(client, res)
-})
+app.get("/getBugs", async (req, res) => {
+	globalAdmin.getBugs(client, res);
+});
 
 //Route for admin to resolve bugs
-app.post("/resolveBugs", async(req, res) => {
+app.post("/resolveBugs", async (req, res) => {
 	const { issueID } = req.body;
-	globalAdmin.resolveBugs(client, res, issueID)
-})
+	globalAdmin.resolveBugs(client, res, issueID);
+});
