@@ -12,6 +12,8 @@ import {
 	CreatePromotion,
 	FeatureRequests,
 	InquiriesNFeedback,
+	ManageContent,
+	ManageDatabase,
 	ManageInventory,
 	ManageUsers,
 	ReportedBugs,
@@ -95,6 +97,16 @@ export default function App() {
 					<Stack.Screen
 						name="FeatureRequests"
 						component={FeatureRequests}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="ManageDatabase"
+						component={ManageDatabase}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="ManageContent"
+						component={ManageContent}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

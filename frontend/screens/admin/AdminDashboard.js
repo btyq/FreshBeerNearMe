@@ -221,7 +221,7 @@ const AdminLogin = ({ navigation }) => {
 								</TouchableOpacity>
 
 								<TouchableOpacity
-									// onPress={() => navigation.navigate("VenueProfile")}
+									onPress={() => navigation.navigate("ManageDatabase")}
 									style={styles.container}
 								>
 									<CustomText>Database Management</CustomText>
@@ -237,7 +237,7 @@ const AdminLogin = ({ navigation }) => {
 								</TouchableOpacity>
 
 								<TouchableOpacity
-									// onPress={() => navigation.navigate("VenueProfile")}
+									onPress={() => navigation.navigate("ManageContent")}
 									style={styles.container}
 								>
 									<CustomText>Content Management</CustomText>

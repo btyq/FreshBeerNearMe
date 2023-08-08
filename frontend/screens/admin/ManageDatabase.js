@@ -42,25 +42,6 @@ const Button = (props) => {
 	);
 };
 
-const CustomButtonGroup = ({ buttons, selectedIndex, onPress }) => {
-	return (
-		<View style={styles.buttonGroupContainer}>
-			{buttons.map((button, index) => (
-				<TouchableOpacity
-					key={index}
-					style={[
-						styles.button,
-						selectedIndex === index && styles.selectedButton,
-					]}
-					onPress={() => onPress(index)}
-				>
-					<Text style={styles.buttonText}>{button}</Text>
-				</TouchableOpacity>
-			))}
-		</View>
-	);
-};
-
 const CustomText = (props) => {
 	return (
 		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
@@ -70,15 +51,15 @@ const CustomText = (props) => {
 };
 
 const tableData1 = {
-	tableHead1: ["Username", "Status", "Actions"],
 	tableData1: [
-		["John", "Active", "Edit Account "],
-		["Doe", "Inactive", "Edit Account"],
-		["Mary", "Active", "Edit Account"],
+		["Name", "Style", "Brewery", "100%"],
+		["Name", "Style", "Brewery", "100%"],
+		["Name", "Style", "Brewery", "100%"],
+		["Name", "Style", "Brewery", "100%"],
 	],
 };
 
-const ManageUsers = ({ navigation }) => {
+const ManageDatabase = ({ navigation }) => {
 	const [data2, setData2] = useState(tableData1);
 
 	const [search, setSearch] = useState("");
@@ -145,16 +126,8 @@ const ManageUsers = ({ navigation }) => {
 									marginBottom: 12,
 								}}
 							>
-								Manage Users
+								Manage Database
 							</Text>
-							<View style={styles.searchContainer}>
-								<TextInput
-									placeholder="Search user"
-									style={{ ...GlobalStyle.bodyFont, ...styles.searchInput }}
-									onChangeText={updateSearch}
-									value={search}
-								/>
-							</View>
 
 							<View
 								style={{
@@ -164,14 +137,14 @@ const ManageUsers = ({ navigation }) => {
 								}}
 							>
 								<Button
-									title="Create user"
+									title="Update Database"
 									color={COLORS.foam}
 									filled
 									style={{
 										marginTop: 10,
 										marginBottom: 4,
 										elevation: 2,
-										width: "30%",
+										width: "40%",
 									}}
 								/>
 							</View>
@@ -181,7 +154,7 @@ const ManageUsers = ({ navigation }) => {
 									borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
 								>
 									<Row
-										data={["Username", "Status", "Actions"]}
+										data={["Beer name", "Style", "Brewery", "Freshness"]}
 										style={styles.head}
 										textStyle={{
 											textAlign: "center",
@@ -242,4 +215,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default ManageUsers;
+export default ManageDatabase;
