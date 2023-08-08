@@ -697,7 +697,7 @@ const VenueOwnerHome = ({ navigation }) => {
 																Operating Hours{" "}
 															</CustomText>
 															<View>
-																{popularVenueData.venueOperatingHours
+																{/* {popularVenueData.venueOperatingHours
 																	.split("\n")
 																	.map((line, index) => (
 																		<View
@@ -722,7 +722,7 @@ const VenueOwnerHome = ({ navigation }) => {
 																				{line.substring(line.indexOf(" ") + 1)}
 																			</CustomText>
 																		</View>
-																	))}
+																	))} */}
 															</View>
 														</View>
 														<CustomText>
