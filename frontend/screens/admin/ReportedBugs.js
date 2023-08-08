@@ -4,11 +4,11 @@ import {
 	MaterialIcons,
 	Octicons,
 } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
-    Modal,
-    Alert,
-	Pressable,
+	Alert,
+	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -22,13 +22,12 @@ import { Feather } from "react-native-vector-icons";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
 	const outlinedColor = COLORS.white;
 	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = COLORS.black;
+	const textColor = props.filled ? COLORS.black : COLORS.white;
 
 	return (
 		<TouchableOpacity
@@ -39,13 +38,7 @@ const Button = (props) => {
 			}}
 			onPress={props.onPress}
 		>
-			<Text
-				style={{
-					fontSize: 12,
-					...GlobalStyle.bodyFont,
-					...{ color: textColor },
-				}}
-			>
+			<Text style={{ fontSize: 12, ...GlobalStyle.bodyFont, color: textColor }}>
 				{props.title}
 			</Text>
 		</TouchableOpacity>
@@ -63,50 +56,48 @@ const CustomText = (props) => {
 const ReportedBugs = ({ navigation }) => {
 	const { cookies } = useCookies();
 	const [bugData, setBugData] = useState([]);
-    const [modalVisibilities, setModalVisibilities] = useState([]);
-    const [useEffectRefresh, setUseEffectRefresh] = useState(false);
+	const [modalVisibilities, setModalVisibilities] = useState([]);
+	const [useEffectRefresh, setUseEffectRefresh] = useState(false);
 
-    const toggleModal = (index) => {
-        const newVisibilities = [...modalVisibilities];
-        newVisibilities[index] = !newVisibilities[index];
-        setModalVisibilities(newVisibilities);
-    };
+	const toggleModal = (index) => {
+		const newVisibilities = [...modalVisibilities];
+		newVisibilities[index] = !newVisibilities[index];
+		setModalVisibilities(newVisibilities);
+	};
 
-    useEffect(() => {
-        axios
-            .get("http://10.0.2.2:3000/getBugs")
-            .then((response) => {
-                setBugData(response.data);
-                setModalVisibilities(Array(response.data.length).fill(false));
-                setUseEffectRefresh(false);
-            })
-            .catch((error) => {
-                console.error("Error retrieving Bugs", error);
-            });
-    }, [useEffectRefresh])
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getBugs")
+			.then((response) => {
+				setBugData(response.data);
+				setModalVisibilities(Array(response.data.length).fill(false));
+				setUseEffectRefresh(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving Bugs", error);
+			});
+	}, [useEffectRefresh]);
 
-    const handleResolve = (issueID) => {
+	const handleResolve = (issueID) => {
+		const data = {
+			issueID: issueID,
+		};
 
-        const data = {
-            issueID: issueID
-        }
-
-        axios
-            .post("http://10.0.2.2:3000/resolveBugs", data)
-            .then((response) => {
-                if (response.data.success) {
-                    Alert.alert("Successfully resolved bugs!")
-                    setUseEffectRefresh(true);
-                }
-                else { 
-                    const { message } = response.data;
-                    Alert.alert("Error!", message)
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
+		axios
+			.post("http://10.0.2.2:3000/resolveBugs", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Successfully resolved bugs!");
+					setUseEffectRefresh(true);
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message);
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -156,69 +147,126 @@ const ReportedBugs = ({ navigation }) => {
 					}
 				/>
 
-                <Text
-                    style={{
-                        fontSize: 16,
-                        ...GlobalStyle.headerFont,
-                        marginTop: 10,
-                    }}
-                >
-                    New bug reports: 3
-                </Text>
-                <View style={{ flex: 1, padding: 5, justifyContent: "center" }}>
-                    <Table
-                        borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
-                    >
-                        <Row
-                            data={["Issue ID", "Description", "Status"]}
-                            style={styles.head}
-                            textStyle={styles.headText}
-                        />
-                        <Rows
-                            data={bugData.map((bug, index) => [
-                                bug.issueID,
-                                bug.issueDescription,
-                                bug.issueStatus ? (
-                                    "Resolved"
-                                ) : (
-                                    <TouchableOpacity onPress={() => toggleModal(index)}>
-                                        <Text>Update status</Text>
-                                    </TouchableOpacity>
-                                )
-                            ])}
-                            textStyle={styles.text}
-                        />
-                        {modalVisibilities.map((isVisible, index) => (
-                            <Modal
-                                key={index}
-                                visible={isVisible}
-                                animationType="fade"
-                                transparent
-                            >
-                                <View
-                                    style={{
-                                        width: "100%",
-                                        height: "100%",
-                                        backgroundColor: COLORS.secondary,
-                                        borderRadius: 10,
-                                        paddingHorizontal: 20,
-                                        elevation: 5,
-                                    }}
-                                >
-                                    <Text>Case Number: {bugData[index].issueID}</Text>
-                                    <Text>Date Reported: {bugData[index].issueDate}</Text>
-                                    <Text>Reported by: {bugData[index].issueUser}</Text>
-                                    <Text>Description: {bugData[index].issueDescription}</Text>
-                                    <Text>
-                                        Status: {bugData[index].issueStatus ? "Resolved" : "Pending"}
-                                    </Text>
-                                    <Button title="Mark as Resolved" onPress={() => handleResolve(bugData[index].issueID)} />
-                                    <Button title="Close" onPress={() => toggleModal(index)} />
-                                </View>
-                            </Modal>
-                        ))}
-                    </Table>
-                </View>
+				<SafeAreaView style={{ flex: 1 }}>
+					<ScrollView>
+						<View style={{ marginHorizontal: 22 }}>
+							<Text
+								style={{
+									fontSize: 16,
+									...GlobalStyle.headerFont,
+									marginTop: 10,
+								}}
+							>
+								New bug reports: 3
+							</Text>
+							<View style={{ marginTop: 20, justifyContent: "center" }}>
+								<Table
+									borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
+								>
+									<Row
+										data={["Issue ID", "Description", "Status"]}
+										style={styles.head}
+										textStyle={{
+											textAlign: "center",
+											...GlobalStyle.headerFont,
+										}}
+									/>
+									<Rows
+										data={bugData.map((bug, index) => [
+											bug.issueID,
+											bug.issueDescription,
+											bug.issueStatus ? (
+												"Resolved"
+											) : (
+												<Button
+													title="Update status"
+													onPress={() => toggleModal(index)}
+													color={COLORS.blue}
+													filled
+													style={{
+														marginTop: 10,
+														marginBottom: 4,
+														elevation: 2,
+													}}
+												/>
+											),
+										])}
+										textStyle={{ ...GlobalStyle.bodyFont, textAlign: "center" }}
+									/>
+									{modalVisibilities.map((isVisible, index) => (
+										<Modal
+											key={index}
+											visible={isVisible}
+											animationType="fade"
+											transparent
+										>
+											<View
+												style={{
+													width: "100%",
+													height: "100%",
+													backgroundColor: COLORS.secondary,
+													borderRadius: 10,
+													paddingHorizontal: 20,
+													elevation: 5,
+												}}
+											>
+												<View style={{ marginTop: 12 }}>
+													<TouchableOpacity onPress={() => toggleModal(index)}>
+														<Ionicons
+															name="arrow-back"
+															size={24}
+															color={COLORS.black}
+														/>
+													</TouchableOpacity>
+												</View>
+												<View style={{ marginTop: 20 }}>
+													<CustomText>
+														Case Number: {bugData[index].issueID}
+													</CustomText>
+													<CustomText>
+														Date Reported: {bugData[index].issueDate}
+													</CustomText>
+													<CustomText>
+														Reported by: {bugData[index].issueUser}
+													</CustomText>
+													<CustomText>
+														Description: {bugData[index].issueDescription}
+													</CustomText>
+													<CustomText>
+														Status:{" "}
+														{bugData[index].issueStatus
+															? "Resolved"
+															: "Pending"}
+													</CustomText>
+												</View>
+												<View
+													style={{
+														flexDirection: "row",
+														justifyContent: "flex-end",
+													}}
+												>
+													<Button
+														title="Mark as Resolved"
+														filled
+														style={{
+															width: "40%",
+															height: 50,
+															borderRadius: 10,
+															marginLeft: 10,
+														}}
+														onPress={() =>
+															handleResolve(bugData[index].issueID)
+														}
+													/>
+												</View>
+											</View>
+										</Modal>
+									))}
+								</Table>
+							</View>
+						</View>
+					</ScrollView>
+				</SafeAreaView>
 			</SafeAreaView>
 		</View>
 	);
@@ -228,7 +276,7 @@ const styles = StyleSheet.create({
 	button: {
 		paddingVertical: 10,
 		borderColor: COLORS.black,
-		borderWidth: 1,
+		borderWidth: 0,
 		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
@@ -239,7 +287,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	head: {
-		height: 34,
+		height: 44,
 		backgroundColor: COLORS.foam,
 	},
 	headText: {

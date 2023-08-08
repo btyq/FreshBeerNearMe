@@ -4,8 +4,6 @@ import {
 	MaterialIcons,
 	Octicons,
 } from "@expo/vector-icons";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {

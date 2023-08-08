@@ -6,7 +6,6 @@ import {
 } from "@expo/vector-icons";
 import React, { useState } from "react";
 import {
-	Pressable,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -16,7 +15,6 @@ import {
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Row, Rows, Table } from "react-native-table-component";
-import { Feather } from "react-native-vector-icons";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
@@ -57,15 +55,6 @@ const CustomText = (props) => {
 	);
 };
 
-const tableData = {
-	tableHead: ["Case Number", "Description", "Status"],
-	tableData: [
-		["4", "Hi", "Pending"],
-		["2", "Hihi", "Active"],
-		["1", "Hihihi", "Inactive"],
-	],
-};
-
 const tableData1 = {
 	tableHead1: ["Request Number", "Requests", "Status"],
 	tableData1: [
@@ -77,7 +66,7 @@ const tableData1 = {
 
 const AdminLogin = ({ navigation }) => {
 	const { cookies } = useCookies();
-	const [data1, setData] = useState(tableData);
+
 	const [data2, setData2] = useState(tableData1);
 
 	return (
@@ -172,30 +161,26 @@ const AdminLogin = ({ navigation }) => {
 							>
 								<TouchableOpacity
 									onPress={() => navigation.navigate("ReportedBugs")}
-									style={styles.subContainer}
+									style={styles.container}
 								>
 									<CustomText>Reported Bugs</CustomText>
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>
-										<FontAwesome5
-											name="house-user"
-											size={34}
-											color={COLORS.foam}
-										/>
+										<FontAwesome5 name="bug" size={34} color={COLORS.foam} />
 									</View>
 								</TouchableOpacity>
 
 								<TouchableOpacity
-									// onPress={() => navigation.navigate("VenueProfile")}
-									style={styles.subContainer}
+									onPress={() => navigation.navigate("FeatureRequests")}
+									style={styles.container}
 								>
 									<CustomText>Feature Requests</CustomText>
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>
 										<FontAwesome5
-											name="house-user"
+											name="question"
 											size={34}
 											color={COLORS.foam}
 										/>
@@ -221,14 +206,14 @@ const AdminLogin = ({ navigation }) => {
 							>
 								<TouchableOpacity
 									onPress={() => navigation.navigate("ManageUsers")}
-									style={styles.subContainer}
+									style={styles.container}
 								>
 									<CustomText>User Management</CustomText>
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>
 										<FontAwesome5
-											name="house-user"
+											name="user-alt"
 											size={34}
 											color={COLORS.foam}
 										/>
@@ -237,14 +222,14 @@ const AdminLogin = ({ navigation }) => {
 
 								<TouchableOpacity
 									// onPress={() => navigation.navigate("VenueProfile")}
-									style={styles.subContainer}
+									style={styles.container}
 								>
 									<CustomText>Database Management</CustomText>
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>
 										<FontAwesome5
-											name="house-user"
+											name="database"
 											size={34}
 											color={COLORS.foam}
 										/>
@@ -253,63 +238,19 @@ const AdminLogin = ({ navigation }) => {
 
 								<TouchableOpacity
 									// onPress={() => navigation.navigate("VenueProfile")}
-									style={styles.subContainer}
+									style={styles.container}
 								>
 									<CustomText>Content Management</CustomText>
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>
-										<FontAwesome5
-											name="house-user"
+										<MaterialIcons
+											name="content-paste"
 											size={34}
 											color={COLORS.foam}
 										/>
 									</View>
 								</TouchableOpacity>
-							</View>	
-													
-							<Text style={{ fontSize: 16, ...GlobalStyle.headerFont }}>
-								New feature requests: 3
-							</Text>
-
-							<View
-								style={{
-									fontSize: 16,
-									...GlobalStyle.headerFont,
-									marginTop: 10,
-								}}
-							>
-								<Table
-									borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
-								>
-									<Row
-										data={data2.tableHead1}
-										style={styles.head}
-										textStyle={styles.headText}
-									/>
-									<Rows data={data2.tableData1} textStyle={styles.text} />
-								</Table>
-								<View
-									style={{
-										flex: 1,
-										alignItems: "flex-end",
-										justifyContent: "flex-end",
-										marginTop: 10,
-									}}
-								>
-									<Button
-										title="See All"
-										// onPress={handlePopup}
-										filled
-										style={{
-											width: "30%",
-											alignContent: "center",
-											borderColor: 0,
-											elevation: 2,
-											borderRadius: 12,
-										}}
-									/>
-								</View>
 							</View>
 						</View>
 					</ScrollView>
@@ -329,35 +270,6 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	container: {
-		flex: 1,
-		padding: 5,
-		justifyContent: "center",
-	},
-	head: {
-		height: 34,
-		backgroundColor: COLORS.foam,
-	},
-	headText: {
-		fontSize: 14,
-		fontWeight: "bold",
-		textAlign: "center",
-		color: COLORS.black,
-	},
-	text: {
-		margin: 6,
-		fontSize: 14,
-		textAlign: "center",
-	},
-	smallButton: {
-		marginTop: 10,
-		paddingVertical: 10,
-		paddingHorizontal: 20,
-		backgroundColor: COLORS.foam,
-		borderRadius: 8,
-		alignSelf: "flex-end",
-		elevation: 2,
-	},
-	subContainer: {
 		height: 100,
 		elevation: 2,
 		backgroundColor: COLORS.grey,

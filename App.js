@@ -10,11 +10,12 @@ import {
 	Analytics,
 	CreateEvents,
 	CreatePromotion,
+	FeatureRequests,
 	InquiriesNFeedback,
 	ManageInventory,
 	ManageUsers,
-	Respond,
 	ReportedBugs,
+	Respond,
 	Signup,
 	VenueComparison,
 	VenueOwnerHome,
@@ -89,6 +90,11 @@ export default function App() {
 					<Stack.Screen
 						name="ReportedBugs"
 						component={ReportedBugs}
+						options={{ headerShown: false }}
+					/>
+					<Stack.Screen
+						name="FeatureRequests"
+						component={FeatureRequests}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

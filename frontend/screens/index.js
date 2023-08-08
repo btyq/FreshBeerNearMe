@@ -1,7 +1,9 @@
 import Signup from "./Signup";
 import Welcome from "./Welcome";
 import AdminDashboard from "./admin/AdminDashboard";
+import FeatureRequests from "./admin/FeatureRequests";
 import ManageUsers from "./admin/ManageUsers";
+import ReportedBugs from "./admin/ReportedBugs";
 import BeersVenue from "./user/BeersVenue";
 import Breweries from "./user/Breweries";
 import Dashboard from "./user/Dashboard";
@@ -21,7 +23,6 @@ import CreatePromotion from "./venueowner/CreatePromotion";
 import InquiriesNFeedback from "./venueowner/InquiriesNFeedback";
 import ManageInventory from "./venueowner/ManageInventory";
 import Respond from "./venueowner/Respond";
-import ReportedBugs from "./admin/ReportedBugs";
 import VenueComparison from "./venueowner/VenueComparison";
 import VenueOwnerHome from "./venueowner/VenueOwnerHome";
 import VenueProfile from "./venueowner/VenueProfile";
@@ -34,6 +35,7 @@ export {
 	CreateEvents,
 	CreatePromotion,
 	Dashboard,
+	FeatureRequests,
 	Feedback,
 	FindABeer,
 	Forums,
@@ -45,8 +47,8 @@ export {
 	Profile,
 	Recommendation,
 	ReferAFriend,
-	Respond,
 	ReportedBugs,
+	Respond,
 	Signup,
 	Social,
 	VenueComparison,
