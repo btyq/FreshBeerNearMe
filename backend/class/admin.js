@@ -85,6 +85,32 @@ class Admin {
 			res.json({ success: false, message: "An error occurred while resolving the bug." });
 		}
 	}
+	
+	async getUser(client, res) {
+		try {
+			const db = client.db('FreshBearNearMe');
+			const userCollection = db.collection('User');
+			const venueOwnersCollection = db.collection('VenueOwners');
+			const adminCollection = db.collection('Admin');
+	
+			const [users, venueOwners, admins] = await Promise.all([
+				userCollection.find().toArray(),
+				venueOwnersCollection.find().toArray(),
+				adminCollection.find().toArray(),
+			]);
+	
+			const allDocuments = {
+				users,
+				venueOwners,
+				admins,
+			};
+	
+			res.json(allDocuments);
+		} catch (error) {
+			console.error(error);
+			res.status(500).json({ error: 'An error occurred while fetching documents.' });
+		}
+	}
 }
 
 module.exports = Admin;

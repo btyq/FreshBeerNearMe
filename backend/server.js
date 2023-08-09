@@ -814,3 +814,8 @@ app.post("/resolveBugs", async (req, res) => {
 	const { issueID } = req.body;
 	globalAdmin.resolveBugs(client, res, issueID);
 });
+
+//Route for admin to get user data
+app.get("/getUser", async (req, res) => {
+	globalAdmin.getUser(client, res);
+})

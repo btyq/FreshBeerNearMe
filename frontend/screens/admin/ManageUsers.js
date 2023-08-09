@@ -4,8 +4,10 @@ import {
 	MaterialIcons,
 	Octicons,
 } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+	Modal,
+	Alert,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -26,6 +28,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -87,12 +90,45 @@ const tableData1 = {
 
 const ManageUsers = ({ navigation }) => {
 	const [data2, setData2] = useState(tableData1);
-
+	const [userData, setUserData] = useState({
+		admins: [],
+		users: [],
+		venueOwners: [],
+	});
 	const [search, setSearch] = useState("");
+	const [selectedUser, setSelectedUser] = useState(null);
+	const [isModalVisible, setIsModalVisible] = useState(false);
+	const [isCreateUserModalVisible, setIsCreateUserModalVisible] = useState(false);
 
 	const updateSearch = (search) => {
 		setSearch(search);
 	};
+
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getUser")
+			.then((response) => {
+				setUserData(response.data)
+			})
+			.catch((error) => {
+				console.error("Error retrieving User Data", error);
+			})
+	}, [])
+
+	const generateTableData = () => {
+        const combinedData = [...userData.admins, ...userData.users, ...userData.venueOwners];
+        
+        return combinedData.map((user) => [
+            user.username,
+            user.adminID ? "Admin" : user.venueOwnerID ? "Venue Owner" : "User",
+			<TouchableOpacity onPress={() => {
+				setSelectedUser(user);
+				setIsModalVisible(true);
+			  }}>
+				<Text>Edit Account</Text>
+			</TouchableOpacity>
+        ]);
+    };
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -127,7 +163,7 @@ const ManageUsers = ({ navigation }) => {
 					}}
 					rightComponent={
 						<View style={{ flexDirection: "row" }}>
-							<TouchableOpacity>
+							<TouchableOpacity onPress={() => console.log(userData)}>
 								<Ionicons
 									name="notifications-outline"
 									size={24}
@@ -180,23 +216,19 @@ const ManageUsers = ({ navigation }) => {
 										elevation: 2,
 										width: "30%",
 									}}
+									onPress={() => {setIsCreateUserModalVisible(true)}}
 								/>
 							</View>
 
 							<View style={{ marginTop: 20, justifyContent: "center" }}>
-								<Table
-									borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
-								>
+								<Table borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}>
 									<Row
-										data={["Username", "Status", "Actions"]}
+										data={["Username", "Account Type", "Actions"]} // Modified labels
 										style={styles.head}
-										textStyle={{
-											textAlign: "center",
-											...GlobalStyle.headerFont,
-										}}
+										textStyle={{ textAlign: "center", ...GlobalStyle.headerFont }}
 									/>
 									<Rows
-										data={data2.tableData1}
+										data={generateTableData()}
 										textStyle={{ ...GlobalStyle.bodyFont, textAlign: "center" }}
 									/>
 								</Table>
@@ -204,6 +236,160 @@ const ManageUsers = ({ navigation }) => {
 						</View>
 					</ScrollView>
 				</SafeAreaView>
+				<Modal
+					visible={isModalVisible}
+					animationType="slide"
+					transparent
+					onRequestClose={() => setIsModalVisible(false)}
+					>
+					{selectedUser && (
+						<View style={styles.modalContainer}>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Username:</Text>
+							<TextInput
+							style={styles.input}
+							value={selectedUser.username}
+							onChangeText={(text) => setSelectedUser({ ...selectedUser, username: text })}
+							placeholder="Username"
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Account Type:</Text>
+							<TextInput
+							style={styles.input}
+							value={selectedUser.adminID ? "Admin" : selectedUser.venueOwnerID ? "Venue Owner" : "User"}
+							onChangeText={() => {}}
+							editable={false}
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Password:</Text>
+							<TextInput
+							style={styles.input}
+							value={selectedUser.password}
+							onChangeText={(text) => setSelectedUser({ ...selectedUser, password: text })}
+							placeholder="Password"
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Email:</Text>
+							<TextInput
+							style={styles.input}
+							value={selectedUser.email}
+							onChangeText={(text) => setSelectedUser({ ...selectedUser, email: text })}
+							placeholder="Email"
+							keyboardType="email-address"
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Mobile Number:</Text>
+							<TextInput
+							style={styles.input}
+							value={selectedUser.mobileNumber}
+							onChangeText={(text) => setSelectedUser({ ...selectedUser, mobileNumber: text })}
+							placeholder="Mobile Number"
+							keyboardType="numeric"
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>
+							{selectedUser.userID
+								? 'Refferal Code:'
+								: selectedUser.venueOwnerID
+								? 'Owned VenueID:'
+								: ''}
+							</Text>
+							<TextInput
+							style={styles.input}
+							value={
+								selectedUser.userID
+								? selectedUser.referralCode
+								: selectedUser.venueOwnerID
+								? selectedUser.venueID
+								: ''
+							}
+							onChangeText={(text) => {
+								if (selectedUser.userID) {
+								setSelectedUser({ ...selectedUser, referralCode: text });
+								} else if (selectedUser.venueOwnerID) {
+								
+								}
+							}}
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>
+								{selectedUser.userID ? 'Refferal Points:' : ''}
+							</Text>
+							<TextInput
+								style={styles.input}
+								value={
+								selectedUser.userID
+									? selectedUser.referralPoints.toString()
+									: ''
+								}
+								onChangeText={(text) => {
+								if (selectedUser.userID) {
+									setSelectedUser({ ...selectedUser, referralPoints: parseInt(text) });
+								}
+								}}
+							/>
+						</View>
+						<Button
+							title="Close"
+							color={COLORS.foam}
+							filled
+							onPress={() => setIsModalVisible(false)}
+							style={{ marginTop: 20 }}
+						/>
+						</View>
+					)}
+				</Modal>
+
+				<Modal
+					visible={isCreateUserModalVisible}
+					animationType="slide"
+					transparent
+					onRequestClose={() => setIsCreateUserModalVisible(false)}
+					>
+					<View style={styles.modalContainer}>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Username:</Text>
+							<TextInput
+								style={styles.input}
+								placeholder="Username"
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Password:</Text>
+							<TextInput
+								style={styles.input}
+								placeholder="Password"
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Email:</Text>
+							<TextInput
+								style={styles.input}
+								placeholder="Email"
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Mobile Number:</Text>
+							<TextInput
+								style={styles.input}
+								placeholder="Mobile Number"
+							/>
+						</View>
+						<Button
+						title="Close"
+						color={COLORS.foam}
+						filled
+						onPress={() => setIsCreateUserModalVisible(false)}
+						style={{ marginTop: 20 }}
+						/>
+					</View>
+				</Modal>
 			</SafeAreaView>
 		</View>
 	);
@@ -238,6 +424,14 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	modalContainer: {
+		backgroundColor: COLORS.white,
+		padding: 20,
+		borderRadius: 10,
+		alignSelf: 'center',
+		marginTop: '50%',
+		width: '80%',
 	},
 });
 
