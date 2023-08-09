@@ -14,9 +14,16 @@ import {
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
-import { DataTable } from "react-native-paper";
+import {
+	Cell,
+	Col,
+	Cols,
+	Row,
+	Rows,
+	Table,
+	TableWrapper,
+} from "react-native-reanimated-table";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Row, Rows, Table } from "react-native-table-component";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
 
@@ -176,35 +183,6 @@ const ManageDatabase = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flexDirection: "row",
-		marginLeft: 5,
-		marginTop: 12,
-		alignItems: "center",
-		marginHorizontal: 12,
-	},
-	searchContainer: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		alignItems: "center",
-		marginHorizontal: 20,
-		marginVertical: 12,
-	},
-	searchInput: {
-		flex: 1,
-		height: 45,
-		borderWidth: 1,
-		borderColor: 0,
-		borderRadius: 20,
-		paddingHorizontal: 20,
-		marginRight: 10,
-		backgroundColor: COLORS.grey,
-	},
-	tableContainer: {
-		marginBottom: 20,
-		paddingHorizontal: 12,
-		maxHeight: 200,
-	},
 	button: {
 		paddingVertical: 10,
 		borderColor: COLORS.black,
@@ -212,6 +190,10 @@ const styles = StyleSheet.create({
 		borderRadius: 12,
 		alignItems: "center",
 		justifyContent: "center",
+	},
+	head: {
+		height: 44,
+		backgroundColor: COLORS.foam,
 	},
 });
 

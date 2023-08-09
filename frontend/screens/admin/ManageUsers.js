@@ -14,9 +14,16 @@ import {
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
-import { DataTable } from "react-native-paper";
+import {
+	Cell,
+	Col,
+	Cols,
+	Row,
+	Rows,
+	Table,
+	TableWrapper,
+} from "react-native-reanimated-table";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Row, Rows, Table } from "react-native-table-component";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
 
@@ -203,13 +210,6 @@ const ManageUsers = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flexDirection: "row",
-		marginLeft: 5,
-		marginTop: 12,
-		alignItems: "center",
-		marginHorizontal: 12,
-	},
 	searchContainer: {
 		flexDirection: "row",
 		justifyContent: "space-between",
@@ -227,10 +227,9 @@ const styles = StyleSheet.create({
 		marginRight: 10,
 		backgroundColor: COLORS.grey,
 	},
-	tableContainer: {
-		marginBottom: 20,
-		paddingHorizontal: 12,
-		maxHeight: 200,
+	head: {
+		height: 44,
+		backgroundColor: COLORS.foam,
 	},
 	button: {
 		paddingVertical: 10,

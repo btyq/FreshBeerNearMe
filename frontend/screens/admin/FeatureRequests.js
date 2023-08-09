@@ -16,9 +16,16 @@ import {
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
+import {
+	Cell,
+	Col,
+	Cols,
+	Row,
+	Rows,
+	Table,
+	TableWrapper,
+} from "react-native-reanimated-table";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Row, Rows, Table } from "react-native-table-component";
-import { Feather } from "react-native-vector-icons";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
@@ -164,12 +171,6 @@ const styles = StyleSheet.create({
 	head: {
 		height: 44,
 		backgroundColor: COLORS.foam,
-	},
-	headText: {
-		fontSize: 14,
-		fontWeight: "bold",
-		textAlign: "center",
-		color: COLORS.black,
 	},
 });
 

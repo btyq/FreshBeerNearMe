@@ -16,9 +16,16 @@ import {
 	View,
 } from "react-native";
 import { Header } from "react-native-elements";
+import {
+	Cell,
+	Col,
+	Cols,
+	Row,
+	Rows,
+	Table,
+	TableWrapper,
+} from "react-native-reanimated-table";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Row, Rows, Table } from "react-native-table-component";
-import { Feather } from "react-native-vector-icons";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
@@ -193,6 +200,7 @@ const ReportedBugs = ({ navigation }) => {
 										])}
 										textStyle={{ ...GlobalStyle.bodyFont, textAlign: "center" }}
 									/>
+
 									{modalVisibilities.map((isVisible, index) => (
 										<Modal
 											key={index}
@@ -281,46 +289,9 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	container: {
-		flex: 1,
-		padding: 5,
-		justifyContent: "center",
-	},
 	head: {
 		height: 44,
 		backgroundColor: COLORS.foam,
-	},
-	headText: {
-		fontSize: 14,
-		fontWeight: "bold",
-		textAlign: "center",
-		color: COLORS.black,
-	},
-	text: {
-		margin: 6,
-		fontSize: 14,
-		textAlign: "center",
-	},
-	smallButton: {
-		marginTop: 10,
-		paddingVertical: 10,
-		paddingHorizontal: 20,
-		backgroundColor: COLORS.foam,
-		borderRadius: 8,
-		alignSelf: "flex-end",
-		elevation: 2,
-	},
-	subContainer: {
-		height: 100,
-		elevation: 2,
-		backgroundColor: COLORS.grey,
-		marginLeft: 10,
-		marginTop: 10,
-		borderRadius: 15,
-		marginBottom: 3,
-		width: "45%",
-		alignItems: "center",
-		justifyContent: "center",
 	},
 });
 
