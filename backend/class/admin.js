@@ -113,6 +113,40 @@ class Admin {
 	}
 
 	async createUser(client, res, username, password, email, mobileNumber, selectedAccountType) {
+
+		function generateRandomString(length) {
+			const characters =
+				"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			let randomString = "";
+			for (let i = 0; i < length; i++) {
+				const randomIndex = Math.floor(Math.random() * characters.length);
+				randomString += characters[randomIndex];
+			}
+			return randomString;
+		}
+
+		async function getNextUserID(db, collectionName, selectedAccountType) {	
+			if (selectedAccountType === "User") {
+				const result = await db.collection(collectionName).find().sort({ userID: -1 }).limit(1).toArray();
+				if (result.length === 0) {
+					return 1; 
+				}
+			return result[0].userID + 1;
+			} else if (selectedAccountType === "Venue Owner") {
+				const result = await db.collection(collectionName).find().sort({ venueOwnerID: -1 }).limit(1).toArray();
+				if (result.length === 0) {
+					return 1; 
+				}
+			return result[0].venueOwnerID + 1;
+			} else if (selectedAccountType === "Admin") {
+				const result = await db.collection(collectionName).find().sort({ adminID: -1 }).limit(1).toArray();
+				if (result.length === 0) {
+					return 1; 
+				}
+			return result[0].adminID + 1;			
+			}
+		}
+
 		try {
 			const db = client.db("FreshBearNearMe"); 
 			
@@ -126,10 +160,23 @@ class Admin {
 			let collectionName = "";
 			if (selectedAccountType === "User") {
 				collectionName = "User";
+				userData.userID = await getNextUserID(db, collectionName, selectedAccountType)
+				userData.receiveNotificaion = false
+				userData.followArray = []
+				userData.recommendationArray = []
+				userData.referralCode = generateRandomString(8)
+				userData.referralPoints = 0
+				userData.referralClaim = [] 
+				userData.rewardArray = []
+				userData.wishlistArray = []
+				userData.journalArray = []
 			} else if (selectedAccountType === "Venue Owner") {
 				collectionName = "VenueOwners";
+				userData.venueID = []
+				userData.venueOwnerID = await getNextUserID(db, collectionName, selectedAccountType)
 			} else if (selectedAccountType === "Admin") {
 				collectionName = "Admin";
+				userData.adminID = await getNextUserID(db, collectionName, selectedAccountType)
 			} else {
 				throw new Error("Invalid account type");
 			}
