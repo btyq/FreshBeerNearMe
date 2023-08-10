@@ -55,19 +55,8 @@ const CustomText = (props) => {
 	);
 };
 
-const tableData1 = {
-	tableHead1: ["Request Number", "Requests", "Status"],
-	tableData1: [
-		["3", "Yes", "Pending"],
-		["1", "Yes", "Pending"],
-		["2", "Yes", "Done"],
-	],
-};
-
 const AdminLogin = ({ navigation }) => {
 	const { cookies } = useCookies();
-
-	const [data2, setData2] = useState(tableData1);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -80,17 +69,6 @@ const AdminLogin = ({ navigation }) => {
 						borderBottomLeftRadius: 40,
 						borderBottomRightRadius: 40,
 					}}
-					leftComponent={
-						<View style={{ flexDirection: "row" }}>
-							<TouchableOpacity onPress={() => navigation.goBack()}>
-								<MaterialIcons
-									name="keyboard-arrow-left"
-									size={24}
-									color={COLORS.black}
-								/>
-							</TouchableOpacity>
-						</View>
-					}
 					centerComponent={{
 						text: "FreshBeer",
 						style: {

@@ -326,26 +326,7 @@ const Welcome = ({ navigation }) => {
 							</View>
 						</View>
 
-						<View
-							style={{
-								flexDirection: "row",
-								marginBottom: 22,
-							}}
-						>
-							<Pressable onPress={() => navigation.navigate("Signup")}>
-								<Text
-									style={{
-										color: COLORS.black,
-										marginLeft: 4,
-										elevation: 2,
-									}}
-								>
-									Forgot your password?
-								</Text>
-							</Pressable>
-						</View>
-
-						<View style={{ marginBottom: 22 }}>
+						<View style={{ marginTop: 52 }}>
 							<SelectList
 								data={data}
 								value={selected}
@@ -377,7 +358,7 @@ const Welcome = ({ navigation }) => {
 								flexDirection: "row",
 								justifyContent: "center",
 								zIndex: -5,
-								marginVertical: 18,
+								marginVertical: 38,
 							}}
 						>
 							<Button
@@ -395,118 +376,6 @@ const Welcome = ({ navigation }) => {
 								visible={isDialogVisible}
 								onClose={handleCloseDialog}
 							/>
-						</View>
-
-						<View
-							style={{
-								flexDirection: "row",
-								alignItems: "center",
-								marginVertical: 10,
-							}}
-						>
-							<View
-								style={{
-									flex: 1,
-									height: 1,
-									backgroundColor: COLORS.black,
-									marginHorizontal: 10,
-								}}
-							></View>
-							<Text style={{ fontSize: 14 }}>Or log in with</Text>
-							<View
-								style={{
-									flex: 1,
-									height: 1,
-									backgroundColor: COLORS.black,
-									marginHorizontal: 10,
-									zIndex: -5,
-								}}
-							></View>
-						</View>
-
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-							}}
-						>
-							<TouchableOpacity
-								onPress={() => console.log("Pressed")}
-								style={{
-									flex: 1,
-									alignItems: "center",
-									justifyContent: "center",
-									flexDirection: "row",
-									height: 52,
-									marginRight: 4,
-									borderRadius: 10,
-									paddingHorizontal: 15, // Add horizontal padding to create space
-									backgroundColor: COLORS.white,
-								}}
-							>
-								<Image
-									source={require("../assets/facebook.png")}
-									style={{
-										height: 26,
-										width: 26,
-										marginRight: 4,
-									}}
-									resizeMode="contain"
-								></Image>
-								<Text>Facebook</Text>
-							</TouchableOpacity>
-
-							<TouchableOpacity
-								onPress={() => console.log("Pressed")}
-								style={{
-									flex: 1,
-									alignItems: "center",
-									justifyContent: "center",
-									flexDirection: "row",
-									height: 52,
-									marginRight: 4,
-									borderRadius: 10,
-									paddingHorizontal: 10, // Add horizontal padding to create space
-									backgroundColor: COLORS.white,
-								}}
-							>
-								<Image
-									source={require("../assets/google.png")}
-									style={{
-										height: 26,
-										width: 26,
-										marginRight: 8,
-									}}
-									resizeMode="contain"
-								></Image>
-								<Text>Google</Text>
-							</TouchableOpacity>
-
-							<TouchableOpacity
-								onPress={() => console.log("Pressed")}
-								style={{
-									flex: 1,
-									alignItems: "center",
-									justifyContent: "center",
-									flexDirection: "row",
-									height: 52,
-									marginRight: 4,
-									borderRadius: 10,
-									paddingHorizontal: 10, // Add horizontal padding to create space
-									backgroundColor: COLORS.white,
-								}}
-							>
-								<Image
-									source={require("../assets/email.png")}
-									style={{
-										height: 36,
-										width: 36,
-										marginRight: 8,
-									}}
-									resizeMode="contain"
-								></Image>
-								<Text>Email</Text>
-							</TouchableOpacity>
 						</View>
 
 						<View
