@@ -111,6 +111,43 @@ class Admin {
 			res.status(500).json({ error: 'An error occurred while fetching documents.' });
 		}
 	}
+
+	async createUser(client, res, username, password, email, mobileNumber, selectedAccountType) {
+		try {
+			const db = client.db("FreshBearNearMe"); 
+			
+			const userData = {
+				username,
+				password,
+				email,
+				mobileNumber,
+			};
+			
+			let collectionName = "";
+			if (selectedAccountType === "User") {
+				collectionName = "User";
+			} else if (selectedAccountType === "Venue Owner") {
+				collectionName = "VenueOwners";
+			} else if (selectedAccountType === "Admin") {
+				collectionName = "Admin";
+			} else {
+				throw new Error("Invalid account type");
+			}
+			
+			const result = await db.collection(collectionName).insertOne(userData);
+			
+			if (result.insertedId) {
+				console.log("User created successfully");
+				res.json({ success: true, message: "User created successfully" });
+			} else {
+				console.log("Failed to create user");
+				res.json({ success: false, message: "Failed to create user" });
+			}
+		} catch (error) {
+			console.error("Error creating user:", error);
+			res.status(500).json({ success: false, message: "An error occurred while creating user" });
+		}
+	}
 }
 
 module.exports = Admin;

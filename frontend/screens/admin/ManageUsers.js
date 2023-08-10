@@ -28,6 +28,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import { SelectList } from "react-native-dropdown-select-list";
 import axios from "axios";
 
 const Button = (props) => {
@@ -99,6 +100,11 @@ const ManageUsers = ({ navigation }) => {
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [isCreateUserModalVisible, setIsCreateUserModalVisible] = useState(false);
+	const [username, setUsername] = useState("")
+	const [password, setPassword] = useState("")
+	const [email, setEmail] = useState("")
+	const [mobileNumber, setMobileNumber] = useState("")
+	const [selectedAccountType, setSelectedAccountType] = useState('User');
 
 	const updateSearch = (search) => {
 		setSearch(search);
@@ -129,6 +135,31 @@ const ManageUsers = ({ navigation }) => {
 			</TouchableOpacity>
         ]);
     };
+
+	const handleCreateUser = () => { 
+		const data = {
+			username: username,
+			password: password,
+			email: email,
+			mobileNumber: mobileNumber,
+			selectedAccountType: selectedAccountType,
+		}
+
+		axios
+			.post("http://10.0.2.2:3000/createUser", data)
+			.then((response) => {
+				if (response.data.success) {
+					Alert.alert("Successfully create account!")
+					setIsCreateUserModalVisible(false)
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message)
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	}
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -358,6 +389,7 @@ const ManageUsers = ({ navigation }) => {
 							<TextInput
 								style={styles.input}
 								placeholder="Username"
+								onChangeText={(text) => setUsername(text)}
 							/>
 						</View>
 						<View style={styles.inputGroup}>
@@ -365,6 +397,7 @@ const ManageUsers = ({ navigation }) => {
 							<TextInput
 								style={styles.input}
 								placeholder="Password"
+								onChangeText={(text) => setPassword(text)}
 							/>
 						</View>
 						<View style={styles.inputGroup}>
@@ -372,6 +405,7 @@ const ManageUsers = ({ navigation }) => {
 							<TextInput
 								style={styles.input}
 								placeholder="Email"
+								onChangeText={(text) => setEmail(text)}
 							/>
 						</View>
 						<View style={styles.inputGroup}>
@@ -379,15 +413,31 @@ const ManageUsers = ({ navigation }) => {
 							<TextInput
 								style={styles.input}
 								placeholder="Mobile Number"
+								onChangeText={(text) => setMobileNumber(text)}
+							/>
+						</View>
+						<View style={styles.inputGroup}>
+							<Text style={styles.label}>Account Type:</Text>
+							<SelectList
+								data={['User', 'Venue Owner', 'Admin']}
+								defaultValue="User"
+								setSelected={(itemValue) => setSelectedAccountType(itemValue)}
 							/>
 						</View>
 						<Button
-						title="Close"
-						color={COLORS.foam}
-						filled
-						onPress={() => setIsCreateUserModalVisible(false)}
-						style={{ marginTop: 20 }}
+							title="Create"
+							color={COLORS.foam}
+							filled
+							onPress={handleCreateUser}
+							style={{ marginTop: 20 }}
 						/>
+						<Button
+							title="Close"
+							color={COLORS.foam}
+							filled
+							onPress={() => setIsCreateUserModalVisible(false)}
+							style={{ marginTop: 20 }}
+						/>						
 					</View>
 				</Modal>
 			</SafeAreaView>

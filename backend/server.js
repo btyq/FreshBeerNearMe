@@ -819,3 +819,9 @@ app.post("/resolveBugs", async (req, res) => {
 app.get("/getUser", async (req, res) => {
 	globalAdmin.getUser(client, res);
 })
+
+//Route for admin to create user account
+app.post("/createUser", async (req, res) => {
+	const { username, password, email, mobileNumber, selectedAccountType } = req.body;
+	globalAdmin.createUser(client, res, username, password, email, mobileNumber, selectedAccountType)
+})
