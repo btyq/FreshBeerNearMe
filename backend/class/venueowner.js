@@ -454,24 +454,33 @@ class VenueOwner {
 			}
 
 			// find the beer with the highest number of positive reviews
-			let mostPopularBeerID;
-			let highestPopularity = 0;
+			const beerPopularity = {};
 			for (const beerID in beerPopularityCount) {
-				if (beerPopularityCount[beerID] > highestPopularity) {
-					highestPopularity = beerPopularityCount[beerID];
-					mostPopularBeerID = beerID;
-				}
+				beerPopularity[beerID] = beerPopularityCount[beerID];
 			}
 
+			// sort beers by popularity
+			const sortedBeers = Object.keys(beerPopularity).sort(
+				(a, b) => beerPopularity[b] - beerPopularity[a]
+			);
+
+			// top 3 most popular beer IDs
+			const top3MostPopularBeerIDs = sortedBeers.slice(0, 3);
+
+			// top 3 most popular beers from the Beer collection
+			const top3MostPopularBeers = await beerCollection
+				.find({
+					beerID: { $in: top3MostPopularBeerIDs.map((id) => parseInt(id)) },
+				})
+				.toArray();
+
+			// most popular beer
+			const mostPopularBeerID = sortedBeers[0];
 			const mostPopularBeer = await beerCollection.findOne({
 				beerID: parseInt(mostPopularBeerID),
 			});
 
-			if (!mostPopularBeer) {
-				return res.status(404).json({ error: "Most popular beer not found." });
-			}
-
-			res.json(mostPopularBeer);
+			res.json({ mostPopularBeer, top3MostPopularBeers });
 		} catch (error) {
 			console.error("Error getting most popular beer:", error);
 			res.status(500).json({ error: "Error getting most popular beer" });
@@ -503,24 +512,33 @@ class VenueOwner {
 			}
 
 			// find the venue with the highest number of positive reviews
-			let mostPopularVenueID;
-			let highestPopularity = 0;
+			const venuePopularity = {};
 			for (const venueID in venuePopularityCount) {
-				if (venuePopularityCount[venueID] > highestPopularity) {
-					highestPopularity = venuePopularityCount[venueID];
-					mostPopularVenueID = venueID;
-				}
+				venuePopularity[venueID] = venuePopularityCount[venueID];
 			}
 
+			// Sort venues by popularity
+			const sortedVenues = Object.keys(venuePopularity).sort(
+				(a, b) => venuePopularity[b] - venuePopularity[a]
+			);
+
+			// Top 3 most popular venue IDs
+			const top3MostPopularVenueIDs = sortedVenues.slice(0, 3);
+
+			// Top 3 most popular venues from the Venue collection
+			const top3MostPopularVenues = await venueCollection
+				.find({
+					venueID: { $in: top3MostPopularVenueIDs.map((id) => parseInt(id)) },
+				})
+				.toArray();
+
+			// Most popular venue
+			const mostPopularVenueID = sortedVenues[0];
 			const mostPopularVenue = await venueCollection.findOne({
 				venueID: parseInt(mostPopularVenueID),
 			});
 
-			if (!mostPopularVenue) {
-				return res.status(404).json({ error: "Most popular venue not found." });
-			}
-
-			res.json(mostPopularVenue);
+			res.json({ mostPopularVenue, top3MostPopularVenues });
 		} catch (error) {
 			console.error("Error getting most popular venue:", error);
 			res.status(500).json({ error: "Error getting most popular venue" });

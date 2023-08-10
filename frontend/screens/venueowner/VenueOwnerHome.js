@@ -70,6 +70,7 @@ const VenueOwnerHome = ({ navigation }) => {
 	const [popularData, setPopularData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [popularVenueData, setPopularVenueData] = useState([]);
+	const [isLoading2, setIsLoading2] = useState(true);
 
 	const [popupVisible, setPopupVisible] = useState(false);
 	const [popupVisible2, setPopupVisible2] = useState(false);
@@ -145,11 +146,11 @@ const VenueOwnerHome = ({ navigation }) => {
 			})
 			.then((response) => {
 				setPopularVenueData(response.data);
-				setIsLoading(false);
+				setIsLoading2(false);
 			})
 			.catch((error) => {
 				console.error("Error retrieving POPULAR VENUE", error);
-				setIsLoading(false);
+				setIsLoading2(false);
 			});
 	}, []);
 
@@ -218,7 +219,7 @@ const VenueOwnerHome = ({ navigation }) => {
 							>
 								Welcome, {username}
 							</Text>
-							<Text style={{ ...GlobalStyle.headerFont, marginBottom: 25 }}>
+							<Text style={{ ...GlobalStyle.headerFont, marginBottom: 15 }}>
 								What would you like to do?
 							</Text>
 						</View>
@@ -229,13 +230,14 @@ const VenueOwnerHome = ({ navigation }) => {
 									flexDirection: "row",
 									justifyContent: "space-between",
 									alignItems: "center",
+									marginTop: 12,
 								}}
 							>
 								<Text
 									style={{
 										fontSize: 18,
 										...GlobalStyle.headerFont,
-										marginBottom: 12,
+										marginVertical: 12,
 									}}
 								>
 									Latest Feedback
@@ -439,7 +441,7 @@ const VenueOwnerHome = ({ navigation }) => {
 								) : popularData ? (
 									<View>
 										<Image
-											source={{ uri: popularData.beerImage }}
+											source={{ uri: popularData.mostPopularBeer.beerImage }}
 											style={styles.beerImage}
 										/>
 										<Text
@@ -450,7 +452,7 @@ const VenueOwnerHome = ({ navigation }) => {
 												alignSelf: "center",
 											}}
 										>
-											{popularData.beerName}
+											{popularData.mostPopularBeer.beerName}
 										</Text>
 										<Modal
 											visible={popupVisible}
@@ -468,7 +470,9 @@ const VenueOwnerHome = ({ navigation }) => {
 												}}
 											>
 												<Image
-													source={{ uri: popularData.beerImage }}
+													source={{
+														uri: popularData.mostPopularBeer.beerImage,
+													}}
 													style={styles.beerImage}
 												/>
 												<CustomText
@@ -477,7 +481,8 @@ const VenueOwnerHome = ({ navigation }) => {
 														textAlign: "center",
 													}}
 												>
-													{popularData.beerName} -- ${popularData.price}
+													{popularData.mostPopularBeer.beerName} -- $
+													{popularData.mostPopularBeer.price}
 												</CustomText>
 												<View
 													style={{
@@ -495,16 +500,18 @@ const VenueOwnerHome = ({ navigation }) => {
 													}}
 												>
 													<CustomText style={{ marginBottom: 12 }}>
-														Alcohol%: {popularData.abv}
+														Alcohol%: {popularData.mostPopularBeer.abv}
 													</CustomText>
 													<CustomText style={{ marginBottom: 12 }}>
-														Bitter Units: {popularData.ibu}
+														Bitter Units: {popularData.mostPopularBeer.ibu}
 													</CustomText>
 												</View>
 												<CustomText style={{ fontSize: 17 }}>
 													Description
 												</CustomText>
-												<CustomText>{popularData.beerDescription}</CustomText>
+												<CustomText>
+													{popularData.mostPopularBeer.beerDescription}
+												</CustomText>
 												<Button
 													title="Close"
 													onPress={handlePopup}
@@ -572,12 +579,14 @@ const VenueOwnerHome = ({ navigation }) => {
 								<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>
 									Most Popular Venue
 								</Text>
-								{isLoading ? (
+								{isLoading2 ? (
 									<Text>Loading...</Text>
-								) : popularData ? (
+								) : popularVenueData ? (
 									<View>
 										<Image
-											source={{ uri: popularVenueData.venueImage }}
+											source={{
+												uri: popularVenueData.mostPopularVenue.venueImage,
+											}}
 											style={styles.venueImage}
 										/>
 										<Text
@@ -588,7 +597,7 @@ const VenueOwnerHome = ({ navigation }) => {
 												alignSelf: "center",
 											}}
 										>
-											{popularVenueData.venueName}
+											{popularVenueData.mostPopularVenue.venueName}
 										</Text>
 										<Modal
 											visible={popupVisible2}
@@ -613,7 +622,9 @@ const VenueOwnerHome = ({ navigation }) => {
 													showsVerticalScrollIndicator={false}
 												>
 													<Image
-														source={{ uri: popularVenueData.venueImage }}
+														source={{
+															uri: popularVenueData.mostPopularVenue.venueImage,
+														}}
 														style={styles.venueImage}
 													/>
 													<CustomText
@@ -623,7 +634,7 @@ const VenueOwnerHome = ({ navigation }) => {
 															marginBottom: 12,
 														}}
 													>
-														{popularVenueData.venueName}
+														{popularVenueData.mostPopularVenue.venueName}
 													</CustomText>
 													<View style={{ marginHorizontal: 12 }}>
 														<View
@@ -651,7 +662,10 @@ const VenueOwnerHome = ({ navigation }) => {
 																		maxWidth: "65%",
 																	}}
 																>
-																	{popularVenueData.venueAddress}
+																	{
+																		popularVenueData.mostPopularVenue
+																			.venueAddress
+																	}
 																</CustomText>
 															</View>
 															<View
@@ -673,65 +687,23 @@ const VenueOwnerHome = ({ navigation }) => {
 																		maxWidth: "80%",
 																	}}
 																>
-																	{popularVenueData.venueContact}
+																	{
+																		popularVenueData.mostPopularVenue
+																			.venueContact
+																	}
 																</CustomText>
-															</View>
-														</View>
-														<View
-															style={{
-																width: "100%",
-																borderColor: 0,
-																paddingHorizontal: 20,
-																paddingVertical: 10,
-																borderRadius: 30,
-																marginBottom: 25,
-																backgroundColor: COLORS.grey,
-																elevation: 2,
-															}}
-														>
-															<CustomText
-																style={{
-																	fontSize: 18,
-																}}
-															>
-																Operating Hours{" "}
-															</CustomText>
-															<View>
-																{/* {popularVenueData.venueOperatingHours
-																	.split("\n")
-																	.map((line, index) => (
-																		<View
-																			key={index}
-																			style={{
-																				flexDirection: "row",
-																				justifyContent: "space-between",
-																			}}
-																		>
-																			<Text
-																				style={{
-																					...GlobalStyle.headerFont,
-																					fontSize: 14,
-																					flex: 1,
-																				}}
-																			>
-																				{line.split(" ")[0]}
-																			</Text>
-																			<CustomText
-																				style={{ justifyContent: "flex-end" }}
-																			>
-																				{line.substring(line.indexOf(" ") + 1)}
-																			</CustomText>
-																		</View>
-																	))} */}
 															</View>
 														</View>
 														<CustomText>
 															Average Beer Freshness:{" "}
-															{popularVenueData.venueFreshness}
+															{popularVenueData.mostPopularVenue.venueFreshness}
 														</CustomText>
 														<CustomText>
 															Average Beer Temperature:{" "}
-															{popularVenueData.venueTemperature}
+															{
+																popularVenueData.mostPopularVenue
+																	.venueTemperature
+															}
 														</CustomText>
 														<View
 															style={{
@@ -764,7 +736,9 @@ const VenueOwnerHome = ({ navigation }) => {
 																		name="star"
 																		size={16}
 																		color={
-																			star <= popularVenueData.venueRating
+																			star <=
+																			popularVenueData.mostPopularVenue
+																				.venueRating
 																				? COLORS.foam
 																				: COLORS.grey
 																		}

@@ -1,7 +1,8 @@
 import { Ionicons, MaterialIcons, Octicons } from "@expo/vector-icons";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
-	ImageBackground,
+	Image,
 	Modal,
 	ScrollView,
 	StyleSheet,
@@ -15,26 +16,11 @@ import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
 
-// CODES TO STYLE BUTTON
-const Button = (props) => {
-	const filledBgColor = props.color || COLORS.primary;
-	const outlinedColor = COLORS.white;
-	const bgColor = props.filled ? filledBgColor : outlinedColor;
-	const textColor = props.filled ? COLORS.black : COLORS.primary;
-
+const CustomText = (props) => {
 	return (
-		<TouchableOpacity
-			style={{
-				...styles.button,
-				...{ backgroundColor: bgColor },
-				...props.style,
-			}}
-			onPress={props.onPress}
-		>
-			<Text style={{ fontSize: 14, ...{ color: textColor } }}>
-				{props.title}
-			</Text>
-		</TouchableOpacity>
+		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
+			{props.children}
+		</Text>
 	);
 };
 
@@ -44,12 +30,8 @@ const VenueComparison = ({ navigation }) => {
 	const [username, setUsername] = useState("");
 	const [modalVisible1, setModalVisible1] = useState(false);
 	const [modalVisible2, setModalVisible2] = useState(false);
-
-	useEffect(() => {
-		const sessionToken = cookies.sessionToken;
-		const venueOwnerID = cookies.venueOwnerID;
-		setUsername(cookies.username);
-	}, []);
+	const [popularVenueData, setPopularVenueData] = useState([]);
+	const [isLoading2, setIsLoading2] = useState(true);
 
 	const data = [30, 40, 25, 50, 45, 20];
 	const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun"];
@@ -57,368 +39,220 @@ const VenueComparison = ({ navigation }) => {
 	const maxDataValue = Math.max(...data);
 	const scaleY = 150 / maxDataValue;
 
-	//=====================================================================================================
+	// for top 3 most popular venue
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getMostPopularVenue", {
+				params: {
+					venueOwnerID: cookies.venueOwnerID,
+				},
+			})
+			.then((response) => {
+				setPopularVenueData(response.data);
+				setIsLoading2(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving POPULAR VENUE", error);
+				setIsLoading2(false);
+			});
+	}, []);
+
 	return (
-		<SafeAreaView backgroundColor={COLORS.secondary} style={{ flex: 1 }}>
-			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-				<View style={{ flex: 1 }}>
-					<Header
-						placement="left"
-						backgroundColor={COLORS.primary}
-						containerStyle={{
-							height: 100,
-							borderBottomLeftRadius: 40,
-							borderBottomRightRadius: 40,
-						}}
-						centerComponent={{
-							text: "FreshBeer",
-							style: {
-								fontSize: 20,
-								...GlobalStyle.headerFont,
-								flexDirection: "row",
-								justifyContent: "flex-start",
-							},
-						}}
-						rightComponent={
-							<View style={{ flexDirection: "row" }}>
-								<TouchableOpacity>
-									<Octicons
-										name="bookmark"
-										size={24}
-										color={COLORS.black}
-										style={{ marginRight: 10 }}
-									/>
-								</TouchableOpacity>
-								<TouchableOpacity>
-									<Ionicons
-										name="notifications-outline"
-										size={24}
-										color={COLORS.black}
-									/>
-								</TouchableOpacity>
-							</View>
-						}
-					/>
-					<View
-						style={{
+		<View style={{ flex: 1 }}>
+			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
+				{/* <ScrollView contentContainerStyle={{ flexGrow: 1 }}> */}
+				<Header
+					placement="left"
+					backgroundColor={COLORS.primary}
+					containerStyle={{
+						height: 100,
+						borderBottomLeftRadius: 40,
+						borderBottomRightRadius: 40,
+					}}
+					leftComponent={
+						<View style={{ flexDirection: "row" }}>
+							<TouchableOpacity onPress={() => navigation.goBack()}>
+								<MaterialIcons
+									name="keyboard-arrow-left"
+									size={24}
+									color={COLORS.black}
+								/>
+							</TouchableOpacity>
+						</View>
+					}
+					centerComponent={{
+						text: "FreshBeer",
+						style: {
+							fontSize: 20,
+							...GlobalStyle.headerFont,
 							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 30,
-						}}
-					>
-						<Text
-							style={{
-								marginLeft: 20,
-								marginBottom: 10,
-								fontSize: 18,
-								// Add any additional styles from GlobalStyle.headerFont
-								marginBottom: 5,
-								flex: 1, // Take up remaining space
-							}}
-						>
-							Summary
-						</Text>
-						<View
-							style={{
-								flex: 1,
-								borderBottomWidth: 1, // Adjust the thickness as desired
-								borderBottomColor: COLORS.black,
-								marginLeft: -200, // Adjust the value to prevent overlapping
-							}}
-						/>
-					</View>
-					<View
-						style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
-					>
-						<View style={{ flex: 1, alignItems: "center", width: "98%" }}>
-							<View
+							justifyContent: "flex-start",
+						},
+					}}
+					rightComponent={
+						<View style={{ flexDirection: "row" }}>
+							<TouchableOpacity>
+								<Ionicons
+									name="notifications-outline"
+									size={24}
+									color={COLORS.black}
+									style={{ marginRight: 10 }}
+								/>
+							</TouchableOpacity>
+							<TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+								<MaterialIcons name="logout" size={24} color={COLORS.black} />
+							</TouchableOpacity>
+						</View>
+					}
+				/>
+
+				<SafeAreaView style={{ flex: 1 }}>
+					<ScrollView contentContainerStyle={{ paddingBottom: 10 }}>
+						<View style={{ marginHorizontal: 22 }}>
+							<Text
 								style={{
-									flex: 1,
-									padding: 10,
-									borderWidth: 1,
-									borderColor: COLORS.black,
-									marginTop: 10,
-									borderRadius: 20,
-									width: "98%",
+									fontSize: 18,
+									...GlobalStyle.headerFont,
+									marginBottom: 12,
 								}}
 							>
-								<View style={{ flexDirection: "row", alignItems: "center" }}>
-									<Text
-										style={{
-											marginTop: 15,
-											marginLeft: 10,
-											fontSize: 18,
-											// Add any additional styles from GlobalStyle.headerFont
-											marginBottom: 5,
-											flex: 1, // Take up remaining space
-										}}
-									>
-										Venue Comparison
-									</Text>
-								</View>
-								<View
-									style={{
-										flex: 1,
-										padding: 10,
-										alignItems: "center",
-										justifyContent: "center",
-									}}
-								>
-									<View style={{ padding: 16 }}>
-										<Text
+								Venue Comparison Summary
+							</Text>
+
+							<View
+								style={{
+									height: 240,
+									elevation: 2,
+									backgroundColor: COLORS.grey,
+									marginTop: 10,
+									borderRadius: 15,
+									marginBottom: 10,
+									width: "100%",
+									padding: 20,
+								}}
+							>
+								<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>
+									Venue Popularity of the Week
+								</Text>
+								{/* <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
+									{data.map((value, index) => (
+										<View
+											key={index}
 											style={{
-												fontSize: 18,
-												fontWeight: "bold",
-												marginBottom: 16,
+												flex: 1,
+												marginLeft: 10,
+												alignItems: "center",
 											}}
 										>
-											Venue Popularity this week
-										</Text>
-										<View
-											style={{ flexDirection: "row", alignItems: "flex-end" }}
-										>
-											{data.map((value, index) => (
-												<View
-													key={index}
-													style={{
-														width: 30,
-														marginLeft: 10,
-														alignItems: "center",
-													}}
-												>
-													<View
-														style={{
-															height: value * scaleY,
-															width: 8,
-															backgroundColor: "blue",
-														}}
-													/>
-													<Text style={{ fontSize: 12, marginTop: 5 }}>
-														{labels[index]}
-													</Text>
-												</View>
+											<View
+												style={{
+													height: value * scaleY,
+													width: 10,
+													backgroundColor: COLORS.foam,
+												}}
+											/>
+											<Text style={{ fontSize: 12, marginTop: 5 }}>
+												{labels[index]}
+											</Text>
+										</View>
+									))}
+								</View> */}
+							</View>
+
+							<View
+								style={{
+									height: 220,
+									elevation: 2,
+									backgroundColor: COLORS.grey,
+									marginTop: 10,
+									borderRadius: 15,
+									marginBottom: 10,
+									width: "100%",
+									padding: 20,
+								}}
+							>
+								<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>
+									Top 3 Popular Venues
+								</Text>
+								<View>
+									{isLoading2 ? (
+										<Text>Loading...</Text>
+									) : popularVenueData ? (
+										<View>
+											<Text style={{ ...GlobalStyle.headerFont }}>
+												Most Popular Venue:{" "}
+												{popularVenueData.mostPopularVenue.venueName}
+											</Text>
+											<Text
+												style={{
+													...GlobalStyle.headerFont,
+													marginTop: 12,
+												}}
+											>
+												Top 3 Most Popular Venues:
+											</Text>
+											{popularVenueData.top3MostPopularVenues.map((venue) => (
+												<CustomText key={venue.venueID}>
+													{venue.venueName}
+												</CustomText>
 											))}
 										</View>
-									</View>
+									) : (
+										<Text>No most popular venue data found.</Text>
+									)}
 								</View>
 							</View>
 						</View>
-					</View>
+					</ScrollView>
+				</SafeAreaView>
 
-					<View
-						style={{
-							flexDirection: "row",
-							alignItems: "center",
-							marginTop: 30,
-						}}
-					>
-						<Text
-							style={{
-								marginLeft: 15,
-								marginBottom: 10,
-								fontSize: 18,
-								// Add any additional styles from GlobalStyle.headerFont
-								marginBottom: 5,
-								flex: 1, // Take up remaining space
-							}}
-						>
-							All Staticstics
-						</Text>
-						<View
-							style={{
-								flex: 1,
-								borderBottomWidth: 1, // Adjust the thickness as desired
-								borderBottomColor: COLORS.black,
-								marginLeft: -150, // Adjust the value toprevent overlapping
-							}}
-						/>
-					</View>
-					<View
-						style={{
-							width: "95%",
-							alignSelf: "center",
-							marginTop: 10,
-							borderWidth: 1,
-							borderColor: COLORS.black,
-							borderRadius: 10,
-							padding: 10,
-							marginBottom: 10,
-						}}
-					>
-						{/* First Subcontainer */}
-						<View style={{ flexDirection: "row", alignItems: "center" }}>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>
-								You vs Other Venue
-							</Text>
-							{/* Add your input field or component for the title here */}
-						</View>
+				{/* <Modal
+					animationType="slide"
+					transparent={true}
+					visible={modalVisible1}
+					onRequestClose={() => setModalVisible1(false)}
+				>
+					<View style={styles.centeredView}>
+						<View style={[styles.modalView, { width: "90%", height: 500 }]}>
+							<Text style={styles.modalText}>Modal 1 Content</Text>
 
-						{/* Black Line */}
-						<View
-							style={{
-								borderBottomWidth: 1,
-								borderBottomColor: COLORS.black,
-								marginVertical: 10,
-								width: "100%",
-							}}
-						/>
 
-						{/* Summary Subcontainer */}
-						<View style={{ height: 100 }}>
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "flex-end",
-									alignItems: "center",
-								}}
-							>
+							<View style={{ flex: 1, justifyContent: "flex-end" }}>
 								<TouchableOpacity
-									style={{
-										backgroundColor: COLORS.grey,
-										paddingHorizontal: 10,
-										paddingVertical: 5,
-										borderRadius: 20,
-										borderWidth: 1,
-										borderBottomColor: COLORS.black,
-									}}
-									onPress={() => setModalVisible1(true)}
+									style={[styles.button, styles.buttonClose]}
+									onPress={() => setModalVisible1(false)}
 								>
-									<Text style={{ color: COLORS.black, fontSize: 14 }}>
-										See More
-									</Text>
+									<Text style={styles.textStyle}>Close Modal</Text>
 								</TouchableOpacity>
 							</View>
-							<Text
-								style={{
-									fontSize: 16,
-									fontWeight: "bold",
-									position: "absolute",
-									top: 0,
-									left: 0,
-								}}
-							>
-								Summary
-							</Text>
-							{/* Add your input field or component for the description here */}
 						</View>
 					</View>
-					<View
-						style={{
-							width: "95%",
-							alignSelf: "center",
-							marginTop: 10,
-							borderWidth: 1,
-							borderColor: COLORS.black,
-							borderRadius: 10,
-							padding: 10,
-							marginBottom: 100,
-						}}
-					>
-						{/* First Subcontainer */}
-						<View style={{ flexDirection: "row", alignItems: "center" }}>
-							<Text style={{ fontSize: 16, fontWeight: "bold" }}>
-								You vs Other Venue
-							</Text>
-							{/* Add your input field or component for the title here */}
-						</View>
+				</Modal>
 
-						{/* Black Line */}
-						<View
-							style={{
-								borderBottomWidth: 1,
-								borderBottomColor: COLORS.black,
-								marginVertical: 10,
-								width: "100%",
-							}}
-						/>
+				<Modal
+					animationType="slide"
+					transparent={true}
+					visible={modalVisible2}
+					onRequestClose={() => setModalVisible2(false)}
+				>
+					<View style={styles.centeredView}>
+						<View style={[styles.modalView, { width: "90%", height: 500 }]}>
+							<Text style={styles.modalText}>Modal 2 Content</Text>
 
-						{/* Description Subcontainer */}
-						<View style={{ height: 100 }}>
-							<View
-								style={{
-									flexDirection: "row",
-									justifyContent: "flex-end",
-									alignItems: "center",
-								}}
-							>
+
+							<View style={{ flex: 1, justifyContent: "flex-end" }}>
 								<TouchableOpacity
-									style={{
-										backgroundColor: COLORS.grey,
-										paddingHorizontal: 10,
-										paddingVertical: 5,
-										borderRadius: 20,
-										borderWidth: 1,
-										borderBottomColor: COLORS.black,
-									}}
-									onPress={() => setModalVisible2(true)}
+									style={[styles.button, styles.buttonClose]}
+									onPress={() => setModalVisible2(false)}
 								>
-									<Text style={{ color: COLORS.black, fontSize: 14 }}>
-										See More
-									</Text>
+									<Text style={styles.textStyle}>Close Modal</Text>
 								</TouchableOpacity>
 							</View>
-							<Text
-								style={{
-									fontSize: 16,
-									fontWeight: "bold",
-									position: "absolute",
-									top: 0,
-									left: 0,
-								}}
-							>
-								Summary
-							</Text>
-							{/* Add your input field or component for the description here */}
 						</View>
 					</View>
-				</View>
-			</ScrollView>
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={modalVisible1}
-				onRequestClose={() => setModalVisible1(false)}
-			>
-				<View style={styles.centeredView}>
-					<View style={[styles.modalView, { width: "90%", height: 500 }]}>
-						<Text style={styles.modalText}>Modal 1 Content</Text>
-
-						{/* Close Modal Button */}
-						<View style={{ flex: 1, justifyContent: "flex-end" }}>
-							<TouchableOpacity
-								style={[styles.button, styles.buttonClose]}
-								onPress={() => setModalVisible1(false)}
-							>
-								<Text style={styles.textStyle}>Close Modal</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</View>
-			</Modal>
-
-			<Modal
-				animationType="slide"
-				transparent={true}
-				visible={modalVisible2}
-				onRequestClose={() => setModalVisible2(false)}
-			>
-				<View style={styles.centeredView}>
-					<View style={[styles.modalView, { width: "90%", height: 500 }]}>
-						<Text style={styles.modalText}>Modal 2 Content</Text>
-
-						{/* Close Modal Button */}
-						<View style={{ flex: 1, justifyContent: "flex-end" }}>
-							<TouchableOpacity
-								style={[styles.button, styles.buttonClose]}
-								onPress={() => setModalVisible2(false)}
-							>
-								<Text style={styles.textStyle}>Close Modal</Text>
-							</TouchableOpacity>
-						</View>
-					</View>
-				</View>
-			</Modal>
-		</SafeAreaView>
+				</Modal> */}
+			</SafeAreaView>
+		</View>
 	);
 };
 
