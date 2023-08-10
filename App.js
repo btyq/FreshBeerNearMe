@@ -10,7 +10,6 @@ import {
 	Analytics,
 	CreateEvents,
 	CreatePromotion,
-	FeatureRequests,
 	InquiriesNFeedback,
 	ManageContent,
 	ManageDatabase,
@@ -92,11 +91,6 @@ export default function App() {
 					<Stack.Screen
 						name="ReportedBugs"
 						component={ReportedBugs}
-						options={{ headerShown: false }}
-					/>
-					<Stack.Screen
-						name="FeatureRequests"
-						component={FeatureRequests}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

@@ -1,7 +1,6 @@
 import Signup from "./Signup";
 import Welcome from "./Welcome";
 import AdminDashboard from "./admin/AdminDashboard";
-import FeatureRequests from "./admin/FeatureRequests";
 import ManageContent from "./admin/ManageContent";
 import ManageDatabase from "./admin/ManageDatabase";
 import ManageUsers from "./admin/ManageUsers";
@@ -37,7 +36,6 @@ export {
 	CreateEvents,
 	CreatePromotion,
 	Dashboard,
-	FeatureRequests,
 	Feedback,
 	FindABeer,
 	Forums,

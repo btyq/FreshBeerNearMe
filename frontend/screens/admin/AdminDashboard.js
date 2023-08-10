@@ -170,22 +170,6 @@ const AdminLogin = ({ navigation }) => {
 										<FontAwesome5 name="bug" size={34} color={COLORS.foam} />
 									</View>
 								</TouchableOpacity>
-
-								<TouchableOpacity
-									onPress={() => navigation.navigate("FeatureRequests")}
-									style={styles.container}
-								>
-									<CustomText>Feature Requests</CustomText>
-									<View
-										style={{ alignItems: "center", justifyContent: "center" }}
-									>
-										<FontAwesome5
-											name="question"
-											size={34}
-											color={COLORS.foam}
-										/>
-									</View>
-								</TouchableOpacity>
 							</View>
 
 							<Text
