@@ -105,6 +105,8 @@ const ManageUsers = ({ navigation }) => {
 	const [email, setEmail] = useState("")
 	const [mobileNumber, setMobileNumber] = useState("")
 	const [selectedAccountType, setSelectedAccountType] = useState('User');
+	const [createUserState, setCreateUserState] = useState(false);
+	const [editUserState, setEditUserState] = useState(false);
 
 	const updateSearch = (search) => {
 		setSearch(search);
@@ -115,11 +117,13 @@ const ManageUsers = ({ navigation }) => {
 			.get("http://10.0.2.2:3000/getUser")
 			.then((response) => {
 				setUserData(response.data)
+				setCreateUserState(false)
+				setEditUserState(false)
 			})
 			.catch((error) => {
 				console.error("Error retrieving User Data", error);
 			})
-	}, [])
+	}, [createUserState, editUserState])
 
 	const generateTableData = () => {
         const combinedData = [...userData.admins, ...userData.users, ...userData.venueOwners];
@@ -151,6 +155,25 @@ const ManageUsers = ({ navigation }) => {
 				if (response.data.success) {
 					Alert.alert("Successfully create account!")
 					setIsCreateUserModalVisible(false)
+					setCreateUserState(true)
+				} else {
+					const { message } = response.data;
+					Alert.alert("Error!", message)
+				}
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	}
+
+	const handleEditUser = () => {
+		axios
+			.post("http://10.0.2.2:3000/editUser", { selectedUser })
+			.then((response) => { 
+				if (response.data.success) {
+					Alert.alert("Successfully editted account!")
+					setIsModalVisible(false)
+					setEditUserState(true)
 				} else {
 					const { message } = response.data;
 					Alert.alert("Error!", message)
@@ -327,7 +350,7 @@ const ManageUsers = ({ navigation }) => {
 							{selectedUser.userID
 								? 'Refferal Code:'
 								: selectedUser.venueOwnerID
-								? 'Owned VenueID:'
+								? ''
 								: ''}
 							</Text>
 							<TextInput
@@ -336,7 +359,7 @@ const ManageUsers = ({ navigation }) => {
 								selectedUser.userID
 								? selectedUser.referralCode
 								: selectedUser.venueOwnerID
-								? selectedUser.venueID
+								? ''
 								: ''
 							}
 							onChangeText={(text) => {
@@ -366,6 +389,13 @@ const ManageUsers = ({ navigation }) => {
 								}}
 							/>
 						</View>
+						<Button
+							title="Edit User"
+							color={COLORS.foam}
+							filled
+							onPress={() => handleEditUser()}
+							style={{ marginTop: 20 }}
+						/>
 						<Button
 							title="Close"
 							color={COLORS.foam}

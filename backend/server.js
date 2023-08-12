@@ -825,3 +825,9 @@ app.post("/createUser", async (req, res) => {
 	const { username, password, email, mobileNumber, selectedAccountType } = req.body;
 	globalAdmin.createUser(client, res, username, password, email, mobileNumber, selectedAccountType)
 })
+
+//Route for amin to edit user account
+app.post("/editUser", async (req, res) => {
+	const { selectedUser } = req.body;
+	globalAdmin.editUser(client, res, selectedUser)
+})

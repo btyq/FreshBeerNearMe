@@ -195,6 +195,60 @@ class Admin {
 			res.status(500).json({ success: false, message: "An error occurred while creating user" });
 		}
 	}
+
+	async editUser(client, res, selectedUser) {
+		try {
+			const db = client.db("FreshBearNearMe");
+			
+			if (selectedUser.adminID) {
+				const adminsCollection = db.collection("Admin");
+				await adminsCollection.updateOne(
+					{ adminID: selectedUser.adminID },
+					{
+						$set: {
+							username: selectedUser.username,
+							password: selectedUser.password,
+							email: selectedUser.email,
+							mobileNumber: selectedUser.mobileNumber
+						},
+					}
+				);
+			} else if (selectedUser.userID) {
+				const usersCollection = db.collection("User");
+				await usersCollection.updateOne(
+					{ userID: selectedUser.userID },
+					{
+						$set: {
+							username: selectedUser.username,
+							password: selectedUser.password,
+							email: selectedUser.email,
+							mobileNumber: selectedUser.mobileNumber,
+							referralCode: selectedUser.referralCode,
+							referralPoints: selectedUser.referralPoints,
+						},
+					}
+				);
+			} else if (selectedUser.venueOwnerID) {
+				const venueOwnersCollection = db.collection("VenueOwners");
+				await venueOwnersCollection.updateOne(
+					{ venueOwnerID: selectedUser.venueOwnerID },
+					{
+						$set: {
+							username: selectedUser.username,
+							password: selectedUser.password,
+							email: selectedUser.email,
+							mobileNumber: selectedUser.mobileNumber
+						},
+					}
+				);
+			}
+			
+			res.json({ success: true, message: "User edited successfully" });
+		} catch (error) {
+			console.error("Error editing user:", error);
+			res.status(500).json({ success: false, message: "An error occurred while editing user" });
+		}
+	}
 }
 
 module.exports = Admin;
