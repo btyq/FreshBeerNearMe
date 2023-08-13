@@ -11,8 +11,8 @@ import {
 	CreateEvents,
 	CreatePromotion,
 	InquiriesNFeedback,
+	ManageBrewery,
 	ManageContent,
-	ManageDatabase,
 	ManageInventory,
 	ManageUsers,
 	ReportedBugs,
@@ -94,8 +94,8 @@ export default function App() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="ManageDatabase"
-						component={ManageDatabase}
+						name="ManageBrewery"
+						component={ManageBrewery}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

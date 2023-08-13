@@ -183,7 +183,7 @@ const AdminLogin = ({ navigation }) => {
 								</TouchableOpacity>
 
 								<TouchableOpacity
-									onPress={() => navigation.navigate("ManageDatabase")}
+									onPress={() => navigation.navigate("ManageBrewery")}
 									style={styles.container}
 								>
 									<CustomText>Brewery Management</CustomText>

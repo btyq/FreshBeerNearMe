@@ -186,6 +186,7 @@ const CustomCreateAlert = ({ visible, onClose, title, message }) => {
 		</Modal>
 	);
 };
+
 const ManageUsers = ({ navigation }) => {
 	const [userData, setUserData] = useState({
 		admins: [],

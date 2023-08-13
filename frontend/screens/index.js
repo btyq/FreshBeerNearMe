@@ -1,8 +1,8 @@
 import Signup from "./Signup";
 import Welcome from "./Welcome";
 import AdminDashboard from "./admin/AdminDashboard";
+import ManageBrewery from "./admin/ManageBrewery";
 import ManageContent from "./admin/ManageContent";
-import ManageDatabase from "./admin/ManageDatabase";
 import ManageUsers from "./admin/ManageUsers";
 import ReportedBugs from "./admin/ReportedBugs";
 import BeersVenue from "./user/BeersVenue";
@@ -41,8 +41,8 @@ export {
 	Forums,
 	InquiriesNFeedback,
 	Journal,
+	ManageBrewery,
 	ManageContent,
-	ManageDatabase,
 	ManageInventory,
 	ManageUsers,
 	NearbyVenues,
