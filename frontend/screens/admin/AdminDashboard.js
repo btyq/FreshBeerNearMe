@@ -186,7 +186,7 @@ const AdminLogin = ({ navigation }) => {
 									onPress={() => navigation.navigate("ManageDatabase")}
 									style={styles.container}
 								>
-									<CustomText>Database Management</CustomText>
+									<CustomText>Brewery Management</CustomText>
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>
@@ -202,7 +202,7 @@ const AdminLogin = ({ navigation }) => {
 									onPress={() => navigation.navigate("ManageContent")}
 									style={styles.container}
 								>
-									<CustomText>Content Management</CustomText>
+									<CustomText>Venue Management</CustomText>
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>

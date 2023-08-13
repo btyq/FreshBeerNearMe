@@ -249,6 +249,75 @@ class Admin {
 			res.status(500).json({ success: false, message: "An error occurred while editing user" });
 		}
 	}
+
+	async getBrewery(client, res) {
+		try {
+			const db = client.db('FreshBearNearMe');
+			const breweryCollection = db.collection('Brewery');
+	
+			const brewery = await breweryCollection.find({}).toArray();
+	
+			if (brewery.length > 0) {
+				res.send(brewery);
+			} else {
+				res.status(500).json({ error: "Error getting brewery data" });
+			}
+		} catch (error) {
+			res.status(500).json({ error: "Error getting brewery data" });
+		}
+	}
+
+	async editBrewery(client, res, selectedBrewery) {
+		try {
+			const db = client.db('FreshBearNearMe')
+			const breweryCollection = db.collection('Brewery');
+
+			await breweryCollection.updateOne(
+				{ breweryID : selectedBrewery.breweryID},
+				{
+					$set: {
+						breweryName : selectedBrewery.breweryName,
+						breweryAddress : selectedBrewery.breweryAddress,
+						breweryContact : selectedBrewery.breweryContact,
+						breweryImage : selectedBrewery.breweryImage,
+						breweryOperatingHours : selectedBrewery.breweryOperatingHours,
+					},
+				}
+			)
+			res.json({ success: true, message: "Brewery successfully editted"})
+		} catch (error) {
+			res.json({ success: false, message: "An error occurred while editting brewery" });
+		}
+	}
+
+	async addBrewery(client, res, breweryName, breweryAddress, breweryContact, breweryImage, breweryOperatingHours, breweryLatitude, breweryLongitude) {
+		try {
+			const latestBrewery = await client.db("FreshBearNearMe").collection("Brewery").find().sort({ breweryID: -1 }).limit(1).toArray();
+			const latestID = latestBrewery.length > 0 ? latestBrewery[0].breweryID : 0;
+	
+			const newBreweryID = latestID + 1;
+			const newBrewery = {
+				breweryID: newBreweryID,
+				breweryName,
+				breweryAddress,
+				breweryContact,
+				breweryRating : 0,
+				breweryImage,
+				breweryOperatingHours,
+				breweryMenu : [],
+				breweryReview: [],
+				breweryLatitude,
+				breweryLongitude,
+				breweryFreshness: 0,
+				breweryTemperature: 0,
+			};
+			await client.db("FreshBearNearMe").collection("Brewery").insertOne(newBrewery);
+	
+			res.json({ success: true, message: "Brewery added successfully." });
+		} catch (error) {
+			res.json({ success: false, message: "An error occurred while adding the brewery." });
+		}
+	}
 }
 
 module.exports = Admin;

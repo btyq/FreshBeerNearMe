@@ -831,3 +831,28 @@ app.post("/editUser", async (req, res) => {
 	const { selectedUser } = req.body;
 	globalAdmin.editUser(client, res, selectedUser)
 })
+
+//Route for admin to retrieve brewery data
+app.get("/getBrewery", async (req, res) => {
+	globalAdmin.getBrewery(client, res)
+})
+
+//Route for admin to edit brewery data
+app.post("/editBrewery", async (req, res) => {
+	const { selectedBrewery } = req.body;
+	globalAdmin.editBrewery(client, res, selectedBrewery)
+})
+
+//Route for admin to add new brewery data
+app.post("/addBrewery", async (req, res) => {
+	const { 
+		breweryName,
+		breweryAddress,
+		breweryContact,
+		breweryImage,
+		breweryOperatingHours,
+		breweryLatitude,
+		breweryLongitude,
+	} = req.body;
+	globalAdmin.addBrewery(client, res, breweryName, breweryAddress, breweryContact, breweryImage, breweryOperatingHours, breweryLatitude, breweryLongitude)
+})
