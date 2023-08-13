@@ -4,10 +4,11 @@ import {
 	MaterialIcons,
 	Octicons,
 } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
-	Modal,
 	Alert,
+	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -15,6 +16,7 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
+import { SelectList } from "react-native-dropdown-select-list";
 import { Header } from "react-native-elements";
 import {
 	Cell,
@@ -28,8 +30,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import { SelectList } from "react-native-dropdown-select-list";
-import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -53,25 +53,6 @@ const Button = (props) => {
 	);
 };
 
-const CustomButtonGroup = ({ buttons, selectedIndex, onPress }) => {
-	return (
-		<View style={styles.buttonGroupContainer}>
-			{buttons.map((button, index) => (
-				<TouchableOpacity
-					key={index}
-					style={[
-						styles.button,
-						selectedIndex === index && styles.selectedButton,
-					]}
-					onPress={() => onPress(index)}
-				>
-					<Text style={styles.buttonText}>{button}</Text>
-				</TouchableOpacity>
-			))}
-		</View>
-	);
-};
-
 const CustomText = (props) => {
 	return (
 		<Text style={{ ...GlobalStyle.bodyFont, ...props.style }}>
@@ -80,109 +61,252 @@ const CustomText = (props) => {
 	);
 };
 
-const tableData1 = {
-	tableHead1: ["Username", "Status", "Actions"],
-	tableData1: [
-		["John", "Active", "Edit Account "],
-		["Doe", "Inactive", "Edit Account"],
-		["Mary", "Active", "Edit Account"],
-	],
+// custom alert for successful edit
+const CustomEditAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
 };
 
+// custom alert for successful user creation
+const CustomCreateAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
 const ManageUsers = ({ navigation }) => {
-	const [data2, setData2] = useState(tableData1);
 	const [userData, setUserData] = useState({
 		admins: [],
 		users: [],
 		venueOwners: [],
 	});
-	const [search, setSearch] = useState("");
 	const [selectedUser, setSelectedUser] = useState(null);
 	const [isModalVisible, setIsModalVisible] = useState(false);
-	const [isCreateUserModalVisible, setIsCreateUserModalVisible] = useState(false);
-	const [username, setUsername] = useState("")
-	const [password, setPassword] = useState("")
-	const [email, setEmail] = useState("")
-	const [mobileNumber, setMobileNumber] = useState("")
-	const [selectedAccountType, setSelectedAccountType] = useState('User');
+	const [isCreateUserModalVisible, setIsCreateUserModalVisible] =
+		useState(false);
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+	const [email, setEmail] = useState("");
+	const [mobileNumber, setMobileNumber] = useState("");
+	const [selectedAccountType, setSelectedAccountType] = useState("User");
 	const [createUserState, setCreateUserState] = useState(false);
 	const [editUserState, setEditUserState] = useState(false);
 
-	const updateSearch = (search) => {
-		setSearch(search);
+	const [isEditVisible, setIsEditVisible] = useState(false);
+	const [EditTitle, setEditTitle] = useState("");
+	const [EditMessage, setEditMessage] = useState("");
+
+	const [isCreateVisible, setIsCreateVisible] = useState(false);
+	const [CreateTitle, setCreateTitle] = useState("");
+	const [CreateMessage, setCreateMessage] = useState("");
+
+	const toggleModal = () => {
+		setIsModalVisible(!isModalVisible);
+	};
+
+	const toggleModal2 = () => {
+		setIsCreateUserModalVisible(!isCreateUserModalVisible);
 	};
 
 	useEffect(() => {
 		axios
 			.get("http://10.0.2.2:3000/getUser")
 			.then((response) => {
-				setUserData(response.data)
-				setCreateUserState(false)
-				setEditUserState(false)
+				setUserData(response.data);
+				setCreateUserState(false);
+				setEditUserState(false);
 			})
 			.catch((error) => {
 				console.error("Error retrieving User Data", error);
-			})
-	}, [createUserState, editUserState])
+			});
+	}, [createUserState, editUserState]);
 
 	const generateTableData = () => {
-        const combinedData = [...userData.admins, ...userData.users, ...userData.venueOwners];
-        
-        return combinedData.map((user) => [
-            user.username,
-            user.adminID ? "Admin" : user.venueOwnerID ? "Venue Owner" : "User",
-			<TouchableOpacity onPress={() => {
-				setSelectedUser(user);
-				setIsModalVisible(true);
-			  }}>
-				<Text>Edit Account</Text>
-			</TouchableOpacity>
-        ]);
-    };
+		const combinedData = [
+			...userData.admins,
+			...userData.users,
+			...userData.venueOwners,
+		];
 
-	const handleCreateUser = () => { 
+		return combinedData.map((user) => [
+			user.username,
+			user.adminID ? "Admin" : user.venueOwnerID ? "Venue Owner" : "User",
+			<Button
+				title="Edit Account"
+				onPress={() => {
+					setSelectedUser(user);
+					toggleModal();
+				}}
+				color={COLORS.blue}
+				filled
+				style={{
+					marginTop: 10,
+					marginBottom: 4,
+					elevation: 2,
+				}}
+			/>,
+		]);
+	};
+
+	const handleCreateUser = () => {
 		const data = {
 			username: username,
 			password: password,
 			email: email,
 			mobileNumber: mobileNumber,
 			selectedAccountType: selectedAccountType,
-		}
+		};
 
 		axios
 			.post("http://10.0.2.2:3000/createUser", data)
 			.then((response) => {
 				if (response.data.success) {
-					Alert.alert("Successfully create account!")
-					setIsCreateUserModalVisible(false)
-					setCreateUserState(true)
+					setCreateTitle("Success");
+					setCreateMessage("Account created!");
+					setCreateUserState(true);
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message)
+					setCreateTitle("Error");
+					setCreateMessage(message);
 				}
+				setIsCreateVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
-			})
-	}
+			});
+	};
 
 	const handleEditUser = () => {
 		axios
 			.post("http://10.0.2.2:3000/editUser", { selectedUser })
-			.then((response) => { 
+			.then((response) => {
 				if (response.data.success) {
-					Alert.alert("Successfully editted account!")
-					setIsModalVisible(false)
-					setEditUserState(true)
+					setEditTitle("Success");
+					setEditMessage("Account edited!");
+					setEditUserState(true);
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message)
+					setEditTitle("Error");
+					setEditMessage(message);
 				}
+				setIsEditVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
-			})
-	}
+			});
+	};
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -217,7 +341,7 @@ const ManageUsers = ({ navigation }) => {
 					}}
 					rightComponent={
 						<View style={{ flexDirection: "row" }}>
-							<TouchableOpacity onPress={() => console.log(userData)}>
+							<TouchableOpacity onPress={() => console.log(filteredAdmins)}>
 								<Ionicons
 									name="notifications-outline"
 									size={24}
@@ -233,25 +357,16 @@ const ManageUsers = ({ navigation }) => {
 				/>
 
 				<SafeAreaView style={{ flex: 1 }}>
-					<ScrollView>
+					<ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
 						<View style={{ marginHorizontal: 22 }}>
 							<Text
 								style={{
 									fontSize: 18,
 									...GlobalStyle.headerFont,
-									marginBottom: 12,
 								}}
 							>
 								Manage Users
 							</Text>
-							<View style={styles.searchContainer}>
-								<TextInput
-									placeholder="Search user"
-									style={{ ...GlobalStyle.bodyFont, ...styles.searchInput }}
-									onChangeText={updateSearch}
-									value={search}
-								/>
-							</View>
 
 							<View
 								style={{
@@ -270,16 +385,152 @@ const ManageUsers = ({ navigation }) => {
 										elevation: 2,
 										width: "30%",
 									}}
-									onPress={() => {setIsCreateUserModalVisible(true)}}
+									onPress={() => {
+										toggleModal2();
+									}}
 								/>
+								{/* popup for create new user */}
+								<Modal
+									visible={isCreateUserModalVisible}
+									animationType="slide"
+									transparent
+									onRequestClose={() => setIsCreateUserModalVisible(false)}
+								>
+									<View
+										style={{
+											width: "100%",
+											height: "100%",
+											backgroundColor: COLORS.secondary,
+											borderRadius: 10,
+											paddingHorizontal: 20,
+											elevation: 5,
+										}}
+									>
+										<View style={{ marginTop: 12 }}>
+											<TouchableOpacity
+												onPress={() => setIsCreateUserModalVisible(false)}
+											>
+												<Ionicons
+													name="arrow-back"
+													size={24}
+													color={COLORS.black}
+												/>
+											</TouchableOpacity>
+										</View>
+										<View style={{ marginHorizontal: 22 }}>
+											<Text
+												style={{
+													fontSize: 18,
+													...GlobalStyle.headerFont,
+													marginVertical: 12,
+												}}
+											>
+												Create New User
+											</Text>
+											<View style={{ marginBottom: 8 }}>
+												<CustomText style={{ marginTop: 10 }}>
+													Username
+												</CustomText>
+												<View style={styles.textInput}>
+													<TextInput
+														placeholder="Username"
+														onChangeText={(text) => setUsername(text)}
+														style={{ width: "100%" }}
+													/>
+												</View>
+											</View>
+
+											<View style={{ marginBottom: 8 }}>
+												<CustomText style={{ marginTop: 10 }}>
+													Password
+												</CustomText>
+												<View style={styles.textInput}>
+													<TextInput
+														placeholder="Password"
+														onChangeText={(text) => setPassword(text)}
+														style={{ width: "100%" }}
+													/>
+												</View>
+											</View>
+
+											<View style={{ marginBottom: 8 }}>
+												<CustomText style={{ marginTop: 10 }}>Email</CustomText>
+												<View style={styles.textInput}>
+													<TextInput
+														placeholder="Email"
+														onChangeText={(text) => setEmail(text)}
+														style={{ width: "100%" }}
+													/>
+												</View>
+											</View>
+
+											<View style={{ marginBottom: 8 }}>
+												<CustomText style={{ marginTop: 10 }}>
+													Mobile Number
+												</CustomText>
+												<View style={styles.textInput}>
+													<TextInput
+														placeholder="Mobile Number"
+														onChangeText={(text) => setMobileNumber(text)}
+														style={{ width: "100%" }}
+													/>
+												</View>
+											</View>
+
+											<View style={{ marginBottom: 8 }}>
+												<CustomText style={{ marginTop: 10 }}>
+													Account Type
+												</CustomText>
+												<SelectList
+													data={["User", "Venue Owner", "Admin"]}
+													defaultOption={{ value: "User" }}
+													setSelected={(itemValue) =>
+														setSelectedAccountType(itemValue)
+													}
+													boxStyles={{
+														borderRadius: 12,
+														borderColor: 0,
+														backgroundColor: COLORS.grey,
+														opacity: 1,
+													}}
+													dropdownStyles={{
+														right: 0,
+														borderColor: 0,
+														backgroundColor: COLORS.grey,
+														opacity: 1,
+													}}
+													search={false}
+												/>
+											</View>
+											<Button
+												title="Create"
+												color={COLORS.foam}
+												filled
+												onPress={() => handleCreateUser()}
+												style={{ marginTop: 20 }}
+											/>
+											<CustomCreateAlert
+												visible={isCreateVisible}
+												onClose={() => setIsCreateVisible(false)}
+												title={CreateTitle}
+												message={CreateMessage}
+											/>
+										</View>
+									</View>
+								</Modal>
 							</View>
 
 							<View style={{ marginTop: 20, justifyContent: "center" }}>
-								<Table borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}>
+								<Table
+									borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
+								>
 									<Row
 										data={["Username", "Account Type", "Actions"]} // Modified labels
 										style={styles.head}
-										textStyle={{ textAlign: "center", ...GlobalStyle.headerFont }}
+										textStyle={{
+											textAlign: "center",
+											...GlobalStyle.headerFont,
+										}}
 									/>
 									<Rows
 										data={generateTableData()}
@@ -287,189 +538,211 @@ const ManageUsers = ({ navigation }) => {
 									/>
 								</Table>
 							</View>
+
+							{/* popup for edit account */}
+							<Modal visible={isModalVisible} animationType="slide" transparent>
+								{selectedUser && (
+									<View
+										style={{
+											width: "100%",
+											height: "100%",
+											backgroundColor: COLORS.secondary,
+											borderRadius: 10,
+											paddingHorizontal: 20,
+											elevation: 5,
+										}}
+									>
+										<View style={{ marginTop: 12 }}>
+											<TouchableOpacity
+												onPress={() => setIsModalVisible(false)}
+											>
+												<Ionicons
+													name="arrow-back"
+													size={24}
+													color={COLORS.black}
+												/>
+											</TouchableOpacity>
+										</View>
+										<ScrollView
+											contentContainerStyle={{ paddingBottom: 10 }}
+											showsVerticalScrollIndicator={false}
+										>
+											<View style={{ marginHorizontal: 22 }}>
+												<Text
+													style={{
+														fontSize: 18,
+														...GlobalStyle.headerFont,
+														marginTop: 22,
+														marginBottom: 12,
+													}}
+												>
+													Edit User Account
+												</Text>
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Username
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															placeholder="Username"
+															onChangeText={(text) =>
+																setSelectedUser({
+																	...selectedUser,
+																	username: text,
+																})
+															}
+															value={selectedUser.username}
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Account Type
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															value={
+																selectedUser.adminID
+																	? "Admin"
+																	: selectedUser.venueOwnerID
+																	? "Venue Owner"
+																	: "User"
+															}
+															onChangeText={() => {}}
+															editable={false}
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Password
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															placeholder="Password"
+															value={selectedUser.password}
+															onChangeText={(text) =>
+																setSelectedUser({
+																	...selectedUser,
+																	password: text,
+																})
+															}
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Email
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															placeholder="Email"
+															onChangeText={(text) =>
+																setSelectedUser({
+																	...selectedUser,
+																	email: text,
+																})
+															}
+															value={selectedUser.email}
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Mobile Number
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															placeholder="Password"
+															value={selectedUser.mobileNumber}
+															onChangeText={(text) =>
+																setSelectedUser({
+																	...selectedUser,
+																	mobileNumber: text,
+																})
+															}
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														{selectedUser.userID
+															? "Referral Code:"
+															: selectedUser.venueOwnerID
+															? ""
+															: ""}
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															value={
+																selectedUser.userID
+																	? selectedUser.referralCode
+																	: selectedUser.venueOwnerID
+																	? ""
+																	: ""
+															}
+															onChangeText={(text) => {
+																if (selectedUser.userID) {
+																	setSelectedUser({
+																		...selectedUser,
+																		referralCode: text,
+																	});
+																} else if (selectedUser.venueOwnerID) {
+																}
+															}}
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														{selectedUser.userID ? "Referral Points" : ""}
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															value={
+																selectedUser.userID
+																	? selectedUser.referralPoints.toString()
+																	: ""
+															}
+															onChangeText={(text) => {
+																if (selectedUser.userID) {
+																	setSelectedUser({
+																		...selectedUser,
+																		referralPoints: parseInt(text),
+																	});
+																}
+															}}
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+												<Button
+													title="Edit User"
+													color={COLORS.foam}
+													filled
+													onPress={() => handleEditUser()}
+													style={{ marginTop: 20 }}
+												/>
+												<CustomEditAlert
+													visible={isEditVisible}
+													onClose={() => setIsEditVisible(false)}
+													title={EditTitle}
+													message={EditMessage}
+												/>
+											</View>
+										</ScrollView>
+									</View>
+								)}
+							</Modal>
 						</View>
 					</ScrollView>
 				</SafeAreaView>
-				<Modal
-					visible={isModalVisible}
-					animationType="slide"
-					transparent
-					onRequestClose={() => setIsModalVisible(false)}
-					>
-					{selectedUser && (
-						<View style={styles.modalContainer}>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Username:</Text>
-							<TextInput
-							style={styles.input}
-							value={selectedUser.username}
-							onChangeText={(text) => setSelectedUser({ ...selectedUser, username: text })}
-							placeholder="Username"
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Account Type:</Text>
-							<TextInput
-							style={styles.input}
-							value={selectedUser.adminID ? "Admin" : selectedUser.venueOwnerID ? "Venue Owner" : "User"}
-							onChangeText={() => {}}
-							editable={false}
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Password:</Text>
-							<TextInput
-							style={styles.input}
-							value={selectedUser.password}
-							onChangeText={(text) => setSelectedUser({ ...selectedUser, password: text })}
-							placeholder="Password"
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Email:</Text>
-							<TextInput
-							style={styles.input}
-							value={selectedUser.email}
-							onChangeText={(text) => setSelectedUser({ ...selectedUser, email: text })}
-							placeholder="Email"
-							keyboardType="email-address"
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Mobile Number:</Text>
-							<TextInput
-							style={styles.input}
-							value={selectedUser.mobileNumber}
-							onChangeText={(text) => setSelectedUser({ ...selectedUser, mobileNumber: text })}
-							placeholder="Mobile Number"
-							keyboardType="numeric"
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>
-							{selectedUser.userID
-								? 'Refferal Code:'
-								: selectedUser.venueOwnerID
-								? ''
-								: ''}
-							</Text>
-							<TextInput
-							style={styles.input}
-							value={
-								selectedUser.userID
-								? selectedUser.referralCode
-								: selectedUser.venueOwnerID
-								? ''
-								: ''
-							}
-							onChangeText={(text) => {
-								if (selectedUser.userID) {
-								setSelectedUser({ ...selectedUser, referralCode: text });
-								} else if (selectedUser.venueOwnerID) {
-								
-								}
-							}}
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>
-								{selectedUser.userID ? 'Refferal Points:' : ''}
-							</Text>
-							<TextInput
-								style={styles.input}
-								value={
-								selectedUser.userID
-									? selectedUser.referralPoints.toString()
-									: ''
-								}
-								onChangeText={(text) => {
-								if (selectedUser.userID) {
-									setSelectedUser({ ...selectedUser, referralPoints: parseInt(text) });
-								}
-								}}
-							/>
-						</View>
-						<Button
-							title="Edit User"
-							color={COLORS.foam}
-							filled
-							onPress={() => handleEditUser()}
-							style={{ marginTop: 20 }}
-						/>
-						<Button
-							title="Close"
-							color={COLORS.foam}
-							filled
-							onPress={() => setIsModalVisible(false)}
-							style={{ marginTop: 20 }}
-						/>
-						</View>
-					)}
-				</Modal>
-
-				<Modal
-					visible={isCreateUserModalVisible}
-					animationType="slide"
-					transparent
-					onRequestClose={() => setIsCreateUserModalVisible(false)}
-					>
-					<View style={styles.modalContainer}>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Username:</Text>
-							<TextInput
-								style={styles.input}
-								placeholder="Username"
-								onChangeText={(text) => setUsername(text)}
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Password:</Text>
-							<TextInput
-								style={styles.input}
-								placeholder="Password"
-								onChangeText={(text) => setPassword(text)}
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Email:</Text>
-							<TextInput
-								style={styles.input}
-								placeholder="Email"
-								onChangeText={(text) => setEmail(text)}
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Mobile Number:</Text>
-							<TextInput
-								style={styles.input}
-								placeholder="Mobile Number"
-								onChangeText={(text) => setMobileNumber(text)}
-							/>
-						</View>
-						<View style={styles.inputGroup}>
-							<Text style={styles.label}>Account Type:</Text>
-							<SelectList
-								data={['User', 'Venue Owner', 'Admin']}
-								defaultValue="User"
-								setSelected={(itemValue) => setSelectedAccountType(itemValue)}
-							/>
-						</View>
-						<Button
-							title="Create"
-							color={COLORS.foam}
-							filled
-							onPress={handleCreateUser}
-							style={{ marginTop: 20 }}
-						/>
-						<Button
-							title="Close"
-							color={COLORS.foam}
-							filled
-							onPress={() => setIsCreateUserModalVisible(false)}
-							style={{ marginTop: 20 }}
-						/>						
-					</View>
-				</Modal>
 			</SafeAreaView>
 		</View>
 	);
@@ -505,13 +778,17 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	modalContainer: {
-		backgroundColor: COLORS.white,
-		padding: 20,
-		borderRadius: 10,
-		alignSelf: 'center',
-		marginTop: '50%',
-		width: '80%',
+	textInput: {
+		width: "100%",
+		height: 45,
+		borderColor: 0,
+		borderWidth: 1,
+		borderRadius: 12,
+		alignItems: "center",
+		justifyContent: "center",
+		paddingLeft: 22,
+		marginTop: 10,
+		backgroundColor: COLORS.grey,
 	},
 });
 
