@@ -318,6 +318,76 @@ class Admin {
 			res.json({ success: false, message: "An error occurred while adding the brewery." });
 		}
 	}
+
+	async getVenue(client, res) {
+		try {
+			const db = client.db('FreshBearNearMe');
+			const venueCollection = db.collection('Venue');
+	
+			const venue = await venueCollection.find({}).toArray();
+	
+			if (venue.length > 0) {
+				res.send(venue);
+			} else {
+				res.status(500).json({ error: "Error getting brewery data" });
+			}
+		} catch (error) {
+			res.status(500).json({ error: "Error getting brewery data" });
+		}
+	}
+
+	async editVenue(client, res, selectedVenue) {
+		try {
+			const db = client.db('FreshBearNearMe')
+			const venueCollection = db.collection('Venue');
+
+			await venueCollection.updateOne(
+				{ venueID : selectedVenue.venueID},
+				{
+					$set: {
+						venueName : selectedVenue.venueName,
+						venueAddress : selectedVenue.venueAddress,
+						venueContact : selectedVenue.venueContact,
+						venueImage : selectedVenue.venueImage,
+						venueOperatingHours : selectedVenue.venueOperatingHours,
+					},
+				}
+			)
+			res.json({ success: true, message: "Venue successfully editted"})
+		} catch (error) {
+			res.json({ success: false, message: "An error occurred while editting Venue" });
+		}
+	}
+
+	async addVenue(client, res, venueName, venueAddress, venueContact, venueImage, venueOperatingHours, venueLatitude, venueLongitude) {
+		try {
+			const latestVenue = await client.db("FreshBearNearMe").collection("Venue").find().sort({ venueID: -1 }).limit(1).toArray();
+			const latestID = latestVenue.length > 0 ? latestVenue[0].venueID : 0;
+	
+			const newVenueID = latestID + 1;
+			const newVenue = {
+				venueID: newVenueID,
+				venueName,
+				venueAddress,
+				venueContact,
+				venueRating : 0,
+				venueImage,
+				venueOperatingHours,
+				venueMenu : [],
+				venueReview: [],
+				venueLatitude,
+				venueLongitude,
+				venueFreshness: 0,
+				venueTemperature: 0,
+				venueFeedback: [],
+			};
+			await client.db("FreshBearNearMe").collection("Venue").insertOne(newVenue);
+	
+			res.json({ success: true, message: "Venue added successfully." });
+		} catch (error) {
+			res.json({ success: false, message: "An error occurred while adding the venue." });
+		}
+	}
 }
 
 module.exports = Admin;

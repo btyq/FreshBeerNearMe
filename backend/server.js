@@ -856,3 +856,28 @@ app.post("/addBrewery", async (req, res) => {
 	} = req.body;
 	globalAdmin.addBrewery(client, res, breweryName, breweryAddress, breweryContact, breweryImage, breweryOperatingHours, breweryLatitude, breweryLongitude)
 })
+
+//Route for admin to get venue data
+app.get("/getVenue", async (req, res) => {
+	globalAdmin.getVenue(client, res)
+})
+
+//Route for admin to edit venue data
+app.post("/editVenue", async (req, res) => {
+	const { selectedVenue } = req.body;
+	globalAdmin.editVenue(client, res, selectedVenue)
+})
+
+//Route for admin to add new venue data
+app.post("/addVenue", async (req, res) => {
+	const { 
+		venueName,
+		venueAddress,
+		venueContact,
+		venueImage,
+		venueOperatingHours,
+		venueLatitude,
+		venueLongitude,
+	} = req.body;
+	globalAdmin.addVenue(client, res, venueName, venueAddress, venueContact, venueImage, venueOperatingHours, venueLatitude, venueLongitude)
+})

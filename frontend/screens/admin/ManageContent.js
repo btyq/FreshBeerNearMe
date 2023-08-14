@@ -4,8 +4,10 @@ import {
 	MaterialIcons,
 	Octicons,
 } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
+	Alert,
+	Modal,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -26,6 +28,7 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
+import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -57,22 +60,236 @@ const CustomText = (props) => {
 	);
 };
 
+const CustomEditAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
+const CustomCreateAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
 const tableData1 = {
 	tableData1: [
-		["Name", "Style", "Brewery", "100%"],
-		["Name", "Style", "Brewery", "100%"],
-		["Name", "Style", "Brewery", "100%"],
-		["Name", "Style", "Brewery", "100%"],
+		["Name", "Style", "venue", "100%"],
+		["Name", "Style", "venue", "100%"],
+		["Name", "Style", "venue", "100%"],
+		["Name", "Style", "venue", "100%"],
 	],
 };
 
 const ManageContent = ({ navigation }) => {
 	const [data2, setData2] = useState(tableData1);
-
+	const [venueData, setVenueData] = useState([]);
+	const [modalVisible, setModalVisible] = useState(false);
+	const [addModalVisible, setAddModalVisible] = useState(false);
+	const [selectedVenue, setSelectedVenue] = useState(null);
+	const [editVenueState, setEditVenueState] = useState(false);
 	const [search, setSearch] = useState("");
+
+	const [venueName, setVenueName] = useState("");
+	const [venueAddress, setVenueAddress] = useState("");
+	const [venueContact, setVenueContact] = useState("");
+	const [venueImage, setVenueImage] = useState("");
+	const [venueOperatingHours, setVenueOperatingHours] = useState("");
+	const [venueLatitude, setVenueLatitude] = useState("");
+	const [venueLongitude, setVenueLongitude] = useState("");
+
+	const [isEditVisible, setIsEditVisible] = useState(false);
+	const [EditTitle, setEditTitle] = useState("");
+	const [EditMessage, setEditMessage] = useState("");
+
+	const [isCreateVisible, setIsCreateVisible] = useState(false);
+	const [CreateTitle, setCreateTitle] = useState("");
+	const [CreateMessage, setCreateMessage] = useState("");
 
 	const updateSearch = (search) => {
 		setSearch(search);
+	};
+
+	const handleOpenModal = (venue) => {
+		setSelectedVenue(venue);
+		setModalVisible(true);
+	};
+
+	const handleCloseModal = () => {
+		setSelectedVenue(null);
+		setModalVisible(false);
+	};
+
+	useEffect(() => {
+		axios
+			.get("http://10.0.2.2:3000/getVenue")
+			.then((response) => {
+				setVenueData(response.data);
+				setEditVenueState(false);
+			})
+			.catch((error) => {
+				console.error("Error retrieving Venue Data", error);
+			})
+	}, [editVenueState])
+
+	const handleEditVenue = () => {
+		axios
+			.post("http://10.0.2.2:3000/editVenue", { selectedVenue })
+			.then((response) => {
+				if (response.data.success) {
+					setEditTitle("Success")
+					setEditMessage("Venue edited!")
+					setEditVenueState(true);
+				}
+				setIsEditVisible(true);
+			})
+			.catch((error) => {
+				console.error(error);
+			})
+	};
+	
+	const handleAddVenue = () => {
+		const data = {
+			venueName: venueName,
+			venueAddress: venueAddress,
+			venueContact: venueContact,
+			venueImage: venueImage,
+			venueOperatingHours: venueOperatingHours,
+			venueLatitude: venueLatitude,
+			venueLongitude: venueLongitude,
+		};
+
+		axios
+			.post("http://10.0.2.2:3000/addVenue", data)
+			.then((response) => {
+				if (response.data.success) {
+					setCreateTitle("Success");
+					setCreateMessage("New venue data added!");
+					setVenueName("");
+					setVenueAddress("");
+					setVenueContact("");
+					setVenueImage("");
+					setVenueOperatingHours("");
+					setVenueLatitude("");
+					setVenueLongitude("");
+				}
+				setIsCreateVisible(true);
+			})
+			.catch((error) => {
+				console.error("Error adding new venue data", error);
+			});
 	};
 
 	return (
@@ -133,18 +350,18 @@ const ManageContent = ({ navigation }) => {
 									marginBottom: 12,
 								}}
 							>
-								Manage Content
+								Manage Venue
 							</Text>
 
 							<View
 								style={{
 									flexDirection: "row",
-									justifyContent: "space-between",
+									justifyContent: "flex-end",
 									alignItems: "flex-end",
 								}}
 							>
 								<Button
-									title="Add Content"
+									title="Add Venue"
 									color={COLORS.foam}
 									filled
 									style={{
@@ -153,27 +370,186 @@ const ManageContent = ({ navigation }) => {
 										elevation: 2,
 										width: "40%",
 									}}
+									onPress={() => setAddModalVisible(true)}
 								/>
+								<Modal visible={addModalVisible} animationType="slide">
+									<View
+										style={{
+											width: "100%",
+											height: "100%",
+											backgroundColor: COLORS.secondary,
+											borderRadius: 10,
+											paddingHorizontal: 20,
+											elevation: 5,
+										}}
+									>
+										<View style={{ marginTop: 12 }}>
+											<TouchableOpacity
+												onPress={() => setAddModalVisible(false)}
+											>
+												<Ionicons
+													name="arrow-back"
+													size={24}
+													color={COLORS.black}
+												/>
+											</TouchableOpacity>
+										</View>
 
-								<Button
-									title="Remove Content"
-									color={COLORS.foam}
-									filled
-									style={{
-										marginTop: 10,
-										marginBottom: 4,
-										elevation: 2,
-										width: "40%",
-									}}
-								/>
+										<ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+											<View style={{ marginHorizontal: 22 }}>
+												<Text
+													style={{
+														fontSize: 18,
+														...GlobalStyle.headerFont,
+														marginTop: 22,
+														marginBottom: 12,
+													}}
+												>
+													Add Venue
+												</Text>
+
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Venue name
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															onChangeText={(text) => setVenueName(text)}
+															placeholder="Venue Name"
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Venue address
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															onChangeText={(text) => setVenueAddress(text)}
+															placeholder="Venue Address"
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Venue contact
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															onChangeText={(text) => setVenueContact(text)}
+															placeholder="Venue Contact"
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Venue image
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															onChangeText={(text) => setVenueImage(text)}
+															placeholder="Venue Image Link"
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Venue operating hours
+													</CustomText>
+													<View
+														style={{
+															flexDirection: "column",
+															height: 150,
+															width: "100%",
+															backgroundColor: COLORS.grey,
+															marginVertical: 10,
+															borderRadius: 15,
+															borderColor: 0,
+															paddingHorizontal: 12,
+														}}
+													>
+														<View style={{ paddingLeft: 12, marginTop: 10 }}>
+															<TextInput
+																onChangeText={(text) =>
+																	setVenueOperatingHours(text)
+																}
+																placeholder="Venue Operating Hours"
+																style={{ width: "100%" }}
+																multiline
+															/>
+														</View>
+													</View>
+												</View>
+
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Venue's latitude coordinates
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															onChangeText={(text) =>
+																setVenueLatitude(parseFloat(text))
+															}
+															placeholder="Venues Latitude Coordinates"
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+
+												<View style={{ marginBottom: 8 }}>
+													<CustomText style={{ marginTop: 10 }}>
+														Venue's longitude coordinates
+													</CustomText>
+													<View style={styles.textInput}>
+														<TextInput
+															onChangeText={(text) =>
+																setVenueLongitude(parseFloat(text))
+															}
+															placeholder="Venue's Longitude Coordinates"
+															style={{ width: "100%" }}
+														/>
+													</View>
+												</View>
+
+												<Button
+													title="Add Venue"
+													filled
+													onPress={handleAddVenue}
+													style={{ marginTop: 20 }}
+												/>
+												<CustomCreateAlert
+													visible={isCreateVisible}
+													onClose={() => setIsCreateVisible(false)}
+													title={CreateTitle}
+													message={CreateMessage}
+												/>
+											</View>
+										</ScrollView>
+									</View>
+								</Modal>
 							</View>
 
 							<View style={{ marginTop: 20, justifyContent: "center" }}>
+							{venueData.length === 0 ? (
+								<Text
+									style={{ ...GlobalStyle.bodyFont, textAlign: "center" }}
+								>
+									No data available.
+								</Text>
+							) : (
 								<Table
 									borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
 								>
 									<Row
-										data={["Beer name", "Style", "Brewery", "Freshness"]}
+										data={["Venue name", "Address", "Contact", "Action"]}
 										style={styles.head}
 										textStyle={{
 											textAlign: "center",
@@ -181,11 +557,192 @@ const ManageContent = ({ navigation }) => {
 										}}
 									/>
 									<Rows
-										data={data2.tableData1}
-										textStyle={{ ...GlobalStyle.bodyFont, textAlign: "center" }}
+										data={venueData.map((venue) => [
+											venue.venueName,
+											venue.venueAddress,
+											venue.venueContact,
+											<Button
+												title="View More"
+												onPress={() => handleOpenModal(venue)}
+												color={COLORS.blue}
+												filled
+												style={{
+													marginTop: 10,
+													marginBottom: 4,
+													elevation: 2,
+												}}
+											/>,
+										])}
+										textStyle={{
+											...GlobalStyle.bodyFont,
+											textAlign: "center",
+										}}
 									/>
 								</Table>
+								)}
 							</View>
+							<Modal visible={modalVisible} animationType="slide">
+								<View
+									style={{
+										width: "100%",
+										height: "100%",
+										backgroundColor: COLORS.secondary,
+										borderRadius: 10,
+										paddingHorizontal: 20,
+										elevation: 5,
+									}}
+								>
+									<View style={{ marginTop: 12 }}>
+										<TouchableOpacity onPress={handleCloseModal}>
+											<Ionicons
+												name="arrow-back"
+												size={24}
+												color={COLORS.black}
+											/>
+										</TouchableOpacity>
+									</View>
+
+									<ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
+										<View style={{ marginHorizontal: 22 }}>
+											<Text
+												style={{
+													fontSize: 18,
+													...GlobalStyle.headerFont,
+													marginTop: 22,
+													marginBottom: 12,
+												}}
+											>
+												Venue Details
+											</Text>
+											{selectedVenue? (
+												<View>
+													<View style={{ marginBottom: 8 }}>
+														<CustomText style={{ marginTop: 10 }}>
+															Venue name
+														</CustomText>
+														<View style={styles.textInput}>
+															<TextInput
+																placeholder="venue name"
+																value={selectedVenue.venueName}
+																onChangeText={(text) =>
+																	setSelectedVenue({
+																		...selectedVenue,
+																		venueName: text,
+																	})
+																}
+																style={{ width: "100%" }}
+															/>
+														</View>
+													</View>
+
+													<View style={{ marginBottom: 8 }}>
+														<CustomText style={{ marginTop: 10 }}>
+															Venue address
+														</CustomText>
+														<View style={styles.textInput}>
+															<TextInput
+																placeholder="venue name"
+																value={selectedVenue.venueAddress}
+																onChangeText={(text) =>
+																	setSelectedVenue({
+																		...selectedVenue,
+																		venueAddress: text,
+																	})
+																}
+																style={{ width: "100%" }}
+															/>
+														</View>
+													</View>
+
+													<View style={{ marginBottom: 8 }}>
+														<CustomText style={{ marginTop: 10 }}>
+															Venue contact
+														</CustomText>
+														<View style={styles.textInput}>
+															<TextInput
+																placeholder="venue name"
+																value={selectedVenue.venueContact}
+																onChangeText={(text) =>
+																	setSelectedVenue({
+																		...selectedVenue,
+																		venueContact: text,
+																	})
+																}
+																style={{ width: "100%" }}
+															/>
+														</View>
+													</View>
+
+													<View style={{ marginBottom: 8 }}>
+														<CustomText style={{ marginTop: 10 }}>
+															Venue image
+														</CustomText>
+														<View style={styles.textInput}>
+															<TextInput
+																placeholder="venue name"
+																value={selectedVenue.venueImage}
+																onChangeText={(text) =>
+																	setSelectedVenue({
+																		...selectedVenue,
+																		venueImage: text,
+																	})
+																}
+																style={{ width: "100%" }}
+															/>
+														</View>
+													</View>
+
+													<View style={{ marginBottom: 8 }}>
+														<CustomText style={{ marginTop: 10 }}>
+															Venue operating hours
+														</CustomText>
+														<View
+															style={{
+																flexDirection: "column",
+																height: 150,
+																width: "100%",
+																backgroundColor: COLORS.grey,
+																marginVertical: 10,
+																borderRadius: 15,
+																borderColor: 0,
+																paddingHorizontal: 12,
+															}}
+														>
+															<View style={{ paddingLeft: 12, marginTop: 10 }}>
+																<TextInput
+																	placeholder="venue name"
+																	value={selectedVenue.venueOperatingHours}
+																	onChangeText={(text) =>
+																		setSelectedVenue({
+																			...selectedVenue,
+																			venueOperatingHours: text,
+																		})
+																	}
+																	multiline
+																	style={{ width: "100%" }}
+																/>
+															</View>
+														</View>
+													</View>
+												</View>
+											) : (
+												<Text>No venue data available.</Text>
+											)}
+											<Button
+												title="Edit venue"
+												filled
+												onPress={handleEditVenue}
+											/>
+											<CustomEditAlert
+												visible={isEditVisible}
+												onClose={() => setIsEditVisible(false)}
+												title={EditTitle}
+												message={EditMessage}
+											/>
+										</View>
+									</ScrollView>
+								</View>
+							</Modal>
 						</View>
 					</ScrollView>
 				</SafeAreaView>
