@@ -180,14 +180,6 @@ const VenueOwnerHome = ({ navigation }) => {
 					}}
 					rightComponent={
 						<View style={{ flexDirection: "row" }}>
-							<TouchableOpacity onPress={() => console.log(popularData)}>
-								<Octicons
-									name="bookmark"
-									size={24}
-									color={COLORS.black}
-									style={{ marginRight: 10 }}
-								/>
-							</TouchableOpacity>
 							<TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
 								<MaterialIcons name="logout" size={24} color={COLORS.black} />
 							</TouchableOpacity>
@@ -400,7 +392,7 @@ const VenueOwnerHome = ({ navigation }) => {
 										marginVertical: 12,
 									}}
 								>
-									Analytics
+									Beer Analytics
 								</Text>
 								<Button
 									title="See more"
@@ -544,7 +536,7 @@ const VenueOwnerHome = ({ navigation }) => {
 										marginVertical: 12,
 									}}
 								>
-									Venue Comparison
+									Venue Analytics
 								</Text>
 								<Button
 									title="See more"
