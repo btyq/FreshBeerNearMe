@@ -4,9 +4,7 @@ import CheckBox from "expo-checkbox";
 import React, { useState } from "react";
 import {
 	Alert,
-	Image,
 	Modal,
-	Pressable,
 	ScrollView,
 	StyleSheet,
 	Text,
@@ -201,42 +199,42 @@ const Signup = ({ navigation }) => {
 	};
 
 	return (
-		<ScrollView>
-			<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
-				<Header
-					placement="left"
-					backgroundColor={COLORS.primary}
-					containerStyle={{
-						height: 100,
-						borderBottomLeftRadius: 40,
-						borderBottomRightRadius: 40,
-					}}
-					leftComponent={
-						<View
-							style={{
-								flexDirection: "row",
-							}}
-						>
-							<TouchableOpacity onPress={() => navigation.goBack()}>
-								<MaterialIcons
-									name="keyboard-arrow-left"
-									size={24}
-									color={COLORS.black}
-								/>
-							</TouchableOpacity>
-						</View>
-					}
-					centerComponent={{
-						text: "FreshBeer",
-						style: {
-							fontSize: 20,
-							...GlobalStyle.headerFont,
+		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.secondary}>
+			<Header
+				placement="left"
+				backgroundColor={COLORS.primary}
+				containerStyle={{
+					height: 100,
+					borderBottomLeftRadius: 40,
+					borderBottomRightRadius: 40,
+				}}
+				leftComponent={
+					<View
+						style={{
 							flexDirection: "row",
-							justifyContent: "flex-start",
-						},
-					}}
-				/>
+						}}
+					>
+						<TouchableOpacity onPress={() => navigation.goBack()}>
+							<MaterialIcons
+								name="keyboard-arrow-left"
+								size={24}
+								color={COLORS.black}
+							/>
+						</TouchableOpacity>
+					</View>
+				}
+				centerComponent={{
+					text: "FreshBeer",
+					style: {
+						fontSize: 20,
+						...GlobalStyle.headerFont,
+						flexDirection: "row",
+						justifyContent: "flex-start",
+					},
+				}}
+			/>
 
+			<ScrollView>
 				<View style={{ flex: 1, marginHorizontal: 32, marginBottom: 12 }}>
 					<View style={{ marginBottom: 8 }}>
 						<Text
@@ -483,7 +481,7 @@ const Signup = ({ navigation }) => {
 						<CustomText style={{ fontSize: 16 }}>
 							Already have an account?
 						</CustomText>
-						<Pressable onPress={() => navigation.navigate("Welcome")}>
+						<TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
 							<Text
 								style={{
 									fontSize: 16,
@@ -493,11 +491,11 @@ const Signup = ({ navigation }) => {
 							>
 								Login
 							</Text>
-						</Pressable>
+						</TouchableOpacity>
 					</View>
 				</View>
-			</SafeAreaView>
-		</ScrollView>
+			</ScrollView>
+		</SafeAreaView>
 	);
 };
 

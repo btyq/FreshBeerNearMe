@@ -199,7 +199,7 @@ const AdminLogin = ({ navigation }) => {
 								</TouchableOpacity>
 
 								<TouchableOpacity
-									onPress={() => navigation.navigate("ManageContent")}
+									onPress={() => navigation.navigate("ManageVenue")}
 									style={styles.container}
 								>
 									<CustomText>Venue Management</CustomText>

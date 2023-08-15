@@ -12,9 +12,9 @@ import {
 	CreatePromotion,
 	InquiriesNFeedback,
 	ManageBrewery,
-	ManageContent,
 	ManageInventory,
 	ManageUsers,
+	ManageVenue,
 	ReportedBugs,
 	Respond,
 	Signup,
@@ -99,8 +99,8 @@ export default function App() {
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen
-						name="ManageContent"
-						component={ManageContent}
+						name="ManageVenue"
+						component={ManageVenue}
 						options={{ headerShown: false }}
 					/>
 					<Stack.Screen

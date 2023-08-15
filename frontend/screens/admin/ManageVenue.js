@@ -4,7 +4,8 @@ import {
 	MaterialIcons,
 	Octicons,
 } from "@expo/vector-icons";
-import React, { useState, useEffect } from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
 	Alert,
 	Modal,
@@ -28,7 +29,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
-import axios from "axios";
 
 const Button = (props) => {
 	const filledBgColor = props.color || COLORS.primary;
@@ -184,23 +184,12 @@ const CustomCreateAlert = ({ visible, onClose, title, message }) => {
 	);
 };
 
-const tableData1 = {
-	tableData1: [
-		["Name", "Style", "venue", "100%"],
-		["Name", "Style", "venue", "100%"],
-		["Name", "Style", "venue", "100%"],
-		["Name", "Style", "venue", "100%"],
-	],
-};
-
-const ManageContent = ({ navigation }) => {
-	const [data2, setData2] = useState(tableData1);
+const ManageVenue = ({ navigation }) => {
 	const [venueData, setVenueData] = useState([]);
 	const [modalVisible, setModalVisible] = useState(false);
 	const [addModalVisible, setAddModalVisible] = useState(false);
 	const [selectedVenue, setSelectedVenue] = useState(null);
 	const [editVenueState, setEditVenueState] = useState(false);
-	const [search, setSearch] = useState("");
 
 	const [venueName, setVenueName] = useState("");
 	const [venueAddress, setVenueAddress] = useState("");
@@ -217,10 +206,6 @@ const ManageContent = ({ navigation }) => {
 	const [isCreateVisible, setIsCreateVisible] = useState(false);
 	const [CreateTitle, setCreateTitle] = useState("");
 	const [CreateMessage, setCreateMessage] = useState("");
-
-	const updateSearch = (search) => {
-		setSearch(search);
-	};
 
 	const handleOpenModal = (venue) => {
 		setSelectedVenue(venue);
@@ -241,25 +226,25 @@ const ManageContent = ({ navigation }) => {
 			})
 			.catch((error) => {
 				console.error("Error retrieving Venue Data", error);
-			})
-	}, [editVenueState])
+			});
+	}, [editVenueState]);
 
 	const handleEditVenue = () => {
 		axios
 			.post("http://10.0.2.2:3000/editVenue", { selectedVenue })
 			.then((response) => {
 				if (response.data.success) {
-					setEditTitle("Success")
-					setEditMessage("Venue edited!")
+					setEditTitle("Success");
+					setEditMessage("Venue edited!");
 					setEditVenueState(true);
 				}
 				setIsEditVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
-			})
+			});
 	};
-	
+
 	const handleAddVenue = () => {
 		const data = {
 			venueName: venueName,
@@ -341,7 +326,7 @@ const ManageContent = ({ navigation }) => {
 				/>
 
 				<SafeAreaView style={{ flex: 1 }}>
-					<ScrollView>
+					<ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
 						<View style={{ marginHorizontal: 22 }}>
 							<Text
 								style={{
@@ -538,47 +523,47 @@ const ManageContent = ({ navigation }) => {
 							</View>
 
 							<View style={{ marginTop: 20, justifyContent: "center" }}>
-							{venueData.length === 0 ? (
-								<Text
-									style={{ ...GlobalStyle.bodyFont, textAlign: "center" }}
-								>
-									No data available.
-								</Text>
-							) : (
-								<Table
-									borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
-								>
-									<Row
-										data={["Venue name", "Address", "Contact", "Action"]}
-										style={styles.head}
-										textStyle={{
-											textAlign: "center",
-											...GlobalStyle.headerFont,
-										}}
-									/>
-									<Rows
-										data={venueData.map((venue) => [
-											venue.venueName,
-											venue.venueAddress,
-											venue.venueContact,
-											<Button
-												title="View More"
-												onPress={() => handleOpenModal(venue)}
-												color={COLORS.blue}
-												filled
-												style={{
-													marginTop: 10,
-													marginBottom: 4,
-													elevation: 2,
-												}}
-											/>,
-										])}
-										textStyle={{
-											...GlobalStyle.bodyFont,
-											textAlign: "center",
-										}}
-									/>
-								</Table>
+								{venueData.length === 0 ? (
+									<Text
+										style={{ ...GlobalStyle.bodyFont, textAlign: "center" }}
+									>
+										No data available.
+									</Text>
+								) : (
+									<Table
+										borderStyle={{ borderWidth: 1, borderColor: COLORS.black }}
+									>
+										<Row
+											data={["Venue name", "Address", "Contact", "Action"]}
+											style={styles.head}
+											textStyle={{
+												textAlign: "center",
+												...GlobalStyle.headerFont,
+											}}
+										/>
+										<Rows
+											data={venueData.map((venue) => [
+												venue.venueName,
+												venue.venueAddress,
+												venue.venueContact,
+												<Button
+													title="View More"
+													onPress={() => handleOpenModal(venue)}
+													color={COLORS.blue}
+													filled
+													style={{
+														marginTop: 10,
+														marginBottom: 4,
+														elevation: 2,
+													}}
+												/>,
+											])}
+											textStyle={{
+												...GlobalStyle.bodyFont,
+												textAlign: "center",
+											}}
+										/>
+									</Table>
 								)}
 							</View>
 							<Modal visible={modalVisible} animationType="slide">
@@ -614,7 +599,7 @@ const ManageContent = ({ navigation }) => {
 											>
 												Venue Details
 											</Text>
-											{selectedVenue? (
+											{selectedVenue ? (
 												<View>
 													<View style={{ marginBottom: 8 }}>
 														<CustomText style={{ marginTop: 10 }}>
@@ -764,6 +749,18 @@ const styles = StyleSheet.create({
 		height: 44,
 		backgroundColor: COLORS.foam,
 	},
+	textInput: {
+		width: "100%",
+		height: 45,
+		borderColor: 0,
+		borderWidth: 1,
+		borderRadius: 12,
+		alignItems: "center",
+		justifyContent: "center",
+		paddingLeft: 22,
+		marginTop: 10,
+		backgroundColor: COLORS.grey,
+	},
 });
 
-export default ManageContent;
+export default ManageVenue;

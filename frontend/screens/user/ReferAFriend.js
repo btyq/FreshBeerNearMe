@@ -576,7 +576,10 @@ const ReferAFriend = ({ navigation }) => {
 					<SafeAreaView style={{ flex: 1 }}>
 						<View style={{ marginHorizontal: 20 }}>
 							<Text style={{ ...GlobalStyle.headerFont }}>Your Rewards</Text>
-							<ScrollView contentContainerStyle={{ paddingBottom: 50 }}>
+							<ScrollView
+								contentContainerStyle={{ paddingBottom: 80 }}
+								showsVerticalScrollIndicator={false}
+							>
 								{rewards.map((reward, index) => (
 									<View
 										key={index}

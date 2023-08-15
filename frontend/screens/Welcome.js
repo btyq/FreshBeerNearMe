@@ -13,8 +13,8 @@ import {
 	TouchableOpacity,
 	View,
 } from "react-native";
-import { SelectList } from "react-native-dropdown-select-list";
 import { SafeAreaView } from "react-native-safe-area-context";
+import SelectDropdown from "react-native-select-dropdown";
 import { useCookies } from "../CookieContext";
 import COLORS from "../constants/colors";
 import GlobalStyle from "../utils/GlobalStyle";
@@ -125,11 +125,7 @@ const Welcome = ({ navigation }) => {
 	const [isChecked, setIsChecked] = useState(false);
 	const { setCookies } = useCookies();
 	const [selected, setSelected] = useState("");
-	const data = [
-		{ key: "1", value: "User" },
-		{ key: "2", value: "Venue Owner" },
-		{ key: "3", value: "Admin" },
-	];
+	const data = ["User", "Venue Owner", "Admin"];
 	const [isDialogVisible, setIsDialogVisible] = useState(false);
 
 	useEffect(() => {
@@ -216,11 +212,11 @@ const Welcome = ({ navigation }) => {
 	};
 
 	const handleLogin = () => {
-		if (selected === "1") {
+		if (selected === "User") {
 			handleUserLogin();
-		} else if (selected === "2") {
+		} else if (selected === "Venue Owner") {
 			handleVenueOwnerLogin();
-		} else if (selected === "3") {
+		} else if (selected === "Admin") {
 			handleAdminLogin();
 		}
 	};
@@ -231,178 +227,297 @@ const Welcome = ({ navigation }) => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.foam}>
-			<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-				<View style={{ flex: 1 }}>
-					<Image
-						source={require("../assets/freshbeer.png")}
-						style={{
-							height: 250,
-							width: 270,
-							alignSelf: "center",
-							resizeMode: "contain",
-						}}
-					></Image>
-				</View>
-
-				<View
+			<View>
+				<Image
+					source={require("../assets/freshbeer.png")}
 					style={{
-						paddingHorizontal: 20,
-						position: "absolute",
-						top: 200,
-						width: "100%",
+						height: 250,
+						width: 270,
+						alignSelf: "center",
+						resizeMode: "contain",
 					}}
-				>
-					<View style={{ flex: 1, marginHorizontal: 22 }}>
-						<View style={{ marginBottom: 12 }}>
-							<View
-								style={{
-									width: "100%",
-									height: 50,
-									borderRadius: 12,
-									alignItems: "center",
-									justifyContent: "center",
-									paddingLeft: 22,
-									marginTop: 15,
-									backgroundColor: COLORS.white,
-								}}
-							>
-								<TextInput
-									value={username}
-									onChangeText={setUsername}
-									placeholder="Username"
-									placeholderTextColor={COLORS.black}
-									keyboardType="default"
-									style={{
-										width: "100%",
-									}}
-								></TextInput>
-							</View>
-						</View>
+				></Image>
+			</View>
 
-						<View style={{ marginBottom: 12 }}>
-							<View
-								style={{
-									width: "100%",
-									height: 50,
-									borderRadius: 12,
-									alignItems: "center",
-									justifyContent: "center",
-									paddingLeft: 22,
-									backgroundColor: COLORS.white,
-								}}
-							>
-								<TextInput
-									value={password}
-									onChangeText={setPassword}
-									placeholder="Password"
-									placeholderTextColor={COLORS.black}
-									secureTextEntry={!isPasswordShown}
-									style={{
-										width: "100%",
-									}}
-								></TextInput>
+			<View style={{ paddingHorizontal: 20, marginHorizontal: 22 }}>
+				<View style={{ marginBottom: 12 }}>
+					<View
+						style={{
+							width: "100%",
+							height: 50,
+							borderRadius: 12,
+							alignItems: "center",
+							justifyContent: "center",
+							paddingLeft: 22,
+							marginBottom: 15,
+							backgroundColor: COLORS.secondary,
+						}}
+					>
+						<TextInput
+							value={username}
+							onChangeText={setUsername}
+							placeholder="Username"
+							placeholderTextColor={COLORS.black}
+							keyboardType="default"
+							style={{ width: "100%" }}
+						></TextInput>
+					</View>
 
-								<TouchableOpacity
-									onPress={() => setIsPasswordShown(!isPasswordShown)}
-									style={{
-										position: "absolute",
-										right: 12,
-									}}
-								>
-									{isPasswordShown == true ? (
-										<Ionicons
-											name="eye"
-											size={24}
-											color={COLORS.black}
-										></Ionicons>
-									) : (
-										<Ionicons
-											name="eye-off"
-											size={24}
-											color={COLORS.black}
-										></Ionicons>
-									)}
-								</TouchableOpacity>
-							</View>
-						</View>
+					<View
+						style={{
+							width: "100%",
+							height: 50,
+							borderRadius: 12,
+							alignItems: "center",
+							justifyContent: "center",
+							paddingLeft: 22,
+							marginBottom: 15,
+							backgroundColor: COLORS.secondary,
+						}}
+					>
+						<TextInput
+							value={password}
+							onChangeText={setPassword}
+							placeholder="Password"
+							placeholderTextColor={COLORS.black}
+							secureTextEntry={!isPasswordShown}
+							style={{ width: "100%" }}
+						></TextInput>
 
-						<View style={{ marginTop: 52 }}>
-							<SelectList
-								data={data}
-								value={selected}
-								setSelected={setSelected}
-								boxStyles={{
-									borderRadius: 12,
-									borderColor: 0,
-									position: "absolute",
-									backgroundColor: COLORS.white,
-									opacity: 1,
-									width: "100%",
-								}}
-								dropdownStyles={{
-									position: "absolute",
-									top: "110%",
-									width: "100%",
-									right: 0,
-									borderColor: 0,
-									backgroundColor: COLORS.white,
-									opacity: 1,
-								}}
-								defaultOption={{ key: "1", value: "User" }}
-								search={false}
-							/>
-						</View>
-
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								zIndex: -5,
-								marginVertical: 38,
-							}}
+						<TouchableOpacity
+							onPress={() => setIsPasswordShown(!isPasswordShown)}
+							style={{ position: "absolute", right: 12 }}
 						>
-							<Button
-								title="Login"
-								onPress={handleLogin}
-								color={COLORS.white}
-								filled
-								style={{
-									marginTop: 15,
-									width: "100%",
-									marginBottom: 4,
-								}}
-							></Button>
-							<CustomAlert
-								visible={isDialogVisible}
-								onClose={handleCloseDialog}
-							/>
-						</View>
-
-						<View
-							style={{
-								flexDirection: "row",
-								justifyContent: "center",
-								marginVertical: 22,
-							}}
-						>
-							<CustomText style={{ fontSize: 16 }}>
-								Don't have an account?
-							</CustomText>
-							<Pressable onPress={() => navigation.navigate("Signup")}>
-								<Text
-									style={{
-										fontSize: 16,
-										...GlobalStyle.headerFont,
-										marginLeft: 6,
-									}}
-								>
-									Register
-								</Text>
-							</Pressable>
-						</View>
+							{isPasswordShown == true ? (
+								<Ionicons name="eye" size={24} color={COLORS.black}></Ionicons>
+							) : (
+								<Ionicons
+									name="eye-off"
+									size={24}
+									color={COLORS.black}
+								></Ionicons>
+							)}
+						</TouchableOpacity>
 					</View>
 				</View>
-			</ScrollView>
+
+				<View style={{ marginTop: 22 }}>
+					<SelectDropdown
+						data={data}
+						onSelect={(selected) => {
+							setSelected(selected);
+						}}
+						buttonTextAfterSelection={(selected, index) => {
+							return selected;
+						}}
+						defaultButtonText="Select user"
+						buttonStyle={{
+							width: "100%",
+							height: 50,
+							borderRadius: 12,
+							justifyContent: "center",
+							alignItems: "center",
+							backgroundColor: COLORS.secondary,
+						}}
+						buttonTextStyle={{ ...GlobalStyle.bodyFont, fontSize: 14 }}
+						dropdownStyle={{ borderRadius: 12 }}
+						rowTextStyle={{ ...GlobalStyle.bodyFont, fontSize: 14 }}
+						renderDropdownIcon={() => (
+							<CustomText style={{ fontSize: 20 }}>▼</CustomText>
+						)}
+					/>
+				</View>
+
+				<View style={{ flexDirection: "row", justifyContent: "center" }}>
+					<Button
+						title="Login"
+						onPress={handleLogin}
+						color={COLORS.secondary}
+						filled
+						style={{
+							width: "100%",
+							marginVertical: 12,
+						}}
+					></Button>
+					<CustomAlert visible={isDialogVisible} onClose={handleCloseDialog} />
+				</View>
+
+				<View style={{ flexDirection: "row", justifyContent: "center" }}>
+					<CustomText style={{ fontSize: 16 }}>
+						Don't have an account?
+					</CustomText>
+					<TouchableOpacity onPress={() => navigation.navigate("Signup")}>
+						<Text
+							style={{
+								fontSize: 16,
+								...GlobalStyle.headerFont,
+								marginLeft: 6,
+							}}
+						>
+							Register
+						</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+
+			{/* <View
+				style={{
+					paddingHorizontal: 20,
+					position: "absolute",
+					top: 200,
+					width: "100%",
+				}}
+			>
+				<View style={{ flex: 1, marginHorizontal: 22 }}>
+					<View style={{ marginBottom: 12 }}>
+						<View
+							style={{
+								width: "100%",
+								height: 50,
+								borderRadius: 12,
+								alignItems: "center",
+								justifyContent: "center",
+								paddingLeft: 22,
+								marginTop: 15,
+								backgroundColor: COLORS.white,
+							}}
+						>
+							<TextInput
+								value={username}
+								onChangeText={setUsername}
+								placeholder="Username"
+								placeholderTextColor={COLORS.black}
+								keyboardType="default"
+								style={{
+									width: "100%",
+								}}
+							></TextInput>
+						</View>
+					</View>
+
+					<View style={{ marginBottom: 12 }}>
+						<View
+							style={{
+								width: "100%",
+								height: 50,
+								borderRadius: 12,
+								alignItems: "center",
+								justifyContent: "center",
+								paddingLeft: 22,
+								backgroundColor: COLORS.white,
+							}}
+						>
+							<TextInput
+								value={password}
+								onChangeText={setPassword}
+								placeholder="Password"
+								placeholderTextColor={COLORS.black}
+								secureTextEntry={!isPasswordShown}
+								style={{
+									width: "100%",
+								}}
+							></TextInput>
+
+							<TouchableOpacity
+								onPress={() => setIsPasswordShown(!isPasswordShown)}
+								style={{
+									position: "absolute",
+									right: 12,
+								}}
+							>
+								{isPasswordShown == true ? (
+									<Ionicons
+										name="eye"
+										size={24}
+										color={COLORS.black}
+									></Ionicons>
+								) : (
+									<Ionicons
+										name="eye-off"
+										size={24}
+										color={COLORS.black}
+									></Ionicons>
+								)}
+							</TouchableOpacity>
+						</View>
+					</View>
+
+					<View style={{ marginTop: 52 }}>
+						<SelectList
+							data={data}
+							value={selected}
+							setSelected={setSelected}
+							boxStyles={{
+								borderRadius: 12,
+								borderColor: 0,
+								position: "absolute",
+								backgroundColor: COLORS.white,
+								opacity: 1,
+								width: "100%",
+							}}
+							dropdownStyles={{
+								position: "absolute",
+								top: "110%",
+								width: "100%",
+								right: 0,
+								borderColor: 0,
+								backgroundColor: COLORS.white,
+								opacity: 1,
+							}}
+							defaultOption={{ key: "1", value: "User" }}
+							search={false}
+						/>
+					</View>
+
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							zIndex: -5,
+							marginVertical: 38,
+						}}
+					>
+						<Button
+							title="Login"
+							onPress={handleLogin}
+							color={COLORS.white}
+							filled
+							style={{
+								marginTop: 15,
+								width: "100%",
+								marginBottom: 4,
+							}}
+						></Button>
+						<CustomAlert
+							visible={isDialogVisible}
+							onClose={handleCloseDialog}
+						/>
+					</View>
+
+					<View
+						style={{
+							flexDirection: "row",
+							justifyContent: "center",
+							marginVertical: 22,
+						}}
+					>
+						<CustomText style={{ fontSize: 16 }}>
+							Don't have an account?
+						</CustomText>
+						<Pressable onPress={() => navigation.navigate("Signup")}>
+							<Text
+								style={{
+									fontSize: 16,
+									...GlobalStyle.headerFont,
+									marginLeft: 6,
+								}}
+							>
+								Register
+							</Text>
+						</Pressable>
+					</View>
+				</View>
+			</View> */}
 		</SafeAreaView>
 	);
 };
