@@ -135,36 +135,6 @@ const BottomTabNavigation = () => {
 					},
 				}}
 			/>
-			{/* <Tab.Screen
-				name="BeersVenue"
-				component={BeersVenue}
-				options={{
-					tabBarIcon: ({ focused }) => {
-						return (
-							<Entypo
-								name="shop"
-								size={24}
-								color={focused ? COLORS.foam : COLORS.black}
-							/>
-						);
-					},
-				}}
-			/>
-			<Tab.Screen
-				name="Social"
-				component={Social}
-				options={{
-					tabBarIcon: ({ focused }) => {
-						return (
-							<Ionicons
-								name="people"
-								size={24}
-								color={focused ? COLORS.foam : COLORS.black}
-							/>
-						);
-					},
-				}}
-			/> */}
 			<Tab.Screen
 				name="Journal"
 				component={Journal}

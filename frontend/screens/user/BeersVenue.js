@@ -1158,29 +1158,6 @@ const BeersVenue = ({ navigation }) => {
 							justifyContent: "flex-start",
 						},
 					}}
-					rightComponent={
-						<View
-							style={{
-								flexDirection: "row",
-							}}
-						>
-							<TouchableOpacity>
-								<Octicons
-									name="bookmark"
-									size={24}
-									color={COLORS.black}
-									style={{ marginRight: 10 }}
-								/>
-							</TouchableOpacity>
-							<TouchableOpacity>
-								<Ionicons
-									name="notifications-outline"
-									size={24}
-									color={COLORS.black}
-								/>
-							</TouchableOpacity>
-						</View>
-					}
 				/>
 				<SafeAreaView style={{ flex: 1 }}>
 					<View style={styles.grid}>

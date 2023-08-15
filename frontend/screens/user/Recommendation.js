@@ -741,7 +741,6 @@ const Recommendation = ({ navigation }) => {
 					setRecommendationMessage("Recommendation submitted!");
 				} else {
 					const { message } = response.data;
-
 					setRecommendationTitle("Error");
 					setRecommendationMessage(message);
 				}
@@ -751,15 +750,6 @@ const Recommendation = ({ navigation }) => {
 				console.error(error);
 			});
 	};
-
-	// console.log("selectedData.rating:", selectedData.rating);
-	// console.log("selectedData:", selectedData);
-
-	// const showModal1 = () => {
-	// 	setModalVisible1(true);
-	// 	console.log(recommendationData);
-	// };
-	// const searchButton = () => {};
 
 	return (
 		<View style={{ flex: 1 }}>

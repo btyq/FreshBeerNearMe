@@ -4,7 +4,7 @@ import {
 	MaterialIcons,
 	Octicons,
 } from "@expo/vector-icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	ScrollView,
 	StyleSheet,
@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import { Header } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Row, Rows, Table } from "react-native-table-component";
 import { useCookies } from "../../CookieContext";
 import COLORS from "../../constants/colors";
 import GlobalStyle from "../../utils/GlobalStyle";
@@ -57,6 +56,11 @@ const CustomText = (props) => {
 
 const AdminLogin = ({ navigation }) => {
 	const { cookies } = useCookies();
+	const [username, setUsername] = useState("");
+
+	useEffect(() => {
+		setUsername(cookies.username);
+	}, [cookies.username]);
 
 	return (
 		<View style={{ flex: 1 }}>
@@ -113,7 +117,7 @@ const AdminLogin = ({ navigation }) => {
 									...GlobalStyle.headerFont,
 								}}
 							>
-								Welcome, admin
+								Welcome, {username}
 							</Text>
 							<Text style={{ ...GlobalStyle.headerFont, marginBottom: 25 }}>
 								What would you like to do?
@@ -191,7 +195,7 @@ const AdminLogin = ({ navigation }) => {
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>
 										<FontAwesome5
-											name="database"
+											name="house-user"
 											size={34}
 											color={COLORS.foam}
 										/>
@@ -206,8 +210,8 @@ const AdminLogin = ({ navigation }) => {
 									<View
 										style={{ alignItems: "center", justifyContent: "center" }}
 									>
-										<MaterialIcons
-											name="content-paste"
+										<FontAwesome5
+											name="house-user"
 											size={34}
 											color={COLORS.foam}
 										/>

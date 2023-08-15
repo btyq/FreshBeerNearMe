@@ -629,7 +629,7 @@ const Journal = ({ navigation }) => {
 										marginVertical: 10,
 									}}
 								></View>
-								<Text style={{ ...GlobalStyle.headerFont }}>Select Venue:</Text>
+								<Text style={{ ...GlobalStyle.headerFont }}>Select Beer:</Text>
 								<View
 									style={{
 										position: "relative",

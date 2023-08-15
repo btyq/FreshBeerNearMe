@@ -180,7 +180,7 @@ const VenueOwnerHome = ({ navigation }) => {
 					}}
 					rightComponent={
 						<View style={{ flexDirection: "row" }}>
-							<TouchableOpacity onPress={() => console.log(newFeedbackData)}>
+							<TouchableOpacity onPress={() => console.log(popularData)}>
 								<Octicons
 									name="bookmark"
 									size={24}
@@ -188,12 +188,8 @@ const VenueOwnerHome = ({ navigation }) => {
 									style={{ marginRight: 10 }}
 								/>
 							</TouchableOpacity>
-							<TouchableOpacity onPress={() => console.log(popularData)}>
-								<Ionicons
-									name="notifications-outline"
-									size={24}
-									color={COLORS.black}
-								/>
+							<TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
+								<MaterialIcons name="logout" size={24} color={COLORS.black} />
 							</TouchableOpacity>
 						</View>
 					}

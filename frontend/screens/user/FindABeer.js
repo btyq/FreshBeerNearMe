@@ -901,12 +901,10 @@ const FindABeer = ({ navigation }) => {
 				if (response.data.success) {
 					setWishlistTitle("Success!");
 					setWishlistMessage("Added to wishlist!");
-					// Alert.alert("Added to Wishlist!")
 				} else {
 					const { message } = response.data;
 					setWishlistTitle("Error");
 					setWishlistMessage(message);
-					// Alert.alert("Error!", message);
 				}
 				setIsWishlistVisible(true);
 			})
@@ -950,29 +948,6 @@ const FindABeer = ({ navigation }) => {
 							justifyContent: "flex-start",
 						},
 					}}
-					rightComponent={
-						<View
-							style={{
-								flexDirection: "row",
-							}}
-						>
-							<TouchableOpacity>
-								<Octicons
-									name="bookmark"
-									size={24}
-									color={COLORS.black}
-									style={{ marginRight: 10 }}
-								/>
-							</TouchableOpacity>
-							<TouchableOpacity>
-								<Ionicons
-									name="notifications-outline"
-									size={24}
-									color={COLORS.black}
-								/>
-							</TouchableOpacity>
-						</View>
-					}
 				/>
 
 				<SafeAreaView style={{ flex: 1 }}>
