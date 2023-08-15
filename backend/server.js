@@ -532,6 +532,11 @@ app.get("/getPersonalisedRecommendation", async (req, res) => {
 	const userID = req.query.userID;
 	globalUser.getPersonalisedRecommendation(client, res, userID);
 });
+
+//Route for user to receieve upcoming events
+app.get("/getUpcomingEvents", async (req, res) => {
+	globalUser.getUpcomingEvents(client, res)
+})
 //===================================================================================================================
 //=================================================All VenueOwner Routes=============================================
 let globalVenueOwner = null;

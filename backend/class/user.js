@@ -974,6 +974,34 @@ class User {
     }
   }
 
+  async getUpcomingEvents(client, res) {
+    try {
+        const db = client.db('FreshBearNearMe');
+        const eventCollection = db.collection('Event');
+
+        const currentDate = new Date(); // Current date as a JavaScript Date object
+        const upcomingEvents = await eventCollection
+            .find()
+            .sort({ eventDate: 1 }) // Sort all events in ascending order of eventDate
+            .toArray();
+
+        const filteredUpcomingEvents = upcomingEvents.filter(event => {
+            const eventDateParts = event.eventDate.split('/'); // Split the date string into parts
+            const eventYear = parseInt(eventDateParts[2]);
+            const eventMonth = parseInt(eventDateParts[0]) - 1; // Months are zero-based in JavaScript Date
+            const eventDay = parseInt(eventDateParts[1]);
+            
+            const eventDate = new Date(eventYear, eventMonth, eventDay);
+            return eventDate >= currentDate; // Compare the event date with the current date
+        }).slice(0, 3); // Take the first 3 upcoming events
+
+        res.status(200).json(filteredUpcomingEvents);
+    } catch (error) {
+        console.error("Error fetching upcoming events:", error);
+        res.status(500).json({ error: "An error occurred while fetching upcoming events." });
+    }
+  }
+
   logout() {
     console.log("User logged out");
   }

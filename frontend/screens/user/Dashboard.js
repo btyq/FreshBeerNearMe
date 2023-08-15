@@ -3,6 +3,7 @@ import { Card, Tab, TabView, ThemeProvider } from "@rneui/themed";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
+	Modal,
 	ActivityIndicator,
 	ImageBackground,
 	ScrollView,
@@ -46,9 +47,24 @@ const Dashboard = ({ navigation }) => {
 	const [index1, setIndex1] = React.useState(0);
 	const [username, setUsername] = useState("");
 	const [personalisedData, setPersonalisedData] = useState([]);
+	const [eventData, setEventData] = useState([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [selectedBeerName, setSelectedBeerName] = useState("");
-	const [popupVisible, setPopupVisible] = useState(false);
+	const [selectedEvent, setSelectedEvent] = useState(null);
+	const [isModalVisible, setIsModalVisible] = useState(false);
+	const eventImageMapping = {
+		event1: require("../../assets/event1.png"),
+		event2: require("../../assets/event2.png"),
+		event3: require("../../assets/event3.png"),
+		event4: require("../../assets/event4.png"),
+		event5: require("../../assets/event5.png"),
+	};
+
+	const getRandomEventImage = (index) => {
+		const eventImageArray = Object.keys(eventImageMapping);
+		const eventImageIndex = index % eventImageArray.length;
+		return eventImageMapping[eventImageArray[eventImageIndex]];
+	  };
 
 	useEffect(() => {
 		const sessionToken = cookies.sessionToken;
@@ -64,7 +80,6 @@ const Dashboard = ({ navigation }) => {
 				},
 			})
 			.then((response) => {
-				console.log("API response:", response.data);
 				setPersonalisedData(response.data);
 				setIsLoading(false);
 			})
@@ -74,9 +89,41 @@ const Dashboard = ({ navigation }) => {
 			});
 	}, []);
 
-	// for personalised recommendations
-	const handlePopup = () => {
-		setPopupVisible(!popupVisible);
+	useEffect(() => {
+		axios
+		  .get("http://10.0.2.2:3000/getUpcomingEvents")
+		  .then((response) => {
+			const eventsWithImages = response.data.map((event, index) => ({
+			  ...event,
+			  randomEventImage: getRandomEventImage(index),
+			}));
+			setEventData(eventsWithImages);
+		  })
+		  .catch((error) => {
+			console.error("Error retrieving events", error);
+		  });
+	  }, []);
+
+	const EventModal = ({ visible, event, onClose }) => {
+		return (
+		  <Modal visible={visible} animationType="slide">
+			<View>
+			  {event ? (
+				<>
+				  <Text>{event.eventTitle}</Text>
+				  <Text>{event.eventDate}</Text>
+				  <Text>{event.eventDescription}</Text>				  
+				  <Button title="Close" onPress={onClose} />
+				</>
+			  ) : (
+				<View style={{ alignItems: "center", marginTop: 20 }}>
+				  <ActivityIndicator size="large" color={COLORS.primary} />
+				  <Text>Loading event details...</Text>
+				</View>
+			  )}
+			</View>
+		  </Modal>
+		);
 	};
 
 	//=====================================================================================================
@@ -411,47 +458,53 @@ const Dashboard = ({ navigation }) => {
 								backgroundColor: "transparent",
 								borderColor: "transparent",
 							}}
-						>
+							>
 							<Card.Title>Upcoming Events</Card.Title>
 							<Card.Divider />
+
 							<ThemeProvider
 								theme={{
-									Tab: {
-										primary: {
-											backgroundColor: COLORS.grey,
-										},
+								Tab: {
+									primary: {
+									backgroundColor: COLORS.grey,
 									},
+								},
 								}}
 							>
 								<TabView
-									value={index}
-									onChange={setIndex}
-									animationType="spring"
+								value={index}
+								onChange={setIndex}
+								animationType="spring"
 								>
-									<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-										<Card containerStyle={styles.cardContainer}>
+								{eventData.map((event, index) => (
+									<TabView.Item
+									key={index}
+									style={{ width: "100%", marginTop: -30 }}
+									>
+									<Card containerStyle={styles.cardContainer}>
+										<TouchableOpacity
+											key={index}
+											onPress={() => {
+												setSelectedEvent(event);
+												setIsModalVisible(true);
+											}}>
 											<ImageBackground
-												source={require("../../assets/event1.png")}
-												style={styles.cardImage}
-											/>
-										</Card>
+											source={event.randomEventImage}
+											style={styles.cardImage}
+											>
+											</ImageBackground>
+										</TouchableOpacity>
+									</Card>
 									</TabView.Item>
-									<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-										<Card containerStyle={styles.cardContainer}>
-											<ImageBackground
-												source={require("../../assets/event2.png")}
-												style={styles.cardImage}
-											/>
-										</Card>
-									</TabView.Item>
-									<TabView.Item style={{ width: "100%", marginTop: -30 }}>
-										<Card containerStyle={styles.cardContainer}>
-											<ImageBackground
-												source={require("../../assets/event3.png")}
-												style={styles.cardImage}
-											/>
-										</Card>
-									</TabView.Item>
+								))}
+								<EventModal
+									visible={isModalVisible}
+									event={selectedEvent}
+									onClose={() => {
+									setSelectedEvent(null); 
+									setIsModalVisible(false); 
+									}}
+								/>
 								</TabView>
 							</ThemeProvider>
 						</Card>
