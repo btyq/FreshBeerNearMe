@@ -96,14 +96,6 @@ const Analytics = ({ navigation }) => {
 					}}
 					rightComponent={
 						<View style={{ flexDirection: "row" }}>
-							<TouchableOpacity>
-								<Ionicons
-									name="notifications-outline"
-									size={24}
-									color={COLORS.black}
-									style={{ marginRight: 10 }}
-								/>
-							</TouchableOpacity>
 							<TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
 								<MaterialIcons name="logout" size={24} color={COLORS.black} />
 							</TouchableOpacity>
@@ -123,46 +115,6 @@ const Analytics = ({ navigation }) => {
 							>
 								Analytics Summary
 							</Text>
-
-							<View
-								style={{
-									height: 240,
-									elevation: 2,
-									backgroundColor: COLORS.grey,
-									marginTop: 10,
-									borderRadius: 15,
-									marginBottom: 10,
-									width: "100%",
-									padding: 20,
-								}}
-							>
-								<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>
-									Beer Popularity of the Week
-								</Text>
-								{/* <View style={{ flexDirection: "row", alignItems: "flex-end" }}>
-									{data.map((value, index) => (
-										<View
-											key={index}
-											style={{
-												flex: 1,
-												marginLeft: 10,
-												alignItems: "center",
-											}}
-										>
-											<View
-												style={{
-													height: value * scaleY,
-													width: 10,
-													backgroundColor: COLORS.foam,
-												}}
-											/>
-											<Text style={{ fontSize: 12, marginTop: 5 }}>
-												{labels[index]}
-											</Text>
-										</View>
-									))}
-								</View> */}
-							</View>
 
 							{/* top 3 popular beers */}
 							<View
@@ -208,68 +160,7 @@ const Analytics = ({ navigation }) => {
 									)}
 								</View>
 							</View>
-
-							<View
-								style={{
-									height: 220,
-									elevation: 2,
-									backgroundColor: COLORS.grey,
-									marginTop: 10,
-									borderRadius: 15,
-									marginBottom: 10,
-									width: "100%",
-									padding: 20,
-								}}
-							>
-								<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>
-									Favorite Promotion
-								</Text>
-							</View>
 						</View>
-						{/* </ScrollView> */}
-						{/* <Modal
-							animationType="slide"
-							transparent={true}
-							visible={modalVisible1}
-							onRequestClose={() => setModalVisible1(false)}
-						>
-							<View style={styles.centeredView}>
-								<View style={[styles.modalView, { width: "90%", height: 500 }]}>
-									<Text style={styles.modalText}>Modal 1 Content</Text>
-
-									<View style={{ flex: 1, justifyContent: "flex-end" }}>
-										<TouchableOpacity
-											style={[styles.button, styles.buttonClose]}
-											onPress={() => setModalVisible1(false)}
-										>
-											<Text style={styles.textStyle}>Close Modal</Text>
-										</TouchableOpacity>
-									</View>
-								</View>
-							</View>
-						</Modal> */}
-
-						{/* <Modal
-							animationType="slide"
-							transparent={true}
-							visible={modalVisible2}
-							onRequestClose={() => setModalVisible2(false)}
-						>
-							<View style={styles.centeredView}>
-								<View style={[styles.modalView, { width: "90%", height: 500 }]}>
-									<Text style={styles.modalText}>Modal 2 Content</Text>
-
-									<View style={{ flex: 1, justifyContent: "flex-end" }}>
-										<TouchableOpacity
-											style={[styles.button, styles.buttonClose]}
-											onPress={() => setModalVisible2(false)}
-										>
-											<Text style={styles.textStyle}>Close Modal</Text>
-										</TouchableOpacity>
-									</View>
-								</View>
-							</View>
-						</Modal> */}
 					</ScrollView>
 				</SafeAreaView>
 			</SafeAreaView>
