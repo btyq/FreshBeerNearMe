@@ -227,7 +227,7 @@ const Welcome = ({ navigation }) => {
 
 	return (
 		<SafeAreaView style={{ flex: 1 }} backgroundColor={COLORS.foam}>
-			<View>
+			<View style={{ marginTop: 50 }}>
 				<Image
 					source={require("../assets/freshbeer.png")}
 					style={{

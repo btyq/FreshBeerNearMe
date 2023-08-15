@@ -310,14 +310,6 @@ const ManageVenue = ({ navigation }) => {
 					}}
 					rightComponent={
 						<View style={{ flexDirection: "row" }}>
-							<TouchableOpacity>
-								<Ionicons
-									name="notifications-outline"
-									size={24}
-									color={COLORS.black}
-									style={{ marginRight: 10 }}
-								/>
-							</TouchableOpacity>
 							<TouchableOpacity onPress={() => navigation.navigate("Welcome")}>
 								<MaterialIcons name="logout" size={24} color={COLORS.black} />
 							</TouchableOpacity>
