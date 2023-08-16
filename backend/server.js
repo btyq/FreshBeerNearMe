@@ -16,12 +16,14 @@ const fs = require("fs");
 
 //===================================================================================================================
 //==============================================Connect to MongoDB===================================================
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config();
+}
 const express = require("express");
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3001;
 const { MongoClient } = require("mongodb");
-const uri =
-	"mongodb+srv://Admin:admin123@fyp.qzlvrug.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.MONGO_URI
 const client = new MongoClient(uri);
 const db = client.db("FreshBearNearMe");
 const collection = db.collection("User");
@@ -44,8 +46,8 @@ app.get("/", (req, res) => {
 	res.send("Server is up");
 });
 
-app.listen(port, () => {
-	console.log(`Server is running on port ${port}`);
+app.listen(PORT, () => {
+	console.log(`Server is running on port ${PORT}`);
 });
 //===================================================================================================================
 //==============================================All Route Functions==================================================
