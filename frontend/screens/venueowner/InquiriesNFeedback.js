@@ -62,7 +62,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 	useEffect(() => {
 		setUsername(cookies.username);
 		axios
-			.get("http://10.0.2.2:3000/getFeedback", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getFeedback", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},

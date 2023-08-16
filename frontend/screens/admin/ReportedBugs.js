@@ -74,7 +74,7 @@ const ReportedBugs = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getBugs")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBugs")
 			.then((response) => {
 				setBugData(response.data);
 				setModalVisibilities(Array(response.data.length).fill(false));
@@ -91,7 +91,7 @@ const ReportedBugs = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/resolveBugs", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/resolveBugs", data)
 			.then((response) => {
 				if (response.data.success) {
 					Alert.alert("Successfully resolved bugs!");

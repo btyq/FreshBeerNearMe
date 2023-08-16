@@ -132,7 +132,7 @@ const CreateEvents = ({ navigation }) => {
 			eventID: eventID,
 		};
 		axios
-			.post("http://10.0.2.2:3000/removeEvent", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/removeEvent", data)
 			.then((response) => {
 				if (response.data.success) {
 					setEventTitle("Success");
@@ -153,7 +153,7 @@ const CreateEvents = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getEvent", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getEvent", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},

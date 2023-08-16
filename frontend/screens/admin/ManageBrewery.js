@@ -221,7 +221,7 @@ const ManageBrewery = ({ navigation }) => {
 
 	const handleEditBrewery = () => {
 		axios
-			.post("http://10.0.2.2:3000/editBrewery", { selectedBrewery })
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/editBrewery", { selectedBrewery })
 			.then((response) => {
 				if (response.data.success) {
 					setEditTitle("Success");
@@ -247,7 +247,7 @@ const ManageBrewery = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/addBrewery", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/addBrewery", data)
 			.then((response) => {
 				if (response.data.success) {
 					setCreateTitle("Success");
@@ -269,7 +269,7 @@ const ManageBrewery = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getBrewery")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBrewery")
 			.then((response) => {
 				setBreweryData(response.data);
 				setEditBreweryState(false);

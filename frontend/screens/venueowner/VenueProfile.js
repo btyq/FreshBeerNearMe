@@ -131,7 +131,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 	useEffect(() => {
 		setUsername(cookies.username);
 		axios
-			.get("http://10.0.2.2:3000/getVenueProfile", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueProfile", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},
@@ -165,7 +165,7 @@ const InquiriesNFeedback = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/updateVenue", updateData)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/updateVenue", updateData)
 			.then((response) => {
 				if (response.data.success) {
 					setProfileTitle("Success");

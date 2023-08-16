@@ -48,7 +48,7 @@ const Analytics = ({ navigation }) => {
 	// for top 3 most popular beer
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getMostPopularBeer", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getMostPopularBeer", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},

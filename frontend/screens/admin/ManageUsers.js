@@ -223,7 +223,7 @@ const ManageUsers = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getUser")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getUser")
 			.then((response) => {
 				setUserData(response.data);
 				setCreateUserState(false);
@@ -271,7 +271,7 @@ const ManageUsers = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/createUser", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/createUser", data)
 			.then((response) => {
 				if (response.data.success) {
 					setCreateTitle("Success");
@@ -291,7 +291,7 @@ const ManageUsers = ({ navigation }) => {
 
 	const handleEditUser = () => {
 		axios
-			.post("http://10.0.2.2:3000/editUser", { selectedUser })
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/editUser", { selectedUser })
 			.then((response) => {
 				if (response.data.success) {
 					setEditTitle("Success");

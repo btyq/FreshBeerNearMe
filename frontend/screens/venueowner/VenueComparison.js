@@ -42,7 +42,7 @@ const VenueComparison = ({ navigation }) => {
 	// for top 3 most popular venue
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getMostPopularVenue", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getMostPopularVenue", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},

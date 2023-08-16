@@ -219,7 +219,7 @@ const ManageVenue = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getVenue")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenue")
 			.then((response) => {
 				setVenueData(response.data);
 				setEditVenueState(false);
@@ -231,7 +231,7 @@ const ManageVenue = ({ navigation }) => {
 
 	const handleEditVenue = () => {
 		axios
-			.post("http://10.0.2.2:3000/editVenue", { selectedVenue })
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/editVenue", { selectedVenue })
 			.then((response) => {
 				if (response.data.success) {
 					setEditTitle("Success");
@@ -257,7 +257,7 @@ const ManageVenue = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/addVenue", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/addVenue", data)
 			.then((response) => {
 				if (response.data.success) {
 					setCreateTitle("Success");

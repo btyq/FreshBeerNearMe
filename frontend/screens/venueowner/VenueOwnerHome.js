@@ -91,7 +91,7 @@ const VenueOwnerHome = ({ navigation }) => {
 	useEffect(() => {
 		setUsername(cookies.username);
 		axios
-			.get("http://10.0.2.2:3000/getFeedback", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getFeedback", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},
@@ -121,7 +121,7 @@ const VenueOwnerHome = ({ navigation }) => {
 	// for most popular beer
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getMostPopularBeer", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getMostPopularBeer", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},
@@ -139,7 +139,7 @@ const VenueOwnerHome = ({ navigation }) => {
 	// for most popular venue
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getMostPopularVenue", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getMostPopularVenue", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},

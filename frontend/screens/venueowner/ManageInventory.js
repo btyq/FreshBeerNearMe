@@ -138,7 +138,7 @@ const ManageInventory = ({ navigation }) => {
 	useEffect(() => {
 		setUsername(cookies.username);
 		axios
-			.get("http://10.0.2.2:3000/getVenueProfile", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueProfile", {
 				params: {
 					venueOwnerID: cookies.venueOwnerID,
 				},
@@ -165,7 +165,7 @@ const ManageInventory = ({ navigation }) => {
 	useEffect(() => {
 		if (selectedVenueData && selectedVenueData.venueMenu) {
 			axios
-				.get("http://10.0.2.2:3000/getVOVenueMenu", {
+				.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVOVenueMenu", {
 					params: {
 						venueMenu: selectedVenueData.venueMenu,
 					},
@@ -189,7 +189,7 @@ const ManageInventory = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/editVenueMenu", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/editVenueMenu", data)
 			.then((response) => {
 				if (response.data.success) {
 					setEditTitle("Success");
@@ -232,7 +232,7 @@ const ManageInventory = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/addVenueMenu", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/addVenueMenu", data)
 			.then((response) => {
 				if (response.data.success) {
 					// Alert.alert("Success!");

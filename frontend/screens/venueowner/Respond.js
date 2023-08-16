@@ -131,7 +131,7 @@ const Respond = ({ navigation, route }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/replyFeedback", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/replyFeedback", data)
 			.then((response) => {
 				if (response.data.success) {
 					setResponseTitle("Success");
