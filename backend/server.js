@@ -608,9 +608,9 @@ app.post("/updateVenue", async (req, res) => {
 });
 
 //Route for venue owner to retrieve venue menu
-app.get("/getVenueMenu", async (req, res) => {
+app.get("/getVOVenueMenu", async (req, res) => {
 	const venueMenu = req.query.venueMenu;
-	globalVenueOwner.getVenueMenu(client, res, venueMenu);
+	globalVenueOwner.getVOVenueMenu(client, res, venueMenu);
 });
 
 //Route for venue owner to edit venue menu
