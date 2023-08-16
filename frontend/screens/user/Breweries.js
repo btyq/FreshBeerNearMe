@@ -251,7 +251,7 @@ const Breweries = ({ navigation }) => {
 	useEffect(() => {
 		const fetchBreweryData = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getBreweryData");
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBreweryData");
 				const { success, breweryData } = response.data;
 				if (success) {
 					let sortedData = [...breweryData];

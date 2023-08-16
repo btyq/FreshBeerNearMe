@@ -175,7 +175,7 @@ const BeerItem = ({
 		const fetchBeerLocations = async () => {
 			try {
 				const response = await axios.get(
-					"http://10.0.2.2:3000/getBeerLocation",
+					"https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBeerLocation",
 					{
 						params: { beerID },
 					}
@@ -375,7 +375,7 @@ const VenueItem = ({
 		setUserID(cookies.userID);
 		const fetchVenueMenu = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getVenueMenu", {
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueMenu", {
 					params: { venueID },
 				});
 				const { success, beers } = response.data;
@@ -688,7 +688,7 @@ const Wishlist = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getWishlist", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getWishlist", {
 				params: {
 					userID: cookies.userID,
 				},
@@ -711,7 +711,7 @@ const Wishlist = ({ navigation }) => {
 			data = { ...data, venueID: ID };
 		}
 		axios
-			.post("http://10.0.2.2:3000/removeWishlist", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/removeWishlist", data)
 			.then((response) => {
 				if (response.data.success) {
 					setWishlistTitle("Success");

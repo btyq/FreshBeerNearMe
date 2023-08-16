@@ -143,7 +143,7 @@ const Signup = ({ navigation }) => {
 			} else {
 				// Passwords match, send signup request
 				axios
-					.post("http://10.0.2.2:3000/signup", {
+					.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/signup", {
 						username: username,
 						password: password1,
 						email: email,

@@ -93,7 +93,7 @@ const PostItem = ({
 			commentDate: formattedDate,
 		};
 		axios
-			.post("http://10.0.2.2:3000/submitComment", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitComment", data)
 			.then((response) => {
 				if (response.data.success) {
 					setPopupVisible2(!popupVisible2);
@@ -342,7 +342,7 @@ const Forum = ({ navigation }) => {
 			postDescription: postDescription,
 		};
 		axios
-			.post("http://10.0.2.2:3000/submitPost", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitPost", data)
 			.then((response) => {
 				if (response.data.success) {
 					setTitle("");
@@ -367,7 +367,7 @@ const Forum = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getPosts")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getPosts")
 			.then((response) => {
 				setPostData(response.data.posts);
 				setCommentSubmitted(false);

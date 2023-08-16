@@ -246,7 +246,7 @@ const VenueItem = ({
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/addVenueReview", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/addVenueReview", data)
 			.then((response) => {
 				if (response.data.success) {
 					console.log("Review Added");
@@ -287,7 +287,7 @@ const VenueItem = ({
 
 		const fetchVenueMenu = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getVenueMenu", {
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueMenu", {
 					params: { venueID },
 				});
 				const { success, beers } = response.data;
@@ -303,7 +303,7 @@ const VenueItem = ({
 		const fetchVenueReview = async () => {
 			try {
 				const response = await axios.get(
-					"http://10.0.2.2:3000/getVenueReview",
+					"https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueReview",
 					{
 						params: { venueID },
 					}
@@ -954,7 +954,7 @@ const BeersVenue = ({ navigation }) => {
 	useEffect(() => {
 		const fetchVenueData = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getVenueData");
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueData");
 				const { success, venueData } = response.data;
 				if (success) {
 					let sortedData = [...venueData];
@@ -1039,7 +1039,7 @@ const BeersVenue = ({ navigation }) => {
 			userID: cookies.userID,
 		};
 		axios
-			.post("http://10.0.2.2:3000/addToWishlist", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/addToWishlist", data)
 			.then((response) => {
 				if (response.data.success) {
 					setWishlistTitle("Success!");

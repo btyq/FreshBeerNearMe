@@ -144,7 +144,7 @@ const Welcome = ({ navigation }) => {
 
 	const handleUserLogin = async () => {
 		try {
-			const response = await axios.post("http://10.0.2.2:19000/userLogin", {
+			const response = await axios.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/userLogin", {
 				username: username,
 				password: password,
 			});
@@ -167,7 +167,7 @@ const Welcome = ({ navigation }) => {
 	const handleVenueOwnerLogin = async () => {
 		try {
 			const response = await axios.post(
-				"http://10.0.2.2:3000/venueOwnerLogin",
+				"https://fresh-beer-near-me-6e244313be42.herokuapp.com/venueOwnerLogin",
 				{
 					username: username,
 					password: password,
@@ -191,7 +191,7 @@ const Welcome = ({ navigation }) => {
 
 	const handleAdminLogin = async () => {
 		try {
-			const response = await axios.post("http://10.0.2.2:3000/adminLogin", {
+			const response = await axios.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/adminLogin", {
 				username: username,
 				password: password,
 			});

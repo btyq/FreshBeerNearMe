@@ -243,7 +243,7 @@ const BeerItem = ({
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/addBeerReview", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/addBeerReview", data)
 			.then((response) => {
 				if (response.data.success) {
 					console.log("Review Added");
@@ -285,7 +285,7 @@ const BeerItem = ({
 		const fetchBeerLocations = async () => {
 			try {
 				const response = await axios.get(
-					"http://10.0.2.2:3000/getBeerLocation",
+					"https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBeerLocation",
 					{
 						params: { beerID },
 					}
@@ -302,7 +302,7 @@ const BeerItem = ({
 
 		const fetchBeerReview = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getBeerReview", {
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBeerReview", {
 					params: { beerID },
 				});
 				const { success, review } = response.data;
@@ -807,7 +807,7 @@ const FindABeer = ({ navigation }) => {
 		const fetchBeerData = async () => {
 			try {
 				setIsDataLoading(true);
-				const response = await axios.get("http://10.0.2.2:3000/getBeerData");
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBeerData");
 				const { success, beerData } = response.data;
 				if (success) {
 					let sortedData = [...beerData];
@@ -896,7 +896,7 @@ const FindABeer = ({ navigation }) => {
 			userID: cookies.userID,
 		};
 		axios
-			.post("http://10.0.2.2:3000/addToWishlist", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/addToWishlist", data)
 			.then((response) => {
 				if (response.data.success) {
 					setWishlistTitle("Success!");

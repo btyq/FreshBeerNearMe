@@ -153,7 +153,7 @@ const BeerItem = ({
 		const fetchBeerLocations = async () => {
 			try {
 				const response = await axios.get(
-					"http://10.0.2.2:3000/getBeerLocation",
+					"https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBeerLocation",
 					{
 						params: { beerID },
 					}
@@ -333,7 +333,7 @@ const VenueItem = ({
 		setUserID(cookies.userID);
 		const fetchVenueMenu = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getVenueMenu", {
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueMenu", {
 					params: { venueID },
 				});
 				const { success, beers } = response.data;
@@ -648,7 +648,7 @@ const Recommendation = ({ navigation }) => {
 	useEffect(() => {
 		setUserID(cookies.userID);
 		axios
-			.get("http://10.0.2.2:3000/getRecommendation", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getRecommendation", {
 				params: {
 					userID: cookies.userID,
 				},
@@ -663,7 +663,7 @@ const Recommendation = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getSearch")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getSearch")
 			.then((response) => {
 				const { venues, beers } = response.data;
 				setSearchData({ venues, beers });
@@ -709,7 +709,7 @@ const Recommendation = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/submitRecommendation", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitRecommendation", data)
 			.then((response) => {
 				if (response.data.success) {
 					setRecommendationTitle("Success");
@@ -734,7 +734,7 @@ const Recommendation = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/submitRecommendation", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitRecommendation", data)
 			.then((response) => {
 				if (response.data.success) {
 					setRecommendationTitle("Success");

@@ -234,7 +234,7 @@ class VenueOwner {
 		}
 	}
 
-	async getVenueMenu(client, res, venueMenu) {
+	async getVOVenueMenu(client, res, venueMenu) {
 		try {
 			const db = client.db("FreshBearNearMe");
 			const beersCollection = db.collection("Beer");

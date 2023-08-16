@@ -149,7 +149,7 @@ const Feedback = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/submitIssue", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitIssue", data)
 			.then((response) => {
 				if (response.data.success) {
 					setFeedbackTitle("Success");
@@ -182,7 +182,7 @@ const Feedback = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/submitFeedback", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitFeedback", data)
 			.then((response) => {
 				if (response.data.success) {
 					setFeedbackTitle("Success");
@@ -203,7 +203,7 @@ const Feedback = ({ navigation }) => {
 	useEffect(() => {
 		const fetchVenueData = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getVenueData");
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueData");
 				const { success, venueData } = response.data;
 				if (success) {
 					setVenueData(venueData);

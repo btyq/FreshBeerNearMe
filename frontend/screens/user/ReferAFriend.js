@@ -76,7 +76,7 @@ const PopUp = ({ visible, onClose, handleSubmitYes }) => {
 			rewardPrice: selectedRewardPrice,
 		};
 		axios
-			.post("http://10.0.2.2:3000/redeemRewards", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/redeemRewards", data)
 			.then((response) => {
 				if (response.data.success) {
 					setPopupVisible2(!popupVisible2);
@@ -94,7 +94,7 @@ const PopUp = ({ visible, onClose, handleSubmitYes }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getRewards")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getRewards")
 			.then((response) => {
 				setRewards(response.data.rewards);
 			})
@@ -323,7 +323,7 @@ const ReferAFriend = ({ navigation }) => {
 			referralCode: referralCode,
 		};
 		axios
-			.post("http://10.0.2.2:3000/submitReferralCode", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitReferralCode", data)
 			.then((response) => {
 				if (response.data.success) {
 					const { username } = response.data;
@@ -348,7 +348,7 @@ const ReferAFriend = ({ navigation }) => {
 	useEffect(() => {
 		setUserID(cookies.userID);
 		axios
-			.get("http://10.0.2.2:3000/getReferralCode", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getReferralCode", {
 				params: {
 					userID: cookies.userID,
 				},

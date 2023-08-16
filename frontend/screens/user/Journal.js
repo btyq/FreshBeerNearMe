@@ -155,7 +155,7 @@ const JournalItem = ({
 			journalRating: tastingNotesRating,
 		};
 		axios
-			.post("http://10.0.2.2:3000/editJournal", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/editJournal", data)
 			.then((response) => {
 				if (response.data.success) {
 					setJournalTitle("Success");
@@ -408,7 +408,7 @@ const Journal = ({ navigation }) => {
 		};
 
 		axios
-			.post("http://10.0.2.2:3000/submitJournal", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitJournal", data)
 			.then((response) => {
 				if (response.data.success) {
 					setJournalTitle("Success");
@@ -430,7 +430,7 @@ const Journal = ({ navigation }) => {
 	useEffect(() => {
 		const fetchBeerData = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getBeerData");
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBeerData");
 				const { success, beerData } = response.data;
 				if (success) {
 					setBeerData(beerData);
@@ -446,7 +446,7 @@ const Journal = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getJournal", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getJournal", {
 				params: {
 					userID: cookies.userID,
 				},
@@ -462,7 +462,7 @@ const Journal = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getStatistics", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getStatistics", {
 				params: {
 					userID: cookies.userID,
 				},
@@ -478,7 +478,7 @@ const Journal = ({ navigation }) => {
 	useEffect(() => {
 		const fetchVenueMenu = async () => {
 			try {
-				const response = await axios.get("http://10.0.2.2:3000/getVenueMenu", {
+				const response = await axios.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueMenu", {
 					params: { venueID: statisticsData.mostRecentVenue?.venueID },
 				});
 				const { success, beers } = response.data;
@@ -500,7 +500,7 @@ const Journal = ({ navigation }) => {
 		const fetchBeerLocations = async () => {
 			try {
 				const response = await axios.get(
-					"http://10.0.2.2:3000/getBeerLocation",
+					"https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBeerLocation",
 					{
 						params: { beerID: statisticsData.mostRecentBeer?.beerID },
 					}

@@ -165,7 +165,7 @@ const ManageInventory = ({ navigation }) => {
 	useEffect(() => {
 		if (selectedVenueData && selectedVenueData.venueMenu) {
 			axios
-				.get("http://10.0.2.2:3000/getVenueMenu", {
+				.get("http://10.0.2.2:3000/getVOVenueMenu", {
 					params: {
 						venueMenu: selectedVenueData.venueMenu,
 					},

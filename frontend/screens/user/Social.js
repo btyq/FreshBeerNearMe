@@ -141,7 +141,7 @@ const FeedItem = ({
 			reviewUserID: reviewUser,
 		};
 		axios
-			.post("http://10.0.2.2:3000/followUser", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/followUser", data)
 			.then((response) => {
 				if (response.data.success) {
 					updateFollowArray(reviewUser, true);
@@ -161,7 +161,7 @@ const FeedItem = ({
 			reviewUserID: reviewUser,
 		};
 		axios
-			.post("http://10.0.2.2:3000/unfollowUser", data)
+			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/unfollowUser", data)
 			.then((response) => {
 				if (response.data.success) {
 					updateFollowArray(reviewUser, false);
@@ -275,7 +275,7 @@ const Social = ({ navigation }) => {
 	useEffect(() => {
 		setUserID(cookies.userID);
 		axios
-			.get("http://10.0.2.2:3000/getFeed", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getFeed", {
 				params: {
 					userID: cookies.userID,
 				},

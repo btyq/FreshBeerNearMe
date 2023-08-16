@@ -215,7 +215,7 @@ const NearbyVenues = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getVenueCoordinates")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getVenueCoordinates")
 			.then((response) => {
 				setVenueData(response.data.venues);
 			})
@@ -226,7 +226,7 @@ const NearbyVenues = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getBreweryCoordinates")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getBreweryCoordinates")
 			.then((response) => {
 				setBreweryData(response.data.breweries);
 			})

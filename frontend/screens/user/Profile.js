@@ -126,7 +126,7 @@ const Profile = ({ navigation }) => {
 
 		const fetchUserData = async () => {
 			try {
-				const response = await axios.post("http://10.0.2.2:3000/getUserData", {
+				const response = await axios.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getUserData", {
 					userID,
 				});
 
@@ -161,7 +161,7 @@ const Profile = ({ navigation }) => {
 			};
 			// Make a POST request to the /updateProfile endpoint with the new data
 			const response = await axios.post(
-				"http://10.0.2.2:3000/editProfile",
+				"https://fresh-beer-near-me-6e244313be42.herokuapp.com/editProfile",
 				newData
 			);
 

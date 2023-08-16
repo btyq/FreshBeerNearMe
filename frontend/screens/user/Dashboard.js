@@ -88,7 +88,7 @@ const Dashboard = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getPersonalisedRecommendation", {
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getPersonalisedRecommendation", {
 				params: {
 					userID: cookies.userID,
 				},
@@ -105,7 +105,7 @@ const Dashboard = ({ navigation }) => {
 
 	useEffect(() => {
 		axios
-			.get("http://10.0.2.2:3000/getUpcomingEvents")
+			.get("https://fresh-beer-near-me-6e244313be42.herokuapp.com/getUpcomingEvents")
 			.then((response) => {
 				const eventsWithImages = response.data.map((event, index) => ({
 					...event,
