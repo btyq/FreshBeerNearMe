@@ -132,7 +132,7 @@ const Welcome = ({ navigation }) => {
 		const fetchData = async () => {
 			try {
 				const freshnessResponse = await axios.post(
-					"http://10.0.2.2:3000/readCSV"
+					"https://fresh-beer-near-me-6e244313be42.herokuapp.com/readCSV"
 				);
 			} catch (error) {
 				console.log("An error occurred:", error.message);
