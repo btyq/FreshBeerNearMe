@@ -55,6 +55,132 @@ const CustomText = (props) => {
 	);
 };
 
+// custom alert for comment
+const CustomCommentAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
+// custom alert for post
+const CustomPostAlert = ({ visible, onClose, title, message }) => {
+	return (
+		<Modal visible={visible} transparent animationType="fade">
+			<View
+				style={{
+					flex: 1,
+					backgroundColor: "rgba(0, 0, 0, 0.5)",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+			>
+				<View
+					style={{
+						width: "80%",
+						backgroundColor: COLORS.white,
+						borderRadius: 20,
+						padding: 30,
+					}}
+				>
+					<Ionicons
+						name="md-beer"
+						size={34}
+						color={COLORS.foam}
+						style={{ alignSelf: "center" }}
+					/>
+					<Text
+						style={{
+							fontSize: 18,
+							...GlobalStyle.headerFont,
+							alignSelf: "center",
+							marginBottom: 20,
+						}}
+					>
+						{title}
+					</Text>
+					<CustomText
+						style={{
+							alignSelf: "center",
+							fontSize: 16,
+							marginBottom: 20,
+						}}
+					>
+						{message}
+					</CustomText>
+					<TouchableOpacity
+						style={{
+							backgroundColor: COLORS.foam,
+							padding: 10,
+							borderRadius: 8,
+							alignItems: "center",
+							marginTop: 20,
+						}}
+						onPress={onClose}
+					>
+						<Text style={{ ...GlobalStyle.headerFont, fontSize: 16 }}>OK</Text>
+					</TouchableOpacity>
+				</View>
+			</View>
+		</Modal>
+	);
+};
+
 // for popup
 const PostItem = ({
 	postID,
@@ -70,6 +196,9 @@ const PostItem = ({
 	const [popupVisible2, setPopupVisible2] = useState(false); // created 2nd modal
 	const [comment, setComment] = useState("");
 	const { cookies } = useCookies();
+	const [isCommentVisible, setIsCommentVisible] = useState(false);
+	const [commentTitle, setCommentTitle] = useState("");
+	const [commentMessage, setCommentMessage] = useState("");
 
 	const handlePopup = () => {
 		setPopupVisible(!popupVisible); // created 1st modal
@@ -93,18 +222,22 @@ const PostItem = ({
 			commentDate: formattedDate,
 		};
 		axios
-			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitComment", data)
+			.post(
+				"https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitComment",
+				data
+			)
 			.then((response) => {
 				if (response.data.success) {
-					setPopupVisible2(!popupVisible2);
 					setComment("");
-					Alert.alert("Commented!");
+					setCommentTitle("Success");
+					setCommentMessage("You commented!");
 					onCommentSubmitted();
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
-					setPopupVisible2(!popupVisible2);
+					setCommentTitle("Error");
+					setCommentMessage(message);
 				}
+				setIsCommentVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -306,6 +439,12 @@ const PostItem = ({
 										borderColor: 0,
 									}}
 								/>
+								<CustomCommentAlert
+									visible={isCommentVisible}
+									onClose={() => setIsCommentVisible(false)}
+									title={commentTitle}
+									message={commentMessage}
+								/>
 							</View>
 						</View>
 					</Modal>
@@ -323,6 +462,10 @@ const Forum = ({ navigation }) => {
 	const [postData, setPostData] = useState([]);
 	const [commentSubmitted, setCommentSubmitted] = useState(false);
 	const [postSubmitted, setPostSubmitted] = useState(false);
+
+	const [isPostVisible, setIsPostVisible] = useState(false);
+	const [postMessage, setPostMessage] = useState("");
+	const [postTitle, setPostTitle] = useState("");
 
 	const toggleCreatePostModal = () => {
 		setShowCreatePostModal(!showCreatePostModal);
@@ -342,19 +485,27 @@ const Forum = ({ navigation }) => {
 			postDescription: postDescription,
 		};
 		axios
-			.post("https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitPost", data)
+			.post(
+				"https://fresh-beer-near-me-6e244313be42.herokuapp.com/submitPost",
+				data
+			)
 			.then((response) => {
 				if (response.data.success) {
 					setTitle("");
 					setPostDescription("");
-					toggleCreatePostModal();
-					Alert.alert("Posted!");
+					// toggleCreatePostModal();
+					// Alert.alert("Posted!");
+					setPostTitle("Success");
+					setPostMessage("You Posted!");
 					setPostSubmitted(true);
 				} else {
 					const { message } = response.data;
-					Alert.alert("Error!", message);
-					toggleCreatePostModal();
+					setPostTitle("Error");
+					setPostMessage(message);
+					// Alert.alert("Error!", message);
+					// toggleCreatePostModal();
 				}
+				setIsPostVisible(true);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -580,6 +731,12 @@ const Forum = ({ navigation }) => {
 									color={COLORS.foam}
 									filled
 									onPress={submitPost}
+								/>
+								<CustomPostAlert
+									visible={isPostVisible}
+									onClose={() => setIsPostVisible(false)}
+									title={postTitle}
+									message={postMessage}
 								/>
 							</View>
 						</View>
